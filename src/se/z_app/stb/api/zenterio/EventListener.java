@@ -1,5 +1,7 @@
 package se.z_app.stb.api.zenterio;
 
-public class EventListener {
+import se.z_app.stb.api.EventListnerInterface;
+
+public class EventListener implements EventListnerInterface {
 
 }

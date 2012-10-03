@@ -1,5 +1,7 @@
 package se.z_app.stb.api;
 
-public interface DiscoveryInterface {
+import se.z_app.stb.STB;
 
+public interface DiscoveryInterface {
+	public STB[] find();
 }
