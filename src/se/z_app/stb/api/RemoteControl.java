@@ -4,6 +4,11 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class RemoteControl implements Observer {
+	public enum Button{
+		P0, P1, P2, P3, P4, P5, P6, P7, P8, P9, BACK, BLUE, BROWSERHOME, CHANNELMINUS, CHANNELPLUS, DOWN, EXIT, GREEN, GUIDE, INFO, LEFT, MENU, OK, OPT, RED, RIGHT, UP, VOLMINUS, VOLPLUS, YELLOW;
+	}
+	
+	
 	//Singleton and adding itself as an observer
 	private static RemoteControl instance; 
 	private RemoteControl(){

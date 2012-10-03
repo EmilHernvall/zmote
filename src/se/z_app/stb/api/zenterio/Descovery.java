@@ -11,4 +11,10 @@ public class Descovery implements DiscoveryInterface {
 		return null;
 	}
 
+	@Override
+	public STB[] find(STB stb) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

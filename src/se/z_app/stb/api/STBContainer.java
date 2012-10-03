@@ -1,9 +1,5 @@
 package se.z_app.stb.api;
-
-
-
 import java.util.Observable;
-
 import se.z_app.stb.STB;
 
 
