@@ -3,7 +3,7 @@ package se.z_app.stb.api.zenterio;
 import se.z_app.stb.STB;
 import se.z_app.stb.api.DiscoveryInterface;
 
-public class Descovery implements DiscoveryInterface {
+public class Discovery implements DiscoveryInterface {
 
 	@Override
 	public STB[] find() {
