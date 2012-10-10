@@ -18,12 +18,12 @@ public class STBListener extends Observable implements Observer, Runnable{
 	
 
 	
-	@Override
+	
 	public void update(Observable observable, Object data) {
 		// TODO Auto-generated method stub
 		
 	}
-	@Override
+
 	public void run() {
 		// TODO Auto-generated method stub
 		
