@@ -1,13 +1,18 @@
 package se.z_app.stb.api.test;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 import se.z_app.stb.api.*;
 
 
 public class RCProxyTest extends TestCase {
 	
-	public void up(){
+	@Test
+	public void testUp(){
 		RCProxy tester = new RCProxy();
-		assertEquals("Result", "pup", tester.up());	
+		assertTrue("pup".equals(tester.up()));	
 	}
+	
+	
 }

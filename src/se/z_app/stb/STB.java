@@ -1,5 +1,7 @@
 package se.z_app.stb;
 
+import se.z_app.stb.api.RemoteControl;
+
 public class STB {
 
 	private STBEnum type;
@@ -8,6 +10,8 @@ public class STB {
 	private String boxName;
 
 	public STBEnum getType() {
+
+		
 		return type;
 	}
 
@@ -16,7 +20,7 @@ public class STB {
 	}
 	
 	public enum STBEnum {
-		// TODO add STBtypes	
+		DEFAULT,ZENTERIO;	
 	}
 
 	public String getMAC() {
