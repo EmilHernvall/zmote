@@ -10,4 +10,8 @@ public class RCProxy {
 		return instance;
 		
 	}
+	public String up() {
+		// TODO Auto-generated method stub
+		return "pup";
+	}
 }
