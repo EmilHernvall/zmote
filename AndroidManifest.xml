@@ -17,12 +17,20 @@
             android:theme="@android:style/Theme.NoTitleBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main" >
+        </activity>
+        <activity
+            android:name=".SelectSTBActivity"
+            android:label="@string/title_activity_select_stb" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="se.z_app.zmote.gui.MainActivity" />
         </activity>
     </application>
 
