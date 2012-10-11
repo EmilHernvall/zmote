@@ -17,6 +17,11 @@ public class STBDiscovery {
 		return null; 
 		}
 	
+	
+	/*
+	 * Finds the subnet of the devices network and returns a string in the form 192.168.0.
+	 * 
+	 */
 	public String findSubnet() {
 	    InetAddress addr = null;
 			try {

@@ -14,7 +14,7 @@ public class EPGData implements Observer{
 			instance = new EPGData();
 		return instance;
 	}
-	@Override
+	
 	public void update(Observable observable, Object data) {
 		// TODO Auto-generated method stub
 		
