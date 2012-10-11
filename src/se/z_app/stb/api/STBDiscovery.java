@@ -27,10 +27,7 @@ public class STBDiscovery {
 			try {
 				addr = InetAddress.getLocalHost();
 				return addr.getHostAddress().toString().substring(0, addr.getHostAddress().lastIndexOf('.')+1);
-			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			} catch (UnknownHostException e) { e.printStackTrace(); }
 		return null;
 	}
 	
