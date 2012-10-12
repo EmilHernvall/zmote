@@ -12,45 +12,46 @@ import se.z_app.stb.api.DiscoveryInterface;
 import se.z_app.stb.api.STBDiscovery; // Should this be imported?
 
 public class Discovery implements DiscoveryInterface {
-
+	private static int timeoutInMs = 30;
 	STBDiscovery stb = new STBDiscovery();
-	
+		
 	/*
 	 * Scans the network for STB's.
 	 * Return an object InetAddress with the IP address to the STB.
 	 * With this the find() function can retrieve the IP addresses to the other STB's for easier creation of the STB classes
-	 * TODO: Write better exception handling. Maybe parallelizes the scan. 30ms=7seconds for 254 addresses unparallelized. 
+	 * TODO: Better exception handling. Right now it just skips all exceptions altogether
 	 */
 	private LinkedList<InetAddress> findSTBIPAddresses() {
 		URL url;
-		int timeoutInMs = 30;
+		
 		InetAddress addr;
 		String str;
 		LinkedList<InetAddress> boxes = new LinkedList<InetAddress>();
 		
-		for (int i = 1; i < 255; i++) {
+		for (int i = 1; i < 255; i++) { //Scans the subnet (for example 192.168.0) addresses .1 to .254
 			try {
-				addr = InetAddress.getByName(stb.findSubnet() + Integer.toString(i));
+				addr = InetAddress.getByName(stb.findSubnet()+Integer.toString(i));
 				if(addr.isReachable(timeoutInMs)) {
 					url = new URL("http://"+addr.getHostAddress().toString()+"/cgi-bin/zids_discovery/");
 					try {
-						BufferedReader row = new BufferedReader(new InputStreamReader(url.openStream()));
-						if(row.readLine().indexOf("Zenterio") > 0) {
+						BufferedReader row = new BufferedReader(new InputStreamReader(url.openStream())); // This one is really slow (4-5 sec)
+						if(row.readLine().contains("Zenterio")) {
 				    		boxes.add(addr);
+				    		System.out.println("Found box at "+addr.getHostAddress().toString());
 				    		while ((str = row.readLine()) != null) {
-				    			if (str.indexOf("Box") > 0) { //Adds multiple boxes if found
-				    				addr = InetAddress.getByName(str.substring(str.indexOf((':')+2),str.indexOf(';')));
+				    			if (str.contains("Box")) { //Adds multiple boxes if found
+				    				addr = InetAddress.getByName(str.split(": ", 2)[1].split(";")[0]);
 				    				System.out.println(addr.getHostAddress().toString());
 				    				boxes.add(addr);
 				    			}
 				    		}
+				    		break;
 				    	}
 						row.close();
 					}
-					catch(Exception e) { /* e.printStackTrace(); */ }
+					catch(Exception e) {  /*e.printStackTrace();*/  }
 				}
-			} catch (Exception e) {/* e.printStackTrace(); */ }
-			
+			} catch (Exception e) { /*e.printStackTrace();*/  }
 		}
 		System.out.println("fin");
 		return boxes;
@@ -58,48 +59,46 @@ public class Discovery implements DiscoveryInterface {
 	
 	/*
 	 * Creates a STB object
-	 * TODO: Test if this actually works.
 	 */
 	private STB createSTBObject(InetAddress addr) {
 		STB stb = new STB();
 		stb.setIP(addr); //Sets IP
 		String str;
 		try {
-			URL url = new URL("http:/"+addr.getHostAddress().toString()+"/cgi-bin/zids_discovery/");
+			URL url = new URL("http://"+addr.getHostAddress().toString()+"/cgi-bin/zids_discovery/");
 			BufferedReader row = new BufferedReader(new InputStreamReader(url.openStream()));
 	    		while ((str = row.readLine()) != null) {
-	    			if (str.indexOf("Boxname") > 0) { //Sets BoxName
-	    				stb.setBoxName(str.substring(str.indexOf(':'+2),str.length()));
-	    			} else if (str.indexOf("MAC") > 0) { // Sets Mac Address
-	    				
-	    			} else if (str.indexOf("Product") > 0) {
-	    				
-	    			} else if (str.indexOf("Box") > 0) {
+	    			if (str.contains("Boxname")) { //Sets BoxName
+	    				stb.setBoxName(str.split(": ", 2)[1]);
+	    				System.out.println("Boxname:: "+str.split(": ", 2)[1]);
+	    				if (str.indexOf("Zenterio") > 0 || str.indexOf("zenterio") > 0) {
+	    					stb.setType(STB.STBEnum.ZENTERIO);
+	    				} else {
+	    					stb.setType(STB.STBEnum.DEFAULT);
+	    				}
+	    			} else if (str.contains("MAC")) { // Sets Mac Address
+	    				stb.setMAC(str.split(": ", 2)[1]);
 	    				break;
 	    			}
 	    		}
 			row.close();
 		}
-		catch(Exception e) { /* e.printStackTrace(); */	}
+		catch(Exception e) { e.printStackTrace(); }
 		return stb;
 	}
 	/*
-	 * Uses the functions for creating STB objects and returning the array of appropriate size
-	 * TODO: Test this function
-	 * @see se.z_app.stb.api.DiscoveryInterface#find()
+	 * Uses the functions findSTBAddresses() and createSTBObject() and returning the array of appropriate size
 	 */
 	@Override
 	public STB[] find() {
-		// TODO Auto-generated method stub
-		LinkedList<InetAddress> boxes = new LinkedList<InetAddress>();
-		boxes = findSTBIPAddresses();
+		LinkedList<InetAddress> boxes = findSTBIPAddresses();
 		STB[] stbs = new STB[boxes.size()];
 		try {
 			for (int i=0;i<boxes.size();i++) {
 				stbs[i] = createSTBObject(boxes.get(i));
 			}
 		}
-		catch (RuntimeException e) { /* e.printStackTrace(); */ }
+		catch (RuntimeException e) { e.printStackTrace(); }
 		return stbs;
 	}
 
@@ -110,3 +109,5 @@ public class Discovery implements DiscoveryInterface {
 	}
 
 }
+
+	

@@ -20,15 +20,16 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
               
+        /*
+         * A button for switching to Select STB screen
+         */
         Button next = (Button) findViewById(R.id.button_selectstbactivity);
         next.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent myIntent = new Intent(view.getContext(), SelectSTBActivity.class);
                 startActivityForResult(myIntent, 0);
             }
-
         });
-        
      
     }
 

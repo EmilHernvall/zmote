@@ -1,34 +1,20 @@
 package se.z_app.stb.api;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
-import se.z_app.stb.STB;
-import se.z_app.stb.api.zenterio.Discovery;
+import android.net.wifi.*;
 
 public class STBDiscovery {
-	Discovery disc = new Discovery();
-	
-	
-	public STB[] find() {  
-		STB[] stb;
-		stb = disc.find();
-		
-		return null; 
-		}
-	
 	
 	/*
 	 * Finds the subnet of the devices network and returns a string in the form 192.168.0.
-	 * 
+	 * TODO: Create the function
 	 */
 	public String findSubnet() {
-	    InetAddress addr = null;
-			try {
-				addr = InetAddress.getLocalHost();
-				return addr.getHostAddress().toString().substring(0, addr.getHostAddress().lastIndexOf('.')+1);
-			} catch (UnknownHostException e) { e.printStackTrace(); }
-		return null;
+//			WifiManager myWifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
+//	    	WifiInfo myWifiInfo = myWifiManager.getConnectionInfo();
+//	    	int ipAddress = myWifiInfo.getIpAddress();
+//	    	System.out.println("WiFi address is " + android.text.format.Formatter.formatIpAddress(ipAddress));
+//	    	return android.text.format.Formatter.formatIpAddress(ipAddress);
+//		}
+		return "192.168.0.";
 	}
-	
 }
