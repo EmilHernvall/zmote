@@ -30,4 +30,13 @@
         android:layout_marginTop="5dp" >
     </ListView>
 
+    <ProgressBar
+        android:id="@+id/progressbar_scan"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="480dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/button_scanforstb"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="44dp" />
+
 </RelativeLayout>
