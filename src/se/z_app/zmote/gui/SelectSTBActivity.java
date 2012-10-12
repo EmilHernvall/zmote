@@ -41,7 +41,9 @@ public class SelectSTBActivity extends Activity {
         Button next = (Button) findViewById(R.id.button_scanforstb);
         next.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+            	System.out.println("Button presdsed.");
             	stbs = Disc.find();
+            	
             	}
         });
         

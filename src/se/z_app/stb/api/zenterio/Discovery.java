@@ -11,6 +11,13 @@ import se.z_app.stb.api.DiscoveryInterface;
 
 import se.z_app.stb.api.STBDiscovery; // Should this be imported?
 
+
+/*
+ * TODO: Needs to be rewritten since it's using the main thread. It's not allowed on android 3+.
+ * Source: http://www.androiddesignpatterns.com/2012/06/app-force-close-honeycomb-ics.html
+ * 
+ * 
+ */
 public class Discovery implements DiscoveryInterface {
 	private static int timeoutInMs = 30;
 	STBDiscovery stb = new STBDiscovery();
@@ -23,18 +30,19 @@ public class Discovery implements DiscoveryInterface {
 	 */
 	private LinkedList<InetAddress> findSTBIPAddresses() {
 		URL url;
-		
 		InetAddress addr;
 		String str;
 		LinkedList<InetAddress> boxes = new LinkedList<InetAddress>();
-		
-		for (int i = 1; i < 255; i++) { //Scans the subnet (for example 192.168.0) addresses .1 to .254
+		BufferedReader row = null;
+		for (int i = 192; i < 193; i++) { //Scans the subnet (for example 192.168.0) addresses .1 to .254
 			try {
 				addr = InetAddress.getByName(stb.findSubnet()+Integer.toString(i));
+				System.out.println(addr.getHostAddress());
 				if(addr.isReachable(timeoutInMs)) {
+					System.out.println("LOL");
 					url = new URL("http://"+addr.getHostAddress().toString()+"/cgi-bin/zids_discovery/");
 					try {
-						BufferedReader row = new BufferedReader(new InputStreamReader(url.openStream())); // This one is really slow (4-5 sec)
+						row = new BufferedReader(new InputStreamReader(url.openStream())); // This one is really slow (4-5 sec)
 						if(row.readLine().contains("Zenterio")) {
 				    		boxes.add(addr);
 				    		System.out.println("Found box at "+addr.getHostAddress().toString());
@@ -49,11 +57,11 @@ public class Discovery implements DiscoveryInterface {
 				    	}
 						row.close();
 					}
-					catch(Exception e) {  /*e.printStackTrace();*/  }
+					catch(Exception e) {  e.printStackTrace();  }
 				}
-			} catch (Exception e) { /*e.printStackTrace();*/  }
+			} catch (Exception e) { e.printStackTrace(); }
 		}
-		System.out.println("fin");
+		System.out.println(boxes);
 		return boxes;
 	}
 	
@@ -107,7 +115,6 @@ public class Discovery implements DiscoveryInterface {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 }
 
 	
