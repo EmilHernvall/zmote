@@ -9,12 +9,14 @@ public class STBContainer extends Observable {
 	private STB stb;
 	
 	
+	
 	private static STBContainer instance; 
 	private STBContainer(){}
 	public static STBContainer instance(){
 		if(instance == null)
 			instance = new STBContainer();
 		return instance;
+		
 	}
 	
 	public STB getSTB(){
