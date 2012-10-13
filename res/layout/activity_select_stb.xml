@@ -26,15 +26,7 @@
         android:layout_alignParentTop="true"
         android:text="@string/title_activity_select_stb"
         tools:context=".SelectSTBActivity" />
-    
-    <TextView
-        android:id="@+id/listItem"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:text="@string/title_activity_select_stb"
-        tools:context=".SelectSTBActivity" />
+
 
     <se.z_app.zmote.gui.STBListView
         android:id="@+id/list_over_stb"
