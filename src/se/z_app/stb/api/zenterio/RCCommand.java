@@ -23,7 +23,7 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 		SENDTEXT, SENDBUTTON, LAUNCH, PLAYWEBTV, QUEUEWEBTV, FACEBOOKAUTH, RAWPOST, RAWGET;
 	}
 	/**
-	 * Constructor that takes the IP adress of the STB as in argument.
+	 * Constructor that takes the IP address of the STB as in argument.
 	 * @param iP
 	 */
 	public RCCommand(String iP){
@@ -347,15 +347,7 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 				break;
 			default:
 				break;
-			}
-			
-			
-
-			
-
-
-				
-		
+			}		
 			
 		}
 		
