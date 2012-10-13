@@ -3,6 +3,8 @@ package se.z_app.stb.api;
 import java.util.Observable;
 import java.util.Observer;
 
+import android.util.Log;
+
 import se.z_app.stb.STB;
 import se.z_app.stb.api.zenterio.RCCommand;
 

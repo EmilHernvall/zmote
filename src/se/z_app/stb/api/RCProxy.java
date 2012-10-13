@@ -2,6 +2,8 @@ package se.z_app.stb.api;
 
 import java.util.concurrent.locks.ReentrantLock;
 
+import android.util.Log;
+
 
 /**
  * 
@@ -91,7 +93,7 @@ public class RCProxy {
 	/**
 	 * Sends the correct button enum for different states when ok is pressed
 	 */
-	public void ok() {		
+	public void ok() {
 		if (getState() == STBState.State.MENU) {
 			RemoteControl.instance().sendButton(RemoteControl.Button.OK);
 		}
