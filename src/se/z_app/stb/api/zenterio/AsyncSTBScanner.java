@@ -6,22 +6,13 @@ import java.net.InetAddress;
 import java.net.URL;
 import java.util.LinkedList;
 
-import android.os.AsyncTask;
-
 import se.z_app.stb.STB;
 import se.z_app.stb.api.DiscoveryInterface;
 
-import se.z_app.stb.api.STBDiscovery; // Should this be imported?
+import android.os.AsyncTask;
 
-
-/*
- * TODO: Dunno know if the async should be here or its own class.
- * 
- * 
- */
-public class Discovery extends AsyncTask<Integer, Integer, STB[]> implements DiscoveryInterface {
+public class AsyncSTBScanner extends AsyncTask<Integer, Integer, STB[]> implements DiscoveryInterface {
 	private static int timeoutInMs = 30;
-	STBDiscovery stbDisc = new STBDiscovery();
 	
 	@Override
 	protected STB[] doInBackground(Integer... params) {
