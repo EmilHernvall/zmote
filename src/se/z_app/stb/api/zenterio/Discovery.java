@@ -1,41 +1,43 @@
-package se.z_app.stb.api.zenterio;
 
+package se.z_app.stb.api.zenterio;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.URL;
 import java.util.LinkedList;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import se.z_app.stb.STB;
 import se.z_app.stb.api.DiscoveryInterface;
 
 import se.z_app.stb.api.STBDiscovery; // Should this be imported?
+import se.z_app.zmote.gui.R;
+import se.z_app.zmote.gui.SelectSTBActivity;
 
 
 /*
- * TODO: Dunno know if the async should be here or its own class.
- * 
  * 
  */
-public class Discovery extends AsyncTask<Integer, Integer, STB[]> implements DiscoveryInterface {
-	private static int timeoutInMs = 30;
-	STBDiscovery stbDisc = new STBDiscovery();
+public class Discovery implements DiscoveryInterface {
+	private static int timeoutInMs = 50;
+	private String ipaddress;
+	public STB[] stbss;
+	public static boolean isRunning, isLoadingBoxes = false;
 	
-	@Override
-	protected STB[] doInBackground(Integer... params) {
-		System.out.println("Scan started...");
-		return find();
+	
+	public Discovery (String ipaddress, STB[] stbs) {
+		this.ipaddress = ipaddress;
+		this.stbss = stbs;
 	}
-	
-	protected void onPostExecute(STB[] stb) {
-		System.out.println("Scan finished.");
-	}
-	
 	/* 
 	 * The find function that's initialized in doInBackground
 	 */
+	@Override
 	public STB[] find() {
 		LinkedList<InetAddress> boxes = null;
 		boxes = findSTBIPAddresses();
@@ -46,6 +48,7 @@ public class Discovery extends AsyncTask<Integer, Integer, STB[]> implements Dis
 			}
 		}
 		catch (RuntimeException e) { e.printStackTrace(); }
+		System.out.println("find() "+stbs);
 		return stbs;
 	}
 
@@ -53,6 +56,7 @@ public class Discovery extends AsyncTask<Integer, Integer, STB[]> implements Dis
 	 * Initiates STB object
 	 */
 	private STB createSTBObject(InetAddress addr) {
+//		System.out.println("createSTBObject()");
 		STB stb = new STB();
 		stb.setIP(addr); //Sets IP
 		String str;
@@ -83,45 +87,132 @@ public class Discovery extends AsyncTask<Integer, Integer, STB[]> implements Dis
 	 * TODO: Verify if the function for finding more than 1 STB works.
 	 * TODO: Exception handling can be somewhat improved...
 	 */
-	public LinkedList<InetAddress> findSTBIPAddresses() {
-		URL url;
-		InetAddress addr;
-		String str;
+	private LinkedList<InetAddress> findSTBIPAddresses() {
 		LinkedList<InetAddress> boxes = new LinkedList<InetAddress>();
-		BufferedReader row = null;
+		ScanObject scanner;
+		LinkedList<ScanObject> objects = new LinkedList<ScanObject>();
 		
-		for (int i = 1; i < 255; i++) { //Scans the subnet (for example 192.168.0) addresses .1 to .254
-			try {
-				addr = InetAddress.getByName("192.168.0."+Integer.toString(i));
-				if(addr.isReachable(timeoutInMs)) {
-					url = new URL("http://"+addr.getHostAddress().toString()+"/cgi-bin/zids_discovery/");
-					try {
-						row = new BufferedReader(new InputStreamReader(url.openStream()));
-						if(row.readLine().contains("Zenterio")) {
-				    		boxes.add(addr);
-				    		System.out.println("Found box at "+addr.getHostAddress().toString());
-				    		while ((str = row.readLine()) != null) {
-				    			if (str.contains("Box")) { //Adds multiple boxes if found
-				    				addr = InetAddress.getByName(str.split(": ", 2)[1].split(";")[0]);
-				    				System.out.println("Other box: "+addr.getHostAddress().toString());
-				    				boxes.add(addr);
-				    			}
-				    		}
-				    		break;
-				    	}
-						row.close();
-					}
-					catch(Exception e) {  /*e.printStackTrace();*/  }
-				}
-			} catch (Exception e) { /*e.printStackTrace();*/ }
+		isRunning = true;
+		for (int j=0;j<8;j++) {
+			scanner = new ScanObject(j);
+			scanner.start();
+			objects.add(scanner);
 		}
+		int count = 0;
+		long t1 = System.nanoTime();
+		while(isRunning) {
+			count++;
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) { e.printStackTrace(); }
+			if (count == 500)  { //Stops scan after 5 sec
+				break;
+			}	
+		}
+		long t2 = System.nanoTime();
+		System.out.println("Time for scan: " +(t2-t1)/1000000+"ms");
+		while (isLoadingBoxes) {
+			try {
+				Thread.sleep(10);
+			} catch (Exception e) { };
+		}
+		long t3 = System.nanoTime();
+		System.out.println("Time for boxgetting: " +(t3-t2)/1000000+"ms");
+		for (int i = 0; i<8; i++) {
+			if (((boxes = objects.get(i).getBoxes()).size()) > 0) {
+				break;
+			}
+		}
+//		System.out.println("findSTBIPAddresses "+boxes);
 		return boxes;
+		
 	}
 	
+	/*
+	 * Finds out if the box is a Zenterio box and if so returns the rest of the HTTP GET.
+	 */
+	private BufferedReader isZenterioSTB(InetAddress addr) {
+		BufferedReader row;
+		URL url;
+		try {
+			url = new URL("http://"+addr.getHostAddress().toString()+"/cgi-bin/zids_discovery/");
+			row = new BufferedReader(new InputStreamReader(url.openStream()));
+			if(row.readLine().contains("Zenterio")) {
+				return row;
+	    	}
+			row.close();
+		} catch (Exception e) { /*e.printStackTrace();*/ }
+		return null;
+	}
+	
+	/*
+	 * Not written yet
+	 * @see se.z_app.stb.api.DiscoveryInterface#find(se.z_app.stb.STB)
+	 * TODO: Todo.
+	 */
 	@Override
 	public STB[] find(STB stb) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
+	/*
+	 * Scans in different threads.
+	 */
+	private class ScanObject extends Thread{
+		InetAddress addr;
+		String line;
+		LinkedList<InetAddress> boxes = new LinkedList<InetAddress>();
+		BufferedReader row = null;
+		int rangeIndex;
+		
+		public ScanObject (int rangeIndex) {
+			this.rangeIndex = rangeIndex;
+		}
+		
+		private int calculateStartRange(int start) {
+			if (start == 0) {
+				return 1;
+			}
+			return start*32;
+		}
+		private int calculateEndRange(int end) {
+			end *= 32;
+			if (end == 224) {
+				return 255;
+			} 
+			return end+32;
+		}
+		public LinkedList<InetAddress> getBoxes() {
+//			System.out.println("getBoxes()");
+			return boxes;
+			
+		}
+		
+		public void run() {
+			for (int i = calculateStartRange(rangeIndex);i<calculateEndRange(rangeIndex) && isRunning;i++) {
+				try {
+					addr = InetAddress.getByName(ipaddress+Integer.toString(i));
+					if(addr.isReachable(timeoutInMs)) {
+						if ((row = isZenterioSTB(addr)) != null) {
+							isLoadingBoxes = true;
+							isRunning = false;
+							boxes.add(addr);
+				    		System.out.println("Found box at "+addr.getHostAddress().toString());
+				    		while ((line = row.readLine()) != null) {
+				    			if (line.contains("Box")) { //Adds multiple boxes if found
+				    				addr = InetAddress.getByName(line.split(": ", 2)[1].split(";")[0]);
+				    				System.out.println("Other box: "+addr.getHostAddress().toString());
+				    				boxes.add(addr);
+				    			}
+				    		}
+				    		row.close();
+				    		isLoadingBoxes = false;
+				    		break;
+						}
+					}
+				} catch(Exception e) {  /*e.printStackTrace();*/  }
+			}
+		}
+	}
 }

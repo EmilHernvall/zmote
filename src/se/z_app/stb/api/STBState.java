@@ -3,7 +3,15 @@ package se.z_app.stb.api;
 import java.util.Observable;
 import java.util.Observer;
 
+/*
+ * The enum for different states 
+ */
 public class STBState implements Observer{
+	public enum State{
+		MENU, CHANNELVIEW, SETTINGS;
+		
+	}
+	
 	
 	//Singleton and adding itself as an observer
 	private static STBState instance; 
@@ -24,6 +32,11 @@ public class STBState implements Observer{
 		}else if(observable.getClass() == STBListener.class){
 			
 		}
+	}
+	
+	public State getState() {
+		return null;
+		
 	}
 
 }

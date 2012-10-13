@@ -43,6 +43,7 @@ public class RemoteControl implements Observer {
 			break;
 		}
 	}
+	
 	public void sendText(String chars){
 		if(remoteImpl != null)
 			remoteImpl.sendText(chars);
@@ -59,9 +60,4 @@ public class RemoteControl implements Observer {
 			remoteImpl.launch(url);
 	
 	}
-	
-	
-	
-	
-	
 }
