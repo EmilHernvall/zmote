@@ -6,31 +6,21 @@ import java.net.InetAddress;
 import java.net.URL;
 import java.util.LinkedList;
 
-import android.app.ProgressDialog;
-import android.os.AsyncTask;
-import android.util.Log;
-import android.view.View;
-import android.widget.ProgressBar;
-
 import se.z_app.stb.STB;
 import se.z_app.stb.api.DiscoveryInterface;
-
-import se.z_app.stb.api.STBDiscovery; // Should this be imported?
-import se.z_app.zmote.gui.R;
-import se.z_app.zmote.gui.SelectSTBActivity;
 
 
 /*
  * 
  */
 public class Discovery implements DiscoveryInterface {
-	private static int timeoutInMs = 30;
-	private String ipaddress;
+	private static int timeOutInMs = 30; // Timeout for each isReachable()
+	private static int timeOutSTBScannerInMs = 4000; // Timeout for the scan
+	private String subNetAddress;
 	public static boolean isRunning, isLoadingBoxes = false;
 	
-	
-	public Discovery (String ipaddress) {
-		this.ipaddress = ipaddress;
+	public Discovery (String subNetAddress) {
+		this.subNetAddress = subNetAddress;
 	}
 	/* 
 	 * The find function that's initialized in doInBackground
@@ -46,7 +36,6 @@ public class Discovery implements DiscoveryInterface {
 			}
 		}
 		catch (RuntimeException e) { e.printStackTrace(); }
-		System.out.println("find() "+stbs);
 		return stbs;
 	}
 
@@ -103,7 +92,7 @@ public class Discovery implements DiscoveryInterface {
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) { e.printStackTrace(); }
-			if (count == 500)  { //Stops scan after 5 sec
+			if (count == timeOutSTBScannerInMs/10)  { //Stops scan after 5 sec
 				break;
 			}	
 		}
@@ -156,7 +145,7 @@ public class Discovery implements DiscoveryInterface {
 	}
 	
 	/*
-	 * Scans in different threads.
+	 * Divides scan into multiple threads for speed.
 	 */
 	private class ScanObject extends Thread{
 		InetAddress addr;
@@ -191,8 +180,9 @@ public class Discovery implements DiscoveryInterface {
 		public void run() {
 			for (int i = calculateStartRange(rangeIndex);i<calculateEndRange(rangeIndex) && isRunning;i++) {
 				try {
-					addr = InetAddress.getByName(ipaddress+Integer.toString(i));
-					if(addr.isReachable(timeoutInMs)) {
+					addr = InetAddress.getByName(subNetAddress+Integer.toString(i));
+					if(addr.isReachable(timeOutInMs)) {
+						
 						if ((row = isZenterioSTB(addr)) != null) {
 							isLoadingBoxes = true;
 							isRunning = false;
