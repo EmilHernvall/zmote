@@ -39,7 +39,10 @@ public class EPGData implements Observer{
 	}
 	
 	public EPG getEPG(){
-		return com.getEPG();
+		EPG epg = com.getEPG();
+		epg.setStb(stb);
+		
+		return epg; 
 	}
 	
 	public Channel getCurrentChannel(){
