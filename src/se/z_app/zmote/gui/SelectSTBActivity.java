@@ -63,6 +63,13 @@ public class SelectSTBActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
     
+    @Override
+    public void onResume() {
+    	if(theView != null)
+    		theView.notifyAdapter();
+    	super.onResume();
+    }
+    
 	/*
 	 * Finds the subnet of the devices network and returns a string in the form 192.168.0.
 	 * TODO: Should be in STBDiscovery.java but I dunno how.
