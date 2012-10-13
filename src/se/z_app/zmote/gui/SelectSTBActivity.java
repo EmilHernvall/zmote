@@ -102,7 +102,6 @@ public class SelectSTBActivity extends Activity {
 		}
 		protected void onPostExecute(STB[] stb) {
 			try {
-				Log.e("Output", ""+stb.length);
 				stbs = stb;
 				updateList(stbs);
 			} catch (Exception e) { e.printStackTrace(); }

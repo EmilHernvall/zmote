@@ -8,7 +8,7 @@ public class Program implements Comparable<Program>, Comparator<Program>{
 	private String name;
 	private int eventID;
 	private Date start;
-	private long duration;
+	private int duration;
 	private String shortText;
 	private String longText;
 	
@@ -30,10 +30,14 @@ public class Program implements Comparable<Program>, Comparator<Program>{
 	public void setStart(Date start) {
 		this.start = start;
 	}
-	public long getDuration() {
+	/**
+	 * 
+	 * @return  duration of a program given in secound
+	 */
+	public int getDuration() {
 		return duration;
 	}
-	public void setDuration(long duration) {
+	public void setDuration(int duration) {
 		this.duration = duration;
 	}
 	public String getShortText() {
@@ -54,7 +58,7 @@ public class Program implements Comparable<Program>, Comparator<Program>{
 	}
 	@Override
 	public int compare(Program lhs, Program rhs) {
-		return lhs.compareTo(rhs);
+		return compareTo(rhs);
 	}
 	
 }

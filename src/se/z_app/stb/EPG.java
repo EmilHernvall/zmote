@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 public class EPG implements Iterable<Channel> {
-	private long dateOfCreation;
+	private long dateOfCreation = System.currentTimeMillis();
 	private STB stb;
 	private ConcurrentSkipListMap<Integer, Channel> channelsNr = new ConcurrentSkipListMap<Integer, Channel>();
 	private ConcurrentSkipListMap<String, Channel> channelsName = new ConcurrentSkipListMap<String, Channel>();
