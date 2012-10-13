@@ -1,7 +1,10 @@
 package se.z_app.stb.api.zenterio;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.Date;
 
 import org.apache.http.HttpResponse;
@@ -18,6 +21,7 @@ import android.graphics.Bitmap;
 import se.z_app.stb.Channel;
 import se.z_app.stb.EPG;
 import se.z_app.stb.Program;
+import se.z_app.stb.STB;
 import se.z_app.stb.WebTVItem;
 import se.z_app.stb.WebTVService;
 import se.z_app.stb.api.BiDirectionalCmdInterface;
@@ -32,11 +36,13 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 	public EPG getEPG() {
 		EPG epg = new EPG();
 		
-		String jsonString = new GetHTTPResponse().getJSON("http://" + ip + "/mdio/currentchannel");
+		String jsonString = new GetHTTPResponse().getJSON("http://" + ip + "/mdio/epg");
+		//System.out.println("EPG-> "+jsonString);
 		
 		try {
 			JSONArray jsonarray = new JSONArray(jsonString);
-			for(int i = 0; i<jsonarray.length(); i++){
+			
+			for(int i = 0; i< jsonarray.length(); i++){
 				JSONObject jsonChannel = jsonarray.getJSONObject(i);
 				Channel channel = new Channel();
 				channel.setName(jsonChannel.getString("name"));
@@ -57,11 +63,13 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 					program.setLongText(jsonProgram.getString("exttext"));
 					program.setEventID(jsonProgram.getInt("eventId"));
 					
+					/*
 					String start = jsonProgram.getString("start");
 					start = start.replace(" ", "-");
 					start = start.replace(":", "-");
 					String startAr[] = start.split("-");
 					
+				
 					@SuppressWarnings("deprecation")
 					Date date = new Date(
 							Integer.parseInt(startAr[0])-1900,
@@ -74,15 +82,18 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 					program.setStart(date);
 					
 					String duration = jsonProgram.getString("duration");
+					System.out.println("Duration ----------> " + duration);
 					String durationAr[] = duration.split(".");
 					int time = Integer.parseInt(durationAr[0])*3600;
 					time += Integer.parseInt(durationAr[1])*60;
 					time += Integer.parseInt(durationAr[2]);
 					program.setDuration(time);
+					*/
 					channel.addProgram(program);
 				}
 				
 			}
+			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -102,6 +113,7 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 //Bug here is listing currentChannel as a WEB tv item
 	// ex. {"label": "Swedish House Mafia @ Madison Square Garden 16-12-2011 [FULL SET]","url": "webtv:youtube:media:cCDcvZr9BNc","type": "","sourceUrl": ""}
 	// ex. {"label": "BBC Three","url": "http://download.ted.com/talks/TerryMoore_2012-480p.mp4?apikey=TEDDOWNLOAD&contentViewer=broadcast&onid=1&tsid=1&sid=1004&nid=1&clid=0","type": "","sourceUrl": ""}
+			//System.out.println("JsonString ---->" + jsonString);
 			JSONObject json = new JSONObject(jsonString);
 			
 			channel.setName(json.getString("label"));
@@ -149,37 +161,26 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 	private class GetHTTPResponse{
 		
 		
-		public String getJSON(String url){
-			// Create a new HttpClient and Post Header
-		    HttpClient httpclient = new DefaultHttpClient();
-		    HttpPost httpget = new HttpPost(url);
-		    String json= "";
-		    try {
-		        
-		      
-		       // System.out.println("Sending Post: " + postText);
-		        HttpResponse response = httpclient.execute(httpget);
-		        InputStream in = response.getEntity().getContent();
-		        
-		        byte buffer[] = new byte[512];
-		        int len = 512;
-		        
-		        while(len != -1){
-		        	len = in.read(buffer);
-		        	json = json + new String(buffer, 0, len, "utf8");
-		        }
-		        
-		    } catch (ClientProtocolException e) {
-		        // TODO Auto-generated catch block
-		    } catch (IOException e) {
-		        // TODO Auto-generated catch block
-		    }
-		    
-		    return json;
+		public String getJSON(String urlStr){
+			
+			
+			String json = "";	
+			try {
+				URL url = new URL(urlStr);
+				InputStream in = url.openStream();
+				
+				
+		    	String str;
+		    	byte buffer[] = new byte[2048];
+		    	int len;
+				while ((len = in.read(buffer)) != -1) {
+					json = json + new String(buffer, 0, len);
+		    	}
+				in.close();
+			}catch (Exception e) {
+				// TODO: handle exception
+			}
+			return json;
 		}
-	}
-	
-	public static void main(String args[]){
-		System.out.println("hejs");
 	}
 }

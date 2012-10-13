@@ -1,6 +1,7 @@
 package se.z_app.stb;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /*
  * 
@@ -9,7 +10,7 @@ public class STB {
 
 	private STBEnum type;
 	private String MAC;
-	private InetAddress IP;
+	private String IP;
 	private String boxName;
 
 	public STBEnum getType() {
@@ -35,15 +36,15 @@ public class STB {
 	}
 
 	public String getIP() {
-		return IP.getHostAddress().toString();
+		return IP;
 	}
 
 	/*
 	 * The IP can be set by iP.getByName("ip-address as string")
 	 */
-	public void setIP(InetAddress iP) {
-		IP = iP;
-	}
+	//public void setIP(InetAddress iP) {
+	//	IP = iP.get;
+	//}
 
 	public String getBoxName() {
 		return boxName;
@@ -59,6 +60,10 @@ public class STB {
 	
 	public String toString() {
 		 return boxName;
+	}
+
+	public void setIP(String ip) {
+		this.IP = ip;
 	}
 }
 

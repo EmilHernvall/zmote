@@ -4,6 +4,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import se.z_app.stb.Channel;
 import se.z_app.stb.EPG;
@@ -46,8 +47,8 @@ public class EPGData implements Observer{
 	}
 	
 	public Channel getCurrentChannel(){
-				
-		return null;
+		Log.i("EPGData", com.getClass().toString());
+		return com.getCurrentChannel();
 	}
 	public Bitmap getChannelIcon(Channel channel){
 		return com.getChannelIcon(channel);
