@@ -26,8 +26,8 @@ public class MainActivity extends Activity {
         Button next = (Button) findViewById(R.id.button_selectstbactivity);
         next.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Intent myIntent = new Intent(view.getContext(), MainActivity.class);
-                startActivityForResult(myIntent, 0);
+                Intent myIntent = new Intent(view.getContext(), SelectSTBActivity.class);
+                startActivity(myIntent);
             }
         });
      
