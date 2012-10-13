@@ -7,10 +7,11 @@
     android:padding="5dip" >
  
     
-    <TextView
+    <EditText
         android:id="@+id/boxname"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:focusable="false"
         android:text="Box"
         android:textColor="#040404"
         android:typeface="sans"

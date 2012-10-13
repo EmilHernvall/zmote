@@ -29,6 +29,7 @@ public class SelectSTBActivity extends Activity {
         scan.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
             		disc = new Discovery();
+            		disc.execute();
             		Log.e("Output", ""+disc.find().length);
             		STB[] List = new STB[2];
             		List[0] = new STB();
