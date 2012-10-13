@@ -22,7 +22,7 @@ public class STBContainer extends Observable {
 	}
 	
 	public void setSTB(STB stb){
-		if(this.stb.equals(stb)) return;
+		if(this.stb != null && this.stb.equals(stb)) return;
 		
 		this.stb = stb;
 		super.setChanged();
