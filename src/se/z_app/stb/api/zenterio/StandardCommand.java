@@ -9,6 +9,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.graphics.Bitmap;
 import se.z_app.stb.Channel;
@@ -30,26 +32,20 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 	}
 
 	
-	public Channel getChannel() {
+	public Channel getCurrentChannel() {
+		Channel channel = new Channel();
 		
-		// Create a new HttpClient and Post Header
-	    HttpClient httpclient = new DefaultHttpClient();
-	    HttpPost httpget = new HttpPost("http://" + ip + "/mdio/currentchannel");
-
-	    try {
-	        
-	      
-	       // System.out.println("Sending Post: " + postText);
-	        HttpResponse response = httpclient.execute(httpget);
-	        InputStream in = response.getEntity().getContent();
-	        
-	    } catch (ClientProtocolException e) {
-	        // TODO Auto-generated catch block
-	    } catch (IOException e) {
-	        // TODO Auto-generated catch block
-	    }
+		String jsonString = new GetJSONResponse().get("http://" + ip + "/mdio/currentchannel");
+		try {
+			JSONObject json = new JSONObject(jsonString);
+			
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		return null;
+		return channel;
 	}
 
 	
@@ -81,4 +77,34 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 		return null;
 	}
 
+	private class GetJSONResponse{
+		public String get(String url){
+			// Create a new HttpClient and Post Header
+		    HttpClient httpclient = new DefaultHttpClient();
+		    HttpPost httpget = new HttpPost(url);
+		    String json= "";
+		    try {
+		        
+		      
+		       // System.out.println("Sending Post: " + postText);
+		        HttpResponse response = httpclient.execute(httpget);
+		        InputStream in = response.getEntity().getContent();
+		        
+		        byte buffer[] = new byte[512];
+		        int len = 512;
+		        
+		        while(len != -1){
+		        	len = in.read(buffer);
+		        	json = json + new String(buffer, 0, len, "utf8");
+		        }
+		        
+		    } catch (ClientProtocolException e) {
+		        // TODO Auto-generated catch block
+		    } catch (IOException e) {
+		        // TODO Auto-generated catch block
+		    }
+		    
+		    return json;
+		}
+	}
 }
