@@ -35,6 +35,7 @@ public class RemoteControl implements Observer {
 		STB stb = STBContainer.instance().getSTB();
 		switch(stb.getType()){
 		case DEFAULT:
+			remoteImpl = null;
 			break;
 		case ZENTERIO:
 			remoteImpl = new RCCommand(stb.getIP());

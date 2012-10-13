@@ -1,18 +1,13 @@
 package se.z_app.stb;
 
-import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /*
  * 
  */
-public class STB implements Serializable {
+public class STB {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	private STBEnum type;
 	private String MAC;
 	private String IP;
