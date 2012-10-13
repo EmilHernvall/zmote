@@ -9,7 +9,7 @@ import se.z_app.stb.WebTVService;
 
 public interface BiDirectionalCmdInterface {
 	public EPG getEPG();
-	public Channel getChannel();
+	public Channel getCurrentChannel();
 	public Bitmap getChannelIcon(Channel channel);
 	
 	public WebTVService[] getWebTVServices();
