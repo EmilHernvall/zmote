@@ -44,7 +44,7 @@ public class EPGData implements Observer{
 	
 	public Channel getCurrentChannel(){
 				
-		return com.getChannel();
+		return null;
 	}
 	public Bitmap getChannelIcon(Channel channel){
 		return com.getChannelIcon(channel);
