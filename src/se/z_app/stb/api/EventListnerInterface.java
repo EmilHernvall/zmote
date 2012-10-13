@@ -6,5 +6,5 @@ public interface EventListnerInterface {
 	public void init(STB stb);
 	public String getCurrentEvent();
 	public String getNextEvent();
-	
+	public void stop();
 }
