@@ -7,8 +7,8 @@
     <string name="title_activity_splash">Zmote</string>
 
     <color name="black">#000000</color>
-
     <string name="title_activity_select_stb">SelectSTBActivity</string>
+    <string name="search_stb_text">SEARCH FOR NEW STB</string>
     <string name="title_activity_main_activity_view">MainActivityView</string>
     <string name="title_activity_edit_stb">EditSTBActivity</string>
     
@@ -24,5 +24,6 @@
     <string name="activity_edit_stb_saveButton">Save</string>
     <string name="activity_edit_stb_cancelButton">Cancel</string>
     <string name="activity_edit_stb_title">Edit STB</string>
+
 
 </resources>
