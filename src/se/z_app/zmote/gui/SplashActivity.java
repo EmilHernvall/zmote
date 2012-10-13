@@ -49,11 +49,8 @@ public class SplashActivity extends Activity {
                 // Create an Intent that will start the main activity.
                 Intent mainIntent = new Intent(SplashActivity.this, MainActivity.class);
                 SplashActivity.this.startActivity(mainIntent);
+                
             }
         }, SPLASH_DISPLAY_LENGTH);
     }
-    
-
-    
-    
 }

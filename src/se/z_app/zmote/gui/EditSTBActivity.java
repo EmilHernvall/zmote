@@ -4,6 +4,7 @@ import se.z_app.stb.STB;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -12,11 +13,13 @@ import android.widget.TextView;
 
 public class EditSTBActivity extends Activity {
 
-	STB stb = new STB();
+	STB stb;
+	int theIndex;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		stb = (STB) getIntent().getSerializableExtra("STB");
+		theIndex = (Integer) getIntent().getSerializableExtra("index");
+		stb = STBListSingleton.instance().getList().get(theIndex);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_stb);
 		TextView tv;
@@ -43,18 +46,14 @@ public class EditSTBActivity extends Activity {
 				EditText e = (EditText) findViewById(R.id.activity_edit_stb_editNameid);
 				String n = e.getText().toString();
 				stb.setBoxName(n);
-				Intent saveIntent = new Intent(v.getContext(), SelectSTBActivity.class);
-				saveIntent.putExtra("MyClass", stb);
-				startActivityForResult(saveIntent, 0);
+				EditSTBActivity.this.finish();
 			}
 		});
 
 		Button cancelButton = (Button) findViewById(R.id.activity_edit_stb_cancel_button);
 		cancelButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Intent cancelIntent = new Intent(v.getContext(), SelectSTBActivity.class);
-				cancelIntent.putExtra("STB", stb); 
-				startActivityForResult(cancelIntent, 0);
+				EditSTBActivity.this.finish();
 			}
 		});
 		

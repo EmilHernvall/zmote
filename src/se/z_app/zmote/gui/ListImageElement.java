@@ -11,6 +11,7 @@ import android.widget.TextView;
 public class ListImageElement extends ImageView {
 	private STB theSTB;
 	private TextView theTextView;
+	private int theIndex;
 	
 	/* Default constructors */
 	public ListImageElement(Context context) { super(context);}	
@@ -27,6 +28,14 @@ public class ListImageElement extends ImageView {
 	
 	public void setSTB(STB theSTBIn) {
 		theSTB = theSTBIn;
+	}
+	
+	public void setIndex(int theIndexIn) {
+		theIndex = theIndexIn;
+	}
+	
+	public int getIndex() {
+		return theIndex;
 	}
 	
 	public STB getSTB() {
