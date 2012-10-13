@@ -57,6 +57,7 @@ public class STBAdapter extends BaseAdapter {
         thumb_image.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
             	ListImageElement theView = (ListImageElement)view;
+            	System.out.println("EDIT");
             }
         });
         
