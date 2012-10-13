@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:text="Box"
         android:textColor="#040404"
-        android:typeface="sans"
         android:textSize="15dip"
         android:textStyle="bold"/>
  	<se.z_app.zmote.gui.ListImageElement
