@@ -14,10 +14,15 @@ public class EPGContentHandler implements Runnable {
 	}
 	private Thread thread;
 	private boolean isRunning;
+	
+	
 	private EPG currentEPG;
+	private long lastEPGTimeWindow;
 	private long lastEPGUpdate;
 	private Channel currentChannel; 
+	private long lastChannelTimeWindow;
 	private long lastChannelUpdate;
+	
 	
 	public void reset(){
 		isRunning = false;
@@ -46,7 +51,7 @@ public class EPGContentHandler implements Runnable {
 	@Override
 	public void run() {
 		while(isRunning){
-						
+			
 		}
 	}
 

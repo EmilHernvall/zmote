@@ -1,8 +1,10 @@
 package se.z_app.stb;
 
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Iterator;
-import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.ConcurrentSkipListMap;
+
 
 import android.graphics.Bitmap;
 
@@ -15,7 +17,8 @@ public class Channel implements Iterable<Program>, Comparable<Channel>, Comparat
 	private int onid;
 	private int tsid;
 	private int sid;
-	private ConcurrentSkipListSet<Program> programs;
+	private ConcurrentSkipListMap<Date, Program> programsByDate = new ConcurrentSkipListMap<Date, Program>();
+	
 	
 	public String getName() {
 		return name;
@@ -67,13 +70,15 @@ public class Channel implements Iterable<Program>, Comparable<Channel>, Comparat
 	}
 	
 	public void addProgram(Program program){
-		programs.add(program);
+		programsByDate.putIfAbsent(program.getStart(), program);
 	}
+
 	
 	@Override
 	public Iterator<Program> iterator() {
-		return programs.iterator();
+		return programsByDate.values().iterator();
 	}
+
 	@Override
 	public int compareTo(Channel another) {
 		return new Integer(getNr()).compareTo(new Integer(another.getNr()));
