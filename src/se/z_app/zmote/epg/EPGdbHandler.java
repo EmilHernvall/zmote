@@ -36,4 +36,4 @@ public class EPGdbHandler {
 	}
 	
 
-}
+}//testar pullandet/pushandet
