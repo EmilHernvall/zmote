@@ -14,35 +14,29 @@ import android.widget.ListView;
  *
  */
 public class STBListView extends ListView{
-	Vector<STB> theList;
-	ArrayAdapter<STB> theAdapter;
+	Vector<STB> theList = STBListSingleton.instance().getList();
+	STBAdapter theAdapter;
 	
-	public STBListView(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
-		// TODO Auto-generated constructor stub
-	}
+	/* Default constructors */
+	public STBListView(Context context, AttributeSet attrs, int defStyle) { super(context, attrs, defStyle);}
+	public STBListView(Context context, AttributeSet attrs) {super(context, attrs);}
+	public STBListView(Context context) {super(context);}
 	
-	public STBListView(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		// TODO Auto-generated constructor stub
-	}
-	
-	public STBListView(Context context) {
-		super(context);
-		// TODO Auto-generated constructor stub
-	}
+    public void notifyAdapter() {
+    	if(theAdapter != null)
+    		theAdapter.notifyDataSetChanged();
+    }
 	
 	public void setList(Activity theActivity, STB[] listIn)
 	{
-		theList = new Vector<STB>();
+		theList.clear();
 		for(int i = 0; i < listIn.length; i ++)
 		{
 			theList.add(listIn[i]);
 		}
-		//ArrayAdapter<STB> adapter = new ArrayAdapter<STB>(theActivity,
-		//		R.layout.list_row, theList);
-		STBAdapter adapter = new STBAdapter(theActivity, theList);
-		this.setAdapter(adapter); 
+		
+		theAdapter = new STBAdapter(theActivity, theList);
+		this.setAdapter(theAdapter); 
 	}
 
 }

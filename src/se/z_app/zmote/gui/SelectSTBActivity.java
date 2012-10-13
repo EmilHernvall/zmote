@@ -67,6 +67,12 @@ public class SelectSTBActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
     
+    @Override
+    public void onResume() {
+    	if(theView != null)
+    		theView.notifyAdapter();
+    	super.onResume();
+    }
 	/**
 	 * Calls the Discovery.find() function for searching after STB's in an asynchronous task. Returns an array of STD's
 	 * TODO: Add a message when no STB's are found.

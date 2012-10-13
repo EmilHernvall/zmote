@@ -39,7 +39,7 @@ public class STBState implements Observer{
 	}
 	
 	public State getState() {
-		return null;
+		return  null;
 		
 	}
 
