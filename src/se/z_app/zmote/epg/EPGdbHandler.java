@@ -1,11 +1,36 @@
 package se.z_app.zmote.epg;
 
+import java.net.InetAddress;
 import se.z_app.stb.Channel;
 import se.z_app.stb.EPG;
 import se.z_app.stb.STB;
 import se.z_app.stb.Program;
 
+import android.database.sqlite.*;
+
+
+/**
+ * First draft of the class, needs a lot of testing. Most of the content in the constructor should be removed, the database will have
+ * been created earlier and are already available in the app.
+ * @author Christian
+ *
+ */
 public class EPGdbHandler {
+	SQLiteDatabase database;
+
+	//The create of the database should no be here, the database should already have been created
+	public EPGdbHandler(){
+		database= SQLiteDatabase.create(null);
+		String query = "CREATE TABLE channel(name String, iconUrl String, nr INTEGER, onid INTEGER, tsdi INTEGER, sid INTEGER);"; //The create string for channel
+		database.execSQL(query); 
+		query = "CREATE TABLE programs(name String, eventID INTEGER, start DATE, duration INTEGER, shortText STRING, longText STring);";
+		database.execSQL(query);
+		query = "CREATE TABLE stb(type String, MAC String, IP String, boxName String);";
+		database.execSQL(query);
+		//Create db if not exist??
+
+
+	}
 
 	public EPG selectEPG(STB stb){
 		//TODO: Implement me
@@ -19,21 +44,31 @@ public class EPGdbHandler {
 		return null;
 	}
 	public void updateChannel(STB stb, Channel channel){
-		//TODO: Implement
+		//only do the beneath if the channel is not existing?
+		String query = "INSERT INTO channel(name, iconUrl, nr, onid, tsid, sid) VALUES ("+channel.getName()+", "+ channel.getIconUrl()+", "+channel.getNr()+", "+channel.getOnid()+", "+channel.getTsid()+", "+channel.getSid()+");";   //only if the channel is not in the database
+		database.execSQL(query);
+
+
 	}
 	public void updateChannels(STB stb, Channel[] channels){
-		//TODO:Implement
+		for (int i = 1; i<=channels.length;i++) { //not tested and I'm tired, starts from 1 or 0??
+			String query = "INSERT INTO channel (name, iconUrl, nr, onid, tsid, sid) VALUES ("+channels[i].getName()+", "+ channels[i].getIconUrl()+", "+channels[i].getNr()+", "+channels[i].getOnid()+", "+channels[i].getTsid()+", "+channels[i].getSid()+");";   //only if the channel is not in the database
+			database.execSQL(query);
+		}
 	}
 	public Program[] selectPrograms(STB stc, Channel channel){
-		//TODO: Implement
+		//String query ="SELECT * FROM programs"
 		return null;
 	}
 	public void updateProgram(STB stb, Channel channel, Program program){
-		//TODO: Implement
+		String query = "INSERT INTO channel (name, eventID, start, duration, shortText, longText) VALUES ("+program.getName()+", "+ program.getEventID()+", "+program.getStart()+", "+program.getDuration()+", "+program.getShortText()+", "+program.getLongText()+");";   //only if the channel is not in the database
+		database.execSQL(query);
 	}
 	public void updatePrograms(STB stb, Channel channel, Program[] programs){
-		//TODO: Implement
+		for (int i = 1; i<=programs.length;i++) { //not tested and I'm tired, starts from 1 or 0??
+			String query = "INSERT INTO channel (name, eventID, start, duration, shortText, longText) VALUES ("+programs[i].getName()+", "+ programs[i].getEventID()+", "+programs[i].getStart()+", "+programs[i].getDuration()+", "+programs[i].getShortText()+", "+programs[i].getLongText()+");";   //only if the channel is not in the database
+			database.execSQL(query);
+		}
 	}
-	
 
-}//testar pullandet/pushandet
+}

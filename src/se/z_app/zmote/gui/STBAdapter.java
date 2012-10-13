@@ -1,12 +1,15 @@
 package se.z_app.zmote.gui;
 
+import java.io.Serializable;
 import java.util.Vector;
 
 import se.z_app.stb.STB;
 import se.z_app.stb.api.zenterio.Discovery;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +19,10 @@ import android.widget.TextView;
  
 public class STBAdapter extends BaseAdapter {
  
-    private Activity activity;
+	private Activity activity;
     private Vector<STB> data;
     private static LayoutInflater inflater=null; 
+    private STBAdapter theAdapter = this;
  
     public STBAdapter(Activity a, Vector<STB> d) {
         activity = a;
@@ -37,7 +41,7 @@ public class STBAdapter extends BaseAdapter {
     public long getItemId(int position) {
         return position;
     }
- 
+    
     public View getView(int position, View convertView, ViewGroup parent) {
         View vi=convertView;
         if(convertView==null)
@@ -49,14 +53,28 @@ public class STBAdapter extends BaseAdapter {
         stb = data.get(position);
         boxName.setText(stb.getBoxName());
         
+        boxName.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				theAdapter.notifyDataSetChanged();
+				((TextView)v).setText("NEW!");
+			}
+		});
+        
         ListImageElement thumb_image=(ListImageElement)vi.findViewById(R.id.editimage); // thumb image
         thumb_image.setSTB(stb);
         thumb_image.setTextView(boxName);
+        thumb_image.setIndex(position);
         
         /* Listener for when the edit button is clicked */
         thumb_image.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
             	ListImageElement theView = (ListImageElement)view;
+            	Intent mainIntent = new Intent(view.getContext(), EditSTBActivity.class);
+            	mainIntent.putExtra("index", theView.getIndex());
+                view.getContext().startActivity(mainIntent);
+                theAdapter.notifyDataSetChanged();
             }
         });
         
