@@ -9,5 +9,6 @@
     <color name="black">#000000</color>
 
     <string name="title_activity_select_stb">SelectSTBActivity</string>
+    <string name="search_stb_text">SEARCH FOR NEW STB</string>
 
 </resources>
