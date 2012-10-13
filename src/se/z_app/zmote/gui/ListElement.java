@@ -10,12 +10,20 @@ import android.widget.TextView;
 
 public class ListElement extends ImageView {
 	private STB theSTB;
+	private TextView theTextView;
 	
 	/* Default constructors */
 	public ListElement(Context context) { super(context);}	
 	public ListElement(Context context, AttributeSet attr) { super(context, attr);}
 	public ListElement(Context context, AttributeSet attr, int n) { super(context, attr, n);}
 	
+	public void setTextView(TextView textViewIn) {
+		theTextView = textViewIn;
+	}
+	
+	public TextView getTextView() {
+		return theTextView;
+	}
 	
 	public void setSTB(STB theSTBIn) {
 		theSTB = theSTBIn;
