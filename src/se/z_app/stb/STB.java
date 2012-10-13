@@ -1,12 +1,17 @@
 package se.z_app.stb;
 
+import java.net.InetAddress;
+
 import se.z_app.stb.api.RemoteControl;
 
+/*
+ * 
+ */
 public class STB {
 
 	private STBEnum type;
 	private String MAC;
-	private String IP;
+	private InetAddress IP;
 	private String boxName;
 
 	public STBEnum getType() {
@@ -32,10 +37,13 @@ public class STB {
 	}
 
 	public String getIP() {
-		return IP;
+		return IP.getHostAddress().toString();
 	}
 
-	public void setIP(String iP) {
+	/*
+	 * The IP can be set by iP.getByName("ip-address as string")
+	 */
+	public void setIP(InetAddress iP) {
 		IP = iP;
 	}
 
