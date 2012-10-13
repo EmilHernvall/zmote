@@ -58,6 +58,10 @@ public class STB {
 	private void updateSTB() {
 		// TODO implementation
 	}
+	
+	public String toString() {
+		 return boxName;
+	}
 }
 
 
