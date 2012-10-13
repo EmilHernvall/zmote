@@ -24,4 +24,8 @@ public class RemoteControl implements Observer {
 		// TODO Auto-generated method stub
 		
 	}
+	public static void sendButton(Button volplus) {
+		// TODO Auto-generated method stub
+		
+	}
 }
