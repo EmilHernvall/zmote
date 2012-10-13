@@ -61,6 +61,10 @@ public class STB implements Serializable {
 	private void updateSTB() {
 		// TODO implementation
 	}
+	
+	public String toString() {
+		 return boxName;
+	}
 }
 
 

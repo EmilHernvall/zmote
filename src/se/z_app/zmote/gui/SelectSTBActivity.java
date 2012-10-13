@@ -10,6 +10,7 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,33 +20,32 @@ import android.support.v4.app.NavUtils;
 
 
 /* 
- * Whoop.
+ * The STB selection view
  */
 public class SelectSTBActivity extends Activity {
-//    private Discovery disc;
+    private STBListView theView;
     private String ipaddress;
     public STB[] stbs;
     private ASyncSTBFinder async;
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_stb);
         Button scan = (Button) findViewById(R.id.button_scanforstb);
+        theView = (STBListView)findViewById(R.id.list_over_stb);
         scan.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-            	async = new ASyncSTBFinder();
-            	async.execute();
+            		async = new ASyncSTBFinder();
+            		async.execute();
             }
         });
-        Button show = (Button) findViewById(R.id.button_showstb);
-        show.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-            	for (int i= 0;i<stbs.length;i++) {
-            		System.out.println(stbs[i].getBoxName());
-            	}
-            	
-            }
-        });
+        
+    }
+    
+    /* Updates the list with an STB array */
+    public void updateList(STB[] theList) {
+		theView.setList(this, theList);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -77,6 +77,7 @@ public class SelectSTBActivity extends Activity {
 	    	
 	}
 	
+	
     private class ASyncSTBFinder extends AsyncTask<Integer,Integer,STB[]> {
     	private Discovery disc;
 		@Override
@@ -91,7 +92,10 @@ public class SelectSTBActivity extends Activity {
 		protected void onPostExecute(STB[] stb) {
 			try {
 				stbs = stb;
+				updateList(stbs);
 			} catch (Exception e) { e.printStackTrace(); }
+			
+			
 			System.out.println("Scan finished.");
 		}
     	

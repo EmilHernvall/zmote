@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="#FF282828"
+    android:orientation="horizontal"
+    android:padding="5dip" >
+ 
+    
+    <TextView
+        android:id="@+id/boxname"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Box"
+        android:textColor="#040404"
+        android:textSize="15dip"
+        android:textStyle="bold"/>
+ 	<se.z_app.zmote.gui.ListImageElement
+ 	    android:id="@+id/editimage" 
+ 	    android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/edit"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"/>
+ 
+</RelativeLayout>
