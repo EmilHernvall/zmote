@@ -47,7 +47,7 @@ public class SplashActivity extends Activity {
                 //Finish the splash activity so it can't be returned to.
                 SplashActivity.this.finish();
                 // Create an Intent that will start the main activity.
-                Intent mainIntent = new Intent(SplashActivity.this, MainActivity.class);
+                Intent mainIntent = new Intent(SplashActivity.this, SelectSTBActivity.class);
                 SplashActivity.this.startActivity(mainIntent);
                 
             }
