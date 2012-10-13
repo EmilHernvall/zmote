@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Vector;
 
 import se.z_app.stb.STB;
+import se.z_app.stb.api.RCProxy;
+import se.z_app.stb.api.RemoteControl;
 import se.z_app.stb.api.STBContainer;
 import se.z_app.stb.api.zenterio.Discovery;
 import android.app.Activity;
