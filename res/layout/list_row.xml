@@ -11,13 +11,12 @@
         android:id="@+id/boxname"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:focusable="false"
         android:text="Box"
         android:textColor="#040404"
         android:typeface="sans"
         android:textSize="15dip"
         android:textStyle="bold"/>
- 	<se.z_app.zmote.gui.ListElement
+ 	<se.z_app.zmote.gui.ListImageElement
  	    android:id="@+id/editimage" 
  	    android:layout_width="wrap_content"
         android:layout_height="wrap_content"

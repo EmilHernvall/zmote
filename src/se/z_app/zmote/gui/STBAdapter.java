@@ -49,15 +49,21 @@ public class STBAdapter extends BaseAdapter {
         stb = data.get(position);
         boxName.setText(stb.getBoxName());
         
-        ListElement thumb_image=(ListElement)vi.findViewById(R.id.editimage); // thumb image
+        ListImageElement thumb_image=(ListImageElement)vi.findViewById(R.id.editimage); // thumb image
         thumb_image.setSTB(stb);
+        thumb_image.setTextView(boxName);
         
         /* Listener for when the edit button is clicked */
         thumb_image.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-            	ListElement theView = (ListElement)view;
-            	theView.getSTB().setBoxName("hej");
-            	notifyDataSetChanged();
+            	ListImageElement theView = (ListImageElement)view;
+            	//theView.getSTB().setBoxName("hej");
+            	theView.getTextView().setCursorVisible(true);
+            	theView.getTextView().setFocusable(true);
+            	theView.getTextView().setFocusableInTouchMode(true);
+            	theView.getTextView().requestFocus();
+            	theView.getTextView().setText("Hej");
+            	//notifyDataSetChanged();
             }
         });
         
