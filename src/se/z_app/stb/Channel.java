@@ -1,11 +1,12 @@
 package se.z_app.stb;
 
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 import android.graphics.Bitmap;
 
-public class Channel implements Iterable<Program> {
+public class Channel implements Iterable<Program>, Comparable<Channel>, Comparator<Channel>{
 	private String name;
 	private Bitmap icon;
 	private String iconUrl;
@@ -72,6 +73,14 @@ public class Channel implements Iterable<Program> {
 	@Override
 	public Iterator<Program> iterator() {
 		return programs.iterator();
+	}
+	@Override
+	public int compareTo(Channel another) {
+		return new Integer(getNr()).compareTo(new Integer(another.getNr()));
+	}
+	@Override
+	public int compare(Channel lhs, Channel rhs) {
+		return lhs.compareTo(rhs);
 	}
 	
 
