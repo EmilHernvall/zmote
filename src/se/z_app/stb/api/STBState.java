@@ -3,8 +3,10 @@ package se.z_app.stb.api;
 import java.util.Observable;
 import java.util.Observer;
 
-/*
- * The enum for different states 
+/**
+ * 
+ * Enum for different states.
+ *
  */
 public class STBState implements Observer{
 	public enum State{
@@ -30,7 +32,9 @@ public class STBState implements Observer{
 		if(observable.getClass() == STBContainer.class){
 			
 		}else if(observable.getClass() == STBListener.class){
-			
+			if(data.getClass()==String.class){
+				
+			}
 		}
 	}
 	
