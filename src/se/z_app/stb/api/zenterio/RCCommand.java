@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -50,7 +51,7 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 
 	
 	public void launch(String url) {
-
+		new Thread(new RCCommandRunnable(Method.LAUNCH, iPAdress, url)).start();
 		
 	}
 
@@ -174,6 +175,28 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 			case FACEBOOKAUTH:
 				break;
 			case LAUNCH:
+				httpclient = new DefaultHttpClient();
+			    httppost = new HttpPost("http://" + address + "/cgi-bin/writepipe_key");
+			    
+			    try {
+
+					httppost.setEntity(new StringEntity(arg1));
+			        httpclient.execute(httppost);	
+			        httppost.getEntity();
+
+			        
+			        
+			    } catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ClientProtocolException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			    
 				break;
 			case PLAYWEBTV:
 				break;
