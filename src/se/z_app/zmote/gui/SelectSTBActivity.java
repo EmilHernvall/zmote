@@ -20,13 +20,14 @@ import android.support.v4.app.NavUtils;
 
 
 /* 
- * Whoop.
+ * The STB selection view
  */
 public class SelectSTBActivity extends Activity {
     private STBListView theView;
     private String ipaddress;
     public STB[] stbs;
     private ASyncSTBFinder async;
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +43,7 @@ public class SelectSTBActivity extends Activity {
         
     }
     
+    /* Updates the list with an STB array */
     public void updateList(STB[] theList) {
 		theView.setList(this, theList);
     }
@@ -74,6 +76,7 @@ public class SelectSTBActivity extends Activity {
 	    	return str.substring(0, str.lastIndexOf('.')+1);
 	    	
 	}
+	
 	
     private class ASyncSTBFinder extends AsyncTask<Integer,Integer,STB[]> {
     	private Discovery disc;
