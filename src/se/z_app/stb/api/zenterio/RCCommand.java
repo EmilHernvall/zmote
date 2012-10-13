@@ -8,9 +8,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-
-import android.R.bool;
-
 import se.z_app.stb.WebTVItem;
 import se.z_app.stb.api.MonoDirectionalCmdInterface;
 import se.z_app.stb.api.RemoteControl.Button;
@@ -48,41 +45,59 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 		
 	}
 
-	
+	/**
+	 * Launches the note corresponding to the url. Whatever that is.
+	 */
 	public void launch(String url) {
-
+		new Thread(new RCCommandRunnable(Method.LAUNCH, iPAdress, url)).start();
 		
 	}
 
-	
+	/**
+	 * Plays the webtvitem.
+	 */
 	public void playWebTV(WebTVItem item) {
-		// TODO Auto-generated method stub
+		new Thread(new RCCommandRunnable(Method.PLAYWEBTV, iPAdress, item)).start();
 		
 	}
 
-
+	/**
+	 * Queues the webtv item.
+	 */
 	public void queueWebTV(WebTVItem item) {
-		// TODO Auto-generated method stub
+		new Thread(new RCCommandRunnable(Method.QUEUEWEBTV, iPAdress, item)).start();
 		
 	}
-
+	/**
+	 * Sends the facebook authorisation.
+	 */
 	public void facebookAuth(String accesstoken, String expires, String uid) {
 		// TODO Auto-generated method stub
 		
 	}
 
-
+	/**
+	 * Sends a rawpost.
+	 */
 	public void rawPost(String rawPostData, String uri) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	
+	/**
+	 * Sends a raw get.
+	 */
 	public void rawGet(String uri) {
 		// TODO Auto-generated method stub
 		
 	}
 	
+	
+	/**
+	 * Private function translating 
+	 * @param button
+	 * @return
+	 */
 	private String buttonToString(Button button){
 		String returnString = button.toString();
 		if(!returnString.startsWith("P"))
