@@ -1,8 +1,8 @@
 package se.z_app.stb.api.zenterio;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
+
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -14,7 +14,8 @@ public class EventListener implements EventListnerInterface {
 	private String iPaddress;
 	private String currentEvent;
 	private Socket socket;
-	private BufferedReader in;
+	private InputStream in;
+	private byte[] buffer;
 	
 	/**
 	 * Initializes the event listener.
@@ -23,7 +24,8 @@ public class EventListener implements EventListnerInterface {
 		iPaddress = stb.getIP();
 		try {
 			socket = new Socket(iPaddress, 9999);
-			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			in = socket.getInputStream();
+			buffer = new byte[512];
 		} catch (UnknownHostException e) { 
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -47,7 +49,9 @@ public class EventListener implements EventListnerInterface {
 	public String getNextEvent() {
 		if(socket.isConnected()){
 			try {
-				currentEvent = in.readLine();
+				int len = in.read(buffer);
+				currentEvent = new String(buffer, 0, len);
+				
 			} catch (IOException e) {
 				return "EOF";
 			}
@@ -61,6 +65,7 @@ public class EventListener implements EventListnerInterface {
 	 */
 	public void stop(){
 		try {
+			in.close();
 			socket.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
