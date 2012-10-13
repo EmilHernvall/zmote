@@ -1,5 +1,6 @@
 package se.z_app.zmote.gui;
 
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.app.Activity;
@@ -51,6 +52,8 @@ public class SplashActivity extends Activity {
             }
         }, SPLASH_DISPLAY_LENGTH);
     }
+    
+
     
     
 }

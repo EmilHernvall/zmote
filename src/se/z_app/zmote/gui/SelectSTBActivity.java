@@ -1,10 +1,13 @@
 package se.z_app.zmote.gui;
 
+import java.util.concurrent.ExecutionException;
+
 import se.z_app.stb.STB;
 import se.z_app.stb.api.zenterio.Discovery;
 
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
@@ -19,10 +22,10 @@ import android.support.v4.app.NavUtils;
  * Whoop.
  */
 public class SelectSTBActivity extends Activity {
-    private Discovery disc;
+//    private Discovery disc;
     private String ipaddress;
     public STB[] stbs;
-    
+    private ASyncSTBFinder async;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,23 +33,19 @@ public class SelectSTBActivity extends Activity {
         Button scan = (Button) findViewById(R.id.button_scanforstb);
         scan.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-            	ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressbar_scan);
-            	System.out.println(progressBar);
-            	ipaddress = findSubnet();
-            	disc = new Discovery(ipaddress, stbs, view, progressBar);
-            	disc.execute();
+            	async = new ASyncSTBFinder();
+            	async.execute();
             }
         });
         Button show = (Button) findViewById(R.id.button_showstb);
         show.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-            	System.out.println(disc.getStatus());
+            	for (int i= 0;i<stbs.length;i++) {
+            		System.out.println(stbs[i].getBoxName());
+            	}
+            	
             }
         });
-    }
-    
-    public void runOPE() {
-    	System.out.println("Hej");
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -77,5 +76,24 @@ public class SelectSTBActivity extends Activity {
 	    	return str.substring(0, str.lastIndexOf('.')+1);
 	    	
 	}
-//		return "130.236.248.";
+	
+    private class ASyncSTBFinder extends AsyncTask<Integer,Integer,STB[]> {
+    	private Discovery disc;
+		@Override
+		protected STB[] doInBackground(Integer... params) {
+			ipaddress = findSubnet();
+        	disc = new Discovery(ipaddress, stbs);
+			return disc.find();
+		}
+		protected void onPreExecute() {
+			System.out.println("Scan started.");
+		}
+		protected void onPostExecute(STB[] stb) {
+			try {
+				stbs = stb;
+			} catch (Exception e) { e.printStackTrace(); }
+			System.out.println("Scan finished.");
+		}
+    	
+    }
 }
