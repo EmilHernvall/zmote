@@ -39,7 +39,6 @@ public class STBListView extends ListView{
 		//		R.layout.list_row, theList);
 		STBAdapter adapter = new STBAdapter(theActivity, theList);
 		this.setAdapter(adapter); 
-		
 	}
 
 }

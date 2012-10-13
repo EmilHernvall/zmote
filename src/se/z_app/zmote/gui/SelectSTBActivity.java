@@ -1,8 +1,13 @@
 package se.z_app.zmote.gui;
 
+import java.util.concurrent.ExecutionException;
+
 import se.z_app.stb.STB;
 import se.z_app.stb.api.zenterio.Discovery;
 
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
@@ -10,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.support.v4.app.NavUtils;
 
 
@@ -17,9 +23,10 @@ import android.support.v4.app.NavUtils;
  * Whoop.
  */
 public class SelectSTBActivity extends Activity {
-    private Discovery disc;
     private STBListView theView;
-    
+    private String ipaddress;
+    public STB[] stbs;
+    private ASyncSTBFinder async;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,24 +35,16 @@ public class SelectSTBActivity extends Activity {
         theView = (STBListView)findViewById(R.id.list_over_stb);
         scan.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-            		disc = new Discovery();
-            		disc.execute();
-            		Log.e("Output", ""+disc.find().length);
-            		STB[] List = new STB[2];
-            		List[0] = new STB();
-            		List[0].setBoxName("box1");
-            		List[1] = new STB();
-            		List[1].setBoxName("box2");
-            		updateList(List);
-//            	}
+            		async = new ASyncSTBFinder();
+            		async.execute();
             }
         });
+        
     }
     
     public void updateList(STB[] theList) {
 		theView.setList(this, theList);
     }
-    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_select_stb, menu);
@@ -60,5 +59,43 @@ public class SelectSTBActivity extends Activity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    
+	/*
+	 * Finds the subnet of the devices network and returns a string in the form 192.168.0.
+	 * TODO: Should be in STBDiscovery.java but I dunno how.
+	 */
+	public String findSubnet() {
+			WifiManager myWifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
+	    	WifiInfo myWifiInfo = myWifiManager.getConnectionInfo();
+	    	int ipAddress = myWifiInfo.getIpAddress();
+	    	System.out.println(ipAddress);
+	    	String str = android.text.format.Formatter.formatIpAddress(ipAddress);
+	    	return str.substring(0, str.lastIndexOf('.')+1);
+	    	
+	}
+	
+    private class ASyncSTBFinder extends AsyncTask<Integer,Integer,STB[]> {
+    	private Discovery disc;
+		@Override
+		protected STB[] doInBackground(Integer... params) {
+			ipaddress = findSubnet();
+        	disc = new Discovery(ipaddress, stbs);
+			return disc.find();
+		}
+		protected void onPreExecute() {
+			System.out.println("Scan started.");
+		}
+		protected void onPostExecute(STB[] stb) {
+			try {
+				Log.e("Output", ""+stb.length);
+				stbs = stb;
+				updateList(stbs);
+			} catch (Exception e) { e.printStackTrace(); }
+			
+			
+			System.out.println("Scan finished.");
+		}
+    	
     }
 }
