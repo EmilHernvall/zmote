@@ -1,14 +1,17 @@
 package se.z_app.stb;
 
+import java.io.Serializable;
 import java.net.InetAddress;
-
-import se.z_app.stb.api.RemoteControl;
 
 /*
  * 
  */
-public class STB {
+public class STB implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private STBEnum type;
 	private String MAC;
 	private InetAddress IP;
