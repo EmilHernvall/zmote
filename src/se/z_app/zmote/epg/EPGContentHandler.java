@@ -1,7 +1,8 @@
 package se.z_app.zmote.epg;
 
-import android.net.wifi.p2p.WifiP2pManager.Channel;
+import se.z_app.stb.Channel;
 import se.z_app.stb.EPG;
+import se.z_app.stb.api.EPGData;
 
 public class EPGContentHandler implements Runnable {
 	private static EPGContentHandler instance;
@@ -13,6 +14,14 @@ public class EPGContentHandler implements Runnable {
 	}
 	private Thread thread;
 	private boolean isRunning;
+	
+	
+	private EPG currentEPG;
+	private long lastEPGTimeWindow;
+	private long lastEPGUpdate;
+	private Channel currentChannel; 
+	private long lastChannelTimeWindow;
+	private long lastChannelUpdate;
 	
 	
 	public void reset(){
@@ -27,16 +36,23 @@ public class EPGContentHandler implements Runnable {
 	}
 	
 	public EPG getEPG(){
-		return null;
+		if(currentEPG == null){
+			currentEPG = EPGData.instance().getEPG();
+		}
+		return currentEPG;
 	}
 	public Channel getCurrentChannel(){
-		return null;
+		if(currentChannel == null){
+			currentChannel = EPGData.instance().getCurrentChannel();
+		}
+		return currentChannel;
 	}
 
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
-		
+		while(isRunning){
+			
+		}
 	}
 
 }
