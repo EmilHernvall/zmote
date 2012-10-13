@@ -7,11 +7,13 @@ import java.net.URL;
 import java.util.LinkedList;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import se.z_app.stb.STB;
 import se.z_app.stb.api.DiscoveryInterface;
 
 import se.z_app.stb.api.STBDiscovery; // Should this be imported?
+import se.z_app.zmote.gui.SelectSTBActivity;
 
 
 /*
@@ -20,8 +22,15 @@ import se.z_app.stb.api.STBDiscovery; // Should this be imported?
  * 
  */
 public class Discovery extends AsyncTask<Integer, Integer, STB[]> implements DiscoveryInterface {
-	private static int timeoutInMs = 30;
+	private static int timeoutInMs = 50;
 	STBDiscovery stbDisc = new STBDiscovery();
+	private String ipaddress;
+	public STB[] stbss;
+	
+	public Discovery (String ipaddress, STB[] stbs) {
+		this.ipaddress = ipaddress;
+		this.stbss = stbs;
+	}
 	
 	@Override
 	protected STB[] doInBackground(Integer... params) {
@@ -30,13 +39,17 @@ public class Discovery extends AsyncTask<Integer, Integer, STB[]> implements Dis
 	}
 	
 	protected void onPostExecute(STB[] stb) {
+		this.stbss = stb;
+		System.out.println(stbss[0].getBoxName());
 		System.out.println("Scan finished.");
+		
 	}
 	
 	/* 
 	 * The find function that's initialized in doInBackground
 	 */
 	public STB[] find() {
+		System.out.println("find()");
 		LinkedList<InetAddress> boxes = null;
 		boxes = findSTBIPAddresses();
 		STB[] stbs = new STB[boxes.size()];
@@ -53,6 +66,7 @@ public class Discovery extends AsyncTask<Integer, Integer, STB[]> implements Dis
 	 * Initiates STB object
 	 */
 	private STB createSTBObject(InetAddress addr) {
+		System.out.println("createSTBObject()");
 		STB stb = new STB();
 		stb.setIP(addr); //Sets IP
 		String str;
@@ -92,7 +106,7 @@ public class Discovery extends AsyncTask<Integer, Integer, STB[]> implements Dis
 		
 		for (int i = 1; i < 255; i++) { //Scans the subnet (for example 192.168.0) addresses .1 to .254
 			try {
-				addr = InetAddress.getByName("192.168.0."+Integer.toString(i));
+				addr = InetAddress.getByName(this.ipaddress+Integer.toString(i));
 				if(addr.isReachable(timeoutInMs)) {
 					url = new URL("http://"+addr.getHostAddress().toString()+"/cgi-bin/zids_discovery/");
 					try {
