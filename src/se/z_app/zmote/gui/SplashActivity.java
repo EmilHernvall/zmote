@@ -40,7 +40,7 @@ public class SplashActivity extends Activity {
         
         new Handler().postDelayed(new Runnable() {
         	
-            @Override
+            
             public void run() {
             	
                 //Finish the splash activity so it can't be returned to.

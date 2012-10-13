@@ -17,7 +17,6 @@ public class STBState implements Observer{
 		return instance;
 	}
 	
-	@Override
 	public void update(Observable observable, Object data) {
 		
 		if(observable.getClass() == STBContainer.class){
