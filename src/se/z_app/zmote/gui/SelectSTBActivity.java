@@ -10,6 +10,7 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,6 +28,9 @@ public class SelectSTBActivity extends Activity {
     private String ipaddress;
     public STB[] stbs;
     private ASyncSTBFinder async;
+    ProgressDialog dialog;
+    
+    
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,9 +42,12 @@ public class SelectSTBActivity extends Activity {
             public void onClick(View view) {
             		async = new ASyncSTBFinder();
             		async.execute();
+            		
             }
         });
-        
+        dialog = new ProgressDialog(this);
+        dialog.setCanceledOnTouchOutside(false);
+
     }
     
     /* Updates the list with an STB array */
@@ -80,14 +87,18 @@ public class SelectSTBActivity extends Activity {
 	
     private class ASyncSTBFinder extends AsyncTask<Integer,Integer,STB[]> {
     	private Discovery disc;
+    	
 		@Override
 		protected STB[] doInBackground(Integer... params) {
-			ipaddress = findSubnet();
-        	disc = new Discovery(ipaddress, stbs);
+			
+        	disc = new Discovery(ipaddress);
 			return disc.find();
 		}
 		protected void onPreExecute() {
 			System.out.println("Scan started.");
+			ipaddress = findSubnet();
+			dialog.setMessage("Scanning for new STB's in network");
+			dialog.show();
 		}
 		protected void onPostExecute(STB[] stb) {
 			try {
@@ -95,6 +106,7 @@ public class SelectSTBActivity extends Activity {
 				stbs = stb;
 				updateList(stbs);
 			} catch (Exception e) { e.printStackTrace(); }
+			dialog.dismiss();
 			
 			
 			System.out.println("Scan finished.");

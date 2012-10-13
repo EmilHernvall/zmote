@@ -24,15 +24,13 @@ import se.z_app.zmote.gui.SelectSTBActivity;
  * 
  */
 public class Discovery implements DiscoveryInterface {
-	private static int timeoutInMs = 50;
+	private static int timeoutInMs = 30;
 	private String ipaddress;
-	public STB[] stbss;
 	public static boolean isRunning, isLoadingBoxes = false;
 	
 	
-	public Discovery (String ipaddress, STB[] stbs) {
+	public Discovery (String ipaddress) {
 		this.ipaddress = ipaddress;
-		this.stbss = stbs;
 	}
 	/* 
 	 * The find function that's initialized in doInBackground
@@ -109,6 +107,7 @@ public class Discovery implements DiscoveryInterface {
 				break;
 			}	
 		}
+		
 		long t2 = System.nanoTime();
 		System.out.println("Time for scan: " +(t2-t1)/1000000+"ms");
 		while (isLoadingBoxes) {
