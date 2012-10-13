@@ -2,6 +2,7 @@ package se.z_app.stb.api;
 
 import java.util.concurrent.locks.ReentrantLock;
 
+
 /**
  * 
  * @author Leonard Jansson, Viktor von Zeipel
@@ -24,6 +25,7 @@ public class RCProxy {
 
 	private RCProxy() {
 		reentrantlock = new ReentrantLock(true);
+		setState(STBState.State.CHANNELVIEW);
 	}
 	
 	/**
