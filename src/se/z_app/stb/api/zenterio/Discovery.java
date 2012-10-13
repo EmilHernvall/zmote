@@ -6,13 +6,17 @@ import java.net.InetAddress;
 import java.net.URL;
 import java.util.LinkedList;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import se.z_app.stb.STB;
 import se.z_app.stb.api.DiscoveryInterface;
 
 import se.z_app.stb.api.STBDiscovery; // Should this be imported?
+import se.z_app.zmote.gui.R;
 import se.z_app.zmote.gui.SelectSTBActivity;
 
 
@@ -26,10 +30,14 @@ public class Discovery extends AsyncTask<Integer, Integer, STB[]> implements Dis
 	STBDiscovery stbDisc = new STBDiscovery();
 	private String ipaddress;
 	public STB[] stbss;
+	View view;
+	ProgressBar progressBar;
 	
-	public Discovery (String ipaddress, STB[] stbs) {
+	
+	public Discovery (String ipaddress, STB[] stbs, View view, ProgressBar progressBar) {
 		this.ipaddress = ipaddress;
 		this.stbss = stbs;
+		this.view =  view;
 	}
 	
 	@Override
@@ -39,12 +47,23 @@ public class Discovery extends AsyncTask<Integer, Integer, STB[]> implements Dis
 	}
 	
 	protected void onPostExecute(STB[] stb) {
-		this.stbss = stb;
-		System.out.println(stbss[0].getBoxName());
+//		stbs = stb;
+		runOPE();
 		System.out.println("Scan finished.");
 		
 	}
+	protected void onPreExecute() {
+
+	}
 	
+	protected void onProgressUpdate(Integer... progress) {
+		setProgressPercent(progress[0]);
+	}
+	
+	private void setProgressPercent(Integer progress) {
+//		System.out.println(progress+" ");
+		}
+
 	/* 
 	 * The find function that's initialized in doInBackground
 	 */
@@ -66,7 +85,7 @@ public class Discovery extends AsyncTask<Integer, Integer, STB[]> implements Dis
 	 * Initiates STB object
 	 */
 	private STB createSTBObject(InetAddress addr) {
-		System.out.println("createSTBObject()");
+//		System.out.println("createSTBObject()");
 		STB stb = new STB();
 		stb.setIP(addr); //Sets IP
 		String str;
@@ -105,6 +124,7 @@ public class Discovery extends AsyncTask<Integer, Integer, STB[]> implements Dis
 		BufferedReader row = null;
 		
 		for (int i = 1; i < 255; i++) { //Scans the subnet (for example 192.168.0) addresses .1 to .254
+			publishProgress(i); //Show progress
 			try {
 				addr = InetAddress.getByName(this.ipaddress+Integer.toString(i));
 				if(addr.isReachable(timeoutInMs)) {

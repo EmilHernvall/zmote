@@ -1,7 +1,5 @@
 package se.z_app.zmote.gui;
 
-import java.util.concurrent.ExecutionException;
-
 import se.z_app.stb.STB;
 import se.z_app.stb.api.zenterio.Discovery;
 
@@ -13,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.support.v4.app.NavUtils;
 
 
@@ -22,7 +21,7 @@ import android.support.v4.app.NavUtils;
 public class SelectSTBActivity extends Activity {
     private Discovery disc;
     private String ipaddress;
-    private STB[] stbs;
+    public STB[] stbs;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,34 +30,24 @@ public class SelectSTBActivity extends Activity {
         Button scan = (Button) findViewById(R.id.button_scanforstb);
         scan.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+            	ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressbar_scan);
+            	System.out.println(progressBar);
             	ipaddress = findSubnet();
-            	disc = new Discovery(ipaddress, stbs);
+            	disc = new Discovery(ipaddress, stbs, view, progressBar);
             	disc.execute();
-            	try {
-					stbs = disc.get();
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
             }
         });
         Button show = (Button) findViewById(R.id.button_showstb);
         show.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-//            	stbs = disc.stbss;
-            	System.out.println(stbs[0].getIP());
+            	System.out.println(disc.getStatus());
             }
         });
-        
-//        disc.
     }
-
-    /*
-     * lol(non-Javadoc)
-     * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
-     */
     
-    
+    public void runOPE() {
+    	System.out.println("Hej");
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_select_stb, menu);

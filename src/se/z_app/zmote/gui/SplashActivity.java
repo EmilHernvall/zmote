@@ -12,7 +12,7 @@ public class SplashActivity extends Activity {
 	// At the start, we are going to use just some time, then we will use
 	// other condition (modules load finish, for example.)
 	// Set the display time, in milliseconds (or extract it out as a configurable parameter)
-    private final int SPLASH_DISPLAY_LENGTH = 3000;
+    private final int SPLASH_DISPLAY_LENGTH = 1000;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
