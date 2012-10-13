@@ -16,7 +16,8 @@ import se.z_app.stb.api.RemoteControl.Button;
 public class RCCommand implements MonoDirectionalCmdInterface {
 	
 	private String iPAdress;
-	
+	private String arg1;
+
 	/**
 	 * Constructor that takes the IP adress of the STB as in argument.
 	 * @param iP
@@ -26,58 +27,103 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 	}
 	
 	/**
-	 * Sends a text string to the STB.
+	 * Sends a text string to the STB. 
 	 */
 	public void sendText(String text) {
-	    HttpClient httpclient = new DefaultHttpClient();
-	    HttpPost httppost = new HttpPost("http://" + iPAdress + "/cgi-bin/writepipe_text");
-   
-	    try {
-			httppost.setEntity(new StringEntity(text));
-	        httpclient.execute(httppost);	 
-	        
-	    } catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	    
-		
+		arg1 = text;
+	    new Thread(new Runnable() {
+	    	
+
+			
+			@Override
+			public void run() {
+				   HttpClient httpclient = new DefaultHttpClient();
+				   HttpPost httppost = new HttpPost("http://" + iPAdress + "/cgi-bin/writepipe_text");
+			   
+				   try {
+						httppost.setEntity(new StringEntity(arg1));
+				        httpclient.execute(httppost);	 
+				        
+				   } catch (UnsupportedEncodingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+				   } catch (ClientProtocolException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+				   } catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+				   }
+				
+			}
+		}).start();
+	 	  	
 	}
 
 	/**
 	 * Sends a button command to the STB.
 	 */
 	public void sendButton(Button button) {
-	    HttpClient httpclient = new DefaultHttpClient();
-	    HttpPost httppost = new HttpPost("http://" + iPAdress + "/cgi-bin/writepipe_key");
-	    String text = buttonToString(button);
-	
-	    try {
-			httppost.setEntity(new StringEntity(text));
-	        httpclient.execute(httppost);	 
-	        
-	    } catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		arg1 = buttonToString(button);
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+			    HttpClient httpclient = new DefaultHttpClient();
+			    HttpPost httppost = new HttpPost("http://" + iPAdress + "/cgi-bin/writepipe_key");
+			    System.out.println("http://" + iPAdress + "/cgi-bin/writepipe_key");
+			    
+			
+			    try {
+					httppost.setEntity(new StringEntity(arg1));
+			        httpclient.execute(httppost);	 
+			        System.out.println(arg1);
+			        
+			    } catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ClientProtocolException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+		}).start();
+
 		
 	}
 
 	
 	public void launch(String url) {
-		// TODO Auto-generated method stub
+		arg1 = url;
+	    new Thread(new Runnable() {
+	    	
+			
+			@Override
+			public void run() {
+				   HttpClient httpclient = new DefaultHttpClient();
+				   HttpPost httppost = new HttpPost("http://" + iPAdress + "/cgi-bin/launchurl");
+			   
+				   try {
+						httppost.setEntity(new StringEntity(arg1));
+				        httpclient.execute(httppost);	 
+				        
+				   } catch (UnsupportedEncodingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+				   } catch (ClientProtocolException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+				   } catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+				   }
+				
+			}
+		}).start();
 		
 	}
 
@@ -98,7 +144,7 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 		
 	}
 
-	
+
 	public void rawPost(String rawPostData, String uri) {
 		// TODO Auto-generated method stub
 		
@@ -112,12 +158,14 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 	
 	private String buttonToString(Button button){
 		String returnString = button.toString();
-		if(returnString.substring(0, 0) != "P")
+		if(!returnString.startsWith("P"))
 			returnString = "P"+returnString;
-		returnString.toLowerCase();
+		returnString = returnString.toLowerCase();
 		return returnString;
 		
 	}
+	
+
 
 	
 }
