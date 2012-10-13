@@ -58,7 +58,8 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 	 * Plays the webtvitem.
 	 */
 	public void playWebTV(WebTVItem item) {
-		new Thread(new RCCommandRunnable(Method.PLAYWEBTV, iPAdress, item)).start();
+		
+		new Thread(new RCCommandRunnable(Method.PLAYWEBTV, iPAdress, item.getId())).start();
 		
 	}
 
@@ -66,14 +67,15 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 	 * Queues the webtv item.
 	 */
 	public void queueWebTV(WebTVItem item) {
-		new Thread(new RCCommandRunnable(Method.QUEUEWEBTV, iPAdress, item)).start();
+		
+		new Thread(new RCCommandRunnable(Method.QUEUEWEBTV, iPAdress, item.getId())).start();
 		
 	}
 	/**
 	 * Sends the facebook authorisation.
 	 */
 	public void facebookAuth(String accesstoken, String expires, String uid) {
-		// TODO Auto-generated method stub
+		new Thread(new RCCommandRunnable(Method.FACEBOOKAUTH, iPAdress, accesstoken, expires, uid)).start();
 		
 	}
 
@@ -81,7 +83,7 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 	 * Sends a rawpost.
 	 */
 	public void rawPost(String rawPostData, String uri) {
-		// TODO Auto-generated method stub
+		new Thread(new RCCommandRunnable(Method.RAWPOST, iPAdress, rawPostData, uri)).start();
 		
 	}
 
@@ -89,7 +91,7 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 	 * Sends a raw get.
 	 */
 	public void rawGet(String uri) {
-		// TODO Auto-generated method stub
+		new Thread(new RCCommandRunnable(Method.RAWGET, iPAdress, uri)).start();
 		
 	}
 	
@@ -108,6 +110,8 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 		
 	}
 	
+
+	
 	/**
 	 * Private class that sends the command to the box.
 	 * The reason for this class is that it needs to be able to access
@@ -121,11 +125,11 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 		private String arg1 = null;
 		private String arg2 = null;
 		private String arg3 = null;
-		private WebTVItem webTVItem = null;
 		private String address = null;
 		private Method method;
 		private HttpClient httpclient;
 	    private HttpPost httppost;
+	    private HttpGet httpGet;
 
 		/**
 		 * Constructor with 1 argument.
@@ -168,18 +172,8 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 			this.arg3 = arg3;
 			
 		}
-		/**
-		 * Constructor with a WebTVItem as argument.
-		 * @param method
-		 * @param address
-		 * @param webTVItem
-		 */
-		public RCCommandRunnable(Method method, String address, WebTVItem webTVItem){
-			this.method = method;
-			this.address = address;
-			this.webTVItem = webTVItem;
-			
-		}
+
+
 
 		@Override
 		/**
@@ -188,18 +182,31 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 		public void run() {
 			switch(method){
 			case FACEBOOKAUTH:
+				httpclient = new DefaultHttpClient();
+				httpGet = new HttpGet("http://" + address +"/mdio/facebook?accesstoken="+arg1+"&expires="+arg2+"&uid="+arg3);
+			    
+			    try {
+			        httpclient.execute(httpGet);	
+	        
+			        
+			    } catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ClientProtocolException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				break;
 			case LAUNCH:
 				httpclient = new DefaultHttpClient();
-			    httppost = new HttpPost("http://" + address + "/cgi-bin/writepipe_key");
+				httpGet = new HttpGet("http://" + address +"mdio/launchurl?url="+arg1);
 			    
 			    try {
-
-					httppost.setEntity(new StringEntity(arg1));
-			        httpclient.execute(httppost);	
-			        httppost.getEntity();
-
-			        
+			        httpclient.execute(httpGet);	
+	        
 			        
 			    } catch (UnsupportedEncodingException e) {
 					// TODO Auto-generated catch block
@@ -214,12 +221,84 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 			    
 				break;
 			case PLAYWEBTV:
+				httpclient = new DefaultHttpClient();
+				httpGet = new HttpGet("http://" + address +"/mdio/webtv/play?url="+arg1);
+			    
+			    try {
+			        httpclient.execute(httpGet);	
+	        
+			        
+			    } catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ClientProtocolException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 				break;
 			case QUEUEWEBTV:
+				httpclient = new DefaultHttpClient();
+				httpGet = new HttpGet("http://" + address +"/mdio/webtv/play?url="+arg1+"&queue=1");
+			    
+			    try {
+			        httpclient.execute(httpGet);	
+	        
+			        
+			    } catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ClientProtocolException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				break;
 			case RAWGET:
+				httpclient = new DefaultHttpClient();
+				httpGet = new HttpGet("http://" + address + arg1);
+			    
+			    try {
+			        httpclient.execute(httpGet);	
+	        
+			        
+			    } catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ClientProtocolException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				break;
 			case RAWPOST:
+			    httpclient = new DefaultHttpClient();
+			    httppost = new HttpPost("http://" + address + arg2);
+			    try {
+
+					httppost.setEntity(new StringEntity(arg1));
+			        httpclient.execute(httppost);	 
+
+			        
+			        
+			    } catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ClientProtocolException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 				break;
 				
 			case SENDBUTTON:
