@@ -36,7 +36,7 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 	 * Sends a text string to the STB. 
 	 */
 	public void sendText(String text) {
-
+		new Thread(new RCCommandRunnable(Method.SENDTEXT, iPAdress, text)).start();
 	}
 
 	/**
@@ -108,13 +108,27 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 		private WebTVItem webTVItem = null;
 		private String address = null;
 		private Method method;
+		private HttpClient httpclient;
+	    private HttpPost httppost;
 
-		
+		/**
+		 * Constructor with 1 argument.
+		 * @param method
+		 * @param address
+		 * @param arg1
+		 */
 		public RCCommandRunnable(Method method, String address, String arg1){
 			this.method = method;
 			this.address = address;
 			this.arg1 = arg1;
 		}
+		/**
+		 * Constructor with 2 arguments.
+		 * @param method
+		 * @param address
+		 * @param arg1
+		 * @param arg2
+		 */
 		public RCCommandRunnable(Method method, String address, String arg1, String arg2){
 			this.method = method;
 			this.address = address;
@@ -122,6 +136,14 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 			this.arg2 = arg2;
 			
 		}
+		/**
+		 * Constructor with 3 arguments.
+		 * @param method
+		 * @param address
+		 * @param arg1
+		 * @param arg2
+		 * @param arg3
+		 */
 		public RCCommandRunnable(Method method, String address, String arg1, String arg2, String arg3){
 			this.method = method;
 			this.address = address;
@@ -130,6 +152,12 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 			this.arg3 = arg3;
 			
 		}
+		/**
+		 * Constructor with a WebTVItem as argument.
+		 * @param method
+		 * @param address
+		 * @param webTVItem
+		 */
 		public RCCommandRunnable(Method method, String address, WebTVItem webTVItem){
 			this.method = method;
 			this.address = address;
@@ -138,6 +166,9 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 		}
 
 		@Override
+		/**
+		 * Sends the command to the box
+		 */
 		public void run() {
 			switch(method){
 			case FACEBOOKAUTH:
@@ -154,8 +185,8 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 				break;
 				
 			case SENDBUTTON:
-			    HttpClient httpclient = new DefaultHttpClient();
-			    HttpPost httppost = new HttpPost("http://" + address + "/cgi-bin/writepipe_key");
+			    httpclient = new DefaultHttpClient();
+			    httppost = new HttpPost("http://" + address + "/cgi-bin/writepipe_key");
 			    try {
 
 					httppost.setEntity(new StringEntity(arg1));
@@ -176,6 +207,26 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 				break;
 				
 			case SENDTEXT:
+			    httpclient = new DefaultHttpClient();
+			    httppost = new HttpPost("http://" + address + "/cgi-bin/writepipe_text");
+			    try {
+
+					httppost.setEntity(new StringEntity(arg1));
+			        httpclient.execute(httppost);	 
+
+			        
+			        
+			    } catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ClientProtocolException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 				break;
 			default:
 				break;
