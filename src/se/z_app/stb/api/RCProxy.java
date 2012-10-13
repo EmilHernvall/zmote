@@ -19,6 +19,9 @@ public class RCProxy {
 
 	}
 
+	private RCProxy() {
+		
+	}
 	
 	/*
 	 * Sends the correct button enum for different states when up is pressed

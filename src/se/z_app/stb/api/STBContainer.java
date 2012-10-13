@@ -22,6 +22,8 @@ public class STBContainer extends Observable {
 	}
 	
 	public void setSTB(STB stb){
+		if(this.stb.equals(stb)) return;
+		
 		this.stb = stb;
 		super.setChanged();
 		super.notifyObservers();
