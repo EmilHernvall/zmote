@@ -6,7 +6,7 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="15" />
-    
+
     <!-- Gives permission to use phone internet -->
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -34,6 +34,15 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="se.z_app.zmote.gui.MainActivity" />
+        </activity>
+        <activity
+            android:name=".RemoteControlActivity"
+            android:label="@string/title_activity_remote_control" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 
