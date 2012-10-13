@@ -37,7 +37,7 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 		EPG epg = new EPG();
 		
 		String jsonString = new GetHTTPResponse().getJSON("http://" + ip + "/mdio/epg");
-		System.out.println("EPG-> "+jsonString);
+		//System.out.println("EPG-> "+jsonString);
 		
 		try {
 			JSONArray jsonarray = new JSONArray(jsonString);
@@ -63,11 +63,13 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 					program.setLongText(jsonProgram.getString("exttext"));
 					program.setEventID(jsonProgram.getInt("eventId"));
 					
+					/*
 					String start = jsonProgram.getString("start");
 					start = start.replace(" ", "-");
 					start = start.replace(":", "-");
 					String startAr[] = start.split("-");
 					
+				
 					@SuppressWarnings("deprecation")
 					Date date = new Date(
 							Integer.parseInt(startAr[0])-1900,
@@ -86,6 +88,7 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 					time += Integer.parseInt(durationAr[1])*60;
 					time += Integer.parseInt(durationAr[2]);
 					program.setDuration(time);
+					*/
 					channel.addProgram(program);
 				}
 				
@@ -168,7 +171,7 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 				
 				
 		    	String str;
-		    	byte buffer[] = new byte[512];
+		    	byte buffer[] = new byte[2048];
 		    	int len;
 				while ((len = in.read(buffer)) != -1) {
 					json = json + new String(buffer, 0, len);

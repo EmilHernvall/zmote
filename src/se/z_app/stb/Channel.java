@@ -3,6 +3,7 @@ package se.z_app.stb;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 
@@ -17,7 +18,8 @@ public class Channel implements Iterable<Program>, Comparable<Channel>, Comparat
 	private int onid;
 	private int tsid;
 	private int sid;
-	private ConcurrentSkipListMap<Date, Program> programsByDate = new ConcurrentSkipListMap<Date, Program>();
+//	private ConcurrentSkipListMap<Date, Program> programsByDate = new ConcurrentSkipListMap<Date, Program>();
+	private LinkedList<Program> programs = new LinkedList<Program>();
 	
 	
 	public String getName() {
@@ -70,13 +72,15 @@ public class Channel implements Iterable<Program>, Comparable<Channel>, Comparat
 	}
 	
 	public void addProgram(Program program){
-		programsByDate.putIfAbsent(program.getStart(), program);
+		programs.add(program);
+		//programsByDate.putIfAbsent(program.getStart(), program);
 	}
 
 	
 	@Override
 	public Iterator<Program> iterator() {
-		return programsByDate.values().iterator();
+		//return programsByDate.values().iterator();
+		return programs.iterator();
 	}
 
 	@Override
