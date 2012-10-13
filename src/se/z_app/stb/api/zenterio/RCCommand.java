@@ -9,15 +9,21 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.R.bool;
+
 import se.z_app.stb.WebTVItem;
 import se.z_app.stb.api.MonoDirectionalCmdInterface;
 import se.z_app.stb.api.RemoteControl.Button;
 
+
 public class RCCommand implements MonoDirectionalCmdInterface {
 	
+	
 	private String iPAdress;
-	private String arg1;
 
+	private enum Method{
+		SENDTEXT, SENDBUTTON, LAUNCH, PLAYWEBTV, QUEUEWEBTV, FACEBOOKAUTH, RAWPOST, RAWGET;
+	}
 	/**
 	 * Constructor that takes the IP adress of the STB as in argument.
 	 * @param iP
@@ -30,100 +36,21 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 	 * Sends a text string to the STB. 
 	 */
 	public void sendText(String text) {
-		arg1 = text;
-	    new Thread(new Runnable() {
-	    	
 
-			
-			@Override
-			public void run() {
-				   HttpClient httpclient = new DefaultHttpClient();
-				   HttpPost httppost = new HttpPost("http://" + iPAdress + "/cgi-bin/writepipe_text");
-			   
-				   try {
-						httppost.setEntity(new StringEntity(arg1));
-				        httpclient.execute(httppost);	 
-				        
-				   } catch (UnsupportedEncodingException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-				   } catch (ClientProtocolException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-				   } catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-				   }
-				
-			}
-		}).start();
-	 	  	
 	}
 
 	/**
 	 * Sends a button command to the STB.
 	 */
 	public void sendButton(Button button) {
-		arg1 = buttonToString(button);
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-			    HttpClient httpclient = new DefaultHttpClient();
-			    HttpPost httppost = new HttpPost("http://" + iPAdress + "/cgi-bin/writepipe_key");
-			    System.out.println("http://" + iPAdress + "/cgi-bin/writepipe_key");
-			    
-			
-			    try {
-					httppost.setEntity(new StringEntity(arg1));
-			        httpclient.execute(httppost);	 
-			        System.out.println(arg1);
-			        
-			    } catch (UnsupportedEncodingException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (ClientProtocolException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-			}
-		}).start();
-
+	
+		new Thread(new RCCommandRunnable(Method.SENDBUTTON, iPAdress, buttonToString(button))).start();
 		
 	}
 
 	
 	public void launch(String url) {
-		arg1 = url;
-	    new Thread(new Runnable() {
-	    	
-			
-			@Override
-			public void run() {
-				   HttpClient httpclient = new DefaultHttpClient();
-				   HttpPost httppost = new HttpPost("http://" + iPAdress + "/cgi-bin/launchurl");
-			   
-				   try {
-						httppost.setEntity(new StringEntity(arg1));
-				        httpclient.execute(httppost);	 
-				        
-				   } catch (UnsupportedEncodingException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-				   } catch (ClientProtocolException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-				   } catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-				   }
-				
-			}
-		}).start();
+
 		
 	}
 
@@ -165,7 +92,104 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 		
 	}
 	
+	/**
+	 * Private class that sends the command to the box.
+	 * The reason for this class is that it needs to be able to access
+	 * variables. And therefore you need a customized constructor.
+	 * @author Linus
+	 *
+	 */
+	private class RCCommandRunnable implements Runnable{
+		
+		
+		private String arg1 = null;
+		private String arg2 = null;
+		private String arg3 = null;
+		private WebTVItem webTVItem = null;
+		private String address = null;
+		private Method method;
+
+		
+		public RCCommandRunnable(Method method, String address, String arg1){
+			this.method = method;
+			this.address = address;
+			this.arg1 = arg1;
+		}
+		public RCCommandRunnable(Method method, String address, String arg1, String arg2){
+			this.method = method;
+			this.address = address;
+			this.arg1 = arg1;
+			this.arg2 = arg2;
+			
+		}
+		public RCCommandRunnable(Method method, String address, String arg1, String arg2, String arg3){
+			this.method = method;
+			this.address = address;
+			this.arg1 = arg1;
+			this.arg2 = arg2;
+			this.arg3 = arg3;
+			
+		}
+		public RCCommandRunnable(Method method, String address, WebTVItem webTVItem){
+			this.method = method;
+			this.address = address;
+			this.webTVItem = webTVItem;
+			
+		}
+
+		@Override
+		public void run() {
+			switch(method){
+			case FACEBOOKAUTH:
+				break;
+			case LAUNCH:
+				break;
+			case PLAYWEBTV:
+				break;
+			case QUEUEWEBTV:
+				break;
+			case RAWGET:
+				break;
+			case RAWPOST:
+				break;
+				
+			case SENDBUTTON:
+			    HttpClient httpclient = new DefaultHttpClient();
+			    HttpPost httppost = new HttpPost("http://" + address + "/cgi-bin/writepipe_key");
+			    try {
+
+					httppost.setEntity(new StringEntity(arg1));
+			        httpclient.execute(httppost);	 
+
+			        
+			        
+			    } catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ClientProtocolException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				break;
+				
+			case SENDTEXT:
+				break;
+			default:
+				break;
+			}
+			
+			
+
+			
 
 
-	
+				
+		
+			
+		}
+		
+	}	
 }
