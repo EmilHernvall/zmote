@@ -57,13 +57,6 @@ public class STBAdapter extends BaseAdapter {
         thumb_image.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
             	ListImageElement theView = (ListImageElement)view;
-            	//theView.getSTB().setBoxName("hej");
-            	theView.getTextView().setCursorVisible(true);
-            	theView.getTextView().setFocusable(true);
-            	theView.getTextView().setFocusableInTouchMode(true);
-            	theView.getTextView().requestFocus();
-            	theView.getTextView().setText("Hej");
-            	//notifyDataSetChanged();
             }
         });
         
