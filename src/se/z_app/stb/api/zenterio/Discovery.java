@@ -17,7 +17,6 @@ import se.z_app.stb.api.DiscoveryInterface;
  */
 public class Discovery implements DiscoveryInterface {
 	private static int timeOutInMs = 30; //Timeout for each ping request when searching for IP addresses in use
-	private static int timeOutSTBScannerInMs = 4000; // Timeout for the scan if no boxes are found
 	private String subNetAddress;
 	public static boolean isRunning, isLoadingBoxes = false;
 	
