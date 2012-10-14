@@ -9,6 +9,14 @@ import se.z_app.stb.STB;
 import se.z_app.stb.WebTVItem;
 import se.z_app.stb.WebTVService;
 import se.z_app.stb.api.zenterio.RCCommand;
+import se.z_app.stb.api.zenterio.StandardCommand;
+
+/**
+ * 
+ * @author Sebastian
+ * 
+ *
+ */
 
 public class WebTVCommand implements Observer{
 
@@ -22,7 +30,8 @@ public class WebTVCommand implements Observer{
 		return instance;
 	}
 	
-	private MonoDirectionalCmdInterface remoteImpl;
+	private MonoDirectionalCmdInterface MonoCmd;
+	private BiDirectionalCmdInterface BiCmd;
 	@Override
 	
 	
@@ -30,38 +39,60 @@ public class WebTVCommand implements Observer{
 		STB stb = STBContainer.instance().getSTB();
 		switch(stb.getType()){
 		case DEFAULT:
-			remoteImpl = null;
+			MonoCmd = null;
+			BiCmd = null;
 			break;
 		case ZENTERIO:
-			remoteImpl = new RCCommand(stb.getIP());
+			MonoCmd = new RCCommand(stb.getIP());
+			BiCmd = new StandardCommand(stb.getIP());
 			break;
 		default:
 			break;
 		}
 	}
 	
-	public WebTVService getSevice(){
-		return null;
+	
+	public WebTVService[] getSevice(){
+		if(BiCmd != null){
+			return BiCmd.getWebTVServices();
+		}
+		else
+			return null;		
 	}
 	
-	public WebTVItem search(){
-		return null;
+	public WebTVItem[] search(String query, WebTVService service){
+		if(BiCmd != null){
+			return BiCmd.searchWebTVService(query, service);
+		}
+		else
+			return null;
 	}
 	
-	public void play(){
-		
+	public void play(WebTVItem item){
+		if (MonoCmd != null){
+			MonoCmd.playWebTV(item);
+		} 	
 	}
 	
-	public void queue(){
-		
+	public void queue(WebTVItem item){
+		if (MonoCmd != null){
+			MonoCmd.queueWebTV(item);
+		} 	
 	}
 	
-	public Bitmap getIcon(WebTVItem wti){
-		return null;
-		
+	public Bitmap getIcon(WebTVItem item){
+		if (BiCmd != null){
+			return BiCmd.getWebTVItemIcon(item);
+		} 
+		else
+			return null;
 	}
 	
-	public Bitmap getIcon(WebTVService wts){
-		return null;
+	public Bitmap getIcon(WebTVService item){
+		if (BiCmd != null){
+			return BiCmd.getWebTVServiceIcon(item);
+		} 
+		else
+			return null;
 	}
 }
