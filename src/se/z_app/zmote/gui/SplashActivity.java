@@ -1,6 +1,7 @@
 package se.z_app.zmote.gui;
 
 
+import se.z_app.stb.api.RemoteControl;
 import android.os.Bundle;
 import android.os.Handler;
 import android.app.Activity;
@@ -43,11 +44,11 @@ public class SplashActivity extends Activity {
         	
             
             public void run() {
-            	
+				RemoteControl.instance();
                 //Finish the splash activity so it can't be returned to.
                 SplashActivity.this.finish();
                 // Create an Intent that will start the main activity.
-                Intent mainIntent = new Intent(SplashActivity.this, MainActivity.class);
+                Intent mainIntent = new Intent(SplashActivity.this, SelectSTBActivity.class);
                 SplashActivity.this.startActivity(mainIntent);
                 
             }

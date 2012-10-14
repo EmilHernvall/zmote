@@ -3,6 +3,7 @@ package se.z_app.zmote.gui;
 import java.util.Vector;
 
 import se.z_app.stb.STB;
+import se.z_app.stb.api.STBContainer;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.TextView;
  
 public class STBAdapter extends BaseAdapter {
  
@@ -42,7 +42,8 @@ public class STBAdapter extends BaseAdapter {
         if(convertView==null)
             vi = inflater.inflate(R.layout.list_row, null);
  
-        TextView boxName = (TextView)vi.findViewById(R.id.boxname);
+        ListTextViewElement boxName = (ListTextViewElement)vi.findViewById(R.id.boxname);
+        boxName.setIndex(position);
         
         STB stb = new STB();
         stb = data.get(position);
@@ -52,8 +53,13 @@ public class STBAdapter extends BaseAdapter {
 			
 			@Override
 			public void onClick(View v) {
-				theAdapter.notifyDataSetChanged();
-				((TextView)v).setText("NEW!");
+				ListTextViewElement theView = (ListTextViewElement) v;
+				STB theSelectedSTB = STBListSingleton.instance().getList().get(theView.getIndex());
+				STBContainer.instance().setSTB(theSelectedSTB);
+				Activity theActivity = (Activity)v.getContext();
+				theActivity.finish();
+				Intent mainIntent = new Intent(v.getContext(), RemoteControlActivity.class);
+				theActivity.startActivity(mainIntent);
 			}
 		});
         

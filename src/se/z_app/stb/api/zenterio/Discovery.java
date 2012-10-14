@@ -212,7 +212,7 @@ public class Discovery implements DiscoveryInterface {
 		 */
 		private STB createSTBObject(InetAddress addr) {
 			STB stb = new STB();
-			stb.setIP(addr); //Sets IP
+			stb.setIP(addr.getHostAddress()); //Sets IP
 			String str;
 			try {
 				URL url = new URL("http://"+addr.getHostAddress().toString()+"/cgi-bin/zids_discovery/");

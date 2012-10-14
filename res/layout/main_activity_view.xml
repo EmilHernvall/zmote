@@ -5,26 +5,8 @@
     android:background="#333333"
     android:orientation="vertical" >
 
-    <!-- STB Name -->
-    <LinearLayout
-        android:id="@+id/stb_name_ly"
-        android:layout_width="fill_parent"
-        android:layout_height="20dp"
-        android:layout_weight="0.22"
-        android:orientation="horizontal" >
-
-        <RadioButton
-            android:id="@+id/radioButton1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="STB Name"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-    </LinearLayout>
+   <!-- STB Name -->
+	<include layout="@layout/selected_stb" android:id="@+id/selected_stb" />
     
     <!-- Top Menu -->
 	<HorizontalScrollView
@@ -82,12 +64,6 @@
             android:background="@color/black"
             android:orientation="horizontal" >
 
-            <Gallery
-                android:id="@+id/gallery1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
             <TextView
                 android:id="@+id/textView3"
                 android:layout_width="wrap_content"
@@ -98,46 +74,6 @@
     </HorizontalScrollView>
 
     <!-- Bottom menu -->
-
-    <LinearLayout
-        android:id="@+id/bottom_menu_ly"
-        android:layout_width="fill_parent"
-        android:layout_height="30dp"
-        android:layout_weight="0.18"
-        android:orientation="horizontal" >
-
-        <ImageButton
-            android:id="@+id/imageButton3"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:background="#333333"
-            android:src="@drawable/collections_go_to_today" />
-
-        <ImageButton
-            android:id="@+id/imageButton1"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:background="#333333"
-            android:src="@android:drawable/ic_dialog_dialer" />
-
-        <ImageButton
-            android:id="@+id/imageButton4"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:background="#333333"
-            android:src="@drawable/rating_favorite" />
-
-        <ImageButton
-            android:id="@+id/imageButton2"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:background="#333333"
-            android:src="@drawable/location_web_site" />
-
-    </LinearLayout>
-
+    <include layout="@layout/bottom_menu" android:id="@+id/bottom_menu" />
+    
 </LinearLayout>

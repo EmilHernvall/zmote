@@ -7,7 +7,7 @@
     android:padding="5dip" >
  
     
-    <TextView
+    <se.z_app.zmote.gui.ListTextViewElement
         android:id="@+id/boxname"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
