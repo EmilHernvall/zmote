@@ -16,8 +16,10 @@ import android.widget.Button;
 import android.support.v4.app.NavUtils;
 
 
-/* 
- * The STB selection view
+/**
+ * The STB Activity screen. Here is the main screen where the STB list is shown as well as the find STB button.
+ * @author viktordahl + others
+ *
  */
 public class SelectSTBActivity extends Activity {
     private STBListView theView;
@@ -29,7 +31,7 @@ public class SelectSTBActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_stb);
-        Button scan = (Button) findViewById(R.id.button_scanforstb);
+        Button scan = (Button) findViewById(R.id.button_scanforstb); //Scan for STB button
         theView = (STBListView)findViewById(R.id.list_over_stb);
         scan.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -42,7 +44,10 @@ public class SelectSTBActivity extends Activity {
 
     }
     
-    /* Updates the list with an STB array */
+   /**
+    * Updates the STB list with an STB array
+    * @param theList
+    */
     private void updateList(STB[] theList) {
 		theView.setList(this, theList);
     }
@@ -68,9 +73,8 @@ public class SelectSTBActivity extends Activity {
     		theView.notifyAdapter();
     	super.onResume();
     }
-    
-	/*
-	 * 
+	/**
+	 * Calls the Discovery.find() function for searching after STB's in an asynchronous task. Returns an array of STD's
 	 * TODO: Add a message when no STB's are found.
 	 */
     private class ASyncSTBFinder extends AsyncTask<Integer,Integer,STB[]> {
@@ -83,7 +87,6 @@ public class SelectSTBActivity extends Activity {
 		}
 		protected void onPreExecute() {
 			System.out.println("Scan started.");
-			
 			dialog.setMessage("Scanning for new STB's in network");
 			dialog.show();
 		}
@@ -95,9 +98,8 @@ public class SelectSTBActivity extends Activity {
 			dialog.dismiss();
 			System.out.println("Scan finished.");
 		}
-		/*
-		 * Finds the subnet of the devices network and returns a string in the form 192.168.0.
-		 * TODO:
+		/**
+		 * Finds the subnet of the devices network and returns a string in the form 192.168.0. (with the last "."!)
 		 */
 		private String findSubnetAddress() {
 				WifiManager myWifiManager = (WifiManager) getSystemService(WIFI_SERVICE);

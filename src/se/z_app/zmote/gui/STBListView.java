@@ -9,6 +9,10 @@ import android.util.AttributeSet;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+/**
+ * The STB list generate
+ *
+ */
 public class STBListView extends ListView{
 	Vector<STB> theList = STBListSingleton.instance().getList();
 	STBAdapter theAdapter;

@@ -1,22 +1,16 @@
 package se.z_app.zmote.gui;
 
-import java.io.Serializable;
 import java.util.Vector;
 
 import se.z_app.stb.STB;
 import se.z_app.stb.api.STBContainer;
-import se.z_app.stb.api.zenterio.Discovery;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
  
 public class STBAdapter extends BaseAdapter {
  
