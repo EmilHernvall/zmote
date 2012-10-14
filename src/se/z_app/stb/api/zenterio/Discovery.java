@@ -16,7 +16,7 @@ import se.z_app.stb.api.DiscoveryInterface;
  *
  */
 public class Discovery implements DiscoveryInterface {
-	private static int timeOutInMs = 30; // Timeout for each ping request when searching for ip addresses in use
+	private static int timeOutInMs = 30; //Timeout for each ping request when searching for IP addresses in use
 	private static int timeOutSTBScannerInMs = 4000; // Timeout for the scan if no boxes are found
 	private String subNetAddress;
 	public static boolean isRunning, isLoadingBoxes = false;
@@ -24,52 +24,30 @@ public class Discovery implements DiscoveryInterface {
 	public Discovery (String subNetAddress) {
 		this.subNetAddress = subNetAddress;
 	}
+
 	/**
 	 * Is initialized in doInBackground(). Finds the IP addresses first then creates a boxes for each IP found. Returns an array of STB's
+	 * TODO: Test if the new function (get stb thread) works. Should cut the find() function time pretty much in 2.
 	 */
 	@Override
 	public STB[] find() {
 		LinkedList<InetAddress> boxes = null;
 		boxes = findSTBIPAddresses();
 		STB[] stbs = new STB[boxes.size()];
+		
+		createSTBObjectThread stbThread;
 		try {
 			for (int i=0;i<boxes.size();i++) {
-				stbs[i] = createSTBObject(boxes.get(i));
+				stbThread = new createSTBObjectThread(boxes.get(i));
+				stbThread.start();
+				while(stbThread.isRunning()) {
+					
+				}
+				stbs[i] = stbThread.getBox();
 			}
 		}
 		catch (RuntimeException e) { e.printStackTrace(); }
 		return stbs;
-	}
-
-	/**
-	 * Creates an STB object
-	 * @param addr
-	 * @return
-	 */
-	private STB createSTBObject(InetAddress addr) {
-		STB stb = new STB();
-		stb.setIP(addr); //Sets IP
-		String str;
-		try {
-			URL url = new URL("http://"+addr.getHostAddress().toString()+"/cgi-bin/zids_discovery/");
-			BufferedReader row = new BufferedReader(new InputStreamReader(url.openStream()));
-	    		while ((str = row.readLine()) != null) {
-	    			if (str.contains("Boxname")) { //Sets BoxName
-	    				stb.setBoxName(str.split(": ", 2)[1]);
-	    				if (str.indexOf("Zenterio") > 0 || str.indexOf("zenterio") > 0) {
-	    					stb.setType(STB.STBEnum.ZENTERIO);
-	    				} else {
-	    					stb.setType(STB.STBEnum.DEFAULT);
-	    				}
-	    			} else if (str.contains("MAC")) { // Sets the Mac Address
-	    				stb.setMAC(str.split(": ", 2)[1]);
-	    				break;
-	    			}
-	    		}
-			row.close();
-		}
-		catch(Exception e) { e.printStackTrace(); }
-		return stb;
 	}
 
 	/**
@@ -144,9 +122,11 @@ public class Discovery implements DiscoveryInterface {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	/**
-	 * Divides scan into multiple threads for speed. One object for each 32 addresses (0-31, 32-64 etc). Speeds up request
+	 * 	Divides scan into multiple threads for speed. One object for each 32 addresses (0-31, 32-64 etc). Speeds up request
+	 * @author viktordahl
+	 *
 	 */
 	private class ScanObjectThread extends Thread{
 		InetAddress addr;
@@ -158,7 +138,6 @@ public class Discovery implements DiscoveryInterface {
 		public ScanObjectThread (int rangeIndex) {
 			this.rangeIndex = rangeIndex;
 		}
-		
 		private int calculateStartRange(int start) {
 			if (start == 0) {
 				return 1;
@@ -202,17 +181,59 @@ public class Discovery implements DiscoveryInterface {
 			}
 		}
 	}
+	
+	/**
+	 * Divides the HTTP GET requests into multiple threads for faster accessing the boxes. Should take approx 1 sec no matter how many boxes there are
+	 * @author viktordahl
+	 *
+	 */
 	private class createSTBObjectThread extends Thread {
-		InetAddress addr;
-		STB stb;
+		private InetAddress addr;
+		private STB stb;
+		private boolean stillRunning = true;
 		
 		public createSTBObjectThread(InetAddress addr) {
 			this.addr = addr;
 		}
-		
-		public void run() {
-			
+		public boolean isRunning() {
+			return stillRunning;
 		}
-		
+		public STB getBox() {
+			return stb;
+		}
+		public void run() {
+			stb = createSTBObject(addr);
+			stillRunning = false;
+		}
+		/**
+		 * Creates an STB object
+		 * @param addr
+		 * @return
+		 */
+		private STB createSTBObject(InetAddress addr) {
+			STB stb = new STB();
+			stb.setIP(addr); //Sets IP
+			String str;
+			try {
+				URL url = new URL("http://"+addr.getHostAddress().toString()+"/cgi-bin/zids_discovery/");
+				BufferedReader row = new BufferedReader(new InputStreamReader(url.openStream()));
+		    		while ((str = row.readLine()) != null) {
+		    			if (str.contains("Boxname")) { //Sets BoxName
+		    				stb.setBoxName(str.split(": ", 2)[1]);
+		    				if (str.indexOf("Zenterio") > 0 || str.indexOf("zenterio") > 0) {
+		    					stb.setType(STB.STBEnum.ZENTERIO);
+		    				} else {
+		    					stb.setType(STB.STBEnum.DEFAULT);
+		    				}
+		    			} else if (str.contains("MAC")) { // Sets the Mac Address
+		    				stb.setMAC(str.split(": ", 2)[1]);
+		    				break;
+		    			}
+		    		}
+				row.close();
+			}
+			catch(Exception e) { e.printStackTrace(); }
+			return stb;
+		}
 	}
 }
