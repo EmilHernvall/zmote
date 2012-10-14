@@ -51,6 +51,23 @@ public class Discovery implements DiscoveryInterface {
 	}
 
 	/**
+	 * Checks if all 8 threads are still scanning. 
+	 * @param objects
+	 * @return
+	 */
+	private boolean isScanning(LinkedList<ScanObjectThread> objects) {
+		int count = 0;
+		for (int i=0;i<8;i++) {
+			if (objects.get(i).isScanning()) {
+				count++;
+			}
+		}
+		if (count == 0) {
+			return false;
+		}
+		return true;
+	}
+	/**
 	 * Finds the IP addresses of any STB boxes in the sub network. Returns a LinkedList with the IP addresses of the boxes
 	 * @return
 	 */
@@ -65,16 +82,12 @@ public class Discovery implements DiscoveryInterface {
 			scanner.start();
 			objects.add(scanner);
 		}
-		int count = 0;
+		
 		long t1 = System.nanoTime();
-		while(isRunning) {
-			count++;
+		while(isScanning(objects)) {
 			try {
-				Thread.sleep(10);
+				Thread.sleep(50);
 			} catch (InterruptedException e) { e.printStackTrace(); }
-			if (count == timeOutSTBScannerInMs/10)  { //Stops scan after a predefined time
-				break;
-			}	
 		}
 		
 		long t2 = System.nanoTime();
@@ -129,11 +142,12 @@ public class Discovery implements DiscoveryInterface {
 	 *
 	 */
 	private class ScanObjectThread extends Thread{
-		InetAddress addr;
-		String line;
-		LinkedList<InetAddress> boxes = new LinkedList<InetAddress>();
-		BufferedReader row = null;
-		int rangeIndex;
+		private InetAddress addr;
+		private String line;
+		private LinkedList<InetAddress> boxes = new LinkedList<InetAddress>();
+		private BufferedReader row = null;
+		private int rangeIndex;
+		private boolean isScanning = true;
 		
 		public ScanObjectThread (int rangeIndex) {
 			this.rangeIndex = rangeIndex;
@@ -153,6 +167,9 @@ public class Discovery implements DiscoveryInterface {
 		}
 		public LinkedList<InetAddress> getBoxes() {
 			return boxes;
+		}
+		public boolean isScanning() {
+			return isScanning;
 		}
 		
 		public void run() {
@@ -179,6 +196,7 @@ public class Discovery implements DiscoveryInterface {
 					}
 				} catch(Exception e) {  /*e.printStackTrace();*/  }
 			}
+			isScanning = false;
 		}
 	}
 	
