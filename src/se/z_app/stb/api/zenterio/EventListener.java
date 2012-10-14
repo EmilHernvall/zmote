@@ -6,13 +6,17 @@ import java.io.InputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import se.z_app.stb.STB;
+import se.z_app.stb.STBEvent;
 import se.z_app.stb.api.EventListnerInterface;
 
 public class EventListener implements EventListnerInterface {
 
 	private String iPaddress;
-	private String currentEvent;
+	private STBEvent currentEvent;
 	private Socket socket;
 	private InputStream in;
 	private byte[] buffer;
@@ -39,21 +43,20 @@ public class EventListener implements EventListnerInterface {
 	/**
 	 * Gets the current event.
 	 */
-	public String getCurrentEvent() {
+	public STBEvent getCurrentEvent() {
 		return currentEvent;
 	}
 
 	/**
 	 * Gets the next event. If not initialized returns current event.
 	 */
-	public String getNextEvent() {
+	public STBEvent getNextEvent() {
 		if(socket.isConnected()){
 			try {
 				int len = in.read(buffer);
-				currentEvent = new String(buffer, 0, len);
-				
+				currentEvent = stringToSTBEvent(new String(buffer, 0, len));
 			} catch (IOException e) {
-				return "EOF";
+				return null;
 			}
 		}
 		return currentEvent;
@@ -72,6 +75,25 @@ public class EventListener implements EventListnerInterface {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	private STBEvent stringToSTBEvent(String eventString){
+
+		try {
+			JSONObject json = new JSONObject(eventString);
+			currentEvent = new STBEvent();
+			currentEvent.setType(json.getString("type"));
+			
+			if(currentEvent.getType().equals("nodeLaunch")){
+			currentEvent.setLabel(json.getString("label"));
+			currentEvent.setUrl(json.getString("url"));
+			}
+
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return currentEvent;
 	}
 
 }
