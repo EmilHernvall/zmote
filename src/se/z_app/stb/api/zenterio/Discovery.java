@@ -10,20 +10,22 @@ import se.z_app.stb.STB;
 import se.z_app.stb.api.DiscoveryInterface;
 
 
-/*
- * 
+/**
+ * Object that includes all necessary functions for discovering a Zenterio STB.
+ * @author viktordahl
+ *
  */
 public class Discovery implements DiscoveryInterface {
-	private static int timeOutInMs = 30; // Timeout for each isReachable()
-	private static int timeOutSTBScannerInMs = 4000; // Timeout for the scan
+	private static int timeOutInMs = 30; // Timeout for each ping request when searching for ip addresses in use
+	private static int timeOutSTBScannerInMs = 4000; // Timeout for the scan if no boxes are found
 	private String subNetAddress;
 	public static boolean isRunning, isLoadingBoxes = false;
 	
 	public Discovery (String subNetAddress) {
 		this.subNetAddress = subNetAddress;
 	}
-	/* 
-	 * The find function that's initialized in doInBackground
+	/**
+	 * Is initialized in doInBackground(). Finds the IP addresses first then creates a boxes for each IP found. Returns an array of STB's
 	 */
 	@Override
 	public STB[] find() {
@@ -39,11 +41,12 @@ public class Discovery implements DiscoveryInterface {
 		return stbs;
 	}
 
-	/*
-	 * Initiates STB object
+	/**
+	 * Creates an STB object
+	 * @param addr
+	 * @return
 	 */
 	private STB createSTBObject(InetAddress addr) {
-//		System.out.println("createSTBObject()");
 		STB stb = new STB();
 		stb.setIP(addr); //Sets IP
 		String str;
@@ -58,7 +61,7 @@ public class Discovery implements DiscoveryInterface {
 	    				} else {
 	    					stb.setType(STB.STBEnum.DEFAULT);
 	    				}
-	    			} else if (str.contains("MAC")) { // Sets Mac Address
+	    			} else if (str.contains("MAC")) { // Sets the Mac Address
 	    				stb.setMAC(str.split(": ", 2)[1]);
 	    				break;
 	    			}
@@ -69,19 +72,18 @@ public class Discovery implements DiscoveryInterface {
 		return stb;
 	}
 
-	/*
-	 * Finds the IP addresses of any STB boxes in the sub network.
-	 * TODO: Verify if the function for finding more than 1 STB works.
-	 * TODO: Exception handling can be somewhat improved...
+	/**
+	 * Finds the IP addresses of any STB boxes in the sub network. Returns a LinkedList with the IP addresses of the boxes
+	 * @return
 	 */
 	private LinkedList<InetAddress> findSTBIPAddresses() {
 		LinkedList<InetAddress> boxes = new LinkedList<InetAddress>();
-		ScanObject scanner;
-		LinkedList<ScanObject> objects = new LinkedList<ScanObject>();
+		ScanObjectThread scanner;
+		LinkedList<ScanObjectThread> objects = new LinkedList<ScanObjectThread>();
 		
 		isRunning = true;
 		for (int j=0;j<8;j++) {
-			scanner = new ScanObject(j);
+			scanner = new ScanObjectThread(j);
 			scanner.start();
 			objects.add(scanner);
 		}
@@ -92,7 +94,7 @@ public class Discovery implements DiscoveryInterface {
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) { e.printStackTrace(); }
-			if (count == timeOutSTBScannerInMs/10)  { //Stops scan after 5 sec
+			if (count == timeOutSTBScannerInMs/10)  { //Stops scan after a predefined time
 				break;
 			}	
 		}
@@ -105,18 +107,17 @@ public class Discovery implements DiscoveryInterface {
 			} catch (Exception e) { };
 		}
 		long t3 = System.nanoTime();
-		System.out.println("Time for boxgetting: " +(t3-t2)/1000000+"ms");
+		System.out.println("Time for getting boxes: " +(t3-t2)/1000000+"ms");
 		for (int i = 0; i<8; i++) {
 			if (((boxes = objects.get(i).getBoxes()).size()) > 0) {
 				break;
 			}
 		}
-//		System.out.println("findSTBIPAddresses "+boxes);
 		return boxes;
 		
 	}
 	
-	/*
+	/**
 	 * Finds out if the box is a Zenterio box and if so returns the rest of the HTTP GET.
 	 */
 	private BufferedReader isZenterioSTB(InetAddress addr) {
@@ -133,7 +134,7 @@ public class Discovery implements DiscoveryInterface {
 		return null;
 	}
 	
-	/*
+	/**
 	 * Not written yet
 	 * @see se.z_app.stb.api.DiscoveryInterface#find(se.z_app.stb.STB)
 	 * TODO: Todo.
@@ -144,17 +145,17 @@ public class Discovery implements DiscoveryInterface {
 		return null;
 	}
 	
-	/*
-	 * Divides scan into multiple threads for speed.
+	/**
+	 * Divides scan into multiple threads for speed. One object for each 32 addresses (0-31, 32-64 etc). Speeds up request
 	 */
-	private class ScanObject extends Thread{
+	private class ScanObjectThread extends Thread{
 		InetAddress addr;
 		String line;
 		LinkedList<InetAddress> boxes = new LinkedList<InetAddress>();
 		BufferedReader row = null;
 		int rangeIndex;
 		
-		public ScanObject (int rangeIndex) {
+		public ScanObjectThread (int rangeIndex) {
 			this.rangeIndex = rangeIndex;
 		}
 		
@@ -172,9 +173,7 @@ public class Discovery implements DiscoveryInterface {
 			return end+32;
 		}
 		public LinkedList<InetAddress> getBoxes() {
-//			System.out.println("getBoxes()");
 			return boxes;
-			
 		}
 		
 		public void run() {
@@ -182,10 +181,9 @@ public class Discovery implements DiscoveryInterface {
 				try {
 					addr = InetAddress.getByName(subNetAddress+Integer.toString(i));
 					if(addr.isReachable(timeOutInMs)) {
-						
 						if ((row = isZenterioSTB(addr)) != null) {
-							isLoadingBoxes = true;
 							isRunning = false;
+							isLoadingBoxes = true;
 							boxes.add(addr);
 				    		System.out.println("Found box at "+addr.getHostAddress().toString());
 				    		while ((line = row.readLine()) != null) {
@@ -203,5 +201,18 @@ public class Discovery implements DiscoveryInterface {
 				} catch(Exception e) {  /*e.printStackTrace();*/  }
 			}
 		}
+	}
+	private class createSTBObjectThread extends Thread {
+		InetAddress addr;
+		STB stb;
+		
+		public createSTBObjectThread(InetAddress addr) {
+			this.addr = addr;
+		}
+		
+		public void run() {
+			
+		}
+		
 	}
 }
