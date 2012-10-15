@@ -13,7 +13,7 @@ import se.z_app.stb.api.DiscoveryInterface;
 /**
  * Object that includes all necessary functions for discovering a Zenterio STB.
  * @author viktordahl
- *
+ * TODO: If no boxes are found a second search with a higher timeOutInMs should be conducted.
  */
 public class Discovery implements DiscoveryInterface {
 	private static int timeOutInMs = 30; //Timeout for each ping request when searching for IP addresses in use
@@ -25,8 +25,8 @@ public class Discovery implements DiscoveryInterface {
 	}
 
 	/**
-	 * Is initialized in doInBackground(). Finds the IP addresses first then creates a boxes for each IP found. Returns an array of STB's
-	 * TODO: Test if the new function (get stb thread) works. Should cut the find() function time pretty much in 2.
+	 * Is initialized in STBDiscovery.find(). Finds the IP addresses first then creates a boxes for each IP found. Returns an array of STB's
+	 * TODO: Test if the new function (get stb thread) works. Should cut the find() function time pretty much in 2 (to 1 sec).
 	 */
 	@Override
 	public STB[] find() {

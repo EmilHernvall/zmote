@@ -1,6 +1,7 @@
 package se.z_app.zmote.gui;
 
 import se.z_app.stb.STB;
+import se.z_app.stb.api.STBDiscovery;
 import se.z_app.stb.api.zenterio.Discovery;
 
 import android.net.wifi.WifiInfo;
@@ -78,12 +79,13 @@ public class SelectSTBActivity extends Activity {
 	 * TODO: Add a message when no STB's are found.
 	 */
     private class ASyncSTBFinder extends AsyncTask<Integer,Integer,STB[]> {
-    	private Discovery disc;
+//    	private Discovery disc;
     	
 		@Override
 		protected STB[] doInBackground(Integer... params) {
-        	disc = new Discovery(findSubnetAddress());
-			return disc.find();
+//        	disc = new Discovery(findSubnetAddress());
+        	STBDiscovery stbDisc = new STBDiscovery(findSubnetAddress());
+			return stbDisc.find();
 		}
 		protected void onPreExecute() {
 			System.out.println("Scan started.");
