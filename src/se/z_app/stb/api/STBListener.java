@@ -3,7 +3,9 @@ package se.z_app.stb.api;
 import java.util.Observable;
 import java.util.Observer;
 
+
 import se.z_app.stb.STB;
+import se.z_app.stb.STBEvent;
 import se.z_app.stb.api.zenterio.EventListener;
 
 public class STBListener extends Observable implements Observer, Runnable{
@@ -12,6 +14,7 @@ public class STBListener extends Observable implements Observer, Runnable{
 	private EventListnerInterface eventListener;
 	private static STBListener instance; 
 	private Thread myThread;
+	private STB stb;
 	
 	private STBListener(){
 		STBContainer.instance().addObserver(this);
@@ -27,8 +30,8 @@ public class STBListener extends Observable implements Observer, Runnable{
 
 	
 	
-	public void update(Observable observable, Object data) {
-		STB stb = STBContainer.instance().getSTB();
+	public void update(Observable obsesrvable, Object data) {
+		stb = STBContainer.instance().getSTB();		
 		switch(stb.getType()){
 		case DEFAULT:
 			break;
@@ -36,23 +39,38 @@ public class STBListener extends Observable implements Observer, Runnable{
 			if(eventListener != null)
 				eventListener.stop();
 			eventListener = new EventListener();
-			eventListener.init(stb);
-			myThread = new Thread(this);
-			myThread.start();
-
 			break;
 		default:
 			break;
 		
 		}
+		myThread = new Thread(this);
+		myThread.start();
 		
 	}
 
 	public void run() {
-		String event;
-		while((event = eventListener.getNextEvent())!="EOF"){
-			notifyObservers(event);
+		
+		STBEvent event;
+		eventListener.init(stb);
+		
+		
+		switch(stb.getType()){
+		case DEFAULT:
+			break;
+		case ZENTERIO:
+			while((event = eventListener.getNextEvent())!=null){
+				this.setChanged();
+				this.notifyObservers(event);
+
+			}
+			break;
+		default:
+			break;
+		
 		}
+
+
 		
 	}
 	
