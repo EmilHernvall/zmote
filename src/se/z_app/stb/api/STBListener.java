@@ -22,8 +22,10 @@ public class STBListener extends Observable implements Observer, Runnable{
 	
 	
 	public static STBListener instance(){
-		if(instance == null)
+		if(instance == null){
 			instance = new STBListener();
+			STBState.instance();
+		}
 		return instance;
 	}
 	

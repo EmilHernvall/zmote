@@ -11,10 +11,17 @@ public class STBContainer extends Observable {
 	
 	
 	private static STBContainer instance; 
-	private STBContainer(){}
+	private STBContainer(){
+	}
+	
 	public static STBContainer instance(){
-		if(instance == null)
+		if(instance == null){
 			instance = new STBContainer();
+			STBListener.instance();
+			EPGData.instance();
+			WebTVCommand.instance();
+			RemoteControl.instance();
+		}
 		return instance;
 		
 	}
