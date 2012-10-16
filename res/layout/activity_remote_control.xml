@@ -96,6 +96,6 @@
         android:layout_alignBaseline="@+id/arrow_right_button"
         android:layout_alignBottom="@+id/arrow_right_button"
         android:layout_centerHorizontal="true"
-        android:text="OK" />
+        android:text="@string/activity_remote_control_OK_button" />
 
 </RelativeLayout>
