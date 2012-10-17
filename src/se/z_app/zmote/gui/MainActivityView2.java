@@ -25,14 +25,7 @@ public class MainActivityView2 extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_activity_view2);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_main_activity_view2, menu);
-        return true;
-    }
-    
+    }    
     
     // DUMMY
     // This function is suppose to add the whole list of channels to the view
