@@ -74,6 +74,6 @@
     </HorizontalScrollView>
 
     <!-- Bottom menu -->
-    <include layout="@layout/bottom_menu" android:id="@+id/bottom_menu" />
+    <include layout="@layout/activity_buttons_bar" android:id="@+id/activity_buttons_bar" />
     
 </LinearLayout>

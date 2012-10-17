@@ -28,8 +28,7 @@ public class RemoteControlActivity extends Activity {
         btnListeners();
         
         
-        
-        
+     
     }
 
     @Override

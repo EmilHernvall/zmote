@@ -34,5 +34,6 @@
     <string name="select_stb_STB_Name">STB Name</string>
     <string name="activity_main_select_TSB_text">SelectSTBActivity</string>
     <string name="activity_remote_control_OK_button">OK</string>
+    <string name="title_activity_buttons_bar">ButtonsBarActivity</string>
 
 </resources>
