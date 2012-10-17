@@ -86,6 +86,7 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 		values.put(CHANNEL_TSID, channel.getTsid());
 		values.put(CHANNEL_SID, channel.getSid());
 		db.insert(TABLE_CHANNEL, null, values);
+		db.close();
 
 
 	}
@@ -109,8 +110,8 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 		db.close();
 	}
 	public Program[] selectPrograms(STB stb, Channel channel){
-		Program[] programArray = null;
-		String selectQuery = "SELECT * FROM" +TABLE_PROGRAM;
+		Program[] programArray = null;  //BUGG?
+		String selectQuery = "SELECT * FROM " +TABLE_CHANNEL; //TODO: Change to TABLE_PROGRAM
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);
 		int iterationCounter=0;
@@ -122,7 +123,7 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 			program.setDuration(cursor.getInt(3));
 			program.setShortText(cursor.getString(4));
 			program.setLongText(cursor.getString(5));
-			programArray[iterationCounter]=program;
+			programArray[iterationCounter]=program; //Null-pointer exception
 			iterationCounter++;
 			
 			
