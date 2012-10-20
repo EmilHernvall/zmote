@@ -15,15 +15,18 @@ public class EPGData implements Observer{
 	private BiDirectionalCmdInterface com;
 	
 	//Singleton and adding itself as an observer
-	private static EPGData instance; 
+	private static class SingletonHolder { 
+        public static final EPGData INSTANCE = new EPGData();
+	}
+		
+	public static EPGData instance(){
+		return SingletonHolder.INSTANCE;
+	}
+	
 	private EPGData(){
 		STBContainer.instance().addObserver(this);
 	}
-	public static EPGData instance(){
-		if(instance == null)
-			instance = new EPGData();
-		return instance;
-	}
+	
 	
 	public void update(Observable observable, Object data) {
 		stb = STBContainer.instance().getSTB();

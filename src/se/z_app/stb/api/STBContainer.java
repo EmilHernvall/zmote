@@ -1,5 +1,7 @@
 package se.z_app.stb.api;
 import java.util.Observable;
+import java.util.Observer;
+
 import se.z_app.stb.STB;
 
 
@@ -10,20 +12,28 @@ public class STBContainer extends Observable {
 	
 	
 	
-	private static STBContainer instance; 
+	private static class SingletonHolder { 
+        public static final STBContainer INSTANCE = new STBContainer();
+	}
+	
+	
+	public static STBContainer instance(){
+		// Bug appears here if one initatate all other singeltons since they as well asks for this instance to 
+		// add them self as observers(Loop of doom). 
+		//The problem of not having a congruent/synced observers can be fixed by overiding addObserver, as done
+		//Raz
+		return SingletonHolder.INSTANCE;	
+	}
 	private STBContainer(){
 	}
 	
-	public static STBContainer instance(){
-		if(instance == null){
-			instance = new STBContainer();
-			STBListener.instance();
-			EPGData.instance();
-			WebTVCommand.instance();
-			RemoteControl.instance();
+	//This i overided due to the problem with instances initaing at diffrent times
+	@Override
+	public void addObserver(Observer observer) {
+		super.addObserver(observer);
+		if(getSTB() != null){
+			observer.update(this, null);
 		}
-		return instance;
-		
 	}
 	
 	public STB getSTB(){
@@ -34,8 +44,8 @@ public class STBContainer extends Observable {
 		if(this.stb != null && this.stb.equals(stb)) return;
 		
 		this.stb = stb;
-		super.setChanged();
-		super.notifyObservers();
+		setChanged();
+		notifyObservers();
 	}
 	
 }

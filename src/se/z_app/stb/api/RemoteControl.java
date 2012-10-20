@@ -21,14 +21,15 @@ public class RemoteControl implements Observer {
 	
 	
 	//Singleton and adding itself as an observer
-	private static RemoteControl instance; 
+	private static class SingletonHolder { 
+        public static final RemoteControl INSTANCE = new RemoteControl();
+	}
+	
+	public static RemoteControl instance(){
+		return SingletonHolder.INSTANCE;
+	}
 	private RemoteControl(){
 		STBContainer.instance().addObserver(this);
-	}
-	public static RemoteControl instance(){
-		if(instance == null)
-			instance = new RemoteControl();
-		return instance;
 	}
 	
 	public void update(Observable observable, Object data) {

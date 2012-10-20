@@ -12,21 +12,19 @@ public class STBListener extends Observable implements Observer, Runnable{
 
 	//Singleton and adding itself as an observer
 	private EventListnerInterface eventListener;
-	private static STBListener instance; 
+
 	private Thread myThread;
 	private STB stb;
 	
+	private static class SingletonHolder { 
+        public static final STBListener INSTANCE = new STBListener();
+	}
+		
+	public static STBListener instance(){
+		return SingletonHolder.INSTANCE;
+	}
 	private STBListener(){
 		STBContainer.instance().addObserver(this);
-	}
-	
-	
-	public static STBListener instance(){
-		if(instance == null){
-			instance = new STBListener();
-			STBState.instance();
-		}
-		return instance;
 	}
 	
 

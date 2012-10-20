@@ -8,8 +8,7 @@ import android.graphics.Bitmap;
 import se.z_app.stb.STB;
 import se.z_app.stb.WebTVItem;
 import se.z_app.stb.WebTVService;
-import se.z_app.stb.api.zenterio.RCCommand;
-import se.z_app.stb.api.zenterio.StandardCommand;
+
 
 /**
  * 
@@ -20,35 +19,26 @@ import se.z_app.stb.api.zenterio.StandardCommand;
 
 public class WebTVCommand implements Observer{
 
-	private static WebTVCommand instance; 
+	
+	private static class SingletonHolder { 
+        public static final WebTVCommand INSTANCE = new WebTVCommand();
+}
+	public static WebTVCommand instance(){
+		return SingletonHolder.INSTANCE;
+	}
+	
 	private WebTVCommand(){
 		STBContainer.instance().addObserver(this);
-	}
-	public static WebTVCommand instance(){
-		if(instance == null)
-			instance = new WebTVCommand();
-		return instance;
 	}
 	
 	private MonoDirectionalCmdInterface MonoCmd;
 	private BiDirectionalCmdInterface BiCmd;
+	
 	@Override
-	
-	
 	public void update(Observable observable, Object data) {
 		STB stb = STBContainer.instance().getSTB();
-		switch(stb.getType()){
-		case DEFAULT:
-			MonoCmd = null;
-			BiCmd = null;
-			break;
-		case ZENTERIO:
-			MonoCmd = new RCCommand(stb.getIP());
-			BiCmd = new StandardCommand(stb.getIP());
-			break;
-		default:
-			break;
-		}
+		MonoCmd = AbstractAPIFactory.getFactory(stb).getMonoDirectional();
+		BiCmd = AbstractAPIFactory.getFactory(stb).getBiDirectional();
 	}
 	
 	
