@@ -1,4 +1,3 @@
-
 <resources>
 
     <string name="app_name">Zmote</string>
@@ -14,7 +13,6 @@
     <string name="title_activity_edit_stb">EditSTBActivity</string>
     <string name="title_activity_remote_control">RemoteControlActivity</string>
     <string name="search_stb_text">SEARCH FOR NEW STB</string>
-    
     <string name="activity_edit_stb_staticName">Name:</string>
     <string name="activity_edit_stb_hintName"></string>
     <string name="activity_edit_stb_editName"></string>
@@ -36,5 +34,6 @@
     <string name="activity_remote_control_OK_button">OK</string>
     <string name="title_activity_buttons_bar">ButtonsBarActivity</string>
     <string name="title_activity_main_activity_view2">MainView2</string>
+    <string name="title_activity_main_test">MainTestActivity</string>
 
 </resources>
