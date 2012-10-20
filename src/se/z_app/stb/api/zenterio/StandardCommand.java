@@ -162,7 +162,6 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 				InputStream in = url.openStream();
 				
 				
-		    	String str;
 		    	byte buffer[] = new byte[2048];
 		    	int len;
 				while ((len = in.read(buffer)) != -1) {

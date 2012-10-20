@@ -3,10 +3,8 @@ package se.z_app.stb.api;
 import java.util.Observable;
 import java.util.Observer;
 
-import android.util.Log;
-
 import se.z_app.stb.STB;
-import se.z_app.stb.api.zenterio.RCCommand;
+
 
 
 /**
@@ -35,16 +33,8 @@ public class RemoteControl implements Observer {
 	
 	public void update(Observable observable, Object data) {
 		STB stb = STBContainer.instance().getSTB();
-		switch(stb.getType()){
-		case DEFAULT:
-			remoteImpl = null;
-			break;
-		case ZENTERIO:
-			remoteImpl = new RCCommand(stb.getIP());
-			break;
-		default:
-			break;
-		}
+		remoteImpl = AbstractAPIFactory.getFactory(stb).getMonoDirectional();
+		
 	}
 	
 	public void sendText(String chars){

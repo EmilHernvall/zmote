@@ -4,17 +4,16 @@ import java.util.Observable;
 import java.util.Observer;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import se.z_app.stb.Channel;
 import se.z_app.stb.EPG;
 import se.z_app.stb.STB;
-import se.z_app.stb.STB.STBEnum;
-import se.z_app.stb.api.zenterio.StandardCommand;
+
 
 public class EPGData implements Observer{
 	private STB stb;
 	private BiDirectionalCmdInterface com;
+	
 	//Singleton and adding itself as an observer
 	private static EPGData instance; 
 	private EPGData(){
@@ -28,15 +27,7 @@ public class EPGData implements Observer{
 	
 	public void update(Observable observable, Object data) {
 		stb = STBContainer.instance().getSTB();
-		switch(stb.getType()){
-			case ZENTERIO:
-				com = new StandardCommand(stb.getIP());
-				break;
-			case DEFAULT:
-				com = new StandardCommand(stb.getIP());
-				break;
-			default:
-		}
+		com = AbstractAPIFactory.getFactory(stb).getBiDirectional();
 	}
 	
 	public EPG getEPG(){
@@ -47,7 +38,6 @@ public class EPGData implements Observer{
 	}
 	
 	public Channel getCurrentChannel(){
-		Log.i("EPGData", com.getClass().toString());
 		return com.getCurrentChannel();
 	}
 	public Bitmap getChannelIcon(Channel channel){

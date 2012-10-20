@@ -2,7 +2,6 @@ package se.z_app.stb.api;
 
 import java.util.concurrent.locks.ReentrantLock;
 
-import android.util.Log;
 
 
 /**
