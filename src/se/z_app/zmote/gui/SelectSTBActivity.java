@@ -2,7 +2,7 @@ package se.z_app.zmote.gui;
 
 import se.z_app.stb.STB;
 import se.z_app.stb.api.STBDiscovery;
-import se.z_app.stb.api.zenterio.Discovery;
+
 
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -107,7 +107,9 @@ public class SelectSTBActivity extends Activity {
 				WifiManager myWifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
 		    	WifiInfo myWifiInfo = myWifiManager.getConnectionInfo();
 		    	int ipAddress = myWifiInfo.getIpAddress();
-		    	String str = android.text.format.Formatter.formatIpAddress(ipAddress);
+		    	
+		    	@SuppressWarnings("deprecation")
+				String str = android.text.format.Formatter.formatIpAddress(ipAddress);
 		    	return str.substring(0, str.lastIndexOf('.')+1);   	
 		}
     }

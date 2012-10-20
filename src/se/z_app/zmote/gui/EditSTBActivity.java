@@ -2,9 +2,9 @@ package se.z_app.zmote.gui;
 
 import se.z_app.stb.STB;
 import android.app.Activity;
-import android.content.Intent;
+
 import android.os.Bundle;
-import android.util.Log;
+
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;

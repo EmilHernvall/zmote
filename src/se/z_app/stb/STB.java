@@ -43,9 +43,6 @@ public class STB {
 		this.boxName = boxName;
 	}
 
-	private void updateSTB() {
-		// TODO implementation
-	}
 	
 	public String toString() {
 		 return boxName;

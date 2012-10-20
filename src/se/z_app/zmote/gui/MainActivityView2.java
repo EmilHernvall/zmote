@@ -12,7 +12,7 @@ package se.z_app.zmote.gui;
 
 import android.os.Bundle;
 import android.app.Activity;
-import android.view.Menu;
+
 import android.widget.HorizontalScrollView;
 import android.widget.Button;
 import se.z_app.stb.Channel;
