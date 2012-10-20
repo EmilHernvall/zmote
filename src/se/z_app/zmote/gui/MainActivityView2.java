@@ -29,7 +29,7 @@ public class MainActivityView2 extends Activity {
     
     // DUMMY
     // This function is suppose to add the whole list of channels to the view
-    // It uses the function addChannelItemToLayout iteratively
+    // It uses th				Log.i("Volume", "Minus V");e function addChannelItemToLayout iteratively
     public void addAllChannelsToLayout(){
     	
     }

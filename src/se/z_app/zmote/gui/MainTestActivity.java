@@ -4,12 +4,14 @@ import se.z_app.stb.STB;
 import se.z_app.stb.STB.STBEnum;
 import se.z_app.stb.api.STBContainer;
 import android.os.Bundle;
-import android.app.Activity;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 
-public class MainTestActivity extends Activity {
+
+//Pleas add your view or setting on this activity to make it easier for testing and accsess 
+public class MainTestActivity extends ZmoteActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -21,6 +23,7 @@ public class MainTestActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
+				vibrate();
 				STB stb = new STB();
 				stb.setBoxName("STB Proxy");
 				stb.setIP("130.236.248.226");
@@ -34,6 +37,7 @@ public class MainTestActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
+				vibrate();
 				STB stb = new STB();
 				stb.setBoxName("Zenterio227");
 				stb.setIP("130.236.248.227");
@@ -42,11 +46,12 @@ public class MainTestActivity extends Activity {
 				STBContainer.instance().setSTB(stb);
 			}
 		});
+        
         Button stb2 = (Button) findViewById(R.id.bLoadSTB1);
-        stb1.setOnClickListener(new View.OnClickListener() {
-			
+        stb2.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				vibrate();
 				STB stb = new STB();
 				stb.setBoxName("Zenterio228");
 				stb.setIP("130.236.248.228");
@@ -56,6 +61,25 @@ public class MainTestActivity extends Activity {
 			}
 		});
         
+        Button splash = (Button) findViewById(R.id.bSplash);
+        splash.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				vibrate();
+				Intent intent = new Intent(MainTestActivity.this, SplashActivity.class);
+				MainTestActivity.this.startActivity(intent);
+			}
+		});
+        
+        Button remote = (Button) findViewById(R.id.bRemoteControl);
+        remote.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				vibrate();
+				Intent intent = new Intent(MainTestActivity.this, RemoteControlActivity.class);
+				MainTestActivity.this.startActivity(intent);
+			}
+		});
         
     }
 
