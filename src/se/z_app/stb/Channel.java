@@ -1,15 +1,13 @@
 package se.z_app.stb;
 
-import java.util.Comparator;
-import java.util.Date;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.concurrent.ConcurrentSkipListMap;
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentSkipListMap;
+
 
 
 import android.graphics.Bitmap;
 
-public class Channel implements Iterable<Program>, Comparable<Channel>, Comparator<Channel>{
+public class Channel implements Iterable<Program>{
 	private String name;
 	private Bitmap icon;
 	private String iconUrl;
@@ -18,8 +16,7 @@ public class Channel implements Iterable<Program>, Comparable<Channel>, Comparat
 	private int onid;
 	private int tsid;
 	private int sid;
-//	private ConcurrentSkipListMap<Date, Program> programsByDate = new ConcurrentSkipListMap<Date, Program>();
-	private LinkedList<Program> programs = new LinkedList<Program>();
+	private ConcurrentSkipListMap programsByDate = new ConcurrentSkipListMap();
 	
 	
 	public String getName() {
@@ -72,25 +69,18 @@ public class Channel implements Iterable<Program>, Comparable<Channel>, Comparat
 	}
 	
 	public void addProgram(Program program){
-		programs.add(program);
-		//programsByDate.putIfAbsent(program.getStart(), program);
+//		programs.add(program);
+		programsByDate.put(program.getStart(), program);
 	}
 
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public Iterator<Program> iterator() {
-		//return programsByDate.values().iterator();
-		return programs.iterator();
+		return programsByDate.values().iterator();
+		//return programs.iterator();
 	}
 
-	@Override
-	public int compareTo(Channel another) {
-		return new Integer(getNr()).compareTo(new Integer(another.getNr()));
-	}
-	@Override
-	public int compare(Channel lhs, Channel rhs) {
-		return lhs.compareTo(rhs);
-	}
 	
 
 	

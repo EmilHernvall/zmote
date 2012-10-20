@@ -1,8 +1,4 @@
 package se.z_app.stb;
-
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
 /*
  * 
  */

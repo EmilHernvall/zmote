@@ -1,9 +1,9 @@
 package se.z_app.stb;
 
-import java.util.Comparator;
+
 import java.util.Date;
 
-public class Program implements Comparable<Program>, Comparator<Program>{
+public class Program{
 	
 	private String name;
 	private int eventID;
@@ -52,13 +52,6 @@ public class Program implements Comparable<Program>, Comparator<Program>{
 	public void setLongText(String longText) {
 		this.longText = longText;
 	}
-	@Override
-	public int compareTo(Program another) {
-		return start.compareTo(another.getStart());
-	}
-	@Override
-	public int compare(Program lhs, Program rhs) {
-		return compareTo(rhs);
-	}
+
 	
 }

@@ -1,27 +1,20 @@
 package se.z_app.stb.api.zenterio;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+
 import java.net.URL;
 import java.util.Date;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 import se.z_app.stb.Channel;
 import se.z_app.stb.EPG;
 import se.z_app.stb.Program;
-import se.z_app.stb.STB;
 import se.z_app.stb.WebTVItem;
 import se.z_app.stb.WebTVService;
 import se.z_app.stb.api.BiDirectionalCmdInterface;
@@ -35,9 +28,9 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 	
 	public EPG getEPG() {
 		EPG epg = new EPG();
-		
+		long time = System.currentTimeMillis();
 		String jsonString = new GetHTTPResponse().getJSON("http://" + ip + "/mdio/epg");
-		//System.out.println("EPG-> "+jsonString);
+		Log.i("ZmoteTestLog", "Featching raw EPG: " + (System.currentTimeMillis() - time) + "ms");
 		
 		try {
 			JSONArray jsonarray = new JSONArray(jsonString);
@@ -63,11 +56,11 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 					program.setLongText(jsonProgram.getString("exttext"));
 					program.setEventID(jsonProgram.getInt("eventId"));
 					
-					/*
+					
 					String start = jsonProgram.getString("start");
 					start = start.replace(" ", "-");
 					start = start.replace(":", "-");
-					String startAr[] = start.split("-");
+					String startAr[] = start.split("\\-");
 					
 				
 					@SuppressWarnings("deprecation")
@@ -80,15 +73,16 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 							Integer.parseInt(startAr[5])
 							);
 					program.setStart(date);
+				 
 					
 					String duration = jsonProgram.getString("duration");
-					System.out.println("Duration ----------> " + duration);
-					String durationAr[] = duration.split(".");
-					int time = Integer.parseInt(durationAr[0])*3600;
-					time += Integer.parseInt(durationAr[1])*60;
-					time += Integer.parseInt(durationAr[2]);
-					program.setDuration(time);
-					*/
+					String durationAr[] = duration.split("\\.");
+					if(durationAr.length > 2){
+						int durationTime = Integer.parseInt(durationAr[0])*3600;
+						durationTime += Integer.parseInt(durationAr[1])*60;
+						durationTime += Integer.parseInt(durationAr[2]);
+						program.setDuration(durationTime);
+					}					
 					channel.addProgram(program);
 				}
 				
@@ -162,8 +156,6 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 		
 		
 		public String getJSON(String urlStr){
-			
-			
 			String json = "";	
 			try {
 				URL url = new URL(urlStr);
