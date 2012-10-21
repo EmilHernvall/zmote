@@ -6,7 +6,6 @@ import java.util.Observer;
 
 import se.z_app.stb.STB;
 import se.z_app.stb.STBEvent;
-import se.z_app.stb.api.zenterio.EventListener;
 
 public class STBListener extends Observable implements Observer, Runnable{
 
