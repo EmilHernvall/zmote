@@ -9,7 +9,7 @@ public class WebTVItem {
 	private String title;
 	private String author;
 	private String info;
-	private int duration;
+	private int duration = -1;
 	private Bitmap icon;
 	private String iconURL;
 	

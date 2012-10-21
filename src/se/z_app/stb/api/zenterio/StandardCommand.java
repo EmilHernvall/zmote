@@ -131,8 +131,25 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 
 	
 	public WebTVService[] getWebTVServices() {
-		// TODO Auto-generated method stub
-		return null;
+		String jsonString = new GetHTTPResponse().getJSON("http://" + ip + "/mdio/webtv/services");
+		WebTVService webservices[] = null;
+		try {
+			JSONArray services = new JSONArray(jsonString);
+			int len = services.length();
+			webservices = new WebTVService[len];
+			for(int i = 0; i < len; i++ ){
+				JSONObject service = services.getJSONObject(i);
+				webservices[i] = new WebTVService();
+				webservices[i].setID(service.getString("id"));
+				webservices[i].setName(service.getString("name"));
+				webservices[i].setIconURL(service.getString("iconURL"));
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return webservices;
 	}
 
 	
@@ -148,8 +165,34 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 	}
 
 	public WebTVItem[] searchWebTVService(String query, WebTVService service) {
-		// TODO Auto-generated method stub
-		return null;
+		String jsonString = new GetHTTPResponse().getJSON("http://" + ip + 
+				"/mdio/webtv/search?service=" + service.getID() + "&q=" + query);
+		WebTVItem webResults[] = null;
+		
+		try {
+			JSONObject Jobject = new JSONObject(jsonString);
+			
+			JSONArray results = Jobject.getJSONArray("media");
+			int len = results.length();
+			webResults = new WebTVItem[len];
+			for (int i = 0; i < len; i++){
+				webResults[i] = new WebTVItem();
+				webResults[i].setId(results.getJSONObject(i).getString("id"));
+				webResults[i].setTitle(results.getJSONObject(i).getString("title"));
+				webResults[i].setAuthor(results.getJSONObject(i).getString("author"));
+				webResults[i].setDuration(results.getJSONObject(i).getInt("duration"));
+				webResults[i].setIconURL(results.getJSONObject(i).getString("iconURL"));
+				webResults[i].setWebTVService(service);
+			}
+				
+				
+		
+		} catch (JSONException e) {
+			return null;
+		}
+		
+		
+		return webResults;
 	}
 
 	private class GetHTTPResponse{
