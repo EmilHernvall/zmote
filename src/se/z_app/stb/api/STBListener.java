@@ -30,7 +30,7 @@ public class STBListener extends Observable implements Observer, Runnable{
 	
 	
 	public void update(Observable obsesrvable, Object data) {
-		stb = STBContainer.instance().getSTB();
+		stb = STBContainer.instance().getActiveSTB();
 		if(eventListener != null)
 			eventListener.stop();
 		eventListener = AbstractAPIFactory.getFactory(stb).getEventListner();

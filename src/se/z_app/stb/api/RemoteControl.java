@@ -31,7 +31,7 @@ public class RemoteControl implements Observer {
 	}
 	
 	public void update(Observable observable, Object data) {
-		STB stb = STBContainer.instance().getSTB();
+		STB stb = STBContainer.instance().getActiveSTB();
 		remoteImpl = AbstractAPIFactory.getFactory(stb).getMonoDirectional();
 		
 	}

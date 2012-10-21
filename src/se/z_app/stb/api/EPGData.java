@@ -30,11 +30,14 @@ public class EPGData implements Observer{
 	
 	
 	public void update(Observable observable, Object data) {
-		stb = STBContainer.instance().getSTB();
+		stb = STBContainer.instance().getActiveSTB();
 		com = AbstractAPIFactory.getFactory(stb).getBiDirectional();
 	}
 	
 	public EPG getEPG(){
+		if(com == null)
+			return null;
+		
 		EPG epg = com.getEPG();
 		epg.setStb(stb);
 		
@@ -42,17 +45,25 @@ public class EPGData implements Observer{
 	}
 	
 	public Channel getCurrentChannel(){
+		if(com == null)
+			return null;
 		return com.getCurrentChannel();
 	}
 	public Bitmap getChannelIcon(Channel channel){
+		if(com == null)
+			return null;
 		return com.getChannelIcon(channel);
 	}
 	
 	public void populateWithChannelIcon(Channel channel){
+		if(com == null)
+			return;
 		channel.setIcon(getChannelIcon(channel));
 	}
 	
 	public void populateWithChannelIcon(EPG epg){
+		if(com == null)
+			return;
 		Iterator<Channel> channels = epg.iterator();
 		while(channels.hasNext()){
 			populateWithChannelIcon(channels.next());

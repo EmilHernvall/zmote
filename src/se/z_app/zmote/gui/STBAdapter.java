@@ -55,7 +55,7 @@ public class STBAdapter extends BaseAdapter {
 			public void onClick(View v) {
 				ListTextViewElement theView = (ListTextViewElement) v;
 				STB theSelectedSTB = STBListSingleton.instance().getList().get(theView.getIndex());
-				STBContainer.instance().setSTB(theSelectedSTB);
+				STBContainer.instance().setActiveSTB(theSelectedSTB);
 				Activity theActivity = (Activity)v.getContext();
 				theActivity.finish();
 				Intent mainIntent = new Intent(v.getContext(), RemoteControlActivity.class);

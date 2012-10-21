@@ -29,7 +29,7 @@ public class MainTestActivity extends ZmoteActivity {
 				stb.setIP("130.236.248.226");
 				stb.setType(STBEnum.ZENTERIO);
 				stb.setMAC("00:07:67:9B:EB:33");
-				STBContainer.instance().setSTB(stb);
+				STBContainer.instance().setActiveSTB(stb);
 			}
 		});
         Button stb1 = (Button) findViewById(R.id.bLoadSTB1);
@@ -43,7 +43,7 @@ public class MainTestActivity extends ZmoteActivity {
 				stb.setIP("130.236.248.227");
 				stb.setType(STBEnum.ZENTERIO);
 				stb.setMAC("00:07:67:9B:EB:34");
-				STBContainer.instance().setSTB(stb);
+				STBContainer.instance().setActiveSTB(stb);
 			}
 		});
         
@@ -57,7 +57,7 @@ public class MainTestActivity extends ZmoteActivity {
 				stb.setIP("130.236.248.228");
 				stb.setType(STBEnum.ZENTERIO);
 				stb.setMAC("00:07:67:9B:EB:35");
-				STBContainer.instance().setSTB(stb);
+				STBContainer.instance().setActiveSTB(stb);
 			}
 		});
         

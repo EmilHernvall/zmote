@@ -1,15 +1,18 @@
 package se.z_app.stb.api;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
+
 
 import se.z_app.stb.STB;
 
 
 
 
-public class STBContainer extends Observable {
+public class STBContainer extends Observable implements Iterable<STB>{
 	private STB stb;
-	
+	private LinkedList<STB> stbs = new LinkedList<STB>();
 	
 	
 	private static class SingletonHolder { 
@@ -18,10 +21,6 @@ public class STBContainer extends Observable {
 	
 	
 	public static STBContainer instance(){
-		// Bug appears here if one initatate all other singeltons since they as well asks for this instance to 
-		// add them self as observers(Loop of doom). 
-		//The problem of not having a congruent/synced observers can be fixed by overriding addObserver, as done
-		//Raz
 		return SingletonHolder.INSTANCE;	
 	}
 	private STBContainer(){
@@ -31,21 +30,53 @@ public class STBContainer extends Observable {
 	@Override
 	public void addObserver(Observer observer) {
 		super.addObserver(observer);
-		if(getSTB() != null){
+		if(getActiveSTB() != null){
 			observer.update(this, null);
 		}
 	}
 	
-	public STB getSTB(){
+	public STB getActiveSTB(){
 		return stb;
 	}
 	
-	public void setSTB(STB stb){
+	public void setActiveSTB(STB stb){
 		if(this.stb != null && this.stb.equals(stb)) return;
 		
 		this.stb = stb;
 		setChanged();
 		notifyObservers();
 	}
+	
+	public boolean isActiveSTB(STB stb){
+		return this.stb.equals(stb);
+	}
+	
+	public boolean addSTB(STB stb){
+		if(!stbs.contains(stb)){
+			stbs.add(stb);
+			return true;
+		}
+		return false;
+	}
+	public boolean removeSTB(STB stb){
+		return stbs.remove(stb);
+	}
+	
+	public boolean containsSTB(STB stb){
+		return stbs.contains(stb);
+	}
+	@Override
+	public Iterator<STB> iterator() {
+		return stbs.iterator();
+	}
+	
+	public void reset(){
+		stbs = new LinkedList<STB>();
+		stb = null;
+		hasChanged();
+		notifyObservers();
+	}
+	
+	
 	
 }
