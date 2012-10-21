@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class RemoteControlActivity extends Activity {
+public class RemoteControlActivity extends ZmoteActivity {
 	private Button arrow_up_button;
 	private Button arrow_down_button;
 	private Button arrow_left_button;

@@ -8,8 +8,11 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.KeyEvent;
 
+
+
 public abstract class ZmoteActivity extends Activity{
-	Vibrator vibe; 
+	private Vibrator vibe;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
