@@ -5,8 +5,6 @@ import java.util.Observer;
 
 import se.z_app.stb.STB;
 
-
-
 /**
  * Remote control needs a STB in the STBContainer to be able to send 
  * commands.
@@ -46,7 +44,6 @@ public class RemoteControl implements Observer {
 	public void sendButton(Button button){
 		if(remoteImpl != null)
 			remoteImpl.sendButton(button);
-	
 	}
 	
 	public void launch(String url){

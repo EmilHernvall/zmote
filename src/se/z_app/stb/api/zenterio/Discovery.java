@@ -46,6 +46,7 @@ public class Discovery implements DiscoveryInterface {
 			}
 		}
 		catch (RuntimeException e) { e.printStackTrace(); }
+		System.out.println(stbs.length);
 		return stbs;
 	}
 
