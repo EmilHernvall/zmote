@@ -6,8 +6,6 @@ import java.net.InetAddress;
 import java.net.URL;
 import java.util.LinkedList;
 
-import android.util.Log;
-
 import se.z_app.stb.STB;
 import se.z_app.stb.api.DiscoveryInterface;
 

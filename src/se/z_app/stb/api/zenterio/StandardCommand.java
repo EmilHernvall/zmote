@@ -29,7 +29,7 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 	public EPG getEPG() {
 		EPG epg = new EPG();
 		long time = System.currentTimeMillis();
-		String jsonString = new GetHTTPResponse().getJSON("http://" + ip + "/mdio/epg");
+		String jsonString = new GetHTTPResponse().getJSON("http://" + ip + "/mdio/epg", 32768);
 		Log.i("ZmoteTestLog", "Featching raw EPG: " + (System.currentTimeMillis() - time) + "ms");
 		
 		try {
@@ -89,8 +89,7 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 			}
 			
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return null;
 		}
 		
 		
@@ -197,15 +196,17 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 
 	private class GetHTTPResponse{
 		
-		
 		public String getJSON(String urlStr){
+			return getJSON(urlStr, 4096);
+		}
+		public String getJSON(String urlStr, int bufferSize){
 			String json = "";	
 			try {
 				URL url = new URL(urlStr);
 				InputStream in = url.openStream();
 				
 				
-		    	byte buffer[] = new byte[2048];
+		    	byte buffer[] = new byte[bufferSize];
 		    	int len;
 				while ((len = in.read(buffer)) != -1) {
 					json = json + new String(buffer, 0, len);
