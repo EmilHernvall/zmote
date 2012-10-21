@@ -17,16 +17,16 @@ public class EPG implements Iterable<Channel> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Iterator<Channel> iterator() {
-		return channelsNr.values().iterator();
+		return (Iterator<Channel>)channelsNr.values().iterator();
 		//return channels.iterator();
 	}
 	
 	@SuppressWarnings("unchecked")
 	public Iterator<Channel> iteratorByName() {
-		return channelsName.values().iterator();
+		return (Iterator<Channel>)channelsName.values().iterator();
 	}
 	public Iterator<Channel> iteratorByNr() {
-		return iterator();
+		return (Iterator<Channel>)iterator();
 	}
 	
 	public long getDateOfCreation() {
