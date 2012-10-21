@@ -112,7 +112,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/confirm_button"
         android:layout_alignBottom="@+id/confirm_button"
-        android:layout_margin="1"
+        android:layout_margin="1.5"
         android:layout_toLeftOf="@+id/confirm_button"
         android:background="@drawable/remote_left"
         android:minHeight="56dip"
