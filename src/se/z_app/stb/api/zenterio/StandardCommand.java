@@ -1,12 +1,12 @@
 package se.z_app.stb.api.zenterio;
 
-import java.io.ByteArrayInputStream;
+
 import java.io.IOException;
 import java.io.InputStream;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
+
 import java.util.Date;
 
 
@@ -161,14 +161,14 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 
 	
 	public Bitmap getWebTVServiceIcon(WebTVService serivce) {
-		// TODO Auto-generated method stub
-		return null;
+		String url = "http://" + ip +"/mdio/webtv/icon?locator=" + serivce.getIconURL();			
+			return new GetHTTPResponse().getImage(url);
 	}
 
 
 	public Bitmap getWebTVItemIcon(WebTVItem item) {
-		// TODO Auto-generated method stub
-		return null;
+		String url = "http://" + ip +"/mdio/webtv/icon?locator=" + item.getIconURL();			
+		return new GetHTTPResponse().getImage(url);
 	}
 
 	public WebTVItem[] searchWebTVService(String query, WebTVService service) {
