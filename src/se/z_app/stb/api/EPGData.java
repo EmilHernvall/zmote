@@ -1,5 +1,6 @@
 package se.z_app.stb.api;
 
+import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -47,6 +48,16 @@ public class EPGData implements Observer{
 		return com.getChannelIcon(channel);
 	}
 	
+	public void populateWithChannelIcon(Channel channel){
+		channel.setIcon(getChannelIcon(channel));
+	}
+	
+	public void populateWithChannelIcon(EPG epg){
+		Iterator<Channel> channels = epg.iterator();
+		while(channels.hasNext()){
+			populateWithChannelIcon(channels.next());
+		}
+	}
 	
 	
 }
