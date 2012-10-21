@@ -11,7 +11,7 @@
 package se.z_app.zmote.gui;
 
 import android.os.Bundle;
-import android.app.Activity;
+
 
 import android.widget.HorizontalScrollView;
 import android.widget.Button;
@@ -19,7 +19,7 @@ import se.z_app.stb.Channel;
 import android.graphics.Bitmap;
 
 
-public class MainActivityView2 extends Activity {
+public class MainActivityView2 extends ZmoteActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

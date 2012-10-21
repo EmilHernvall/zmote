@@ -22,7 +22,7 @@ import android.support.v4.app.NavUtils;
  * @author viktordahl + others
  *
  */
-public class SelectSTBActivity extends Activity {
+public class SelectSTBActivity extends ZmoteActivity {
     private STBListView theView;
     private STB[] stbs;
     private ASyncSTBFinder async;

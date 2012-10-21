@@ -1,8 +1,12 @@
 package se.z_app.stb.api.zenterio;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 
 
@@ -11,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import se.z_app.stb.Channel;
 import se.z_app.stb.EPG;
@@ -125,7 +130,10 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 	
 	public Bitmap getChannelIcon(Channel channel) {
 		
-		return null;
+		String url = "http://" + ip +"/mdio/channelicon?onid="+ channel.getOnid() +
+			"&tsid=" + channel.getTsid() + "&sid=" + channel.getSid(); 
+		
+		return new GetHTTPResponse().getImage(url);
 	}
 
 	
@@ -195,7 +203,23 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 	}
 
 	private class GetHTTPResponse{
-		
+		public Bitmap getImage(String urlStr){
+			URL url;
+			Bitmap theImage = null;
+			try {
+				url = new URL(urlStr);
+				InputStream in = url.openStream();
+				theImage = BitmapFactory.decodeStream(in);
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return theImage;
+		}
 		public String getJSON(String urlStr){
 			return getJSON(urlStr, 4096);
 		}
