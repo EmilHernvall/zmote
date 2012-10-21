@@ -9,10 +9,10 @@ public class WebTVService {
 	private String iconURL;
 	
 	
-	public String getiD() {
+	public String getID() {
 		return iD;
 	}
-	public void setiD(String iD) {
+	public void setID(String iD) {
 		this.iD = iD;
 	}
 	public String getName() {

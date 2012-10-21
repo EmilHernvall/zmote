@@ -1,8 +1,12 @@
 package se.z_app.stb.api.zenterio;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 
 
@@ -11,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import se.z_app.stb.Channel;
 import se.z_app.stb.EPG;
@@ -29,7 +34,7 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 	public EPG getEPG() {
 		EPG epg = new EPG();
 		long time = System.currentTimeMillis();
-		String jsonString = new GetHTTPResponse().getJSON("http://" + ip + "/mdio/epg");
+		String jsonString = new GetHTTPResponse().getJSON("http://" + ip + "/mdio/epg", 32768);
 		Log.i("ZmoteTestLog", "Featching raw EPG: " + (System.currentTimeMillis() - time) + "ms");
 		
 		try {
@@ -89,8 +94,7 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 			}
 			
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return null;
 		}
 		
 		
@@ -126,13 +130,33 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 	
 	public Bitmap getChannelIcon(Channel channel) {
 		
-		return null;
+		String url = "http://" + ip +"/mdio/channelicon?onid="+ channel.getOnid() +
+			"&tsid=" + channel.getTsid() + "&sid=" + channel.getSid(); 
+		
+		return new GetHTTPResponse().getImage(url);
 	}
 
 	
 	public WebTVService[] getWebTVServices() {
-		// TODO Auto-generated method stub
-		return null;
+		String jsonString = new GetHTTPResponse().getJSON("http://" + ip + "/mdio/webtv/services");
+		WebTVService webservices[] = null;
+		try {
+			JSONArray services = new JSONArray(jsonString);
+			int len = services.length();
+			webservices = new WebTVService[len];
+			for(int i = 0; i < len; i++ ){
+				JSONObject service = services.getJSONObject(i);
+				webservices[i] = new WebTVService();
+				webservices[i].setID(service.getString("id"));
+				webservices[i].setName(service.getString("name"));
+				webservices[i].setIconURL(service.getString("iconURL"));
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return webservices;
 	}
 
 	
@@ -148,21 +172,65 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 	}
 
 	public WebTVItem[] searchWebTVService(String query, WebTVService service) {
-		// TODO Auto-generated method stub
-		return null;
+		String jsonString = new GetHTTPResponse().getJSON("http://" + ip + 
+				"/mdio/webtv/search?service=" + service.getID() + "&q=" + query);
+		WebTVItem webResults[] = null;
+		
+		try {
+			JSONObject Jobject = new JSONObject(jsonString);
+			
+			JSONArray results = Jobject.getJSONArray("media");
+			int len = results.length();
+			webResults = new WebTVItem[len];
+			for (int i = 0; i < len; i++){
+				webResults[i] = new WebTVItem();
+				webResults[i].setId(results.getJSONObject(i).getString("id"));
+				webResults[i].setTitle(results.getJSONObject(i).getString("title"));
+				webResults[i].setAuthor(results.getJSONObject(i).getString("author"));
+				webResults[i].setDuration(results.getJSONObject(i).getInt("duration"));
+				webResults[i].setIconURL(results.getJSONObject(i).getString("iconURL"));
+				webResults[i].setWebTVService(service);
+			}
+				
+				
+		
+		} catch (JSONException e) {
+			return null;
+		}
+		
+		
+		return webResults;
 	}
 
 	private class GetHTTPResponse{
-		
-		
+		public Bitmap getImage(String urlStr){
+			URL url;
+			Bitmap theImage = null;
+			try {
+				url = new URL(urlStr);
+				InputStream in = url.openStream();
+				theImage = BitmapFactory.decodeStream(in);
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return theImage;
+		}
 		public String getJSON(String urlStr){
+			return getJSON(urlStr, 4096);
+		}
+		public String getJSON(String urlStr, int bufferSize){
 			String json = "";	
 			try {
 				URL url = new URL(urlStr);
 				InputStream in = url.openStream();
 				
 				
-		    	byte buffer[] = new byte[2048];
+		    	byte buffer[] = new byte[bufferSize];
 		    	int len;
 				while ((len = in.read(buffer)) != -1) {
 					json = json + new String(buffer, 0, len);

@@ -2,100 +2,120 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black" >
-
-    <Button
-        android:id="@+id/info_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginBottom="35dp"
-        android:layout_marginLeft="33dp"
-        android:background="@drawable/action_about"
-        android:text="" />
+    android:layout_marginBottom="3dp"
+    android:background="@color/black"
+    android:minWidth="64dip" >
 
     <Button
         android:id="@+id/undo_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/info_button"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="33dp"
-        android:background="@drawable/content_undo"
-        android:text="" />
-
-    <Button
-        android:id="@+id/arrow_down_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/info_button"
-        android:layout_alignBottom="@+id/info_button"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/play_down"
-        android:minHeight="32dip"
-        android:minWidth="32dip"
-        android:text="" />
-
-    <Button
-        android:id="@+id/arrow_right_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/undo_button"
-        android:layout_alignLeft="@+id/undo_button"
-        android:layout_marginBottom="15dp"
-        android:background="@drawable/play_right"
-        android:minHeight="32dip"
-        android:minWidth="32dip"
-        android:text="" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="14dp"
+        android:layout_marginLeft="13dp"
+        android:background="@drawable/remote_back"
+        android:minWidth="48dip" />
 
     <Button
         android:id="@+id/store_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/arrow_right_button"
-        android:layout_alignLeft="@+id/undo_button"
-        android:layout_marginBottom="15dp"
-        android:background="@drawable/device_access_storage"
-        android:text="" />
+        android:layout_alignBaseline="@+id/undo_button"
+        android:layout_alignBottom="@+id/undo_button"
+        android:layout_margin="13dp"
+        android:layout_toRightOf="@+id/undo_button"
+        android:background="@drawable/remote_options"
+        android:minWidth="48dip" />
 
     <Button
-        android:id="@+id/arrow_up_button"
+        android:id="@+id/info_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/store_button"
         android:layout_alignBottom="@+id/store_button"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/play_up"
-        android:minHeight="32dip"
-        android:minWidth="32dip" />
+        android:layout_marginTop="5dp"
+        android:background="@drawable/remote_info"
+        android:minWidth="48dip" />
 
     <Button
         android:id="@+id/mute_volume_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/arrow_up_button"
-        android:layout_alignBottom="@+id/arrow_up_button"
-        android:layout_alignLeft="@+id/info_button"
-        android:background="@drawable/device_access_volume_muted" />
+        android:layout_alignBaseline="@+id/info_button"
+        android:layout_alignBottom="@+id/info_button"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="14dp"
+        android:background="@drawable/remote_sound"
+        android:minWidth="48dip" />
 
     <Button
-        android:id="@+id/arrow_left_button"
+        android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/mute_volume_button"
-        android:layout_below="@+id/store_button"
-        android:background="@drawable/play_left"
-        android:minHeight="32dip"
-        android:minWidth="32dip" />
+        android:layout_alignBaseline="@+id/mute_volume_button"
+        android:layout_alignBottom="@+id/mute_volume_button"
+        android:layout_margin="13dp"
+        android:layout_toLeftOf="@+id/mute_volume_button"
+        android:background="@drawable/placeholder"
+        android:minWidth="48dip" />
+
+    <Button
+        android:id="@+id/arrow_down_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/info_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="-11dp"
+        android:background="@drawable/remote_down"
+        android:minHeight="96dip"
+        android:minWidth="66dip" />
 
     <Button
         android:id="@+id/confirm_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/arrow_right_button"
-        android:layout_alignBottom="@+id/arrow_right_button"
+        android:layout_above="@+id/arrow_down_button"
         android:layout_centerHorizontal="true"
-        android:text="@string/activity_remote_control_OK_button" />
+        android:layout_marginBottom="-5dp"
+        android:background="@drawable/remote_middle"
+        android:minHeight="56dp"
+        android:minWidth="56dp" />
+
+    <Button
+        android:id="@+id/arrow_up_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/confirm_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="-5dp"
+        android:background="@drawable/remote_up"
+        android:minHeight="96dp"
+        android:minWidth="64dp" />
+
+    <Button
+        android:id="@+id/arrow_right_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/confirm_button"
+        android:layout_alignBottom="@+id/confirm_button"
+        android:layout_margin="0.5dp"
+        android:layout_toRightOf="@+id/confirm_button"
+        android:background="@drawable/remote_right"
+        android:minHeight="56dip"
+        android:minWidth="96dip" />
+
+    <Button
+        android:id="@+id/arrow_left_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/confirm_button"
+        android:layout_alignBottom="@+id/confirm_button"
+        android:layout_margin="1.5dp"
+        android:layout_toLeftOf="@+id/confirm_button"
+        android:background="@drawable/remote_left"
+        android:minHeight="56dip"
+        android:minWidth="96dip" />
 
 </RelativeLayout>
