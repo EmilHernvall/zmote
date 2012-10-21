@@ -9,7 +9,7 @@ import android.content.Intent;
 import android.view.Menu;
 import android.widget.ImageView;
 
-public class SplashActivity extends Activity {
+public class SplashActivity extends ZmoteActivity {
 
 	// At the start, we are going to use just some time, then we will use
 	// other condition (modules load finish, for example.)

@@ -1,13 +1,13 @@
 package se.z_app.zmote.gui;
 
-import android.app.Activity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class ButtonsBarActivity extends Activity {
+public class ButtonsBarActivity extends ZmoteActivity {
 	private Button remote_button;
 //	private RemoteControlActivity remote_activity;
 	

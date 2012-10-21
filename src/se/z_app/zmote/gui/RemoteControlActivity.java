@@ -3,12 +3,13 @@ package se.z_app.zmote.gui;
 import se.z_app.stb.api.RCProxy;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class RemoteControlActivity extends Activity {
+public class RemoteControlActivity extends ZmoteActivity {
 	private Button arrow_up_button;
 	private Button arrow_down_button;
 	private Button arrow_left_button;
@@ -18,13 +19,14 @@ public class RemoteControlActivity extends Activity {
 	private Button undo_button;
 	private Button mute_volume_button;
 	private Button info_button;
-	 
+	private Button exit_button; 
 	 
 	 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_remote_control);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         btnListeners();
         
         
@@ -47,6 +49,7 @@ public class RemoteControlActivity extends Activity {
  		undo_button=(Button)findViewById(R.id.undo_button);
  		mute_volume_button=(Button)findViewById(R.id.mute_volume_button);
  		info_button=(Button)findViewById(R.id.info_button);
+ 		exit_button=(Button)findViewById(R.id.exit_button);
  		
  		 arrow_up_button.setOnClickListener(new OnClickListener() {
              @Override
@@ -110,28 +113,15 @@ public class RemoteControlActivity extends Activity {
              RCProxy.instance().info();    
              }
          });
- 		
+ 		 exit_button.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            //Yet to be implemented   
+            }
+        });
  		
  	
  	
  	}  
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

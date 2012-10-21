@@ -5,13 +5,11 @@ package se.z_app.stb;
 public class STB {
 
 	private STBEnum type;
-	private String MAC;
-	private String IP;
+	private String mac;
+	private String ip;
 	private String boxName;
 
 	public STBEnum getType() {
-
-		
 		return type;
 	}
 
@@ -24,15 +22,15 @@ public class STB {
 	}
 
 	public String getMAC() {
-		return MAC;
+		return mac;
 	}
 
-	public void setMAC(String mAC) {
-		MAC = mAC;
+	public void setMAC(String mac) {
+		this.mac = mac;
 	}
 
 	public String getIP() {
-		return IP;
+		return ip;
 	}
 
 	public String getBoxName() {
@@ -49,7 +47,7 @@ public class STB {
 	}
 
 	public void setIP(String ip) {
-		this.IP = ip;
+		this.ip = ip;
 	}
 }
 

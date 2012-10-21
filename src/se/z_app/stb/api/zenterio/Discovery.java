@@ -176,6 +176,7 @@ public class Discovery implements DiscoveryInterface {
 			for (int i = calculateStartRange(rangeIndex);i<calculateEndRange(rangeIndex) && isRunning;i++) {
 				try {
 					addr = InetAddress.getByName(subNetAddress+Integer.toString(i));
+					
 					if(addr.isReachable(timeOutInMs)) {
 						if ((row = isZenterioSTB(addr)) != null) {
 							isRunning = false;

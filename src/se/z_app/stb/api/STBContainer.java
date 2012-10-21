@@ -20,14 +20,14 @@ public class STBContainer extends Observable {
 	public static STBContainer instance(){
 		// Bug appears here if one initatate all other singeltons since they as well asks for this instance to 
 		// add them self as observers(Loop of doom). 
-		//The problem of not having a congruent/synced observers can be fixed by overiding addObserver, as done
+		//The problem of not having a congruent/synced observers can be fixed by overriding addObserver, as done
 		//Raz
 		return SingletonHolder.INSTANCE;	
 	}
 	private STBContainer(){
 	}
 	
-	//This i overided due to the problem with instances initaing at diffrent times
+	//This i overridden due to the problem with instances initiation at different times
 	@Override
 	public void addObserver(Observer observer) {
 		super.addObserver(observer);

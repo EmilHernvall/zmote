@@ -6,9 +6,9 @@ import java.util.Date;
 public class Program{
 	
 	private String name;
-	private int eventID;
+	private int eventID = -1;
 	private Date start;
-	private int duration;
+	private int duration = -1;
 	private String shortText;
 	private String longText;
 	

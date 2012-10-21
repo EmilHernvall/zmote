@@ -12,7 +12,7 @@
     <string name="title_activity_main_activity_view">MainActivityView</string>
     <string name="title_activity_edit_stb">EditSTBActivity</string>
     <string name="title_activity_remote_control">RemoteControlActivity</string>
-    <string name="search_stb_text">SEARCH FOR NEW STB</string>
+    <string name="search_stb_text">Search STB</string>
     <string name="activity_edit_stb_staticName">Name:</string>
     <string name="activity_edit_stb_hintName"></string>
     <string name="activity_edit_stb_editName"></string>

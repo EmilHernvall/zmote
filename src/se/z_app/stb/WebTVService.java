@@ -3,17 +3,17 @@ package se.z_app.stb;
 import android.graphics.Bitmap;
 
 public class WebTVService {
-	private String iD;
+	private String id;
 	private String name;
 	private Bitmap icon;
 	private String iconURL;
 	
 	
-	public String getiD() {
-		return iD;
+	public String getID() {
+		return id;
 	}
-	public void setiD(String iD) {
-		this.iD = iD;
+	public void setID(String id) {
+		this.id = id;
 	}
 	public String getName() {
 		return name;

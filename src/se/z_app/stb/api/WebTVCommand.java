@@ -37,8 +37,9 @@ public class WebTVCommand implements Observer{
 	@Override
 	public void update(Observable observable, Object data) {
 		STB stb = STBContainer.instance().getSTB();
-		MonoCmd = AbstractAPIFactory.getFactory(stb).getMonoDirectional();
-		BiCmd = AbstractAPIFactory.getFactory(stb).getBiDirectional();
+		AbstractAPIFactory factory = AbstractAPIFactory.getFactory(stb);
+		MonoCmd = factory.getMonoDirectional();
+		BiCmd = factory.getBiDirectional();
 	}
 	
 	

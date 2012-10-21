@@ -3,43 +3,37 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FF000000" >
-	
-    
+
+    <LinearLayout
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_marginBottom="121dip">
+    <se.z_app.zmote.gui.STBListView
+        android:id="@+id/list_over_stb"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="30dp"
+        android:background="#FF282828"
+        android:divider="#FF747474"
+        android:dividerHeight="1dp"
+        android:orientation="vertical" >
+    </se.z_app.zmote.gui.STBListView>
+    </LinearLayout>
+
     <Button
         android:id="@+id/button_scanforstb"
-        android:textColor="#FFFFFFFF"
-        android:textSize="12sp"
-        android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="57dp"
+        android:layout_marginBottom="23dp"
+        android:drawableTop="@drawable/ic_action_search"
         android:text="@string/search_stb_text"
-         />
-
-
-    <se.z_app.zmote.gui.STBListView
-        android:id="@+id/list_over_stb"
-        android:orientation="vertical"
-        android:background="#FF282828"
-        android:layout_centerHorizontal="true"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        
-        android:divider="#FF747474"
-        android:dividerHeight="1dp"
-        android:layout_marginTop="5dp" >
-    </se.z_app.zmote.gui.STBListView>
-
-    <ProgressBar
-        android:id="@+id/progressbar_scan"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="480dp"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/button_scanforstb"
-        android:layout_alignParentLeft="true"
-        android:layout_marginBottom="44dp" />
-
+        android:textColor="#FFFFFFFF"
+        android:textSize="12sp"
+        android:textStyle="bold" />
 
 </RelativeLayout>
