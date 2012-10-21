@@ -4,8 +4,9 @@
     android:layout_height="match_parent"
     android:layout_marginBottom="3dp"
     android:background="@color/black"
-    android:minWidth="64dip" >
-
+    android:minWidth="64dip" 
+	android:orientation="Vertical">
+   
     <Button
         android:id="@+id/undo_button"
         android:layout_width="wrap_content"
