@@ -12,10 +12,10 @@ public class Channel implements Iterable<Program>{
 	private Bitmap icon;
 	private String iconUrl;
 	private String url;
-	private int nr; 
-	private int onid;
-	private int tsid;
-	private int sid;
+	private int nr = -1; 
+	private int onid = -1;
+	private int tsid = -1;
+	private int sid = -1;
 	private ConcurrentSkipListMap programsByDate = new ConcurrentSkipListMap();
 	
 	
