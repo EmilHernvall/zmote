@@ -34,8 +34,23 @@ public class STBListView extends ListView{
 		{
 			theList.add(listIn[i]);
 		}
-		
+		STB newSTB = new STB();
+		newSTB.setBoxName("Kitchen");
+		STB newSTB2 = new STB();
+		newSTB2.setBoxName("Living room");
+		STB newSTB3 = new STB();
+		newSTB3.setBoxName("Living room");
+		STB newSTB4 = new STB();
+		newSTB4.setBoxName("TV Room");
+		STB newSTB5 = new STB();
+		newSTB5.setBoxName("Bomb shelter");
+		theList.add(newSTB);
+		theList.add(newSTB2);
+		theList.add(newSTB3);
+		theList.add(newSTB4);
+		theList.add(newSTB5);
 		theAdapter = new STBAdapter(theActivity, theList);
+		this.getLayoutParams().height = Math.max(theList.size(),3) * 75;
 		this.setAdapter(theAdapter); 
 	}
 
