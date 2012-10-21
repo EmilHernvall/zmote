@@ -5,7 +5,7 @@
     android:layout_marginBottom="3dp"
     android:background="@color/black"
     android:minWidth="64dip" 
-	android:orientation="Vertical">
+	android:screenOrientation="portrait">
    
     <Button
         android:id="@+id/undo_button"
