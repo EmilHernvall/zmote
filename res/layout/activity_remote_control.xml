@@ -51,14 +51,14 @@
         android:minWidth="48dip" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/exit_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/mute_volume_button"
         android:layout_alignBottom="@+id/mute_volume_button"
         android:layout_margin="13dp"
         android:layout_toLeftOf="@+id/mute_volume_button"
-        android:background="@drawable/placeholder"
+        android:background="@drawable/remote_exit"
         android:minWidth="48dip" />
 
     <Button
@@ -67,7 +67,8 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/info_button"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="-11dp"
+        android:layout_margin="0dp"
+        android:layout_marginBottom="-5dp"
         android:background="@drawable/remote_down"
         android:minHeight="96dip"
         android:minWidth="66dip" />

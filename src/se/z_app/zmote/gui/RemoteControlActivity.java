@@ -18,7 +18,7 @@ public class RemoteControlActivity extends ZmoteActivity {
 	private Button undo_button;
 	private Button mute_volume_button;
 	private Button info_button;
-	 
+	private Button exit_button; 
 	 
 	 
     @Override
@@ -47,6 +47,7 @@ public class RemoteControlActivity extends ZmoteActivity {
  		undo_button=(Button)findViewById(R.id.undo_button);
  		mute_volume_button=(Button)findViewById(R.id.mute_volume_button);
  		info_button=(Button)findViewById(R.id.info_button);
+ 		exit_button=(Button)findViewById(R.id.exit_button);
  		
  		 arrow_up_button.setOnClickListener(new OnClickListener() {
              @Override
@@ -110,28 +111,15 @@ public class RemoteControlActivity extends ZmoteActivity {
              RCProxy.instance().info();    
              }
          });
- 		
+ 		 exit_button.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            //Yet to be implemented   
+            }
+        });
  		
  	
  	
  	}  
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
