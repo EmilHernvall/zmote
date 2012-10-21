@@ -31,19 +31,11 @@ public class STBListener extends Observable implements Observer, Runnable{
 	
 	
 	public void update(Observable obsesrvable, Object data) {
-		stb = STBContainer.instance().getSTB();		
-		switch(stb.getType()){
-		case DEFAULT:
-			break;
-		case ZENTERIO:
-			if(eventListener != null)
-				eventListener.stop();
-			eventListener = new EventListener();
-			break;
-		default:
-			break;
+		stb = STBContainer.instance().getSTB();
+		if(eventListener != null)
+			eventListener.stop();
+		eventListener = AbstractAPIFactory.getFactory(stb).getEventListner();
 		
-		}
 		myThread = new Thread(this);
 		myThread.start();
 		
