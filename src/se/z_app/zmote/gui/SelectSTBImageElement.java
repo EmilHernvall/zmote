@@ -8,15 +8,15 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class ListImageElement extends ImageView {
+public class SelectSTBImageElement extends ImageView {
 	private STB theSTB;
 	private TextView theTextView;
 	private int theIndex;
 	
 	/* Default constructors */
-	public ListImageElement(Context context) { super(context);}	
-	public ListImageElement(Context context, AttributeSet attr) { super(context, attr);}
-	public ListImageElement(Context context, AttributeSet attr, int n) { super(context, attr, n);}
+	public SelectSTBImageElement(Context context) { super(context);}	
+	public SelectSTBImageElement(Context context, AttributeSet attr) { super(context, attr);}
+	public SelectSTBImageElement(Context context, AttributeSet attr, int n) { super(context, attr, n);}
 	
 	public void setTextView(TextView textViewIn) {
 		theTextView = textViewIn;

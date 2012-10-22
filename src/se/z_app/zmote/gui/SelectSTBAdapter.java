@@ -63,7 +63,7 @@ public class SelectSTBAdapter extends BaseAdapter {
 			}
 		});
         
-        ListImageElement thumb_image=(ListImageElement)vi.findViewById(R.id.editimage); // thumb image
+        SelectSTBImageElement thumb_image=(SelectSTBImageElement)vi.findViewById(R.id.editimage); // thumb image
         thumb_image.setSTB(stb);
         thumb_image.setTextView(boxName);
         thumb_image.setIndex(position);
@@ -71,7 +71,7 @@ public class SelectSTBAdapter extends BaseAdapter {
         /* Listener for when the edit button is clicked */
         thumb_image.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-            	ListImageElement theView = (ListImageElement)view;
+            	SelectSTBImageElement theView = (SelectSTBImageElement)view;
             	Intent mainIntent = new Intent(view.getContext(), EditSTBActivity.class);
             	mainIntent.putExtra("index", theView.getIndex());
                 view.getContext().startActivity(mainIntent);
