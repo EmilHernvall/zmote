@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 public class HTTPSessionHandler {
 	private ThreadPoolExecutor threadPool = new ThreadPoolExecutor(3, 10, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(40));
 	
-	private HashMap<String, HTTPRequestHandlerIntf> targetUris;
+	private HashMap<String, HTTPRequestHandlerIntf> targetUris = new HashMap<String, HTTPRequestHandlerIntf>();
 	
 	public void addHandler(HTTPRequestHandlerIntf handler){
 		targetUris.put(handler.getTargetUri(), handler);
@@ -68,7 +68,11 @@ public class HTTPSessionHandler {
 					return;
 				}
 				
+				
+				
+				
 				HTTPRequestHandlerIntf handler = session.getHandler(request.getUri());
+				
 				if(handler == null){
 					//TODO: Implement 404
 					return;
@@ -80,13 +84,29 @@ public class HTTPSessionHandler {
 				out.write(buffer);
 				
 				buffer = new byte[4096];
+				
 				in = response.getBody();
+				if(in == null)
+					return;
 				while((len = in.read(buffer)) != -1){
 					out.write(buffer, 0, len);
 				}
 				
+				
+				
 			} catch (IOException e) {
 				e.printStackTrace();
+			}finally{
+				
+				try {
+					in.close();
+					out.close();
+					socket.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 			}
 			
 		}
