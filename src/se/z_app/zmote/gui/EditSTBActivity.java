@@ -18,7 +18,7 @@ public class EditSTBActivity extends ZmoteActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		theIndex = (Integer) getIntent().getSerializableExtra("index");
-		stb = STBListSingleton.instance().getList().get(theIndex);
+		stb = SelectSTBList.instance().getList().get(theIndex);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_stb);
 		TextView tv;

@@ -12,14 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
  
-public class STBAdapter extends BaseAdapter {
+public class SelectSTBAdapter extends BaseAdapter {
  
 	private Activity activity;
     private Vector<STB> data;
     private static LayoutInflater inflater=null; 
-    private STBAdapter theAdapter = this;
+    private SelectSTBAdapter theAdapter = this;
  
-    public STBAdapter(Activity a, Vector<STB> d) {
+    public SelectSTBAdapter(Activity a, Vector<STB> d) {
         activity = a;
         data=d;
         inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -54,7 +54,7 @@ public class STBAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 				ListTextViewElement theView = (ListTextViewElement) v;
-				STB theSelectedSTB = STBListSingleton.instance().getList().get(theView.getIndex());
+				STB theSelectedSTB = SelectSTBList.instance().getList().get(theView.getIndex());
 				STBContainer.instance().setActiveSTB(theSelectedSTB);
 				Activity theActivity = (Activity)v.getContext();
 				theActivity.finish();
@@ -63,7 +63,7 @@ public class STBAdapter extends BaseAdapter {
 			}
 		});
         
-        ListImageElement thumb_image=(ListImageElement)vi.findViewById(R.id.editimage); // thumb image
+        SelectSTBImageElement thumb_image=(SelectSTBImageElement)vi.findViewById(R.id.editimage); // thumb image
         thumb_image.setSTB(stb);
         thumb_image.setTextView(boxName);
         thumb_image.setIndex(position);
@@ -71,7 +71,7 @@ public class STBAdapter extends BaseAdapter {
         /* Listener for when the edit button is clicked */
         thumb_image.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-            	ListImageElement theView = (ListImageElement)view;
+            	SelectSTBImageElement theView = (SelectSTBImageElement)view;
             	Intent mainIntent = new Intent(view.getContext(), EditSTBActivity.class);
             	mainIntent.putExtra("index", theView.getIndex());
                 view.getContext().startActivity(mainIntent);

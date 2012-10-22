@@ -13,14 +13,14 @@ import android.widget.ListView;
  * The STB list generate
  *
  */
-public class STBListView extends ListView{
-	Vector<STB> theList = STBListSingleton.instance().getList();
-	STBAdapter theAdapter;
+public class SelectSTBListView extends ListView{
+	Vector<STB> theList = SelectSTBList.instance().getList();
+	SelectSTBAdapter theAdapter;
 	
 	/* Default constructors */
-	public STBListView(Context context, AttributeSet attrs, int defStyle) { super(context, attrs, defStyle);}
-	public STBListView(Context context, AttributeSet attrs) {super(context, attrs);}
-	public STBListView(Context context) {super(context);}
+	public SelectSTBListView(Context context, AttributeSet attrs, int defStyle) { super(context, attrs, defStyle);}
+	public SelectSTBListView(Context context, AttributeSet attrs) {super(context, attrs);}
+	public SelectSTBListView(Context context) {super(context);}
 	
     public void notifyAdapter() {
     	if(theAdapter != null)
@@ -35,7 +35,7 @@ public class STBListView extends ListView{
 			theList.add(listIn[i]);
 		}
 		
-		theAdapter = new STBAdapter(theActivity, theList);
+		theAdapter = new SelectSTBAdapter(theActivity, theList);
 		this.setAdapter(theAdapter); 
 	}
 

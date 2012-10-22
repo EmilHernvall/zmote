@@ -7,16 +7,16 @@ import se.z_app.stb.STB;
 /** Class that holds the list of STBs, will probably not be used
  *   once the databse is implemented.
  */
-public class STBListSingleton {
+public class SelectSTBList {
 	private Vector<STB> theList = new Vector<STB>();
-	private static STBListSingleton theInstance;
+	private static SelectSTBList theInstance;
 	
-	private STBListSingleton(){}
+	private SelectSTBList(){}
 	
-	public static STBListSingleton instance() {
+	public static SelectSTBList instance() {
 		if(theInstance == null) 
 		{
-			theInstance = new STBListSingleton();
+			theInstance = new SelectSTBList();
 		}
 		return theInstance;
 	}
