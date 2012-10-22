@@ -23,7 +23,7 @@ import android.support.v4.app.NavUtils;
  *
  */
 public class SelectSTBActivity extends ZmoteActivity {
-    private STBListView theView;
+    private SelectSTBListView theView;
     private STB[] stbs;
     private ASyncSTBFinder async;
     private ProgressDialog dialog;
@@ -33,7 +33,7 @@ public class SelectSTBActivity extends ZmoteActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_stb);
         Button scan = (Button) findViewById(R.id.button_scanforstb); //Scan for STB button
-        theView = (STBListView)findViewById(R.id.list_over_stb);
+        theView = (SelectSTBListView)findViewById(R.id.list_over_stb);
         scan.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
             	async = new ASyncSTBFinder();

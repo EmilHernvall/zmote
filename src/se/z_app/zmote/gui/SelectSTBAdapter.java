@@ -12,14 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
  
-public class STBAdapter extends BaseAdapter {
+public class SelectSTBAdapter extends BaseAdapter {
  
 	private Activity activity;
     private Vector<STB> data;
     private static LayoutInflater inflater=null; 
-    private STBAdapter theAdapter = this;
+    private SelectSTBAdapter theAdapter = this;
  
-    public STBAdapter(Activity a, Vector<STB> d) {
+    public SelectSTBAdapter(Activity a, Vector<STB> d) {
         activity = a;
         data=d;
         inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -54,7 +54,7 @@ public class STBAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 				ListTextViewElement theView = (ListTextViewElement) v;
-				STB theSelectedSTB = STBListSingleton.instance().getList().get(theView.getIndex());
+				STB theSelectedSTB = SelectSTBList.instance().getList().get(theView.getIndex());
 				STBContainer.instance().setActiveSTB(theSelectedSTB);
 				Activity theActivity = (Activity)v.getContext();
 				theActivity.finish();
