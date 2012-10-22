@@ -18,6 +18,8 @@ public class MainTestActivity extends ZmoteActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_test);
         
+        
+        
         Button stbProxy = (Button) findViewById(R.id.bLoadSTBProxy);
         stbProxy.setOnClickListener(new View.OnClickListener() {
 			
