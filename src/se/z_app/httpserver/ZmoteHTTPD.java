@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Properties;
 
+import android.util.Log;
+
 
 public class ZmoteHTTPD extends NanoHTTPD {
 
@@ -19,18 +21,24 @@ public class ZmoteHTTPD extends NanoHTTPD {
 	@Override
 	public synchronized Response serve( String uri, String method, Properties header, Properties parms, Properties files )
 	{
+		//Log.i("WebServer", "serve: " + uri);
+		//Log.i("WebServer", "  parms: " + parms);
+		//Log.i("WebServer", "  files: " + files);
 		ZmoteHTTPDRequestHandler handler;
 		synchronized(handlers){
-			handler = handlers.get(uri.trim()).clone();
+			handler = handlers.get(uri).clone();
 		}
+		
+		//Log.i("WebServer", "  handler: " + handler.getURI());
 		if(handler == null)
 			return serveFile( uri, header, wwwroot, true );
-		return handler.serve(method, header, parms, files);
+		return handler.serve(uri, method, header, parms, files, this);
 	}
 	
 	public void addHandler(ZmoteHTTPDRequestHandler handler){
 		synchronized(handlers){
-			handlers.put(handler.getURI().trim(), handler);
+			//Log.i("WebServer", "Adding handler: " + handler.getURI());
+			handlers.put(handler.getURI(), handler);
 		}
 	}
 	public  void removeHandler(ZmoteHTTPDRequestHandler handler){

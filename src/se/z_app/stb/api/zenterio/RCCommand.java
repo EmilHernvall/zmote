@@ -202,7 +202,7 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 				break;
 			case LAUNCH:
 				httpclient = new DefaultHttpClient();
-				httpGet = new HttpGet("http://" + address +"mdio/launchurl?url="+arg1);
+				httpGet = new HttpGet("http://" + address +"/mdio/launchurl?url="+arg1);
 			    
 			    try {
 			        httpclient.execute(httpGet);	
