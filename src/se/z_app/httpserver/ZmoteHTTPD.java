@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Properties;
 
-import android.util.Log;
 
 
 public class ZmoteHTTPD extends NanoHTTPD {
