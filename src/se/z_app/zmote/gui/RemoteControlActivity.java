@@ -2,7 +2,6 @@ package se.z_app.zmote.gui;
 
 import se.z_app.stb.api.RCProxy;
 import android.os.Bundle;
-import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.view.Menu;
 import android.view.View;

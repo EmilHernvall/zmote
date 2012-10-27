@@ -35,7 +35,7 @@
         android:scrollbars="none" >
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@color/black"
             android:orientation="horizontal" >
@@ -44,7 +44,7 @@
                 android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Large Text heer ñalkjdfñlajsdflk jaslñdfj "
+                android:text="Large Text here. You can scroll in this window the information about the channels. "
                 android:textAppearance="?android:attr/textAppearanceLarge" />
         </LinearLayout>
     </HorizontalScrollView>
