@@ -12,10 +12,13 @@ package se.z_app.zmote.gui;
 
 import java.util.Iterator;
 
+import android.R.color;
 import android.os.Bundle;
 
 
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.ImageButton;
 import se.z_app.stb.Channel;
@@ -31,6 +34,7 @@ public class MainActivityView2 extends ZmoteActivity {
 	private EPGQuery query = new EPGQuery();
 	private EPG epg;
 	String temp;
+	int i_tmp;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,31 +80,43 @@ public class MainActivityView2 extends ZmoteActivity {
     	LinearLayout h_layout = (LinearLayout) findViewById(R.id.channel_icons_ly);
     	ImageButton new_btn = new ImageButton(this);
     	new_btn.setImageBitmap(icon);
-    	new_btn.setBackgroundResource(0);
+    	new_btn.setBackgroundResource(0);	// Set the background transparent
     	new_btn.setClickable(true);
-    	// Set the background transparent
 
     	// Set listeners to execute this
     	//RemoteControl.instance().launch(ch.getUrl()); //
     	temp = ch.getUrl();
+    	i_tmp = ch.getNr();
     	new_btn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				RemoteControl.instance().launch(temp);
+				LinearLayout elem = (LinearLayout) findViewById(i_tmp);
+				elem.requestFocus();
+				System.out.println("Listener:"+i_tmp);
+				// It's not working propertly
 				}
 			});
     	
     	//new_btn.setId(R.id.channel1);
-    	//new_btn.setImage... --> to icon
     	h_layout.addView(new_btn);
+
+    	// Now we load the information about the channel in the middle section
+    	LinearLayout c_layout = (LinearLayout) findViewById(R.id.content_ly);
+    	LinearLayout channel_ly = new LinearLayout(this); // Check arguments (correct?)
+    	channel_ly.setBackgroundColor(color.white);
+    	channel_ly.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 50));
+    	TextView ch_name = new TextView(this);
+    	// Right now we just load the name
+    	ch_name.setText(ch.getName());
+    	channel_ly.addView(ch_name);
+    	channel_ly.setId(ch.getNr());	// We will try to identify them by ch number
+    	channel_ly.setPadding(30, 5, 30, 5);
+    	channel_ly.setMinimumWidth(300);
+    	// Add the information of the channel to the middle section
+    	c_layout.addView(channel_ly);
     	
-    	// Listener should be added when the item exist on the layout
-    	//new_btn=(Button)findViewById(R.id.recently_added_button);
-    	//new_btn.setOnClickListener(new OnClickListener(){
-    		
-    	//});
-    }
-    
+    } 
 
 }
