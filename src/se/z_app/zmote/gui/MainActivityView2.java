@@ -76,6 +76,7 @@ public class MainActivityView2 extends ZmoteActivity {
     	LinearLayout h_layout = (LinearLayout) findViewById(R.id.channel_icons_ly);
     	ImageButton new_btn = new ImageButton(this);
     	new_btn.setImageBitmap(icon);
+    	new_btn.setBackgroundResource(0);
     	new_btn.setClickable(true);
     	// Set the background transparent
 
