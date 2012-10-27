@@ -2,7 +2,9 @@ package se.z_app.zmote.gui;
 
 import se.z_app.stb.STB;
 import se.z_app.stb.STB.STBEnum;
+import se.z_app.stb.api.EPGData;
 import se.z_app.stb.api.STBContainer;
+import se.z_app.zmote.epg.EPGContentHandler;
 import android.os.Bundle;
 import android.content.Intent;
 import android.view.Menu;
@@ -17,7 +19,9 @@ public class MainTestActivity extends ZmoteActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_test);
-        
+        EPGData.instance();
+        EPGContentHandler.instance();
+        STBContainer.instance();
         
         
         Button stbProxy = (Button) findViewById(R.id.bLoadSTBProxy);
@@ -31,7 +35,10 @@ public class MainTestActivity extends ZmoteActivity {
 				stb.setIP("130.236.248.226");
 				stb.setType(STBEnum.ZENTERIO);
 				stb.setMAC("00:07:67:9B:EB:33");
+		
 				STBContainer.instance().setActiveSTB(stb);
+				
+				
 			}
 		});
         Button stb1 = (Button) findViewById(R.id.bLoadSTB1);
@@ -45,7 +52,9 @@ public class MainTestActivity extends ZmoteActivity {
 				stb.setIP("130.236.248.227");
 				stb.setType(STBEnum.ZENTERIO);
 				stb.setMAC("00:07:67:9B:EB:34");
+			
 				STBContainer.instance().setActiveSTB(stb);
+				
 			}
 		});
         
@@ -59,7 +68,9 @@ public class MainTestActivity extends ZmoteActivity {
 				stb.setIP("130.236.248.228");
 				stb.setType(STBEnum.ZENTERIO);
 				stb.setMAC("00:07:67:9B:EB:35");
+			
 				STBContainer.instance().setActiveSTB(stb);
+			
 			}
 		});
         

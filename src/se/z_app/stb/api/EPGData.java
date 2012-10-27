@@ -5,6 +5,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import se.z_app.stb.Channel;
 import se.z_app.stb.EPG;
@@ -35,11 +36,16 @@ public class EPGData implements Observer{
 	}
 	
 	public EPG getEPG(){
+		Log.i("SearchTest", "STB box name ->" + stb.getBoxName());
+		Log.i("SearchTest", "com ->" + com.getClass().getName());
+		
 		if(com == null)
 			return null;
 		
+		
 		EPG epg = com.getEPG();
-		epg.setStb(stb);
+		if(epg != null)
+			epg.setStb(stb);
 		
 		return epg; 
 	}

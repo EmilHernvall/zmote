@@ -35,7 +35,9 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 		EPG epg = new EPG();
 		long time = System.currentTimeMillis();
 		String jsonString = new GetHTTPResponse().getJSON("http://" + ip + "/mdio/epg", 32768);
-		Log.i("ZmoteTestLog", "Featching raw EPG: " + (System.currentTimeMillis() - time) + "ms");
+		//Log.i("ZmoteTestLog", "Request: " + "http://" + ip + "/mdio/epg" );
+		//Log.i("SearchTest", "JsonLength: " + jsonString.length());
+		//Log.i("ZmoteTestLog", "Featching raw EPG: " + (System.currentTimeMillis() - time) + "ms");
 		
 		try {
 			JSONArray jsonarray = new JSONArray(jsonString);
@@ -94,6 +96,8 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 			}
 			
 		} catch (JSONException e) {
+			Log.i("SearchTest", "Standard Command: JSON Faliur: " + e.toString());
+			
 			return null;
 		}
 		
