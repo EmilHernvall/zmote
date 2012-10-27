@@ -58,10 +58,16 @@ public class EPGContentHandler implements Runnable, Observer{
 			if(STBContainer.instance().getActiveSTB() != null){
 				synchronized (currentEPG) {
 					currentEPG = EPGData.instance().getEPG();
-					EPGData.instance().populateWithChannelIcon(currentEPG);
+					if(currentEPG != null){
+						EPGData.instance().populateWithChannelIcon(currentEPG);
+					}else{
+						currentEPG = new EPG();
+					}
 				}
 				synchronized (currentChannel) {
 					currentChannel = EPGData.instance().getCurrentChannel();
+					if(currentChannel == null)
+						currentChannel = new Channel();
 				}
 								
 			}
