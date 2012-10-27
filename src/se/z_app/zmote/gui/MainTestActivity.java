@@ -83,7 +83,7 @@ public class MainTestActivity extends ZmoteActivity {
 			}
 		});
         Button selectSTB = (Button) findViewById(R.id.bSelectSTBActivity);
-        remote.setOnClickListener(new View.OnClickListener() {
+        selectSTB.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				vibrate();

@@ -26,7 +26,6 @@ import se.z_app.zmote.epg.EPGQuery;
 import android.widget.TextView;
 
 
-
 public class MainActivityView2 extends ZmoteActivity {
 
 	private EPGQuery query = new EPGQuery();
@@ -48,7 +47,6 @@ public class MainActivityView2 extends ZmoteActivity {
         // Change the STB name
     	TextView stbName = (TextView) findViewById(R.id.stb_name);
     	stbName.setText( epg.getStb().getBoxName() );
-    	
 
         // We add the channels to the view
     	addAllChannelsToLayout();
