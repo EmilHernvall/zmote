@@ -14,7 +14,8 @@
     <!-- Top Menu -->
 	<HorizontalScrollView
         android:layout_width="wrap_content"
-        android:layout_height="70dp" >
+        android:layout_height="70dp"
+        android:scrollbars="none" >
 
         <LinearLayout
             android:id="@+id/channel_icons_ly"
@@ -30,7 +31,8 @@
     <HorizontalScrollView
         android:id="@+id/content_ly"
         android:layout_width="wrap_content"
-        android:layout_height="300dp" >
+        android:layout_height="290dp"
+        android:scrollbars="none" >
 
         <LinearLayout
             android:layout_width="match_parent"
