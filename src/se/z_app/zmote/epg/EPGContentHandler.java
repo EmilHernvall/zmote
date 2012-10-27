@@ -48,6 +48,15 @@ public class EPGContentHandler implements Runnable {
 	public void run() {
 		while(isRunning){
 			
+			currentEPG = EPGData.instance().getEPG();
+			EPGData.instance().populateWithChannelIcon(currentEPG);
+			currentChannel = EPGData.instance().getCurrentChannel();
+			try {
+				Thread.sleep(300000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
