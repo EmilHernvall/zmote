@@ -1,5 +1,7 @@
 package se.z_app.zmote.webtv;
 
-public class WebTVQuery {
+import se.z_app.stb.WebTVService;
+import se.z_app.stb.api.WebTVCommand;
 
+public class WebTVQuery {
 }
