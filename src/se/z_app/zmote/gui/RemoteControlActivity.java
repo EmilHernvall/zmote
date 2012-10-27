@@ -54,69 +54,79 @@ public class RemoteControlActivity extends ZmoteActivity {
  		 arrow_up_button.setOnClickListener(new OnClickListener() {
              @Override
              public void onClick(View v) {
-             RCProxy.instance().up();   
+            	vibrate();
+             	RCProxy.instance().up();   
              }
          });
  		 
  		arrow_down_button.setOnClickListener(new OnClickListener() {
              @Override
              public void onClick(View v) {
-             RCProxy.instance().down();    
+            	 vibrate();
+            	 RCProxy.instance().down();    
              }
          });
  		 
  		arrow_left_button.setOnClickListener(new OnClickListener() {
              @Override
              public void onClick(View v) {
-             RCProxy.instance().left(); 	 
+            	 vibrate();
+            	 RCProxy.instance().left(); 	 
              }
          });
  		 
  		arrow_right_button.setOnClickListener(new OnClickListener() {
              @Override
              public void onClick(View v) {
-           	 RCProxy.instance().right(); 
+            	 vibrate();
+            	 RCProxy.instance().right(); 
              }
          });
  		 
  		confirm_button.setOnClickListener(new OnClickListener() {
              @Override
              public void onClick(View v) {
-           	 RCProxy.instance().ok(); 
+            	 vibrate();
+            	 RCProxy.instance().ok(); 
              }
          });
  		 
  		 store_button.setOnClickListener(new OnClickListener() {
              @Override
              public void onClick(View v) {
-             RCProxy.instance().menu();        
+            	 vibrate();
+            	 RCProxy.instance().menu();        
              }
          });
  		 
  		 undo_button.setOnClickListener(new OnClickListener() {
              @Override
              public void onClick(View v) {
-             RCProxy.instance().back();   
+            	 vibrate();
+            	 RCProxy.instance().back();   
              }
          });
  		 
  		 mute_volume_button.setOnClickListener(new OnClickListener() {
              @Override
              public void onClick(View v) {
-             RCProxy.instance().mute();   
+            	 vibrate();
+            	 RCProxy.instance().mute();   
              }
          });
  		 
  		 info_button.setOnClickListener(new OnClickListener() {
              @Override
              public void onClick(View v) {
-             RCProxy.instance().info();    
+            	 vibrate();
+            	 RCProxy.instance().info();    
              }
          });
  		 exit_button.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-            //Yet to be implemented   
+            //Yet to be implemented
+            	vibrate();
             }
         });
  		

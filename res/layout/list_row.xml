@@ -17,7 +17,7 @@
         android:layout_marginLeft="10dp"
         android:layout_centerVertical="true"
         />
- 	<se.z_app.zmote.gui.ListImageElement
+ 	<se.z_app.zmote.gui.SelectSTBImageElement
  	    android:id="@+id/editimage" 
  	    android:layout_width="wrap_content"
         android:layout_height="wrap_content"

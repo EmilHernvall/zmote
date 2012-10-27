@@ -82,6 +82,15 @@ public class MainTestActivity extends ZmoteActivity {
 				MainTestActivity.this.startActivity(intent);
 			}
 		});
+        Button selectSTB = (Button) findViewById(R.id.bSelectSTBActivity);
+        remote.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				vibrate();
+				Intent intent = new Intent(MainTestActivity.this, SelectSTBActivity.class);
+				MainTestActivity.this.startActivity(intent);
+			}
+		});
         
         Button mainview2 = (Button) findViewById(R.id.bMainview2);
         mainview2.setOnClickListener(new View.OnClickListener() {
