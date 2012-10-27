@@ -75,4 +75,14 @@
         android:layout_toRightOf="@+id/bSplash"
         android:text="Remote" />
 
+    <Button
+        android:id="@+id/bMainview2"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/bRemoteControl"
+        android:layout_alignBottom="@+id/bRemoteControl"
+        android:layout_toRightOf="@+id/bRemoteControl"
+        android:text="MainView2" />
+
 </RelativeLayout>

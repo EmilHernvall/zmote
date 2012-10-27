@@ -83,6 +83,16 @@ public class MainTestActivity extends ZmoteActivity {
 			}
 		});
         
+        Button mainview2 = (Button) findViewById(R.id.bMainview2);
+        mainview2.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				vibrate();
+				Intent intent = new Intent(MainTestActivity.this, MainActivityView2.class);
+				MainTestActivity.this.startActivity(intent);
+			}
+		});
+        
     }
 
     @Override

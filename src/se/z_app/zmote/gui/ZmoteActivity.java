@@ -17,6 +17,8 @@ public abstract class ZmoteActivity extends Activity{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		vibe = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE) ;
+		
+		// Here is a good place to add the buttons bar menu (hardcoded, not xml).
 	}
 
 	public void vibrate(){

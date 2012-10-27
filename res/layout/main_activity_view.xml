@@ -7,7 +7,10 @@
 
    <!-- STB Name -->
 	<include layout="@layout/selected_stb" android:id="@+id/selected_stb" />
-    
+   
+   <!-- Bottom menu -->
+   <include layout="@layout/activity_buttons_bar" android:id="@+id/activity_buttons_bar" />
+     
     <!-- Top Menu -->
 	<HorizontalScrollView
 	     android:id="@+id/channel_icons_ly"
@@ -18,37 +21,6 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="horizontal" >
-
-            <ImageView
-                android:id="@+id/imageView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_launcher" />
-
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_launcher" />
-
-            <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_launcher" />
-
-            <ImageView
-                android:id="@+id/imageView4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_launcher" />
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Channels icons dsñlfkaj sldfkj salñdfj lañsdfj las "
-                android:textAppearance="?android:attr/textAppearanceLarge" />
         </LinearLayout>
     </HorizontalScrollView>
     
@@ -73,7 +45,4 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <!-- Bottom menu -->
-    <include layout="@layout/activity_buttons_bar" android:id="@+id/activity_buttons_bar" />
-    
 </LinearLayout>

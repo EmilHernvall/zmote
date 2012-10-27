@@ -33,6 +33,7 @@ public class EPGContentHandler implements Runnable {
 	public EPG getEPG(){
 		if(currentEPG == null){
 			currentEPG = EPGData.instance().getEPG();
+			EPGData.instance().populateWithChannelIcon(currentEPG);
 		}
 		return currentEPG;
 	}
