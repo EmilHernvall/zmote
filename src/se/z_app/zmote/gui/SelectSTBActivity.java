@@ -8,7 +8,6 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.view.Menu;
 import android.view.MenuItem;
