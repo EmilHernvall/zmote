@@ -104,9 +104,13 @@ public class MainActivityView2 extends ZmoteActivity {
     	//new_btn.setId(R.id.channel1);
     	h_layout.addView(new_btn);
 
+    	// GETTING THE PROGRAM INFORMATION
+    	// Check this code, especially the inicialization of the iterator
+    	// With currentProgram = itr; does not work
+    	// But, what would happen if we need to show the FIRST program?
     	Iterator<Program> itr = ch.iterator();
-    	Program currentProgram = new Program();
-    	Program nextProgram = new Program();
+    	Program currentProgram = itr.next();
+    	Program nextProgram = currentProgram;
     	Date now = new Date(System.currentTimeMillis());
     	while(itr.hasNext()){
     		Program program = (Program)itr.next();
@@ -124,20 +128,22 @@ public class MainActivityView2 extends ZmoteActivity {
     	// Now we load the information about the channel in the middle section
     	LinearLayout c_layout = (LinearLayout) findViewById(R.id.content_ly);
     	LinearLayout channel_ly = new LinearLayout(this); // Check arguments (correct?)
-    	channel_ly.setBackgroundColor(color.white);
+    	channel_ly.setBackgroundColor(color.white);	// This is not doing anything
     	channel_ly.setLayoutParams(new LayoutParams(300, 500));
     	channel_ly.setOrientation(1);	// Vertical 1; Horizontal 0
     	
     	TextView ch_name = new TextView(this);
-    	TextView ch_short_desc = new TextView(this);
+    	TextView pr_name = new TextView(this);
+    	TextView pr_short_desc = new TextView(this);
     	// Right now we just load the name
     	ch_name.setText(ch.getName());
-    	ch_short_desc.setSingleLine(false);
-    	ch_short_desc.setText("\n Description of the Program. \n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris eu tortor eget eros facilisis congue. Vivamus eget imperdiet nisl. Fusce non dolor ut lacus ullamcorper malesuada. Donec pretium nisl at quam volutpat iaculis. Ut iaculis pulvinar bibendum. Pellentesque interdum, leo et euismod facilisis, dolor ligula porta tortor, id mollis diam mauris eu quam. Nulla a magna nunc. Nam mattis mi quis risus sodales sollicitudin. Mauris mauris nisi, tempus vitae faucibus eu, porttitor eu odio.");
-    	//ch_short_desc.setText(currentProgram.getShortText());
-    	//System.out.println(currentProgram.getShortText());
+    	pr_name.setSingleLine(false);
+    	pr_short_desc.setSingleLine(false);
+    	pr_name.setText("\n"+currentProgram.getName()+" --> "+nextProgram.getName()+"\n");
+    	pr_short_desc.setText(currentProgram.getLongText());
     	channel_ly.addView(ch_name);
-    	channel_ly.addView(ch_short_desc);
+    	channel_ly.addView(pr_name);
+    	channel_ly.addView(pr_short_desc);
     	channel_ly.setId(ch.getNr());	// We will try to identify them by ch number
     	channel_ly.setPadding(30, 5, 30, 5);
     	channel_ly.setMinimumWidth(300);
