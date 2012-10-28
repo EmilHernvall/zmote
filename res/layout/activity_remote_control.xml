@@ -25,7 +25,7 @@
         android:layout_alignBottom="@+id/undo_button"
         android:layout_margin="13dp"
         android:layout_toRightOf="@+id/undo_button"
-        android:background="@drawable/remote_options"
+        android:background="@drawable/remote_settings"
         android:minWidth="48dip" />
 
     <Button
