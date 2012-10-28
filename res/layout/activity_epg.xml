@@ -10,8 +10,7 @@
    <include layout="@layout/activity_buttons_bar" android:id="@+id/activity_buttons_bar" />
    
 	<RelativeLayout android:layout_width="match_parent"
-	    android:layout_height="0dp"
-	    android:layout_weight="0.90" >
+	    android:layout_height="340dp" >
 	
 	    <TextView android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
