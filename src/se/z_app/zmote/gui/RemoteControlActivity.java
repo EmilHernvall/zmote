@@ -37,7 +37,7 @@ public class RemoteControlActivity extends ZmoteActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_remote_control, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
     
  	public void btnListeners(){

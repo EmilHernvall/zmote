@@ -4,7 +4,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="14"
         android:targetSdkVersion="15" />
 
     <!-- Gives permission to use phone internet -->
@@ -97,6 +97,15 @@
         <activity
             android:name=".EPGActivity"
             android:label="@string/title_activity_epg" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".MainTabActivity"
+            android:label="@string/title_activity_main_tab" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
