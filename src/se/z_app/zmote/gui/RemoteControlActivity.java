@@ -1,9 +1,7 @@
 package se.z_app.zmote.gui;
 
-import se.z_app.stb.Channel;
-import se.z_app.stb.EPG;
+
 import se.z_app.stb.api.RCProxy;
-import se.z_app.zmote.epg.EPGQuery;
 import android.os.Bundle;
 import android.content.pm.ActivityInfo;
 import android.view.Menu;
@@ -22,7 +20,7 @@ public class RemoteControlActivity extends ZmoteActivity {
 	private Button mute_volume_button;
 	private Button info_button;
 	private Button exit_button; 
-	 
+
 	 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,8 +29,8 @@ public class RemoteControlActivity extends ZmoteActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         btnListeners();
         setButtonsBarListeners();	// Set the listeners for the buttons bar menu
-        
-     
+        setSTBName();	// General func.
+
     }
 
     @Override

@@ -12,11 +12,8 @@ package se.z_app.zmote.gui;
 
 import java.util.Date;
 import java.util.Iterator;
-
 import android.R.color;
 import android.os.Bundle;
-
-
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
@@ -41,21 +38,13 @@ public class MainActivityView2 extends ZmoteActivity {
         setContentView(R.layout.activity_main_activity_view2);
         
         setButtonsBarListeners();	// Set the listeners for the buttons bar menu
-        
-        //Import the whole EPG
-        fetchEPG();
         epg = getFullEPG();
     	// This should be done in other place because now only loads the first stb
     	// you push, but doesn't change of stb never because the method OnCreate is
     	// not executing again
         
-        // Change the STB name
-    	TextView stbName = (TextView) findViewById(R.id.stb_name);
-    	stbName.setText( epg.getStb().getBoxName() );
-
-        // We add the channels to the view
+    	setSTBName();
     	addAllChannelsToLayout();
-
     }    
     
     // DUMMY

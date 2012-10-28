@@ -11,6 +11,7 @@ import android.os.Vibrator;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.TextView;
 import se.z_app.stb.EPG;
 
 
@@ -20,6 +21,7 @@ public abstract class ZmoteActivity extends Activity{
 	private Vibrator vibe;
 	private EPGQuery query = new EPGQuery();
 	private EPG epg;
+	private boolean fetched = false;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -113,20 +115,40 @@ public abstract class ZmoteActivity extends Activity{
        */
      }
 	
+	/*
+	 * Return if the EPG is already fetched or not
+	 */
+	public boolean isFetchedTheEPG(){
+		return fetched;
+	}
+	
 	/* 
 	 * Fetch the EPG from the STB 
 	 */
 	public void fetchEPG(){
 		epg = query.getEPG();
+		fetched = true;
 		// The upper line should be on the OnCreate method
 		// This way will be fetched only one time and used several times
 	}
 	
 	/*
-	 * Return the EPG
+	 * Return the EPG after fetching it (just do it one time now)
 	 */
 	public EPG getFullEPG(){
+		if(!fetched)
+			fetchEPG();
 		return epg;
+	}
+	
+	public void setSTBName(){
+		
+		// Sanity check
+		if(!fetched) fetchEPG();
+		
+		// Change the STB name
+    	TextView stbName = (TextView) findViewById(R.id.stb_name);
+    	stbName.setText( epg.getStb().getBoxName() );
 	}
 
 }
