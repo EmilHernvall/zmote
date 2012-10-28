@@ -1,16 +1,22 @@
 package se.z_app.zmote.gui;
 
+import se.z_app.stb.api.RemoteControl;
+import se.z_app.stb.api.RemoteControl.Button;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
+
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,21 +26,33 @@ import android.widget.TextView;
 
 public class MainTabActivity extends FragmentActivity implements ActionBar.TabListener {
 
-	Tab tabRC;
-    Tab tabMain;
-    Tab tabEPG;
-    Tab tabFav;
-    Tab tabWeb;
-	
+	private Tab tabRC;
+	private Tab tabMain;
+	private Tab tabEPG;
+	private Tab tabFav;
+	private Tab tabWeb;
+	private Vibrator vibe;
     private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
 
+    
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_tab);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        
-    }
+        vibe = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE) ;
+	}
+
+	
+	
+	public void vibrate(){
+		vibe.vibrate(95);
+	}
+	public void vibrate(int ms){
+		vibe.vibrate(ms);
+	}
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
@@ -90,7 +108,7 @@ public class MainTabActivity extends FragmentActivity implements ActionBar.TabLi
     	
     	if(tab.equals(tabRC)){
     		Log.i("FragmentLog", "RC");
-    		fragment = new RemoteControlFragment();
+    		fragment = new RemoteControlFragment(this);
     	}
     	else if(tab.equals(tabEPG)){
     		Log.i("FragmentLog", "EPG");
@@ -106,7 +124,7 @@ public class MainTabActivity extends FragmentActivity implements ActionBar.TabLi
 		}
 		else if(tab.equals(tabMain)){
 			Log.i("FragmentLog", "Main");
-			return;
+			fragment = new ChannelInformationFragment(this);
 		}
     	
         
@@ -121,6 +139,30 @@ public class MainTabActivity extends FragmentActivity implements ActionBar.TabLi
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
     }
+    
+    
+
+	@Override
+	public boolean dispatchKeyEvent(KeyEvent event) {
+		int action = event.getAction();
+		int keyCode = event.getKeyCode();
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_VOLUME_UP:
+			if (action == KeyEvent.ACTION_UP) {
+				RemoteControl.instance().sendButton(Button.VOLPLUS);
+				vibrate();
+			}
+			return true;
+		case KeyEvent.KEYCODE_VOLUME_DOWN:
+			if (action == KeyEvent.ACTION_DOWN) {
+				RemoteControl.instance().sendButton(Button.VOLMINUS);
+				vibrate();
+			}
+			return true;
+		default:
+			return super.dispatchKeyEvent(event);
+		}
+	}
 
 
 }

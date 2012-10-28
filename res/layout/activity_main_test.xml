@@ -67,39 +67,22 @@
         android:text="Splash" />
 
     <Button
-        android:id="@+id/bRemoteControl"
+        android:id="@+id/bMainTabActivity"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView3"
-        android:layout_toRightOf="@+id/bSplash"
-        android:text="Remote" />
-    
-	<Button android:id="@+id/bMainview2"
+        android:layout_alignBaseline="@+id/bSplash"
+        android:layout_alignBottom="@+id/bSplash"
+        android:layout_alignRight="@+id/textView2"
+        android:text="MainTabActivity" />
+
+    <Button
+        android:id="@+id/bSelectSTBActivity"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/bRemoteControl"
-        android:layout_alignBottom="@+id/bRemoteControl"
-        android:layout_toRightOf="@+id/bRemoteControl"
-        android:text="MainView2" />
-
-	<Button android:id="@+id/bSelectSTBActivity"
-	    style="?android:attr/buttonStyleSmall"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_below="@+id/bSplash"
-	    android:layout_toLeftOf="@+id/bMainview2"
-	    android:text="SelectSTBActivity" />
-
-	<Button
-	    android:id="@+id/bMainTabActivity"
-	    style="?android:attr/buttonStyleSmall"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_alignLeft="@+id/bMainview2"
-	    android:layout_below="@+id/bMainview2"
-	    android:layout_marginLeft="24dp"
-	    android:text="MainTabActivity" />
+        android:layout_alignRight="@+id/bMainTabActivity"
+        android:layout_below="@+id/bSplash"
+        android:text="SelectSTBActivity" />
 
 </RelativeLayout>

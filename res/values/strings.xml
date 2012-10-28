@@ -37,6 +37,10 @@
     <string name="title_activity_main_test">MainTestActivity</string>
     <string name="title_activity_epg">EPGActivity</string>
     <string name="green_button_description">green_button_description</string>
+     <string name="title_section3">Section 3</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section1">Section 1</string>
+    <string name="title_activity_main_tab">MainTabActivity</string>
 
 
 </resources>

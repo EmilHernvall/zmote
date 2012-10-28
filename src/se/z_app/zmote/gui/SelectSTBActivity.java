@@ -8,6 +8,7 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,7 +22,7 @@ import android.support.v4.app.NavUtils;
  * @author viktordahl + others
  *
  */
-public class SelectSTBActivity extends ZmoteActivity {
+public class SelectSTBActivity extends Activity {
     private SelectSTBListView theView;
     private STB[] stbs;
     private ASyncSTBFinder async;

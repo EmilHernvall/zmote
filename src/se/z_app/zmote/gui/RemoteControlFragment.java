@@ -1,6 +1,7 @@
 package se.z_app.zmote.gui;
 
 import se.z_app.stb.api.RCProxy;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -25,11 +26,12 @@ public class RemoteControlFragment extends Fragment{
 	private Button mute_volume_button;
 	private Button info_button;
 	private Button exit_button; 
-
-
+	private MainTabActivity main;
 	
-	public RemoteControlFragment() {
+	public RemoteControlFragment(MainTabActivity main){
+		this.main = main;
 	}
+	
 
 	public static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -41,7 +43,7 @@ public class RemoteControlFragment extends Fragment{
 		
 		View v = inflater.inflate(R.layout.activity_remote_control, null);
 
-
+		
 		btnListeners(v);
 
 		return v;
@@ -49,7 +51,7 @@ public class RemoteControlFragment extends Fragment{
 
 
 	public void vibrate(){
-		
+		main.vibrate();
 	}
 	
 	public void btnListeners(View v){

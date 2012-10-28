@@ -1,51 +1,92 @@
-/* This class purpose is to try functions about filling the main view with content:
- * Channels, Icons, EPG info about them and STB name 
- * Please, don't erase it. If you feel that this functions should be in other file,
- * just move it and note this change in the commit message.
- * 
- * P.D: activity_main_activity_view is just a copy of the main_activity_view layout
- * 		At the end of the edition of this functions implemented on this file, this
- * 		 .xml layout should be erased or renamed to the main activity view layout.
- * 																					*/
-
 package se.z_app.zmote.gui;
 
 import java.util.Date;
 import java.util.Iterator;
-import android.R.color;
-import android.os.Bundle;
-import android.view.View;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.LinearLayout;
-import android.widget.ImageButton;
+
 import se.z_app.stb.Channel;
-import se.z_app.stb.Program;
 import se.z_app.stb.EPG;
+import se.z_app.stb.Program;
 import se.z_app.stb.api.RemoteControl;
+import se.z_app.zmote.epg.EPGQuery;
+import android.R.color;
+
+import android.graphics.Picture;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
-public class MainActivityView2 extends ZmoteActivity {
-
+public class ChannelInformationFragment extends Fragment{
+	LinearLayout h_layout;
+    LinearLayout c_layout;
+	
+	private View v;
 	private EPG epg;
 	String temp;
 	int i_tmp;
+	private EPGQuery query = new EPGQuery();
+	private EPG epgFetched;
+	private boolean fetched = false;
+	private MainTabActivity main;
 	
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-    	
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_activity_view2);
+	public ChannelInformationFragment(MainTabActivity main){
+		this.main = main;
+	}
+	
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+
+		 v = inflater.inflate(R.layout.fragment_channel_information, null);
         
-        setButtonsBarListeners();	// Set the listeners for the buttons bar menu
+		 h_layout = (LinearLayout)v.findViewById(R.id.channel_icons_ly);
+		 c_layout = (LinearLayout)v.findViewById(R.id.content_ly);
+       // setButtonsBarListeners();	// Set the listeners for the buttons bar menu
         epg = getFullEPG();
     	// This should be done in other place because now only loads the first stb
     	// you push, but doesn't change of stb never because the method OnCreate is
     	// not executing again
         
-    	setSTBName();
+    	
     	addAllChannelsToLayout();
+    	
+    	return v;
     }    
+	
+	/*
+	 * Return if the EPG is already fetched or not
+	 */
+	public boolean isFetchedTheEPG(){
+		return fetched;
+	}
+	
+	/* 
+	 * Fetch the EPG from the STB 
+	 */
+	public void fetchEPG(){
+		epgFetched = query.getEPG();
+		fetched = true;
+		// The upper line should be on the OnCreate method
+		// This way will be fetched only one time and used several times
+	}
+	
+	/*
+	 * Return the EPG after fetching it (just do it one time now)
+	 */
+	public EPG getFullEPG(){
+		if(!fetched)
+			fetchEPG();
+		return epgFetched;
+	}
+	
+
+	
+	
     
     // DUMMY
     // This function is suppose to add the whole list of channels to the view
@@ -64,10 +105,12 @@ public class MainActivityView2 extends ZmoteActivity {
     // DUMMY
     // This function is suppose to load a new channel in the main activity view
     // That means: put the icon of the channel in the list and assign it a function
+    
+    
     public void addChannelItemToLayout(Channel ch){
     
-    	LinearLayout h_layout = (LinearLayout) findViewById(R.id.channel_icons_ly);
-    	ImageButton new_btn = new ImageButton(this);
+    	
+    	ImageButton new_btn = new ImageButton(v.getContext());
     	new_btn.setId(ch.getNr()+100);	// ID of the button: ChannelNr+100
     	new_btn.setImageBitmap(ch.getIcon());
     	new_btn.setBackgroundResource(0);	// Set the background transparent
@@ -84,9 +127,10 @@ public class MainActivityView2 extends ZmoteActivity {
 			public void onClick(View v) {
 				
 				RemoteControl.instance().launch(url);
-				LinearLayout elem = (LinearLayout) findViewById(channelNr);
+				LinearLayout elem = (LinearLayout) c_layout.findViewById(channelNr);
 				elem.setFocusableInTouchMode(true);
 				elem.requestFocus();
+				main.vibrate();
 			}
 		});
     	
@@ -114,8 +158,8 @@ public class MainActivityView2 extends ZmoteActivity {
     	
     	
     	// Now we load the information about the channel in the middle section
-    	LinearLayout c_layout = (LinearLayout) findViewById(R.id.content_ly);
-    	LinearLayout channel_ly = new LinearLayout(this); // Check arguments (correct?)
+    	
+    	LinearLayout channel_ly = new LinearLayout(v.getContext()); // Check arguments (correct?)
     	channel_ly.setBackgroundColor(color.white);	// This is not doing anything
     	channel_ly.setLayoutParams(new LayoutParams(300, 500));
     	channel_ly.setOrientation(1);	// Vertical 1; Horizontal 0
@@ -127,16 +171,17 @@ public class MainActivityView2 extends ZmoteActivity {
     		@Override
 			public void onClick(View v) {
 				
-				ImageButton elem = (ImageButton) findViewById(channelNr);
+				ImageButton elem = (ImageButton)h_layout.findViewById(channelNr);
 				elem.setFocusableInTouchMode(true);
 				elem.requestFocus();
+				main.vibrate();
 				}
 			});
     	
     	
-    	TextView ch_name = new TextView(this);
-    	TextView pr_name = new TextView(this);
-    	TextView pr_short_desc = new TextView(this);
+    	TextView ch_name = new TextView(v.getContext());
+    	TextView pr_name = new TextView(v.getContext());
+    	TextView pr_short_desc = new TextView(v.getContext());
     	// Right now we just load the name
     	ch_name.setText(ch.getName());
     	pr_name.setSingleLine(false);

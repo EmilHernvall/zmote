@@ -58,7 +58,7 @@ public class SelectSTBAdapter extends BaseAdapter {
 				STBContainer.instance().setActiveSTB(theSelectedSTB);
 				Activity theActivity = (Activity)v.getContext();
 				theActivity.finish();
-				Intent mainIntent = new Intent(v.getContext(), RemoteControlActivity.class);
+				Intent mainIntent = new Intent(v.getContext(), MainTabActivity.class);
 				theActivity.startActivity(mainIntent);
 			}
 		});
