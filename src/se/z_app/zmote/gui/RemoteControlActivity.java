@@ -30,6 +30,7 @@ public class RemoteControlActivity extends ZmoteActivity {
         setContentView(R.layout.activity_remote_control);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         btnListeners();
+        setButtonsBarListeners();	// Set the listeners for the buttons bar menu
         
      
     }
@@ -126,8 +127,8 @@ public class RemoteControlActivity extends ZmoteActivity {
  		 exit_button.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-            //Yet to be implemented
             	vibrate();
+            	RCProxy.instance().exit();    
             }
         });
  		
