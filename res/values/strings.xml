@@ -35,5 +35,6 @@
     <string name="title_activity_buttons_bar">ButtonsBarActivity</string>
     <string name="title_activity_main_activity_view2">MainView2</string>
     <string name="title_activity_main_test">MainTestActivity</string>
+    <string name="title_activity_epg">EPGActivity</string>
 
 </resources>

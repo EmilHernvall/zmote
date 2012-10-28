@@ -27,7 +27,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
         <activity
             android:name="SplashActivity"
             android:label="@string/title_activity_splash"
@@ -89,6 +88,15 @@
         <activity
             android:name=".MainActivityView2"
             android:label="@string/title_activity_main_activity_view2" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".EPGActivity"
+            android:label="@string/title_activity_epg" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
