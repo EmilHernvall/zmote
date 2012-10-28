@@ -2,10 +2,32 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/bottom_menu_ly"
     android:layout_width="fill_parent"
-    android:layout_height="30dp"
+    android:layout_height="20dp"
     android:layout_weight="0.18"
+    android:background="#33819d"
     android:contentDescription="@string/button_menu_webtv_description"
-    android:orientation="horizontal" >
+    android:orientation="horizontal"
+    android:paddingBottom="2dp"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    android:paddingTop="2dp" >
+
+    <Button
+        android:id="@+id/home_button"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:background="#333333"
+        android:drawableTop="@drawable/ic_menu_home" />
+
+    <Button
+        android:id="@+id/remote_button"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:background="#333333"
+        android:drawableTop="@drawable/ic_dialog_dialer"
+        android:visibility="visible" />
 
     <Button
         android:id="@+id/epg_button"
@@ -14,15 +36,6 @@
         android:layout_weight="1"
         android:background="#333333"
         android:drawableTop="@drawable/collections_go_to_today" />
-
-     <Button
-         android:id="@+id/remote_button"
-         android:drawableTop= "@drawable/ic_dialog_dialer"
-         android:layout_width="wrap_content"
-         android:layout_height="fill_parent"
-         android:layout_weight="1"
-         android:background="#333333"
-         android:visibility="visible" />
 
      <Button
          android:id="@+id/webtv_button"
