@@ -94,7 +94,7 @@ public class MainActivityView2 extends ZmoteActivity {
 			String url = temp;
     		@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+				
 				RemoteControl.instance().launch(url);
 				LinearLayout elem = (LinearLayout) findViewById(channelNr);
 				elem.setFocusableInTouchMode(true);
@@ -138,7 +138,7 @@ public class MainActivityView2 extends ZmoteActivity {
     		int channelNr = i_tmp+100;
     		@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+				
 				ImageButton elem = (ImageButton) findViewById(channelNr);
 				elem.setFocusableInTouchMode(true);
 				elem.requestFocus();
@@ -153,7 +153,10 @@ public class MainActivityView2 extends ZmoteActivity {
     	ch_name.setText(ch.getName());
     	pr_name.setSingleLine(false);
     	pr_short_desc.setSingleLine(false);
-    	String curTime = currentProgram.getStart().getHours()+":"+currentProgram.getStart().getMinutes();
+    	
+    	@SuppressWarnings("deprecation")
+		String curTime = currentProgram.getStart().getHours()+":"+currentProgram.getStart().getMinutes();
+    	@SuppressWarnings("deprecation")
     	String nexTime = nextProgram.getStart().getHours()+":"+nextProgram.getStart().getMinutes();
     	pr_name.setText("\n"+curTime+"- "+currentProgram.getName()+"\n"
     						+nexTime+"- "+nextProgram.getName()+"\n");

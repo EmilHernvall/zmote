@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/stb_name_ly"
     android:layout_width="fill_parent"
-    android:layout_height="20dp"
-    android:layout_weight="0.22"
+    android:layout_height="15dp"
+    android:layout_weight="0.10"
     android:contentDescription="@string/green_button_description"
     android:orientation="horizontal" >
 
