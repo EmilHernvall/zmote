@@ -8,8 +8,11 @@
 
      <RadioButton
          android:id="@+id/radioButton1"
+         style="@drawable/green_button"
          android:layout_width="wrap_content"
-         android:layout_height="wrap_content" />
+         android:layout_height="wrap_content"
+         android:background="@drawable/green_button" />
+     
 
      <TextView
          android:id="@+id/stb_name"
@@ -17,4 +20,6 @@
          android:layout_height="wrap_content"
          android:text="@string/select_stb_STB_Name"
          android:textAppearance="?android:attr/textAppearanceLarge" />
+
+
  </LinearLayout>

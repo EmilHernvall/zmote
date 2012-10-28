@@ -126,8 +126,8 @@ public class RemoteControlActivity extends ZmoteActivity {
  		 exit_button.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-            //Yet to be implemented
             	vibrate();
+            	RCProxy.instance().exit();    
             }
         });
  		
