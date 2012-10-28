@@ -44,6 +44,8 @@ public class MainActivityView2 extends ZmoteActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_activity_view2);
         
+        setButtonsBarListeners();	// Set the listeners for the buttons bar menu
+        
         //Import the whole EPG
         epg = query.getEPG();
     	// This should be done in other place because now only loads the first stb
