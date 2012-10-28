@@ -36,5 +36,6 @@
     <string name="title_activity_main_activity_view2">MainView2</string>
     <string name="title_activity_main_test">MainTestActivity</string>
     <string name="title_activity_epg">EPGActivity</string>
+    <string name="green_button_description">green_button_description</string>
 
 </resources>

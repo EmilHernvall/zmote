@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-     android:id="@+id/stb_name_ly"
-     android:layout_width="fill_parent"
-     android:layout_height="20dp"
-     android:layout_weight="0.22"
-     android:orientation="horizontal" >
+    android:id="@+id/stb_name_ly"
+    android:layout_width="fill_parent"
+    android:layout_height="20dp"
+    android:layout_weight="0.22"
+    android:contentDescription="@string/green_button_description"
+    android:orientation="horizontal" >
 
-     <RadioButton
-         android:id="@+id/radioButton1"
-         style="@drawable/green_button"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:background="@drawable/green_button" />
-     
+    <ImageView
+        android:id="@+id/green_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/activity_edit_stb_cancelButton"
+        android:src="@drawable/green_button" />
 
      <TextView
          android:id="@+id/stb_name"
