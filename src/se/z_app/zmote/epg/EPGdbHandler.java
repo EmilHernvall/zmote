@@ -113,16 +113,16 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 	/**
 	 * A method for selecting programs, given an STB and a channel
 	 * @param stb The STB to get the data from
-	 * @param channel The channel which for fetching the porgram
+	 * @param channel The channel which for fetching the program
 	 * @return an arraylist of the Programs
 	 */
 	@SuppressWarnings("deprecation")
 	public Program[] selectPrograms(STB stb, Channel channel){
 		
-		String selectQuery = "SELECT * FROM " +TABLE_PROGRAM; //TODO: Change to TABLE_PROGRAM
+		String selectQuery = "SELECT * FROM " +TABLE_PROGRAM; //no where statement, TODO: add where
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);
-		Program[] programArray = new Program[cursor.getCount()];  //BUGG?
+		Program[] programArray = new Program[cursor.getCount()];
 		int iterationCounter=0;
 		if(cursor.moveToFirst()) {
 			do{
