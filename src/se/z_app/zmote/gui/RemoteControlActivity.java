@@ -1,6 +1,9 @@
 package se.z_app.zmote.gui;
 
+import se.z_app.stb.Channel;
+import se.z_app.stb.EPG;
 import se.z_app.stb.api.RCProxy;
+import se.z_app.zmote.epg.EPGQuery;
 import android.os.Bundle;
 import android.content.pm.ActivityInfo;
 import android.view.Menu;
@@ -27,7 +30,6 @@ public class RemoteControlActivity extends ZmoteActivity {
         setContentView(R.layout.activity_remote_control);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         btnListeners();
-        
         
      
     }
