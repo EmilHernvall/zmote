@@ -1,22 +1,27 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    	android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        
+	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:id="@+id/epg_content"
+	    android:scrollbars="vertical" 
+	    android:scrollbarAlwaysDrawVerticalTrack="true" >
+	
+	    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	        android:layout_width="30dp"
+	        android:layout_height="match_parent"
+	        android:orientation="vertical"
+	        android:id="@+id/chanel_icons_list"></LinearLayout>
+	    
+	     <LinearLayout
+	         xmlns:android="http://schemas.android.com/apk/res/android"
+	         android:id="@+id/chanels_information"
+	         android:layout_width="fill_parent"
+	         android:layout_height="match_parent"
+	         android:layout_toRightOf="@id/chanel_icons_list"
+	         android:orientation="vertical" ></LinearLayout>
 
-	<!-- STB Name -->
-	<include layout="@layout/selected_stb" android:id="@+id/selected_stb" />
-   
-   <!-- Bottom menu -->
-   <include layout="@layout/activity_buttons_bar" android:id="@+id/activity_buttons_bar" />
-   
-	<RelativeLayout android:layout_width="match_parent"
-	    android:layout_height="340dp" >
-	
-	    <TextView android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_centerHorizontal="true"
-	        android:layout_centerVertical="true"
-	        android:text="@string/hello_world" />
-	
 	</RelativeLayout>
-</LinearLayout>
+</ScrollView>

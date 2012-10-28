@@ -113,11 +113,21 @@ public class MainTestActivity extends ZmoteActivity {
 			}
 		});
         
+        Button mainTab = (Button) findViewById(R.id.bMainTabActivity);
+        mainTab.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				vibrate();
+				Intent intent = new Intent(MainTestActivity.this, MainTabActivity.class);
+				MainTestActivity.this.startActivity(intent);
+			}
+		});
+        
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main_test, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 }

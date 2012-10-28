@@ -2,13 +2,22 @@ package se.z_app.zmote.gui;
 
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.stb.api.RemoteControl.Button;
+
+import android.app.ActionBar;
+
 import se.z_app.zmote.epg.EPGQuery;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.KeyEvent;
+
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
@@ -27,11 +36,10 @@ public abstract class ZmoteActivity extends Activity{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		vibe = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE) ;
-		
-		// Here is a good place to add the buttons bar menu (hardcoded, not xml).
-		//fetchEPG();
 	}
 
+	
+	
 	public void vibrate(){
 		vibe.vibrate(95);
 	}
