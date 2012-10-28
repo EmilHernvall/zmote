@@ -90,14 +90,15 @@ public class MainActivityView2 extends ZmoteActivity {
     	temp = ch.getUrl();
     	i_tmp = ch.getNr();
     	new_btn.setOnClickListener(new View.OnClickListener() {
-			@Override
+    		int channelNr = i_tmp;
+			String url = temp;
+    		@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				RemoteControl.instance().launch(temp);
-				LinearLayout elem = (LinearLayout) findViewById(i_tmp);
+				RemoteControl.instance().launch(url);
+				LinearLayout elem = (LinearLayout) findViewById(channelNr);
+				elem.setFocusableInTouchMode(true);
 				elem.requestFocus();
-				System.out.println("Listener:"+i_tmp);
-				// It's not working propertly
 				}
 			});
     	
