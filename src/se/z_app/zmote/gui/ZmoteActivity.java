@@ -2,6 +2,7 @@ package se.z_app.zmote.gui;
 
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.stb.api.RemoteControl.Button;
+import se.z_app.zmote.epg.EPGQuery;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -10,19 +11,23 @@ import android.os.Vibrator;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import se.z_app.stb.EPG;
 
 
 
 
 public abstract class ZmoteActivity extends Activity{
 	private Vibrator vibe;
-
+	private EPGQuery query = new EPGQuery();
+	private EPG epg;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		vibe = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE) ;
 		
 		// Here is a good place to add the buttons bar menu (hardcoded, not xml).
+		//fetchEPG();
 	}
 
 	public void vibrate(){
@@ -107,5 +112,21 @@ public abstract class ZmoteActivity extends Activity{
   	    });
        */
      }
+	
+	/* 
+	 * Fetch the EPG from the STB 
+	 */
+	public void fetchEPG(){
+		epg = query.getEPG();
+		// The upper line should be on the OnCreate method
+		// This way will be fetched only one time and used several times
+	}
+	
+	/*
+	 * Return the EPG
+	 */
+	public EPG getFullEPG(){
+		return epg;
+	}
 
 }

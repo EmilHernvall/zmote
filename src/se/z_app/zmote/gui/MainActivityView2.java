@@ -18,22 +18,18 @@ import android.os.Bundle;
 
 
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.ImageButton;
 import se.z_app.stb.Channel;
 import se.z_app.stb.Program;
-import android.graphics.Bitmap;
 import se.z_app.stb.EPG;
 import se.z_app.stb.api.RemoteControl;
-import se.z_app.zmote.epg.EPGQuery;
 import android.widget.TextView;
 
 
 public class MainActivityView2 extends ZmoteActivity {
 
-	private EPGQuery query = new EPGQuery();
 	private EPG epg;
 	String temp;
 	int i_tmp;
@@ -47,7 +43,8 @@ public class MainActivityView2 extends ZmoteActivity {
         setButtonsBarListeners();	// Set the listeners for the buttons bar menu
         
         //Import the whole EPG
-        epg = query.getEPG();
+        fetchEPG();
+        epg = getFullEPG();
     	// This should be done in other place because now only loads the first stb
     	// you push, but doesn't change of stb never because the method OnCreate is
     	// not executing again
