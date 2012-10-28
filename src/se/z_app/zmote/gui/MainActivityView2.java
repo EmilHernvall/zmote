@@ -10,6 +10,7 @@
 
 package se.z_app.zmote.gui;
 
+import java.util.Date;
 import java.util.Iterator;
 
 import android.R.color;
@@ -22,6 +23,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.ImageButton;
 import se.z_app.stb.Channel;
+import se.z_app.stb.Program;
 import android.graphics.Bitmap;
 import se.z_app.stb.EPG;
 import se.z_app.stb.api.RemoteControl;
@@ -82,7 +84,7 @@ public class MainActivityView2 extends ZmoteActivity {
     	new_btn.setImageBitmap(icon);
     	new_btn.setBackgroundResource(0);	// Set the background transparent
     	new_btn.setClickable(true);
-
+    	
     	// Set listeners to execute this
     	//RemoteControl.instance().launch(ch.getUrl()); //
     	temp = ch.getUrl();
@@ -102,18 +104,44 @@ public class MainActivityView2 extends ZmoteActivity {
     	//new_btn.setId(R.id.channel1);
     	h_layout.addView(new_btn);
 
+    	Iterator<Program> itr = ch.iterator();
+    	Program currentProgram = new Program();
+    	Program nextProgram = new Program();
+    	Date now = new Date(System.currentTimeMillis());
+    	while(itr.hasNext()){
+    		Program program = (Program)itr.next();
+    	
+    		if(now.compareTo(program.getStart()) < 0){
+    			currentProgram = program;
+    		}else{
+    			nextProgram = program;
+    			break;
+    		}
+    		
+    	}
+    	
+    	
     	// Now we load the information about the channel in the middle section
     	LinearLayout c_layout = (LinearLayout) findViewById(R.id.content_ly);
     	LinearLayout channel_ly = new LinearLayout(this); // Check arguments (correct?)
     	channel_ly.setBackgroundColor(color.white);
-    	channel_ly.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 50));
+    	channel_ly.setLayoutParams(new LayoutParams(300, 500));
+    	channel_ly.setOrientation(1);	// Vertical 1; Horizontal 0
+    	
     	TextView ch_name = new TextView(this);
+    	TextView ch_short_desc = new TextView(this);
     	// Right now we just load the name
     	ch_name.setText(ch.getName());
+    	ch_short_desc.setSingleLine(false);
+    	ch_short_desc.setText("\n Description of the Program. \n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris eu tortor eget eros facilisis congue. Vivamus eget imperdiet nisl. Fusce non dolor ut lacus ullamcorper malesuada. Donec pretium nisl at quam volutpat iaculis. Ut iaculis pulvinar bibendum. Pellentesque interdum, leo et euismod facilisis, dolor ligula porta tortor, id mollis diam mauris eu quam. Nulla a magna nunc. Nam mattis mi quis risus sodales sollicitudin. Mauris mauris nisi, tempus vitae faucibus eu, porttitor eu odio.");
+    	//ch_short_desc.setText(currentProgram.getShortText());
+    	//System.out.println(currentProgram.getShortText());
     	channel_ly.addView(ch_name);
+    	channel_ly.addView(ch_short_desc);
     	channel_ly.setId(ch.getNr());	// We will try to identify them by ch number
     	channel_ly.setPadding(30, 5, 30, 5);
     	channel_ly.setMinimumWidth(300);
+    	
     	// Add the information of the channel to the middle section
     	c_layout.addView(channel_ly);
     	
