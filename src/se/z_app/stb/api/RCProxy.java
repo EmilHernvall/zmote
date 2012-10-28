@@ -6,7 +6,7 @@ package se.z_app.stb.api;
 
 /**
  * 
- * @author Leonard Jansson, Viktor von Zeipel
+ * @author Leonard Jansson, Viktor von Zeipel, refractord by Rasmus Holm
  * 
  *
  */
