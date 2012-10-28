@@ -1,7 +1,19 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+   <!-- STB Name -->
+	<include layout="@layout/selected_stb" android:id="@+id/selected_stb" />
+   
+   <!-- Bottom menu -->
+   <include layout="@layout/activity_buttons_bar" android:id="@+id/activity_buttons_bar" />
+    
+    <RelativeLayout 
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="0.90"
     android:layout_marginBottom="3dp"
     android:background="@color/black"
     android:minWidth="64dip">
@@ -120,3 +132,4 @@
         android:minWidth="96dip" />
 
 </RelativeLayout>
+</LinearLayout>
