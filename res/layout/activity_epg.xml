@@ -1,22 +1,12 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:id="@+id/epg_content" >
 
-	<!-- STB Name -->
-	<include layout="@layout/selected_stb" android:id="@+id/selected_stb" />
-   
-   <!-- Bottom menu -->
-   <include layout="@layout/activity_buttons_bar" android:id="@+id/activity_buttons_bar" />
-   
-	<RelativeLayout android:layout_width="match_parent"
-	    android:layout_height="340dp" >
-	
-	    <TextView android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_centerHorizontal="true"
-	        android:layout_centerVertical="true"
-	        android:text="@string/hello_world" />
-	
-	</RelativeLayout>
-</LinearLayout>
+    <TextView android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/hello_world" />
+
+</RelativeLayout>
