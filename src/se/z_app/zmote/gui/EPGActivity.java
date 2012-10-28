@@ -9,24 +9,17 @@ import android.app.Activity;
 import android.view.Menu;
 
 public class EPGActivity extends Activity {
-
+	private EPGQuery q = new EPGQuery();
+    private EPG epg = q.getEPG();
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_epg);
+        mainEPG();
         
         
-        
-     /*   EPGQuery q = new EPGQuery();
-        EPG epg = q.getEPG();
-        
-        for (Channel channel : epg) {
-        	channel.getIcon()
-        	
-			for (Program program : channel) {
-			program.ge	
-			}
-		}*/
+    
     }
 
     
@@ -37,4 +30,34 @@ public class EPGActivity extends Activity {
         getMenuInflater().inflate(R.menu.activity_epg, menu);
         return true;
     }
+
+
+void mainEPG(){
+	
+	for (Channel channel : epg) {
+    	addIconToLayout(channel);
+    	for (Program program : channel) {
+			addProgramsToLayout(program);	
+			}
+	
+     }	
+}
+
+void addIconToLayout(Channel ch){
+	
+	
+	
+}
+
+void addProgramsToLayout(Program pg){
+
+
+
+}
+
+
+
+
+
+
 }
