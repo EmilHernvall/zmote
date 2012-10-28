@@ -12,28 +12,21 @@ package se.z_app.zmote.gui;
 
 import java.util.Date;
 import java.util.Iterator;
-
 import android.R.color;
 import android.os.Bundle;
-
-
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.ImageButton;
 import se.z_app.stb.Channel;
 import se.z_app.stb.Program;
-import android.graphics.Bitmap;
 import se.z_app.stb.EPG;
 import se.z_app.stb.api.RemoteControl;
-import se.z_app.zmote.epg.EPGQuery;
 import android.widget.TextView;
 
 
 public class MainActivityView2 extends ZmoteActivity {
 
-	private EPGQuery query = new EPGQuery();
 	private EPG epg;
 	String temp;
 	int i_tmp;
@@ -44,19 +37,14 @@ public class MainActivityView2 extends ZmoteActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_activity_view2);
         
-        //Import the whole EPG
-        epg = query.getEPG();
+        setButtonsBarListeners();	// Set the listeners for the buttons bar menu
+        epg = getFullEPG();
     	// This should be done in other place because now only loads the first stb
     	// you push, but doesn't change of stb never because the method OnCreate is
     	// not executing again
         
-        // Change the STB name
-    	TextView stbName = (TextView) findViewById(R.id.stb_name);
-    	stbName.setText( epg.getStb().getBoxName() );
-
-        // We add the channels to the view
+    	setSTBName();
     	addAllChannelsToLayout();
-
     }    
     
     // DUMMY
@@ -77,11 +65,11 @@ public class MainActivityView2 extends ZmoteActivity {
     // This function is suppose to load a new channel in the main activity view
     // That means: put the icon of the channel in the list and assign it a function
     public void addChannelItemToLayout(Channel ch){
-    	Bitmap icon = ch.getIcon();
-    	//String name = ch.getName();
+    
     	LinearLayout h_layout = (LinearLayout) findViewById(R.id.channel_icons_ly);
     	ImageButton new_btn = new ImageButton(this);
-    	new_btn.setImageBitmap(icon);
+    	new_btn.setId(ch.getNr()+100);	// ID of the button: ChannelNr+100
+    	new_btn.setImageBitmap(ch.getIcon());
     	new_btn.setBackgroundResource(0);	// Set the background transparent
     	new_btn.setClickable(true);
     	
@@ -94,19 +82,18 @@ public class MainActivityView2 extends ZmoteActivity {
 			String url = temp;
     		@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+				
 				RemoteControl.instance().launch(url);
 				LinearLayout elem = (LinearLayout) findViewById(channelNr);
 				elem.setFocusableInTouchMode(true);
 				elem.requestFocus();
-				}
-			});
+			}
+		});
     	
-    	//new_btn.setId(R.id.channel1);
     	h_layout.addView(new_btn);
 
     	// GETTING THE PROGRAM INFORMATION
-    	// Check this code, especially the inicialization of the iterator
+    	// Check this code, especially the initialization of the iterator
     	// With currentProgram = itr; does not work
     	// But, what would happen if we need to show the FIRST program?
     	Iterator<Program> itr = ch.iterator();
@@ -133,6 +120,20 @@ public class MainActivityView2 extends ZmoteActivity {
     	channel_ly.setLayoutParams(new LayoutParams(300, 500));
     	channel_ly.setOrientation(1);	// Vertical 1; Horizontal 0
     	
+    	// Set listeners for the descriptions to link to the channel icon
+    	i_tmp = ch.getNr();
+    	channel_ly.setOnClickListener(new View.OnClickListener() {
+    		int channelNr = i_tmp+100;
+    		@Override
+			public void onClick(View v) {
+				
+				ImageButton elem = (ImageButton) findViewById(channelNr);
+				elem.setFocusableInTouchMode(true);
+				elem.requestFocus();
+				}
+			});
+    	
+    	
     	TextView ch_name = new TextView(this);
     	TextView pr_name = new TextView(this);
     	TextView pr_short_desc = new TextView(this);
@@ -140,8 +141,16 @@ public class MainActivityView2 extends ZmoteActivity {
     	ch_name.setText(ch.getName());
     	pr_name.setSingleLine(false);
     	pr_short_desc.setSingleLine(false);
-    	pr_name.setText("\n"+currentProgram.getName()+" --> "+nextProgram.getName()+"\n");
+    	
+    	@SuppressWarnings("deprecation")
+		String curTime = currentProgram.getStart().getHours()+":"+currentProgram.getStart().getMinutes();
+    	@SuppressWarnings("deprecation")
+    	String nexTime = nextProgram.getStart().getHours()+":"+nextProgram.getStart().getMinutes();
+    	pr_name.setText("\n"+curTime+"- "+currentProgram.getName()+"\n"
+    						+nexTime+"- "+nextProgram.getName()+"\n");
     	pr_short_desc.setText(currentProgram.getLongText());
+    	
+    	// We add the new items and give the LinearLayout a new id and some properties
     	channel_ly.addView(ch_name);
     	channel_ly.addView(pr_name);
     	channel_ly.addView(pr_short_desc);
