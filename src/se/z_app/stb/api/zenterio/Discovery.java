@@ -9,44 +9,47 @@ import java.util.LinkedList;
 import se.z_app.stb.STB;
 import se.z_app.stb.api.DiscoveryInterface;
 
-
 /**
  * Object that includes all necessary functions for discovering a Zenterio STB.
  * @author viktordahl
  * TODO: If no boxes are found a second search with a higher timeOutInMs should be conducted.
  */
 public class Discovery implements DiscoveryInterface {
-	private static int timeOutInMs = 30; //Timeout for each ping request when searching for IP addresses in use
-	private String subNetAddress;
+	private static int timeOutInMs = 40; //Timeout for each ping request when searching for IP addresses in use
 	public static boolean isRunning, isLoadingBoxes = false;
+	private String subNetAddress;
 	
 	public Discovery (String subNetAddress) {
 		this.subNetAddress = subNetAddress;
+//		this.timeOutInMs = timeOutInMs;
 	}
 
 	/**
 	 * Is initialized in STBDiscovery.find(). Finds the IP addresses first then creates a boxes for each IP found. Returns an array of STB's
-	 * TODO: Test if the new function (get stb thread) works. Should cut the find() function time pretty much in 2 (to 1 sec).
 	 */
 	@Override
 	public STB[] find() {
 		LinkedList<InetAddress> boxes = null;
-		boxes = findSTBIPAddresses();
+		boxes = findSTBIPAddresses(); // Searches the subnet for addresses of Zenterio boxes
 		STB[] stbs = new STB[boxes.size()];
 		
 		createSTBObjectThread stbThread;
-		try {
+		long t2 = System.nanoTime();
+		try { // Creates a thread for every box to gather info
 			for (int i=0;i<boxes.size();i++) {
 				stbThread = new createSTBObjectThread(boxes.get(i));
 				stbThread.start();
 				while(stbThread.isRunning()) {
-					
+					try {
+						Thread.sleep(20);
+					} catch (InterruptedException e) { e.printStackTrace(); }
 				}
 				stbs[i] = stbThread.getBox();
 			}
 		}
 		catch (RuntimeException e) { e.printStackTrace(); }
-		System.out.println(stbs.length);
+		long t3 = System.nanoTime();
+		System.out.println("Time for getting boxes: " +(t3-t2)/1000000+"ms");
 		return stbs;
 	}
 
@@ -58,7 +61,7 @@ public class Discovery implements DiscoveryInterface {
 	private boolean isScanning(LinkedList<ScanObjectThread> objects) {
 		int count = 0;
 		for (int i=0;i<8;i++) {
-			if (objects.get(i).isScanning()) {
+			if (objects.get(i).isScanning() && isRunning) {
 				count++;
 			}
 		}
@@ -75,31 +78,21 @@ public class Discovery implements DiscoveryInterface {
 		LinkedList<InetAddress> boxes = new LinkedList<InetAddress>();
 		ScanObjectThread scanner;
 		LinkedList<ScanObjectThread> objects = new LinkedList<ScanObjectThread>();
-		
 		isRunning = true;
 		for (int j=0;j<8;j++) {
 			scanner = new ScanObjectThread(j);
 			scanner.start();
 			objects.add(scanner);
 		}
-		
 		long t1 = System.nanoTime();
 		while(isScanning(objects)) {
 			try {
-				Thread.sleep(50);
+				Thread.sleep(20);
 			} catch (InterruptedException e) { e.printStackTrace(); }
 		}
-		
 		long t2 = System.nanoTime();
 		System.out.println("Time for scan: " +(t2-t1)/1000000+"ms");
-		while (isLoadingBoxes) {
-			try {
-				Thread.sleep(10);
-			} catch (Exception e) { };
-		}
-		long t3 = System.nanoTime();
-		System.out.println("Time for getting boxes: " +(t3-t2)/1000000+"ms");
-		for (int i = 0; i<8; i++) {
+		for (int i=0;i<8;i++) {
 			if (((boxes = objects.get(i).getBoxes()).size()) > 0) {
 				break;
 			}
@@ -170,8 +163,7 @@ public class Discovery implements DiscoveryInterface {
 		}
 		public boolean isScanning() {
 			return isScanning;
-		}
-		
+		}	
 		public void run() {
 			for (int i = calculateStartRange(rangeIndex);i<calculateEndRange(rangeIndex) && isRunning;i++) {
 				try {
@@ -180,7 +172,7 @@ public class Discovery implements DiscoveryInterface {
 					if(addr.isReachable(timeOutInMs)) {
 						if ((row = isZenterioSTB(addr)) != null) {
 							isRunning = false;
-							isLoadingBoxes = true;
+							isScanning = false;
 							boxes.add(addr);
 				    		System.out.println("Found box at "+addr.getHostAddress().toString());
 				    		while ((line = row.readLine()) != null) {
@@ -191,7 +183,6 @@ public class Discovery implements DiscoveryInterface {
 				    			}
 				    		}
 				    		row.close();
-				    		isLoadingBoxes = false;
 				    		break;
 						}
 					}
