@@ -12,12 +12,13 @@ import se.z_app.stb.api.DiscoveryInterface;
 /**
  * Object that includes all necessary functions for discovering a Zenterio STB.
  * @author viktordahl
- * TODO: If no boxes are found a second search with a higher timeOutInMs should be conducted.
  */
 public class Discovery implements DiscoveryInterface {
-	private static int timeOutInMs = 40; //Timeout for each ping request when searching for IP addresses in use
+	private static int timeOutInMs = 200; //Timeout for each ping request when searching for IP addresses in use
+	private static int numberOfScanThreads = 32;
 	public static boolean isRunning, isLoadingBoxes = false;
 	private String subNetAddress;
+	long t1, t2, t3; //for timing measurement
 	
 	public Discovery (String subNetAddress) {
 		this.subNetAddress = subNetAddress;
@@ -34,7 +35,7 @@ public class Discovery implements DiscoveryInterface {
 		STB[] stbs = new STB[boxes.size()];
 		
 		createSTBObjectThread stbThread;
-		long t2 = System.nanoTime();
+		t2 = System.nanoTime();
 		try { // Creates a thread for every box to gather info
 			for (int i=0;i<boxes.size();i++) {
 				stbThread = new createSTBObjectThread(boxes.get(i));
@@ -48,8 +49,8 @@ public class Discovery implements DiscoveryInterface {
 			}
 		}
 		catch (RuntimeException e) { e.printStackTrace(); }
-		long t3 = System.nanoTime();
-		System.out.println("Time for getting boxes: " +(t3-t2)/1000000+"ms");
+		t3 = System.nanoTime();
+		System.out.println("Time for boxgetting: " +(t3-t2)/1000000+"ms. Total time: "+(t3-t1)/1000000+".");
 		return stbs;
 	}
 
@@ -79,12 +80,12 @@ public class Discovery implements DiscoveryInterface {
 		ScanObjectThread scanner;
 		LinkedList<ScanObjectThread> objects = new LinkedList<ScanObjectThread>();
 		isRunning = true;
-		for (int j=0;j<8;j++) {
+		for (int j=0;j<numberOfScanThreads;j++) {
 			scanner = new ScanObjectThread(j);
 			scanner.start();
 			objects.add(scanner);
 		}
-		long t1 = System.nanoTime();
+		t1 = System.nanoTime();
 		while(isScanning(objects)) {
 			try {
 				Thread.sleep(20);
@@ -92,7 +93,7 @@ public class Discovery implements DiscoveryInterface {
 		}
 		long t2 = System.nanoTime();
 		System.out.println("Time for scan: " +(t2-t1)/1000000+"ms");
-		for (int i=0;i<8;i++) {
+		for (int i=0;i<numberOfScanThreads;i++) {
 			if (((boxes = objects.get(i).getBoxes()).size()) > 0) {
 				break;
 			}
@@ -149,14 +150,14 @@ public class Discovery implements DiscoveryInterface {
 			if (start == 0) {
 				return 1;
 			}
-			return start*32;
+			return start*(256/numberOfScanThreads);
 		}
 		private int calculateEndRange(int end) {
-			end *= 32;
-			if (end == 224) {
+			end *= (256/numberOfScanThreads);
+			if (end == (256-(256/numberOfScanThreads))) {
 				return 255;
 			} 
-			return end+32;
+			return end+(256/numberOfScanThreads);
 		}
 		public LinkedList<InetAddress> getBoxes() {
 			return boxes;
