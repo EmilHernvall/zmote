@@ -124,7 +124,7 @@ public class MainTabActivity extends FragmentActivity implements ActionBar.TabLi
 		}
 		else if(tab.equals(tabMain)){
 			Log.i("FragmentLog", "Main");
-			fragment = new ChannelInformationFragment(this);
+			fragment = new MainViewFragment(this);//new ChannelInformationFragment(this);
 		}
     	
         

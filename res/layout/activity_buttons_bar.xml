@@ -37,22 +37,20 @@
         android:background="#333333"
         android:drawableTop="@drawable/collections_go_to_today" />
 
-     <Button
-         android:id="@+id/webtv_button"
-         android:layout_width="wrap_content"
-         android:layout_height="fill_parent"
-         android:layout_weight="1"
-         android:background="#333333"
-         android:drawableTop="@drawable/location_web_site" />
+    <Button
+        android:id="@+id/webtv_button"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:background="#333333"
+        android:drawableTop="@drawable/location_web_site" />
 
-     <Button
-         android:id="@+id/fav_button"
-         android:drawableTop= "@drawable/rating_favourite"
-         android:layout_width="wrap_content"
-         android:layout_height="fill_parent"
-         android:layout_weight="1"
-         android:background="#333333" />
+    <Button
+        android:id="@+id/fav_button"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:background="#333333"
+        android:drawableTop="@drawable/rating_favourite" />
 
-    
-
- </LinearLayout>
+</LinearLayout>
