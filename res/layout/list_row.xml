@@ -5,24 +5,22 @@
     android:background="#FF282828"
     android:orientation="horizontal"
     android:padding="5dip" >
- 
-    
+
     <se.z_app.zmote.gui.ListTextViewElement
         android:id="@+id/boxname"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_marginLeft="10dp"
         android:layout_centerVertical="true"
-        />
- 	<se.z_app.zmote.gui.SelectSTBImageElement
- 	    android:id="@+id/editimage" 
- 	    android:layout_width="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <se.z_app.zmote.gui.SelectSTBImageElement
+        android:id="@+id/editimage"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_editnew"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"/>
- 
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_editnew" />
+
 </RelativeLayout>

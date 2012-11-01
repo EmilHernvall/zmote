@@ -5,22 +5,23 @@
     android:background="#FF000000" >
 
     <LinearLayout
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:layout_marginBottom="121dip">
-    <se.z_app.zmote.gui.SelectSTBListView
-        android:id="@+id/list_over_stb"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="30dp"
-        android:background="#FF282828"
-        android:divider="#FF747474"
-        android:dividerHeight="1dp"
-        android:orientation="vertical" >
-    </se.z_app.zmote.gui.SelectSTBListView>
+        android:layout_height="fill_parent"
+        android:layout_marginBottom="121dip" >
+
+        <se.z_app.zmote.gui.SelectSTBListView
+            android:id="@+id/list_over_stb"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="30dp"
+            android:background="#FF282828"
+            android:divider="#FF747474"
+            android:dividerHeight="1dp"
+            android:orientation="vertical" >
+        </se.z_app.zmote.gui.SelectSTBListView>
     </LinearLayout>
 
     <Button

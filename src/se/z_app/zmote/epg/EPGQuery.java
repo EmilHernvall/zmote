@@ -14,6 +14,10 @@ public class EPGQuery {
 		return EPGContentHandler.instance().getEPG();
 	}	
 	
+	public Channel getCurrentChannel(){
+		return EPGContentHandler.instance().getCurrentChannel();
+	}
+	
 	public Channel getChannel(int nr){
 		EPG epg = EPGContentHandler.instance().getEPG();
 		return epg.getChannel(nr);

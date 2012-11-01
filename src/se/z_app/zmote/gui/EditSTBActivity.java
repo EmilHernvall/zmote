@@ -2,6 +2,7 @@ package se.z_app.zmote.gui;
 
 import se.z_app.stb.STB;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import android.view.Menu;
@@ -10,7 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class EditSTBActivity extends ZmoteActivity {
+public class EditSTBActivity extends Activity {
 
 	STB stb;
 	int theIndex;

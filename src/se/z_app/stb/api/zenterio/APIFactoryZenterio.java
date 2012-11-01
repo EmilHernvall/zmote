@@ -1,10 +1,11 @@
-package se.z_app.stb.api;
+package se.z_app.stb.api.zenterio;
 
 import se.z_app.stb.STB;
-import se.z_app.stb.api.zenterio.Discovery;
-import se.z_app.stb.api.zenterio.EventListener;
-import se.z_app.stb.api.zenterio.RCCommand;
-import se.z_app.stb.api.zenterio.StandardCommand;
+import se.z_app.stb.api.AbstractAPIFactory;
+import se.z_app.stb.api.BiDirectionalCmdInterface;
+import se.z_app.stb.api.DiscoveryInterface;
+import se.z_app.stb.api.EventListnerInterface;
+import se.z_app.stb.api.MonoDirectionalCmdInterface;
 
 public class APIFactoryZenterio extends AbstractAPIFactory {
 

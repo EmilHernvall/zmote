@@ -2,29 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#333333"
     android:orientation="vertical" >
-
-    <!-- STB Name -->
-
-    <include
-        android:id="@+id/selected_stb"
-        layout="@layout/selected_stb" />
-
-    <!-- Bottom menu -->
-
-    <include
-        android:id="@+id/activity_buttons_bar"
-        layout="@layout/activity_buttons_bar" />
 
     <!-- Top Menu -->
 
     <HorizontalScrollView
-        android:id="@+id/channel_icons_ly"
         android:layout_width="wrap_content"
-        android:layout_height="50dp" >
+        android:layout_height="70dp"
+        android:scrollbars="none" >
 
         <LinearLayout
+            android:id="@+id/channel_icons_ly"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="horizontal" >
@@ -34,22 +22,16 @@
     <!-- Middle section -->
 
     <HorizontalScrollView
-        android:id="@+id/content_ly"
         android:layout_width="wrap_content"
-        android:layout_height="300dp" >
+        android:layout_height="270dp"
+        android:scrollbars="none" >
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/content_ly"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@color/black"
             android:orientation="horizontal" >
-
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Large Text heer ñalkjdfñlajsdflk jaslñdfj "
-                android:textAppearance="?android:attr/textAppearanceLarge" />
         </LinearLayout>
     </HorizontalScrollView>
 

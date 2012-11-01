@@ -6,6 +6,7 @@ import se.z_app.stb.api.EPGData;
 import se.z_app.stb.api.STBContainer;
 import se.z_app.zmote.epg.EPGContentHandler;
 import android.os.Bundle;
+import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
@@ -13,7 +14,7 @@ import android.widget.Button;
 
 
 //Pleas add your view or setting on this activity to make it easier for testing and accsess 
-public class MainTestActivity extends ZmoteActivity {
+public class MainTestActivity extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,7 +30,7 @@ public class MainTestActivity extends ZmoteActivity {
 			
 			@Override
 			public void onClick(View v) {
-				vibrate();
+				
 				STB stb = new STB();
 				stb.setBoxName("STB Proxy");
 				stb.setIP("130.236.248.226");
@@ -46,7 +47,7 @@ public class MainTestActivity extends ZmoteActivity {
 			
 			@Override
 			public void onClick(View v) {
-				vibrate();
+			
 				STB stb = new STB();
 				stb.setBoxName("Zenterio227");
 				stb.setIP("130.236.248.227");
@@ -62,7 +63,7 @@ public class MainTestActivity extends ZmoteActivity {
         stb2.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				vibrate();
+				
 				STB stb = new STB();
 				stb.setBoxName("Zenterio228");
 				stb.setIP("130.236.248.228");
@@ -78,37 +79,29 @@ public class MainTestActivity extends ZmoteActivity {
         splash.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				vibrate();
+				
 				Intent intent = new Intent(MainTestActivity.this, SplashActivity.class);
 				MainTestActivity.this.startActivity(intent);
 			}
 		});
         
-        Button remote = (Button) findViewById(R.id.bRemoteControl);
-        remote.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				vibrate();
-				Intent intent = new Intent(MainTestActivity.this, RemoteControlActivity.class);
-				MainTestActivity.this.startActivity(intent);
-			}
-		});
+
         Button selectSTB = (Button) findViewById(R.id.bSelectSTBActivity);
         selectSTB.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				vibrate();
+			
 				Intent intent = new Intent(MainTestActivity.this, SelectSTBActivity.class);
 				MainTestActivity.this.startActivity(intent);
 			}
 		});
         
-        Button mainview2 = (Button) findViewById(R.id.bMainview2);
-        mainview2.setOnClickListener(new View.OnClickListener() {
+        
+        Button mainTab = (Button) findViewById(R.id.bMainTabActivity);
+        mainTab.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				vibrate();
-				Intent intent = new Intent(MainTestActivity.this, MainActivityView2.class);
+				Intent intent = new Intent(MainTestActivity.this, MainTabActivity.class);
 				MainTestActivity.this.startActivity(intent);
 			}
 		});
@@ -118,6 +111,6 @@ public class MainTestActivity extends ZmoteActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main_test, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 }

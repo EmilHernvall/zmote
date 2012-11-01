@@ -11,7 +11,7 @@
         android:layout_alignParentTop="true"
         android:text="@string/activity_edit_stb_title"
         tools:context=".EditSTBActivity" />
-    
+
     <TextView
         android:id="@+id/activity_edit_stb_textNameid"
         android:layout_width="wrap_content"
@@ -85,7 +85,7 @@
         android:layout_toRightOf="@+id/activity_edit_stb_staticTypeid"
         android:text="@string/activity_edit_stb_dynamicType"
         tools:context=".EditSTBActivity" />
-    
+
     <Button
         android:id="@+id/activity_edit_stb_save_button"
         android:layout_width="fill_parent"
@@ -93,13 +93,13 @@
         android:layout_below="@id/activity_edit_stb_staticTypeid"
         android:layout_centerHorizontal="true"
         android:text="@string/activity_edit_stb_saveButton" />
-    
+
     <Button
         android:id="@+id/activity_edit_stb_cancel_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_below="@id/activity_edit_stb_save_button"
+        android:layout_centerHorizontal="true"
         android:text="@string/activity_edit_stb_cancelButton" />
 
 </RelativeLayout>
