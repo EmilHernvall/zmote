@@ -105,7 +105,7 @@ public class MainViewFragment extends Fragment{
 		}
 		
 		//TODO: Featch this one
-		currentChannelNr = 4;
+		currentChannelNr = 0;
 	
 		
 	    buildForCurrentChannel();    
@@ -124,7 +124,7 @@ public class MainViewFragment extends Fragment{
 						posVar = true;
 					}					
 					
-					currentChannelNr = (currentChannelNr+1)%imageList.size();
+					
 					
 					rotateLeft();
 				}
@@ -143,7 +143,7 @@ public class MainViewFragment extends Fragment{
 						posVar = true;
 					}
 					
-					currentChannelNr = (currentChannelNr+imageList.size()-1)%imageList.size();
+					
 					
 					rotateRight();
 				}
@@ -154,8 +154,44 @@ public class MainViewFragment extends Fragment{
 		return v;
 	}
 	
+
+	
+	public void setChannel(int channelNr){		
+		if(currentChannelNr > channelNr){
+			
+			if(currentChannelNr-channelNr < imageList.size()-currentChannelNr+channelNr){
+				rotateRight(currentChannelNr-channelNr);
+			}
+			else{
+				rotateLeft(imageList.size()-currentChannelNr+channelNr);
+			}
+			
+						
+		}else if(currentChannelNr < channelNr){
+			
+			
+			if(channelNr-currentChannelNr < imageList.size()-currentChannelNr+channelNr){
+				rotateLeft(currentChannelNr-channelNr);
+			}
+			else{
+				rotateRight(imageList.size()-currentChannelNr+channelNr);
+			}
+			
+		}
+		
+	}
+	
 	
 	private void rotateRight(){
+		rotateRight(1);
+	}
+	
+	
+	private int tmpInt;
+	private void rotateRight(int turns){
+		
+		currentChannelNr = (currentChannelNr+imageList.size()-1)%imageList.size();
+		
 		ImageView newLeft = imageList.get((currentChannelNr+imageList.size()-1)%imageList.size());
 		newLeft.setY(-300);
 		newLeft.setX(-300);
@@ -163,6 +199,7 @@ public class MainViewFragment extends Fragment{
 	    params1.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 	    newLeft.setLayoutParams(params1);
 		newLeft.setVisibility(View.VISIBLE);
+		newLeft.setAlpha(defaultAlpha);
 		r.addView(newLeft);
 		newLeft.invalidate();
 		
@@ -170,6 +207,7 @@ public class MainViewFragment extends Fragment{
 		
 		right.animate().y(-300).x(rightX + 300).setListener(new AnimatorListener() {
 			ImageView tmp = right;
+			
 			
 			@Override
 			public void onAnimationStart(Animator animation) {
@@ -183,19 +221,24 @@ public class MainViewFragment extends Fragment{
 			public void onAnimationEnd(Animator animation) {
 				r.removeView(tmp);
 				isAnimationRunning = false;	
+			
 			}
 			
 			@Override
 			public void onAnimationCancel(Animator animation) {
 				r.removeView(tmp);
 				isAnimationRunning = false;
+				
 			}
 		});
 		
 
 		center.animate().x(rightX).y(rightY).scaleX(rightScale).scaleY(rightScale).alpha(defaultAlpha).setListener(null);
+		
+		
+		tmpInt = turns;
 		left.animate().x(centerX).y(centerY).scaleX(centerScale).scaleY(centerScale).alpha(alpha).setListener(new AnimatorListener() {
-			
+			int turns = tmpInt;
 			@Override
 			public void onAnimationStart(Animator animation) {
 				text.setText("");
@@ -206,12 +249,19 @@ public class MainViewFragment extends Fragment{
 			
 			@Override
 			public void onAnimationEnd(Animator animation) {
-				text.setText(generateText());
+					
+				turns--;
+				if(turns>0){
+					rotateRight(turns);
+				}else{
+					text.setText(generateText());
+				}
 			}
 			
 			@Override
 			public void onAnimationCancel(Animator animation) {}
 		});
+		
 		newLeft.animate().x(leftX).y(leftY).scaleX(leftScale).scaleY(leftScale).setListener(null);
 		
 		
@@ -222,6 +272,11 @@ public class MainViewFragment extends Fragment{
 	}
 	
 	private void rotateLeft(){
+		rotateLeft(1);
+	}
+	
+	private void rotateLeft(int turns){
+		currentChannelNr = (currentChannelNr+1)%imageList.size();
 		ImageView newRight = imageList.get((currentChannelNr+1)%imageList.size());
 		newRight.setY(-300);
 		newRight.setX(rightX+300);
@@ -229,6 +284,7 @@ public class MainViewFragment extends Fragment{
 	    params1.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 	    newRight.setLayoutParams(params1);
 	    newRight.setVisibility(View.VISIBLE);
+	    newRight.setAlpha(defaultAlpha);
 		r.addView(newRight);
 		newRight.invalidate();
 		
@@ -261,8 +317,9 @@ public class MainViewFragment extends Fragment{
 
 		
 		center.animate().x(leftX).y(leftY).scaleX(leftScale).scaleY(leftScale).alpha(defaultAlpha).setListener(null);
+		tmpInt = turns;
 		right.animate().x(centerX).y(centerY).scaleX(centerScale).scaleY(centerScale).alpha(alpha).setListener(new AnimatorListener() {
-			
+			int turns = tmpInt;
 			@Override
 			public void onAnimationStart(Animator animation) {
 				text.setText("");
@@ -273,7 +330,12 @@ public class MainViewFragment extends Fragment{
 			
 			@Override
 			public void onAnimationEnd(Animator animation) {
-				text.setText(generateText());
+				turns--;
+				if(turns>0){
+					rotateLeft(turns);
+				}else{
+					text.setText(generateText());
+				}
 			}
 			
 			@Override
@@ -346,8 +408,9 @@ public class MainViewFragment extends Fragment{
 	    params1.setMargins(40, 300, 40, 60);
 	    text.setLayoutParams(params1);
 	    
-	    text.setText("Test Tests\n more tests");
+	    text.setText(generateText());
 	    text.setTextColor(0xFFFFFFFF);
+	    
 	    r.addView(text);
 	}
 	
@@ -380,21 +443,24 @@ public class MainViewFragment extends Fragment{
 		String startTime = new SimpleDateFormat("HH:mm").format(currentProgram.getStart());
 		String info = currentProgram.getLongText();
 		
-		String nextName = nextProgram.getName();
-		String nextStartTime = new SimpleDateFormat("HH:mm").format(nextProgram.getStart());
-		String nextNextName = nextNextProgram.getName();
-		String nextNextStartTime = new SimpleDateFormat("HH:mm").format(nextNextProgram.getStart());
-		
 		name = trimString(name, 29);
-		nextName = trimString(nextName, 29);
-		nextNextName = trimString(nextNextName, 29);
 		info = trimString(info, 260);
-		
 		t = "> " + startTime +  " - " + name + "\n" ; 
 		t += info + "\n\n";
-		t += "> " + nextStartTime +  " - " + nextName + "\n";
-		t += "> " + nextNextStartTime +  " - " + nextNextName;
 		
+		if(nextProgram != null){
+			String nextName = nextProgram.getName();
+			String nextStartTime = new SimpleDateFormat("HH:mm").format(nextProgram.getStart());
+			nextName = trimString(nextName, 29);
+			t += "> " + nextStartTime +  " - " + nextName + "\n";
+		}
+		
+		if(nextNextProgram != null){
+			String nextNextName = nextNextProgram.getName();
+			String nextNextStartTime = new SimpleDateFormat("HH:mm").format(nextNextProgram.getStart());
+			nextNextName = trimString(nextNextName, 29);
+			t += "> " + nextNextStartTime +  " - " + nextNextName;
+		}
 		
 		return t;
 	}
