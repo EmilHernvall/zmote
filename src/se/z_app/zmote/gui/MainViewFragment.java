@@ -107,7 +107,6 @@ public class MainViewFragment extends Fragment{
 		//TODO: Featch this one
 		currentChannelNr = 0;
 	
-		
 	    buildForCurrentChannel();    
 	
 	    
@@ -155,6 +154,16 @@ public class MainViewFragment extends Fragment{
 	}
 	
 
+	
+	public boolean setChannel(Channel targert){
+		for(int i = 0; i< channelList.size(); i++){
+			if(channelList.get(i).getUrl().contains(targert.getUrl())){
+				setChannel(i);
+				return true;
+			}
+		}
+		return false;		
+	}
 	
 	public void setChannel(int channelNr){		
 		if(currentChannelNr > channelNr){
@@ -410,6 +419,7 @@ public class MainViewFragment extends Fragment{
 	    
 	    text.setText(generateText());
 	    text.setTextColor(0xFFFFFFFF);
+	    text.setAlpha(1);
 	    
 	    r.addView(text);
 	}
