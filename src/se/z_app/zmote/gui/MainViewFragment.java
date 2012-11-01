@@ -16,6 +16,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -84,10 +85,11 @@ public class MainViewFragment extends Fragment{
 		
 		r = (RelativeLayout)v.findViewById(R.id.rellativIconSpinner);
 		
-		
+				
 		EPGQuery query = new EPGQuery();
 		EPG epg = query.getEPG();
 		
+		currentChannelNr = 0;
 		for (Channel channel : epg) {
 			Drawable draw = new BitmapDrawable(channel.getIcon());
 			ImageView i = new ImageView(v.getContext());
@@ -102,6 +104,17 @@ public class MainViewFragment extends Fragment{
 			imageList.add(i);
 			channelList.add(channel);
 			
+			i.setOnClickListener(new View.OnClickListener() {
+				int i = currentChannelNr;
+				@Override
+				public void onClick(View v) {
+					setChannel(i);
+					
+				}
+			});
+			
+			currentChannelNr++;
+			
 		}
 		
 		//TODO: Featch this one
@@ -110,83 +123,77 @@ public class MainViewFragment extends Fragment{
 	    buildForCurrentChannel();    
 	
 	    
-		Button leftButton=(Button)v.findViewById(R.id.bLeft);
-		Button rightButton=(Button)v.findViewById(R.id.bRight);
-		
-		leftButton.setOnClickListener(new OnClickListener() {
-			
+	    r.setOnTouchListener(new OnSwipeTouchListener() {
 			@Override
-			public void onClick(View v) {
+			public void onSwipeTop() {
+				
+			}	
+			@Override
+			public void onSwipeRight() {
+				if (!isAnimationRunning) {						
+					rotateRight();
+				}		
+			}
+			@Override
+			public void onSwipeLeft() {
 				if (!isAnimationRunning) {	
-					if(!posVar){
-						setVariables();
-						posVar = true;
-					}					
-					
-					
-					
 					rotateLeft();
 				}
-			}
-		});
-		
-		
-		rightButton.setOnClickListener(new OnClickListener() {
-			
+				
+			}		
 			@Override
-			public void onClick(View v) {
-				if(!isAnimationRunning) {
-					
-					if(!posVar){
-						setVariables();
-						posVar = true;
-					}
-					
-					
-					
-					rotateRight();
-				}
+			public void onSwipeBottom() {
+				// TODO Auto-generated method stub		
 			}
 		});
-		
-		
+	    
+	 
+	
 		return v;
 	}
 	
 
 	
 	public boolean setChannel(Channel targert){
-		for(int i = 0; i< channelList.size(); i++){
-			if(channelList.get(i).getUrl().contains(targert.getUrl())){
-				setChannel(i);
-				return true;
+		if (!isAnimationRunning) {	
+			for(int i = 0; i< channelList.size(); i++){
+				if(channelList.get(i).getUrl().contains(targert.getUrl())){
+					setChannel(i);
+					return true;
+				}
 			}
 		}
 		return false;		
 	}
 	
 	public void setChannel(int channelNr){		
-		if(currentChannelNr > channelNr){
-			
-			if(currentChannelNr-channelNr < imageList.size()-currentChannelNr+channelNr){
-				rotateRight(currentChannelNr-channelNr);
+		if(currentChannelNr == channelNr)
+			return;
+		
+		Log.i("TestZ", "Current nr: " +currentChannelNr );
+		Log.i("TestZ", "Targer nr: " +channelNr );
+		
+		int can1 = 0;
+		int can2 = 0;
+		int fin = 0;
+		int size = imageList.size(); 
+		for(int i = 0; i< size; i++){
+			if((can1+currentChannelNr)%size == channelNr){
+				fin = can1;
+				break;
 			}
-			else{
-				rotateLeft(imageList.size()-currentChannelNr+channelNr);
+			if((currentChannelNr-can2+size)%size == channelNr){
+				fin = -can2;
+				break;
 			}
-			
-						
-		}else if(currentChannelNr < channelNr){
-			
-			
-			if(channelNr-currentChannelNr < imageList.size()-currentChannelNr+channelNr){
-				rotateLeft(currentChannelNr-channelNr);
-			}
-			else{
-				rotateRight(imageList.size()-currentChannelNr+channelNr);
-			}
-			
+			can2++;
+			can1++;
 		}
+		
+		if(fin < 0)
+			rotateRight(fin*(-1));
+		else
+			rotateLeft(fin);
 		
 	}
 	
@@ -198,6 +205,13 @@ public class MainViewFragment extends Fragment{
 	
 	private int tmpInt;
 	private void rotateRight(int turns){
+	
+		if(!posVar){
+			setVariables();
+			posVar = true;
+		}					
+		
+		
 		
 		currentChannelNr = (currentChannelNr+imageList.size()-1)%imageList.size();
 		
@@ -211,8 +225,7 @@ public class MainViewFragment extends Fragment{
 		newLeft.setAlpha(defaultAlpha);
 		r.addView(newLeft);
 		newLeft.invalidate();
-		
-		
+				
 		
 		right.animate().y(-300).x(rightX + 300).setListener(new AnimatorListener() {
 			ImageView tmp = right;
@@ -285,6 +298,12 @@ public class MainViewFragment extends Fragment{
 	}
 	
 	private void rotateLeft(int turns){
+		
+		if(!posVar){
+			setVariables();
+			posVar = true;
+		}	
+		
 		currentChannelNr = (currentChannelNr+1)%imageList.size();
 		ImageView newRight = imageList.get((currentChannelNr+1)%imageList.size());
 		newRight.setY(-300);
@@ -385,6 +404,8 @@ public class MainViewFragment extends Fragment{
 	    params1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 	    params1.addRule(RelativeLayout.CENTER_HORIZONTAL);
 	    params1.setMargins(10, 400, 10, 10);
+	    
+	    
 	    center.setAlpha(alpha);
 	    center.setLayoutParams(params1);
 	    center.setScaleX(4.5F);
