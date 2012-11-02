@@ -26,6 +26,7 @@ public class EventListener implements EventListnerInterface {
 	 */
 	public void init(STB stb) {
 		iPaddress = stb.getIP();
+
 		try {
 			socket = new Socket(iPaddress, 9999);
 			in = socket.getInputStream();

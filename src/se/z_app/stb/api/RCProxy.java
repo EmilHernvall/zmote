@@ -1,31 +1,38 @@
 package se.z_app.stb.api;
 
+import java.util.Observable;
+import java.util.Observer;
+
+import se.z_app.stb.STBEvent;
+
+
+
 
 
 
 
 /**
  * 
- * @author Leonard Jansson, Viktor von Zeipel, refractord by Rasmus Holm
+ * @author Leonard Jansson, Viktor von Zeipel, refractord by Rasmus Holm, Linus back
  * 
  *
  */
-public class RCProxy {
+public class RCProxy implements Observer{
 
 
 	private RCProxyState state;
 	
 	//Singleton
-	private static RCProxy instance; 
-	public static RCProxy instance(){
-		if(instance == null)
-			instance = new RCProxy();
-		return instance;
-
+	private static class SingletonHolder { 
+        public static final RCProxy INSTANCE = new RCProxy();
 	}
-
+	public static RCProxy instance(){
+		return SingletonHolder.INSTANCE;
+	}
+	
 	private RCProxy() {
-		state = new RCProxyState();
+		state = new DefaultState();
+		STBListener.instance().addObserver(this);
 	}
 	
 	/**
@@ -107,5 +114,17 @@ public class RCProxy {
 	 */
 	public void setState(RCProxyState state) {
 		this.state = state;
+	}
+
+	@Override
+	public void update(Observable observable, Object data) {
+		/*
+		 * Code for setting different states depending on events sent from the box
+		 *  should go here.
+		 */
+		if(data instanceof STBEvent){
+			
+		}
+		
 	}
 }
