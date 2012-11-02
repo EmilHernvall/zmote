@@ -60,6 +60,7 @@ public class EPGContentHandler implements Runnable, Observer{
 					currentEPG = EPGData.instance().getEPG();
 					if(currentEPG != null){
 						EPGData.instance().populateWithChannelIcon(currentEPG);
+						EPGData.instance().populateAbsentChannelIcon(currentEPG);
 					}else{
 						currentEPG = new EPG();
 					}

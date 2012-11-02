@@ -56,23 +56,33 @@ public class EPGData implements Observer{
 		return com.getCurrentChannel();
 	}
 	public Bitmap getChannelIcon(Channel channel){
-		if(com == null)
+		if(com == null || channel == null)
 			return null;
 		return com.getChannelIcon(channel);
 	}
 	
 	public void populateWithChannelIcon(Channel channel){
-		if(com == null)
+		if(com == null || channel == null)
 			return;
 		channel.setIcon(getChannelIcon(channel));
 	}
 	
 	public void populateWithChannelIcon(EPG epg){
-		if(com == null)
+		if(com == null || epg == null)
 			return;
 		Iterator<Channel> channels = epg.iterator();
 		while(channels.hasNext()){
 			populateWithChannelIcon(channels.next());
+		}
+	}
+	
+	public void populateAbsentChannelIcon(EPG epg){
+		if(com == null || epg == null)
+			return;
+		for (Channel channel : epg) {
+			if(channel.getIcon() == null){
+				populateWithChannelIcon(channel);
+			}
 		}
 	}
 	

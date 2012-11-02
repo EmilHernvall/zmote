@@ -7,12 +7,14 @@ import java.util.Date;
 import se.z_app.stb.Channel;
 import se.z_app.stb.Program;
 import se.z_app.stb.EPG;
+import se.z_app.stb.STB;
 import se.z_app.zmote.epg.EPGQuery;
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import android.support.v4.app.Fragment;
@@ -85,68 +87,12 @@ public class MainViewFragment extends Fragment{
 		
 		r = (RelativeLayout)v.findViewById(R.id.rellativIconSpinner);
 		
-				
-		EPGQuery query = new EPGQuery();
-		EPG epg = query.getEPG();
 		
-		currentChannelNr = 0;
-		for (Channel channel : epg) {
-			Drawable draw = new BitmapDrawable(channel.getIcon());
-			ImageView i = new ImageView(v.getContext());
-			i.setImageDrawable(draw);	
-			i.setBackgroundColor(0xFFFFFFFF );
-			i.setAdjustViewBounds(true);
-			i.setMaxHeight(150);
-			i.setMaxHeight(150);
-			i.invalidate();
-			
-			
-			imageList.add(i);
-			channelList.add(channel);
-			
-			i.setOnClickListener(new View.OnClickListener() {
-				int i = currentChannelNr;
-				@Override
-				public void onClick(View v) {
-					setChannel(i);
-					
-				}
-			});
-			
-			currentChannelNr++;
-			
-		}
-		
-		//TODO: Featch this one
-		currentChannelNr = 0;
-	
-	    buildForCurrentChannel();    
+		new AsyncDataLoader().execute();
+		  
 	
 	    
-	    r.setOnTouchListener(new OnSwipeTouchListener() {
-			@Override
-			public void onSwipeTop() {
-				
-			}	
-			@Override
-			public void onSwipeRight() {
-				if (!isAnimationRunning) {						
-					rotateRight();
-				}		
-			}
-			@Override
-			public void onSwipeLeft() {
-				if (!isAnimationRunning) {	
-					rotateLeft();
-				}
-				
-			}		
-			@Override
-			public void onSwipeBottom() {
-				// TODO Auto-generated method stub		
-			}
-		});
-	    
+	        
 	 
 	
 		return v;
@@ -517,6 +463,83 @@ public class MainViewFragment extends Fragment{
 		rightY = right.getY();
 		rightScale = right.getScaleX();
 	}
+	
+	
+	
+	private class AsyncDataLoader extends AsyncTask<Integer, Integer, EPG>{
+
+		@Override
+		protected EPG doInBackground(Integer... params) {
+			EPGQuery query = new EPGQuery();
+			return query.getEPG();
+		}
+		
+		@Override
+		protected void onPostExecute(EPG epg) {
+			
+			v.findViewById(R.id.progressLoadingEPG).setVisibility(View.INVISIBLE);
+			
+			currentChannelNr = 0;
+			for (Channel channel : epg) {
+				Drawable draw = new BitmapDrawable(channel.getIcon());
+				ImageView i = new ImageView(v.getContext());
+				i.setImageDrawable(draw);	
+				i.setBackgroundColor(0xFFFFFFFF );
+				i.setAdjustViewBounds(true);
+				i.setMaxHeight(150);
+				i.setMaxHeight(150);
+				i.invalidate();
+				
+				
+				imageList.add(i);
+				channelList.add(channel);
+				
+				i.setOnClickListener(new View.OnClickListener() {
+					int i = currentChannelNr;
+					@Override
+					public void onClick(View v) {
+						setChannel(i);
+						
+					}
+				});
+				
+				currentChannelNr++;
+				
+			}
+			
+			currentChannelNr = 0;
+		    buildForCurrentChannel();
+		    
+		    r.setOnTouchListener(new OnSwipeTouchListener() {
+				@Override
+				public void onSwipeTop() {
+					
+				}	
+				@Override
+				public void onSwipeRight() {
+					if (!isAnimationRunning) {						
+						rotateRight();
+					}		
+				}
+				@Override
+				public void onSwipeLeft() {
+					if (!isAnimationRunning) {	
+						
+						rotateLeft();
+					}
+					
+				}		
+				@Override
+				public void onSwipeBottom() {
+					// TODO Auto-generated method stub		
+				}
+			});
+		    
+		}
+		
+		
+	}
+	
 	
 	
 }
