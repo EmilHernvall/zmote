@@ -11,32 +11,59 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
- 
+
+/**
+ * Adapter for the list of STBs to be shown as 
+ *  an android ListView.
+ * @author Marcus Widegren, Christian Vestman
+ *
+ */
 public class SelectSTBAdapter extends BaseAdapter {
- 
 	private Activity activity;
     private Vector<STB> data;
     private static LayoutInflater inflater=null; 
     private SelectSTBAdapter theAdapter = this;
- 
+
+    /**
+     * Constructor
+     * @param The current activity
+     * @param The list of STBs as a Vector<STB>
+     */
     public SelectSTBAdapter(Activity a, Vector<STB> d) {
         activity = a;
-        data=d;
+        data = d;
         inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
  
+    /**
+     * Get size of the list of STBs
+     * @return size of list
+     */
     public int getCount() {
         return data.size();
     }
  
+    /**
+     * Get an item at a specified position
+     * @param position - the position in the list
+     * @return the item at that position
+     */
     public Object getItem(int position) {
-        return position;
+        return data.get(position);
     }
  
+    /**
+     * Get the id of an item
+     * @param position
+     * @return position
+     */
     public long getItemId(int position) {
         return position;
     }
     
+    /**
+     * Get the view of a certain index, used automatically by android
+     */
     public View getView(int position, View convertView, ViewGroup parent) {
         View vi=convertView;
         if(convertView==null)
