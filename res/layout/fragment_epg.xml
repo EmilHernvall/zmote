@@ -14,9 +14,43 @@
             android:id="@+id/channel_icons"
             android:orientation="vertical" 
        		android:layout_width="wrap_content"
-			android:layout_height="wrap_content" >
+			android:layout_height="wrap_content" 
+			>
         </LinearLayout>
-       
+
+        <HorizontalScrollView
+     	android:id="@+id/hz_scroll"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:layout_toRightOf="@id/channel_icons"
+		android:fillViewport="true">
+        
+        <LinearLayout
+            android:id="@+id/channel_programs"
+            android:orientation="vertical" 
+       		android:layout_width="wrap_content"
+			android:layout_height="wrap_content" 
+			>
+        </LinearLayout>        
+        
+        
+       	
+    	</HorizontalScrollView>
+ 		
+    	<!-- LinearLayout
+ 		android:orientation="vertical"
+ 		android:id="@+id/program_info"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+    	</LinearLayout-->
+
+        <ProgressBar
+            android:id="@+id/progressEPGView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+    
     </RelativeLayout>
 
 </ScrollView>
