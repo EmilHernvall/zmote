@@ -105,7 +105,9 @@ public class SelectSTBActivity extends Activity {
 			System.out.println("Scan finished.");
 		}
 		/**
-		 * Finds the subnet of the devices network and returns a string in the form 192.168.0. (with the last "."!)
+		 * Finds the subnet of the devices network
+		 *
+		 *@return  the ip in a string in the form 192.168.0. (with the last "."!)		 
 		 */
 		private String findSubnetAddress() {
 				WifiManager myWifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
