@@ -29,18 +29,22 @@ import android.support.v4.app.Fragment;
 //This should be a fragment not a Activity
 public class EPGFragment extends Fragment{
 	private String temp;
-	 private EPG epg;
+	private EPG epg;
 	private View v;
 	private MainTabActivity main;
 	private LinearLayout i_layout;
+
 	private LinearLayout p_layout;
 	private GridLayout g_layout;
-	private int height=40;
-	private int width=40;
+
 	private int counter=0;
 	private HorizontalScrollView hz_scroll;
 	private LinearLayout vt_scroll;
 	
+
+	private int height=80;
+	private int width=80;
+
 	
 	public EPGFragment(MainTabActivity main){
 		this.main = main;

@@ -74,6 +74,8 @@ public class EventListener implements EventListnerInterface {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch( RuntimeException e){
+			
 		}
 		
 	}
