@@ -119,7 +119,7 @@ public class Discovery implements DiscoveryInterface {
 				return row;
 	    	}
 			row.close();
-		} catch (Exception e) { /*e.printStackTrace();*/ }
+		} catch (Exception e) {}
 		return null;
 	}
 	
@@ -136,7 +136,7 @@ public class Discovery implements DiscoveryInterface {
 
 	/**
 	 * 	Divides scan into multiple threads for speed. One object for each 32 addresses (0-31, 32-64 etc). Speeds up request
-	 * @author viktordahl
+	 * @author Viktor Dahl
 	 *
 	 */
 	private class ScanObjectThread extends Thread{

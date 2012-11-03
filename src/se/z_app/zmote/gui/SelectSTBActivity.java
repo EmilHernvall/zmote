@@ -95,6 +95,11 @@ public class SelectSTBActivity extends Activity {
 			dialog.show();
 		}
 		protected void onPostExecute(STB[] stb) {
+			System.out.print("Vicks: Number of STB's:"+stb.length+". Boxnames: ");
+			for (STB box : stb) {
+				System.out.print(box.getBoxName()+" ,");
+			}
+			System.out.print("\n\n");
 			try {
 				stbs = stb;
 				updateList(stbs);
