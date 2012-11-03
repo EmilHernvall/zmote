@@ -6,7 +6,7 @@ import se.z_app.stb.api.zenterio.Discovery;
 /**
  *
  * Calls the Discovery.find() for finding the customers box.
- * @author viktordahl
+ * @author Viktor Dahl
  *
  */
 public class STBDiscovery {

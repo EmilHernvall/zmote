@@ -10,33 +10,51 @@ import android.util.AttributeSet;
 import android.widget.ListView;
 
 /**
- * The STB list generate
- *
+ * The STB list generator
+ * 
+ * @author Marcus Widegren, Christian Vestman
+ * 
+ * 
  */
-public class SelectSTBListView extends ListView{
+public class SelectSTBListView extends ListView {
 	Vector<STB> theList = SelectSTBList.instance().getList();
 	SelectSTBAdapter theAdapter;
-	
+
 	/* Default constructors */
-	public SelectSTBListView(Context context, AttributeSet attrs, int defStyle) { super(context, attrs, defStyle);}
-	public SelectSTBListView(Context context, AttributeSet attrs) {super(context, attrs);}
-	public SelectSTBListView(Context context) {super(context);}
-	
-    public void notifyAdapter() {
-    	if(theAdapter != null)
-    		theAdapter.notifyDataSetChanged();
-    }
-	
-	public void setList(Activity theActivity, STB[] listIn)
-	{
+	public SelectSTBListView(Context context, AttributeSet attrs, int defStyle) {
+		super(context, attrs, defStyle);
+	}
+
+	public SelectSTBListView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+	}
+
+	public SelectSTBListView(Context context) {
+		super(context);
+	}
+
+	/**
+	 * notify´s the adapter when the list is changed
+	 */
+	public void notifyAdapter() {
+		if (theAdapter != null)
+			theAdapter.notifyDataSetChanged();
+	}
+
+	/**
+	 * sets the lenght of the STB list
+	 * 
+	 * @param theActivity
+	 * @param listIn
+	 */
+	public void setList(Activity theActivity, STB[] listIn) {
 		theList.clear();
-		for(int i = 0; i < listIn.length; i ++)
-		{
+		for (int i = 0; i < listIn.length; i++) {
 			theList.add(listIn[i]);
 		}
-		
+
 		theAdapter = new SelectSTBAdapter(theActivity, theList);
-		this.setAdapter(theAdapter); 
+		this.setAdapter(theAdapter);
 	}
 
 }
