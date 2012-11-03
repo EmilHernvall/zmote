@@ -17,10 +17,9 @@ import android.view.View;
 import android.widget.Button;
 import android.support.v4.app.NavUtils;
 
-
 /**
- * The STB Activity screen. Here is the main screen where the STB list is shown as well as the find STB button.
- * @author viktordahl + others
+ * The screen where the STB list is shown as well as the find STB button.
+ * @author Viktor Dahl, + others
  *
  */
 public class SelectSTBActivity extends Activity {
@@ -79,15 +78,14 @@ public class SelectSTBActivity extends Activity {
     	super.onResume();
     }
 	/**
-	 * Calls the Discovery.find() function for searching after STB's in an asynchronous task. Returns an array of STD's
+	 * Calls the STBDiscovery.find() for searching after STB's in an async task. 
 	 * TODO: Add a message when no STB's are found.
+	 * @return Array of STB's
 	 */
     private class ASyncSTBFinder extends AsyncTask<Integer,Integer,STB[]> {
-//    	private Discovery disc;
     	
 		@Override
 		protected STB[] doInBackground(Integer... params) {
-//        	disc = new Discovery(findSubnetAddress());
         	STBDiscovery stbDisc = new STBDiscovery(findSubnetAddress());
 			return stbDisc.find();
 		}
@@ -105,7 +103,8 @@ public class SelectSTBActivity extends Activity {
 			System.out.println("Scan finished.");
 		}
 		/**
-		 * Finds the subnet of the devices network and returns a string in the form 192.168.0. (with the last "."!)
+		 * Finds the Subnet of the devices network.
+		 * @string String in the form "192.168.0."
 		 */
 		private String findSubnetAddress() {
 				WifiManager myWifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
