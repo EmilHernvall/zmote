@@ -27,8 +27,8 @@ public class EPGFragment extends Fragment{
 	private View v;
 	private MainTabActivity main;
 	private LinearLayout i_layout;
-	private int height=40;
-	private int width=40;
+	private int height=80;
+	private int width=80;
 	
 	public EPGFragment(MainTabActivity main){
 		this.main = main;

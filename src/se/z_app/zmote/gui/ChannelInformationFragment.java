@@ -12,6 +12,7 @@ import se.z_app.stb.api.RemoteControl;
 import se.z_app.zmote.epg.EPGQuery;
 import android.R.color;
 
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -45,6 +46,13 @@ public class ChannelInformationFragment extends Fragment{
 	private MainTabActivity main;
 	private ProgressBar pb;
 	
+	private Program currentProgram = null;
+	private Program nextProgram = null;
+	private Program nextProgram2 = null;
+	private Program nextProgram3 = null;
+	private Program nextProgram4 = null;
+	public ProgramInfo programInf[] = new ProgramInfo[10];	//We will see the next 10 programs
+
 	private ArrayList<ImageView> imageList = new ArrayList<ImageView>();
 	private ArrayList<Channel> channelList = new ArrayList<Channel>();
 	private int currentChannelNr;
@@ -116,13 +124,32 @@ public class ChannelInformationFragment extends Fragment{
     
     	// "White box" parameters
     	LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(400, LayoutParams.MATCH_PARENT);
-        layoutParams.setMargins(15, 15, 15, 15);
+        layoutParams.setMargins(15, 15, 15, 30);
+        
+        // Standard parameters
+        LinearLayout.LayoutParams wrapContentParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+       
+        // Separator parameters
+        LinearLayout.LayoutParams separatorParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 2);
         
         // Prepare the "white box" for the program information
     	LinearLayout channel_ly = new LinearLayout(view_temp.getContext()); // Check arguments (correct?)
     	channel_ly.setBackgroundColor(0xFFFFFFFF);
     	channel_ly.setPadding(10, 5, 10, 5);
     	channel_ly.setOrientation(1);	// Vertical 1; Horizontal 0
+    	
+    	// Head of the info (Current program + Channel icon)
+    	LinearLayout top_ly = new LinearLayout(view_temp.getContext());
+    	top_ly.setOrientation(0);	// Vertical 1; Horizontal 0
+    	
+    	// Current program: left side of the Head
+    	LinearLayout top_info_ly = new LinearLayout(view_temp.getContext());
+    	top_info_ly.setOrientation(1);	// Vertical 1; Horizontal 0
+    	top_info_ly.setPadding(15, 5, 15, 0);
+    	
+    	// Separator line
+    	View separator = new View(view_temp.getContext());
+    	separator.setBackgroundColor(0xFF000000);
     	
     	// CHANNEL BUTTON
     	// Prepare the channel icon and its ClickListener
@@ -149,13 +176,68 @@ public class ChannelInformationFragment extends Fragment{
     	
     	// GETTING THE PROGRAM INFORMATION
     	// Preparing text of the white box
-    	TextView info = new TextView(view_temp.getContext());
-    	info.setText(generateText(ch));
-    	//info.setTextColor(0x00000000);
+    	getPrograms(ch);
+    	TextView cur_info = new TextView(view_temp.getContext());
+    	TextView cur_name = new TextView(view_temp.getContext());
+    	TextView cur_time = new TextView(view_temp.getContext());
+    	TextView cur_date = new TextView(view_temp.getContext());
+    	cur_date.setText(new SimpleDateFormat("EEEEEEEEEE dd MMM").format(currentProgram.getStart()));
+    	cur_date.setTextColor(0xFF000000);
+    	cur_date.setTypeface(null, Typeface.BOLD);
+    	cur_time.setText(new SimpleDateFormat("HH:mm").format(currentProgram.getStart()));
+    	cur_time.setTextColor(0xFF000000);
+    	cur_name.setText(currentProgram.getName());
+    	cur_name.setTextColor(0xFF000000);
+    	cur_info.setText(currentProgram.getLongText());
+    	cur_info.setTextColor(0xFF000000);
+    	cur_info.setPadding(15, 5, 15, 5);
     	
     	// Adding the view elements
-    	channel_ly.addView(new_btn);
-    	channel_ly.addView(info);
+    	top_info_ly.addView(cur_date);
+    	top_info_ly.addView(cur_time);
+    	top_info_ly.addView(cur_name);
+    	top_ly.addView(top_info_ly, wrapContentParams);
+    	top_ly.addView(new_btn, wrapContentParams);
+    	channel_ly.addView(top_ly);
+    	channel_ly.addView(separator, separatorParams);
+    	channel_ly.addView(cur_info);
+    	
+    	// BOTTOM BUTTONS SECTION
+    	// Now we add the Imdb, Fav and Social buttons
+    	LinearLayout but_menu = new LinearLayout(view_temp.getContext());
+    	but_menu.setOrientation(0);	// Vertical 1; Horizontal 0
+    	but_menu.setPadding(15, 15, 15, 5);
+    	
+    	// Button
+    	
+    	
+    	channel_ly.addView(but_menu);
+    	// Now we can add the rest of the programs info
+    	
+    	// TODO: Shorten the above code
+    	// Adding the rest of the programs
+    	Program[] pr = new Program[5];
+    	pr[1] = nextProgram;	// We prefer the programs in an array
+    	pr[2] = nextProgram2;	// this way we can use a for loop
+    	pr[3] = nextProgram3;	// Don't used array as global variable because
+    	pr[4] = nextProgram4;	// we were unable to avoid a weird error
+    	
+    	for(int i=1; i<5; ++i){
+    		
+    		// Separator between program names
+    		View separator_temp = new View(view_temp.getContext());
+        	separator_temp.setBackgroundColor(0xFF000000);
+        	// Program name
+    		String time = new SimpleDateFormat("HH:mm").format(pr[i].getStart());
+    		TextView nextName = new TextView(view_temp.getContext());
+    		nextName.setText(time+" - "+pr[i].getName());
+    		nextName.setTextColor(0xFF000000);
+    		nextName.setPadding(15, 5, 15, 5);
+    		// Add both informations to the screen
+    		channel_ly.addView(separator_temp, separatorParams);
+    		channel_ly.addView(nextName);
+    	}
+    	
     	content_layout.addView(channel_ly, layoutParams);
     	
     }
@@ -211,57 +293,46 @@ public class ChannelInformationFragment extends Fragment{
 	/**
 	 * Fetch and set the description of the current program and the names
 	 * of the next programs.
-	 * @return The text inside a String
+	 * @return Success of the operation
 	 */
-	private String generateText(Channel ch){
-		String t = "";
+	private int getPrograms(Channel ch){
+		
 		Channel channel = ch;
-		Program currentProgram = null;
-		Program nextProgram = null;
-		Program nextNextProgram = null;
 		Date now = new Date(System.currentTimeMillis());
 		
+		// Get list of programs for this channel
 		for (Program program : channel) {
-			if(now.compareTo(program.getStart()) >= 0)
+			if(now.compareTo(program.getStart()) >= 0){
 				currentProgram = program;
-			else if(nextProgram == null){
+			}else if(nextProgram == null){
 				nextProgram = program;
-			}else if(nextNextProgram == null){
-				nextNextProgram = program;
+			}else if(nextProgram2 == null){
+				nextProgram2 = program;
+			}else if(nextProgram3 == null){
+				nextProgram3 = program;
+			}else if(nextProgram4 == null){
+				nextProgram4 = program;
 			}else{
 				break;
 			}
 		}
 		
-		if(currentProgram == null)
-			return "";
-		
-		String name = currentProgram.getName();
-		String startTime = new SimpleDateFormat("HH:mm").format(currentProgram.getStart());
-		String info = currentProgram.getLongText();
-		
-		//name = trimString(name, 29);
-		//info = trimString(info, 260);
-		t = "> " + startTime +  " - " + name + "\n" ; 
-		t += info + "\n\n";
-		
-		if(nextProgram != null){
-			String nextName = nextProgram.getName();
-			String nextStartTime = new SimpleDateFormat("HH:mm").format(nextProgram.getStart());
-			nextName = trimString(nextName, 29);
-			t += "> " + nextStartTime +  " - " + nextName + "\n";
+		if(currentProgram == null){
+			return -1;
 		}
-		
-		if(nextNextProgram != null){
-			String nextNextName = nextNextProgram.getName();
-			String nextNextStartTime = new SimpleDateFormat("HH:mm").format(nextNextProgram.getStart());
-			nextNextName = trimString(nextNextName, 29);
-			t += "> " + nextNextStartTime +  " - " + nextNextName;
-		}
-		
-		return t;
+
+		return 0;
+		//END*/
 	}
 	
+	
+	public String setText(Program p){
+		String t ="";
+		t.concat(p.getName());
+		t.concat(new SimpleDateFormat("HH:mm").format(p.getStart()));
+		t.concat(p.getLongText());
+		return t;
+	}
 	/**
 	 * Shorten a string to a desired size
 	 * @param s		Original string we want to cut
@@ -273,6 +344,16 @@ public class ChannelInformationFragment extends Fragment{
 			s = s.substring(0, max-4) + "...";
 		}
 		return s;
+	}
+	
+	public class ProgramInfo{
+		public String name;
+		public String info;
+		public String date;
+		
+		public void setName(String n){
+			name = n;
+		}
 	}
 
 }
