@@ -1,5 +1,7 @@
 package se.z_app.zmote.gui;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -10,7 +12,9 @@ import se.z_app.stb.api.RemoteControl;
 import se.z_app.zmote.epg.EPGQuery;
 import android.R.color;
 
-import android.graphics.Picture;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -18,27 +22,36 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
 /**
- * DEPRECATED
- *  Main view: View with the channels and their information 
- * 
+ *  Channel information view: View with the information of the channel
+ *  It is shown when we click on an EPG program
  * */
 public class ChannelInformationFragment extends Fragment{
-	LinearLayout h_layout;
-    LinearLayout c_layout;
 	
-	private View v;
+    private LinearLayout content_layout;
+	private View view_temp;
 	private EPG epg;
-	String temp;
-	int i_tmp;
+	private String temp;
+	private int i_tmp;
 	private EPGQuery query = new EPGQuery();
 	private EPG epgFetched;
 	private boolean fetched = false;
 	private MainTabActivity main;
+	private ProgressBar pb;
+	
+	private ArrayList<ImageView> imageList = new ArrayList<ImageView>();
+	private ArrayList<Channel> channelList = new ArrayList<Channel>();
+	private int currentChannelNr;
+	
+	public ChannelInformationFragment(){
+		
+	}
 	
 	public ChannelInformationFragment(MainTabActivity main){
 		this.main = main;
@@ -48,40 +61,31 @@ public class ChannelInformationFragment extends Fragment{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		 v = inflater.inflate(R.layout.fragment_channel_information, null);
-        
-		 h_layout = (LinearLayout)v.findViewById(R.id.channel_icons_ly);
-		 c_layout = (LinearLayout)v.findViewById(R.id.content_ly);
-       // setButtonsBarListeners();	// Set the listeners for the buttons bar menu
-        epg = getFullEPG();
-    	// This should be done in other place because now only loads the first stb
-    	// you push, but doesn't change of stb never because the method OnCreate is
-    	// not executing again
-        
-    	
-    	addAllChannelsToLayout();
-    	
-    	return v;
+		view_temp = inflater.inflate(R.layout.fragment_channel_information, null);
+		content_layout = (LinearLayout)view_temp.findViewById(R.id.content_ly);
+		pb = (ProgressBar)view_temp.findViewById(R.id.progressLodingEpgChannelInformation);
+		
+		new AsyncDataLoader().execute();
+	
+    	return view_temp;
     }    
 	
-	/*
+	/**
 	 * Return if the EPG is already fetched or not
 	 */
 	public boolean isFetchedTheEPG(){
 		return fetched;
 	}
 	
-	/* 
+	/** 
 	 * Fetch the EPG from the STB 
 	 */
 	public void fetchEPG(){
 		epgFetched = query.getEPG();
 		fetched = true;
-		// The upper line should be on the OnCreate method
-		// This way will be fetched only one time and used several times
 	}
 	
-	/*
+	/**
 	 * Return the EPG after fetching it (just do it one time now)
 	 */
 	public EPG getFullEPG(){
@@ -90,14 +94,10 @@ public class ChannelInformationFragment extends Fragment{
 		return epgFetched;
 	}
 	
-
-	
-	
-    
-    // DUMMY
-    // This function is suppose to add the whole list of channels to the view
-    // It uses the function addChannelItemToLayout iteratively
-    public void addAllChannelsToLayout(){
+	/**
+	 * Add all channels information to the layout
+	 */
+    public void addAllChannelsInformationToLayout(){
     	
     	Iterator<Channel> itr = epg.iteratorByNr();
     	
@@ -108,15 +108,25 @@ public class ChannelInformationFragment extends Fragment{
 
     }
     
-    // DUMMY
-    // This function is suppose to load a new channel in the main activity view
-    // That means: put the icon of the channel in the list and assign it a function
-    
-    
+	/**
+	 * Loads the information about the channel to the layout
+	 * @param ch
+	 */
     public void addChannelItemToLayout(Channel ch){
     
+    	// "White box" parameters
+    	LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(400, LayoutParams.MATCH_PARENT);
+        layoutParams.setMargins(15, 15, 15, 15);
+        
+        // Prepare the "white box" for the program information
+    	LinearLayout channel_ly = new LinearLayout(view_temp.getContext()); // Check arguments (correct?)
+    	channel_ly.setBackgroundColor(0xFFFFFFFF);
+    	channel_ly.setPadding(10, 5, 10, 5);
+    	channel_ly.setOrientation(1);	// Vertical 1; Horizontal 0
     	
-    	ImageButton new_btn = new ImageButton(v.getContext());
+    	// CHANNEL BUTTON
+    	// Prepare the channel icon and its ClickListener
+    	ImageButton new_btn = new ImageButton(view_temp.getContext());
     	new_btn.setId(ch.getNr()+100);	// ID of the button: ChannelNr+100
     	new_btn.setImageBitmap(ch.getIcon());
     	new_btn.setBackgroundResource(0);	// Set the background transparent
@@ -127,92 +137,142 @@ public class ChannelInformationFragment extends Fragment{
     	temp = ch.getUrl();
     	i_tmp = ch.getNr();
     	new_btn.setOnClickListener(new View.OnClickListener() {
-    		int channelNr = i_tmp;
+    		//int channelNr = i_tmp;
 			String url = temp;
     		@Override
 			public void onClick(View v) {
-				
+    			
 				RemoteControl.instance().launch(url);
-				LinearLayout elem = (LinearLayout) c_layout.findViewById(channelNr);
-				elem.setFocusableInTouchMode(true);
-				elem.requestFocus();
 				main.vibrate();
 			}
 		});
     	
-    	h_layout.addView(new_btn);
-
     	// GETTING THE PROGRAM INFORMATION
-    	// Check this code, especially the initialization of the iterator
-    	// With currentProgram = itr; does not work
-    	// But, what would happen if we need to show the FIRST program?
-    	Iterator<Program> itr = ch.iterator();
-    	Program currentProgram = itr.next();
-    	Program nextProgram = currentProgram;
-    	Date now = new Date(System.currentTimeMillis());
-    	while(itr.hasNext()){
-    		Program program = (Program)itr.next();
+    	// Preparing text of the white box
+    	TextView info = new TextView(view_temp.getContext());
+    	info.setText(generateText(ch));
+    	//info.setTextColor(0x00000000);
     	
-    		if(now.compareTo(program.getStart()) < 0){
-    			currentProgram = program;
-    		}else{
-    			nextProgram = program;
-    			break;
-    		}
-    		
-    	}
+    	// Adding the view elements
+    	channel_ly.addView(new_btn);
+    	channel_ly.addView(info);
+    	content_layout.addView(channel_ly, layoutParams);
     	
-    	
-    	// Now we load the information about the channel in the middle section
-    	
-    	LinearLayout channel_ly = new LinearLayout(v.getContext()); // Check arguments (correct?)
-    	channel_ly.setBackgroundColor(color.white);	// This is not doing anything
-    	channel_ly.setLayoutParams(new LayoutParams(300, 500));
-    	channel_ly.setOrientation(1);	// Vertical 1; Horizontal 0
-    	
-    	// Set listeners for the descriptions to link to the channel icon
-    	i_tmp = ch.getNr();
-    	channel_ly.setOnClickListener(new View.OnClickListener() {
-    		int channelNr = i_tmp+100;
-    		@Override
-			public void onClick(View v) {
+    }
+    
+    
+	private class AsyncDataLoader extends AsyncTask<Integer, Integer, EPG>{
+
+		@Override
+		protected EPG doInBackground(Integer... params) {
+			return getFullEPG();
+		}
+		
+		/**
+		 * Fetch de EPG information asynchronously
+		 */
+		@Override
+		protected void onPostExecute(EPG epgPassed) {
+			pb.setVisibility(View.GONE);
+			epg = epgPassed;
+			addAllChannelsInformationToLayout();
+			
+			currentChannelNr = 0;
+			for (Channel channel : epg) {
+				Drawable draw = new BitmapDrawable(channel.getIcon());
+				ImageView i = new ImageView(view_temp.getContext());
+				i.setImageDrawable(draw);	
+				i.setBackgroundColor(0xFFFFFFFF );
+				i.setAdjustViewBounds(true);
+				i.setMaxHeight(150);
+				i.setMaxHeight(150);
+				i.invalidate();
 				
-				ImageButton elem = (ImageButton)h_layout.findViewById(channelNr);
-				elem.setFocusableInTouchMode(true);
-				elem.requestFocus();
-				main.vibrate();
-				}
-			});
-    	
-    	
-    	TextView ch_name = new TextView(v.getContext());
-    	TextView pr_name = new TextView(v.getContext());
-    	TextView pr_short_desc = new TextView(v.getContext());
-    	
-    	// Right now we just load the name
-    	ch_name.setText(ch.getName());
-    	pr_name.setSingleLine(false);
-    	pr_short_desc.setSingleLine(false);
-    	
-    	@SuppressWarnings("deprecation")
-		String curTime = currentProgram.getStart().getHours()+":"+currentProgram.getStart().getMinutes();
-    	@SuppressWarnings("deprecation")
-    	String nexTime = nextProgram.getStart().getHours()+":"+nextProgram.getStart().getMinutes();
-    	pr_name.setText("\n"+curTime+"- "+currentProgram.getName()+"\n"
-    						+nexTime+"- "+nextProgram.getName()+"\n");
-    	pr_short_desc.setText(currentProgram.getLongText());
-    	
-    	// We add the new items and give the LinearLayout a new id and some properties
-    	channel_ly.addView(ch_name);
-    	channel_ly.addView(pr_name);
-    	channel_ly.addView(pr_short_desc);
-    	channel_ly.setId(ch.getNr());	// We will try to identify them by ch number
-    	channel_ly.setPadding(30, 5, 30, 5);
-    	channel_ly.setMinimumWidth(300);
-    	
-    	// Add the information of the channel to the middle section
-    	c_layout.addView(channel_ly);
-    	
-    } 
+				
+				imageList.add(i);
+				channelList.add(channel);
+				
+				i.setOnClickListener(new View.OnClickListener() {
+					int i = currentChannelNr;
+					@Override
+					public void onClick(View v) {
+						//setChannel(i);
+						// Change STB to the channel we clicked on	
+					}
+				});
+				
+				currentChannelNr++;
+			}	// END of FOR loop
+			
+		}	//End of OnPostExecute
+		
+	} // End of class definition
+
+	/**
+	 * Fetch and set the description of the current program and the names
+	 * of the next programs.
+	 * @return The text inside a String
+	 */
+	private String generateText(Channel ch){
+		String t = "";
+		Channel channel = ch;
+		Program currentProgram = null;
+		Program nextProgram = null;
+		Program nextNextProgram = null;
+		Date now = new Date(System.currentTimeMillis());
+		
+		for (Program program : channel) {
+			if(now.compareTo(program.getStart()) >= 0)
+				currentProgram = program;
+			else if(nextProgram == null){
+				nextProgram = program;
+			}else if(nextNextProgram == null){
+				nextNextProgram = program;
+			}else{
+				break;
+			}
+		}
+		
+		if(currentProgram == null)
+			return "";
+		
+		String name = currentProgram.getName();
+		String startTime = new SimpleDateFormat("HH:mm").format(currentProgram.getStart());
+		String info = currentProgram.getLongText();
+		
+		//name = trimString(name, 29);
+		//info = trimString(info, 260);
+		t = "> " + startTime +  " - " + name + "\n" ; 
+		t += info + "\n\n";
+		
+		if(nextProgram != null){
+			String nextName = nextProgram.getName();
+			String nextStartTime = new SimpleDateFormat("HH:mm").format(nextProgram.getStart());
+			nextName = trimString(nextName, 29);
+			t += "> " + nextStartTime +  " - " + nextName + "\n";
+		}
+		
+		if(nextNextProgram != null){
+			String nextNextName = nextNextProgram.getName();
+			String nextNextStartTime = new SimpleDateFormat("HH:mm").format(nextNextProgram.getStart());
+			nextNextName = trimString(nextNextName, 29);
+			t += "> " + nextNextStartTime +  " - " + nextNextName;
+		}
+		
+		return t;
+	}
+	
+	/**
+	 * Shorten a string to a desired size
+	 * @param s		Original string we want to cut
+	 * @param max	Maximum amount of characters
+	 * @return	The shortened string
+	 */
+	private String trimString(String s, int max){
+		if(s.length() > max){
+			s = s.substring(0, max-4) + "...";
+		}
+		return s;
+	}
 
 }
