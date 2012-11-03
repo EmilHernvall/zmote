@@ -76,9 +76,6 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 
 	private int currentChannelNr;
 	
-    private GestureDetector gestureScanner;
-	//private GestureLibrary gestureLibrary;
-
 	public MainViewFragment(MainTabActivity main){
 		this.main = main;
 	}
@@ -93,8 +90,9 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 		// TODO Auto-generated method stub
 		if(activeGest){
 			float currentX = event.getX();
-			float currnetY = event.getY(); //TODO use with volume
-			
+			float currentY = event.getY(); //TODO use with volume
+			//TODO Get CurrenChannel +/- 1 from channelList, add new channel when rotating, 
+			//rotate first, change channel on TV next to currentChannel
 			float dir = x-currentX;
 			
 				if(Math.abs(dir) > threshhold){
