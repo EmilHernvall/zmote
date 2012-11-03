@@ -21,6 +21,12 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+
+/**
+ * DEPRECATED
+ *  Main view: View with the channels and their information 
+ * 
+ * */
 public class ChannelInformationFragment extends Fragment{
 	LinearLayout h_layout;
     LinearLayout c_layout;
@@ -182,6 +188,7 @@ public class ChannelInformationFragment extends Fragment{
     	TextView ch_name = new TextView(v.getContext());
     	TextView pr_name = new TextView(v.getContext());
     	TextView pr_short_desc = new TextView(v.getContext());
+    	
     	// Right now we just load the name
     	ch_name.setText(ch.getName());
     	pr_name.setSingleLine(false);
