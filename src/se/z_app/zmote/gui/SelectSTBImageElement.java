@@ -18,7 +18,7 @@ public class SelectSTBImageElement extends ImageView {
 	private int theIndex;
 	
 	/* Default constructors */
-	public SelectSTBImageElement(Context context) { 
+	public SelectSTBImageElement(Context context) {
 		super(context);
 	}
 	
