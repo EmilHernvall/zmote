@@ -9,12 +9,19 @@ import se.z_app.zmote.epg.EPGQuery;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.GridLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.support.v4.app.Fragment;
@@ -22,13 +29,18 @@ import android.support.v4.app.Fragment;
 //This should be a fragment not a Activity
 public class EPGFragment extends Fragment{
 	private String temp;
-	private EPGQuery q = new EPGQuery();
-    private EPG epg = q.getEPG();
+	 private EPG epg;
 	private View v;
 	private MainTabActivity main;
 	private LinearLayout i_layout;
+	private LinearLayout p_layout;
+	private GridLayout g_layout;
 	private int height=40;
 	private int width=40;
+	private int counter=0;
+	private HorizontalScrollView hz_scroll;
+	private LinearLayout vt_scroll;
+	
 	
 	public EPGFragment(MainTabActivity main){
 		this.main = main;
@@ -44,12 +56,10 @@ public class EPGFragment extends Fragment{
 		
 		i_layout = (LinearLayout)v.findViewById(R.id.channel_icons);
 		
+		vt_scroll = (LinearLayout)v.findViewById(R.id.channel_programs);
 		
-		
-		mainEPG();
-	    
-	        
-	 
+		new AsyncDataLoader().execute();
+
 	
 		return v;
 	}
@@ -63,10 +73,15 @@ public class EPGFragment extends Fragment{
 void mainEPG(){
 	
 	for (Channel channel : epg) {
-    	addIconToLayout(channel);
+		counter+=1;	
+		//g_layout.setRowCount(counter);
+		addIconToLayout(channel);
+		p_layout = new LinearLayout(v.getContext());
+		p_layout.setOrientation(LinearLayout.HORIZONTAL);
     	for (Program program : channel) {
 			addProgramsToLayout(program);	
-			}
+		}
+    	vt_scroll.addView(p_layout);
 	
      }	
 }
@@ -96,14 +111,26 @@ void addIconToLayout(Channel ch){
 		});
 	
 	i_layout.addView(new_btn);
+
 }
 
 void addProgramsToLayout(Program pg){
+	Button new_btn2 = new Button(v.getContext());
+	new_btn2.setText(pg.getName());
+	new_btn2.setClickable(true);
+	new_btn2.setWidth(55);
+	new_btn2.setHeight(40);
+	new_btn2.setOnClickListener(new View.OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+		
+		}
+		});
 	
+	p_layout.addView(new_btn2);
 
 	
-	
-
 }
 
 //Changing the icons size
@@ -134,5 +161,23 @@ return resizedBitmap;
 }
 
 
+
+private class AsyncDataLoader extends AsyncTask<Integer, Integer, EPG>{
+
+	@Override
+	protected EPG doInBackground(Integer... params) {
+		EPGQuery query = new EPGQuery();
+		return query.getEPG();
+	}
+	
+	@Override
+	protected void onPostExecute(EPG epgTemp) {
+		epg = epgTemp;
+		v.findViewById(R.id.progressEPGView).setVisibility(View.INVISIBLE);
+		
+		mainEPG();
+	}	
+
+}
 
 }
