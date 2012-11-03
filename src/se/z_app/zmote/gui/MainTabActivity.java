@@ -1,30 +1,27 @@
 package se.z_app.zmote.gui;
 
+import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.app.ActionBar.TabListener;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.stb.api.RemoteControl.Button;
 import android.app.ActionBar;
-import android.app.ActionBar.Tab;
 
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.NavUtils;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
-public class MainTabActivity extends FragmentActivity implements ActionBar.TabListener {
+import android.util.Log;
+
+import android.view.KeyEvent;
+
+
+
+public class MainTabActivity extends SherlockFragmentActivity implements TabListener {
 
 	private Tab tabRC;
 	private Tab tabMain;
@@ -57,7 +54,7 @@ public class MainTabActivity extends FragmentActivity implements ActionBar.TabLi
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(STATE_SELECTED_NAVIGATION_ITEM)) {
-            getActionBar().setSelectedNavigationItem(
+        	getSupportActionBar().setSelectedNavigationItem(
                     savedInstanceState.getInt(STATE_SELECTED_NAVIGATION_ITEM));
         }
     }
@@ -65,14 +62,14 @@ public class MainTabActivity extends FragmentActivity implements ActionBar.TabLi
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(STATE_SELECTED_NAVIGATION_ITEM,
-                getActionBar().getSelectedNavigationIndex());
+        		getSupportActionBar().getSelectedNavigationIndex());
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_main_tab, menu);
+       //getMenuInflater().inflate(R.menu.activity_main_tab, menu);
      // Set up the action bar.
-        final ActionBar actionBar = getActionBar();
+        final com.actionbarsherlock.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -97,50 +94,6 @@ public class MainTabActivity extends FragmentActivity implements ActionBar.TabLi
 
     
 
-    @Override
-    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-    }
-
-    @Override
-    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-        
-    	Fragment fragment = null;
-    	
-    	if(tab.equals(tabRC)){
-    		Log.i("FragmentLog", "RC");
-    		fragment = new RemoteControlFragment(this);
-    	}
-    	else if(tab.equals(tabEPG)){
-    		Log.i("FragmentLog", "EPG");
-    		fragment = new EPGFragment(this);
-    	}
-    	else if(tab.equals(tabWeb)){
-    		Log.i("FragmentLog", "Web");
-    		return;
-    	}
-		else if(tab.equals(tabFav)){
-			Log.i("FragmentLog", "Fav");
-			
-			//WARNING! : provisional function 
-			fragment = new ChannelInformationFragment(this);
-		}
-		else if(tab.equals(tabMain)){
-			Log.i("FragmentLog", "Main");
-			fragment = new MainViewFragment(this);//new ChannelInformationFragment(this);
-		}
-    	
-        
-        Bundle args = new Bundle();
-        
-        fragment.setArguments(args);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, fragment)
-                .commit();
-    }
-
-    @Override
-    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-    }
     
     
 
@@ -164,6 +117,66 @@ public class MainTabActivity extends FragmentActivity implements ActionBar.TabLi
 		default:
 			return super.dispatchKeyEvent(event);
 		}
+	}
+
+
+
+	@Override
+	public void onTabSelected(Tab tab,
+			android.support.v4.app.FragmentTransaction ft) {
+  	Fragment fragment = null;
+    	
+    	if(tab.equals(tabRC)){
+    		Log.i("FragmentLog", "RC");
+    		fragment = new RemoteControlFragment(this);
+    	}
+    	else if(tab.equals(tabEPG)){
+    		Log.i("FragmentLog", "EPG");
+    		//fragment = new EPGFragment(this);
+    		return;
+    	}
+    	else if(tab.equals(tabWeb)){
+    		Log.i("FragmentLog", "Web");
+    		return;
+    	}
+		else if(tab.equals(tabFav)){
+			Log.i("FragmentLog", "Fav");
+			
+			//WARNING! : provisional function 
+			//fragment = new ChannelInformationFragment(this);
+			return;
+		}
+		else if(tab.equals(tabMain)){
+			Log.i("FragmentLog", "Main");
+			fragment = new MainViewFragment(this);//new ChannelInformationFragment(this);
+		}
+    	
+        
+        Bundle args = new Bundle();
+        
+        fragment.setArguments(args);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, fragment)
+                .commit();
+		
+	}
+
+
+
+	@Override
+	public void onTabUnselected(Tab tab,
+			android.support.v4.app.FragmentTransaction ft) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void onTabReselected(Tab tab,
+			android.support.v4.app.FragmentTransaction ft) {
+		// TODO Auto-generated method stub
+		
 	}
 
 
