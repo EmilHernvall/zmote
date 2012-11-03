@@ -9,11 +9,19 @@ import android.content.Intent;
 import android.view.Menu;
 import android.widget.ImageView;
 
-public class SplashActivity extends Activity {
 
-	// At the start, we are going to use just some time, then we will use
-	// other condition (modules load finish, for example.)
-	// Set the display time, in milliseconds (or extract it out as a configurable parameter)
+/**
+ * First screen loaded with the current STB logo and loading animation
+ * @author Francisco
+ *
+ */
+public class SplashActivity extends Activity {
+	/* TODO
+	 * Right now we're using some established time
+	 * We should figure out when to leave the screen
+	 *  (modules load finish, for example.)
+	 * Set the display time, in milliseconds (or extract it out as a configurable parameter) */
+	
     private final int SPLASH_DISPLAY_LENGTH = 1000;
     
     @Override
@@ -30,13 +38,13 @@ public class SplashActivity extends Activity {
  
     @Override
     protected void onResume() {
-    	
         super.onResume();
 
-        // To do here
-        // Access the BD
-        // Get the operator logo
-        // Set @id/opLogo to the image we get
+        /* TODO here:
+         	1- Access the BD
+        	2- Get the operator logo
+         	3- Set @id/opLogo to the image we get    */
+        
         ImageView iView = (ImageView) findViewById(R.id.opLogo);
         iView.setImageResource(R.drawable.tele2);
         
@@ -45,13 +53,22 @@ public class SplashActivity extends Activity {
             
             public void run() {
 				RemoteControl.instance();
-                //Finish the splash activity so it can't be returned to.
-                SplashActivity.this.finish();
+               
+				//Finish the splash activity so it can't be returned to.
+                SplashActivity.this.finish(); 		
+              
                 // Create an Intent that will start the main activity.
-                Intent mainIntent = new Intent(SplashActivity.this, SelectSTBActivity.class);
+                Intent mainIntent = new Intent(SplashActivity.this, 
+                								SelectSTBActivity.class); 
+                
                 SplashActivity.this.startActivity(mainIntent);
                 
             }
+            
         }, SPLASH_DISPLAY_LENGTH);
+        
     }
+    
+    
+    
 }
