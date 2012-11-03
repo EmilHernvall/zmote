@@ -95,7 +95,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".EPGActivity"
+            android:name=".EPGFragment"
             android:label="@string/title_activity_epg" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

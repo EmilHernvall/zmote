@@ -112,7 +112,7 @@ public class MainTabActivity extends FragmentActivity implements ActionBar.TabLi
     	}
     	else if(tab.equals(tabEPG)){
     		Log.i("FragmentLog", "EPG");
-    		return;
+    		fragment = new EPGFragment(this);
     	}
     	else if(tab.equals(tabWeb)){
     		Log.i("FragmentLog", "Web");
@@ -123,7 +123,6 @@ public class MainTabActivity extends FragmentActivity implements ActionBar.TabLi
 			
 			//WARNING! : provisional function 
 			fragment = new ChannelInformationFragment(this);
-			return;
 		}
 		else if(tab.equals(tabMain)){
 			Log.i("FragmentLog", "Main");
