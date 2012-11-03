@@ -132,8 +132,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
     	}
     	else if(tab.equals(tabEPG)){
     		Log.i("FragmentLog", "EPG");
-    		//fragment = new EPGFragment(this);
-    		return;
+    		fragment = new EPGFragment(this);
     	}
     	else if(tab.equals(tabWeb)){
     		Log.i("FragmentLog", "Web");
@@ -143,8 +142,8 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 			Log.i("FragmentLog", "Fav");
 			
 			//WARNING! : provisional function 
-			//fragment = new ChannelInformationFragment(this);
-			return;
+			fragment = new ChannelInformationFragment(this);
+			
 		}
 		else if(tab.equals(tabMain)){
 			Log.i("FragmentLog", "Main");
