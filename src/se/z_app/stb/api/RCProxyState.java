@@ -1,69 +1,38 @@
 package se.z_app.stb.api;
 
 /**
- * A deault sate for the RCProxy, if other states are needed. Let them extend this class and overwrite the 
- * changed default states. All commands, such as up() corresponds RemoteControl.Button.UP
- * @author Rasmus Holm
+ * An abstract state class specifying any functions needed in a state, default state is now
+ * found under default state class. If other states are needed extends this class.
+ * All commands, such as up() corresponds RemoteControl.Button.UP
+ * @author Rasmus Holm, refractord Linus Back
  *
  */
-public class RCProxyState {
+public abstract class RCProxyState {
 	
 	
-	public void up() {
-		RemoteControl.instance().sendButton(RemoteControl.Button.UP);
-	
-	}
+	public abstract void up();
 
 	
-	public void down() {
-		RemoteControl.instance().sendButton(RemoteControl.Button.DOWN);
-	
-	}
+	public abstract void down();
 
 	
-	public void right() {
-		RemoteControl.instance().sendButton(RemoteControl.Button.RIGHT);
-		
-	}	
+	public abstract void right();
 
 	
-	public void left() {
-		RemoteControl.instance().sendButton(RemoteControl.Button.LEFT);
-		
-	}
+	public abstract void left() ;
 
 	
-	public void ok() {
-		RemoteControl.instance().sendButton(RemoteControl.Button.OK);
-		
-	}
+	public abstract void ok();	
 	
+	public abstract void back();	
 	
-	public void back() {
-		RemoteControl.instance().sendButton(RemoteControl.Button.BACK);
-		
-	}
+	public abstract void mute();
 	
+	public abstract void info();
 	
-	public void mute() {
-		RemoteControl.instance().sendButton(RemoteControl.Button.MUTE);
-			
-	}
-
+	public abstract void menu();
 	
-	public void info() {
-		RemoteControl.instance().sendButton(RemoteControl.Button.INFO);
-		
-	}
-	
-	
-	public void menu() {
-		RemoteControl.instance().sendButton(RemoteControl.Button.MENU);
-	}
-	
-	public void exit() {
-		RemoteControl.instance().sendButton(RemoteControl.Button.EXIT);
-	}
+	public abstract void exit();
 	
 	
 }

@@ -5,26 +5,34 @@
     android:background="#333333"
     android:orientation="vertical" >
 
-   <!-- STB Name -->
-	<include layout="@layout/selected_stb" android:id="@+id/selected_stb" />
-   
-   <!-- Bottom menu -->
-   <include layout="@layout/activity_buttons_bar" android:id="@+id/activity_buttons_bar" />
-     
+    <!-- STB Name -->
+
+    <include
+        android:id="@+id/selected_stb"
+        layout="@layout/selected_stb" />
+
+    <!-- Bottom menu -->
+
+    <include
+        android:id="@+id/activity_buttons_bar"
+        layout="@layout/activity_buttons_bar" />
+
     <!-- Top Menu -->
-	<HorizontalScrollView
-	     android:id="@+id/channel_icons_ly"
+
+    <HorizontalScrollView
+        android:id="@+id/channel_icons_ly"
         android:layout_width="wrap_content"
         android:layout_height="50dp" >
 
-        <LinearLayout android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="horizontal" >
-            
         </LinearLayout>
     </HorizontalScrollView>
-    
+
     <!-- Middle section -->
+
     <HorizontalScrollView
         android:id="@+id/content_ly"
         android:layout_width="wrap_content"

@@ -7,6 +7,11 @@ import java.util.Observer;
 import se.z_app.stb.STB;
 import se.z_app.stb.STBEvent;
 
+/**
+ * Class that listens to a eventlistener.
+ * @author Linus Back
+ *
+ */
 public class STBListener extends Observable implements Observer, Runnable{
 
 	//Singleton and adding itself as an observer
@@ -24,7 +29,22 @@ public class STBListener extends Observable implements Observer, Runnable{
 	}
 	private STBListener(){
 		STBContainer.instance().addObserver(this);
+
 	}
+	
+	/**
+	 * Might be unnecessary with this override, needs to look at this more
+	 */
+	@Override
+	public void addObserver(Observer observer) {
+		super.addObserver(observer);
+		if(eventListener !=null && eventListener.getCurrentEvent() != null){
+			this.setChanged();
+			this.notifyObservers(eventListener.getCurrentEvent());
+		}
+		
+	}
+	
 	
 
 	
@@ -46,24 +66,13 @@ public class STBListener extends Observable implements Observer, Runnable{
 		eventListener.init(stb);
 		
 		
-		switch(stb.getType()){
-		case DEFAULT:
-			break;
-		case ZENTERIO:
-			while((event = eventListener.getNextEvent())!=null){
-				this.setChanged();
-				this.notifyObservers(event);
+		while((event = eventListener.getNextEvent())!=null){
+			this.setChanged();
+			this.notifyObservers(event);
 
-			}
-			break;
-		default:
-			break;
-		
 		}
-
-
 		
 	}
-	
+
 
 }

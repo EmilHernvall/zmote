@@ -14,12 +14,11 @@
         android:contentDescription="@string/activity_edit_stb_cancelButton"
         android:src="@drawable/green_button" />
 
-     <TextView
-         android:id="@+id/stb_name"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:text="@string/select_stb_STB_Name"
-         android:textAppearance="?android:attr/textAppearanceLarge" />
+    <TextView
+        android:id="@+id/stb_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/select_stb_STB_Name"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-
- </LinearLayout>
+</LinearLayout>

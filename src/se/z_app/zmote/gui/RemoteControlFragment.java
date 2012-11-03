@@ -41,7 +41,7 @@ public class RemoteControlFragment extends Fragment{
 
 		
 		
-		View v = inflater.inflate(R.layout.activity_remote_control, null);
+		View v = inflater.inflate(R.layout.fragment_remote_control, null);
 
 		
 		btnListeners(v);

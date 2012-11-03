@@ -21,6 +21,11 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+
+/**
+ *  Channel information view: View with the information of the channel
+ *  It is shown when we click on an EPG program
+ * */
 public class ChannelInformationFragment extends Fragment{
 	LinearLayout h_layout;
     LinearLayout c_layout;
@@ -182,6 +187,7 @@ public class ChannelInformationFragment extends Fragment{
     	TextView ch_name = new TextView(v.getContext());
     	TextView pr_name = new TextView(v.getContext());
     	TextView pr_short_desc = new TextView(v.getContext());
+    	
     	// Right now we just load the name
     	ch_name.setText(ch.getName());
     	pr_name.setSingleLine(false);
