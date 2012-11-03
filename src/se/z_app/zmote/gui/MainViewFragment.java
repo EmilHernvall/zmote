@@ -86,50 +86,49 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 	boolean clicked = false;
 
 	
-	
-/*	@Override
-	public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture) {
-		long time = System.currentTimeMillis();
-		ArrayList<Prediction> predictions = gestureLibrary.recognize(gesture);
-		Log.i("Timing", "Recognizing " + (System.currentTimeMillis()-time));
-		Log.v("performed","performed");
-		time = System.currentTimeMillis();
-		if (predictions.size() > 0) {
-			Prediction prediction = predictions.get(0);
-			if (prediction.score > 1.0) {
-				if(prediction.name.equalsIgnoreCase("r2l")){
-					
-					rotateLeft();
-					Log.i("Timing", "Getting perdiction " + (System.currentTimeMillis()-time));
-
-				}
-				else if(prediction.name.equalsIgnoreCase("l2r")){
-					
-					rotateRight();
-					Log.i("Timing", "Getting perdiction " + (System.currentTimeMillis()-time));
-				}
-			}
-		}
-	}
-*/	
+	float threshhold = 20;
+	boolean activeGest = false;
 	@Override
 	public void onGesture(GestureOverlayView overlay, MotionEvent event) {
 		// TODO Auto-generated method stub
+		if(activeGest){
+			float currentX = event.getX();
+			float currnetY = event.getY(); //TODO use with volume
+			
+			float dir = x-currentX;
+			
+				if(Math.abs(dir) > threshhold){
+				
+				if(dir < 0 ){
+					activeGest = false;
+					rotateRight();
+				}else if (dir > 0){
+					activeGest = false;
+					rotateLeft();
+				}
+			}
+		}
 		
 	}
 	@Override
 	public void onGestureCancelled(GestureOverlayView overlay, MotionEvent event) {
 		// TODO Auto-generated method stub
-		
+		activeGest = false;
 	}
 	@Override
 	public void onGestureEnded(GestureOverlayView overlay, MotionEvent event) {
-		// TODO Auto-generated method stub
-		
+		activeGest= false;
 	}
+
+	float x;
+	float y;
 	@Override
 	public void onGestureStarted(GestureOverlayView overlay, MotionEvent event) {
-		// TODO Auto-generated method stub
+		
+		activeGest = true;
+		x = event.getX();
+		y = event.getY();
+		
 		
 	}
 	
@@ -141,13 +140,8 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 		r = (RelativeLayout)v.findViewById(R.id.rellativIconSpinner);
 	
 
-		/*	gestureLibrary = GestureLibraries.fromRawResource(v.getContext(), R.raw.gestures);
-		gestureLibrary.load();
-
 		GestureOverlayView gestures = (GestureOverlayView) v.findViewById(R.id.gestures);
-		gestures.addOnGesturePerformedListener(this);
-		//gestures.setGestureColor(Color.);
-		*/
+		gestures.addOnGestureListener(this);	
 
 		
 		new AsyncDataLoader().execute();
@@ -208,7 +202,11 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 
 	private int tmpInt;
 	private void rotateRight(int turns){
-
+		if(isAnimationRunning){
+			return;
+		}
+		isAnimationRunning = true;
+		
 		if(!posVar){
 			setVariables();
 			posVar = true;
@@ -226,7 +224,11 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 		newLeft.setLayoutParams(params1);
 		newLeft.setVisibility(View.VISIBLE);
 		newLeft.setAlpha(defaultAlpha);
-		r.addView(newLeft);
+		//r.removeView(newLeft);
+		
+		try{
+			r.addView(newLeft);
+		}catch(RuntimeException e){}
 		newLeft.invalidate();
 
 
@@ -302,6 +304,11 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 
 	private void rotateLeft(int turns){
 
+		if(isAnimationRunning){
+			return;
+		}
+		isAnimationRunning = true;
+		
 		if(!posVar){
 			setVariables();
 			posVar = true;
@@ -316,7 +323,11 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 		newRight.setLayoutParams(params1);
 		newRight.setVisibility(View.VISIBLE);
 		newRight.setAlpha(defaultAlpha);
-		r.addView(newRight);
+		
+		try{
+			r.addView(newRight);
+		}catch(RuntimeException e){}
+		
 		newRight.invalidate();
 
 
@@ -567,32 +578,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 
 			currentChannelNr = 0;
 			buildForCurrentChannel();
-			/*
-			r.setOnTouchListener(new OnSwipeTouchListener() {
-				@Override
-				public void onSwipeTop() {
 
-				}	
-				@Override
-				public void onSwipeRight() {
-					if (!isAnimationRunning) {						
-						rotateRight();
-					}		
-				}
-				@Override
-				public void onSwipeLeft() {
-					if (!isAnimationRunning) {	
-
-						rotateLeft();
-					}
-
-				}		
-				@Override
-				public void onSwipeBottom() {
-					// TODO Auto-generated method stub		
-				}
-			});
-			 */
 		}
 
 
