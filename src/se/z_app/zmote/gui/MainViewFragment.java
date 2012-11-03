@@ -73,28 +73,16 @@ public class MainViewFragment extends Fragment{
 	boolean clicked = false;
 	
 	
-	
+	/**
+	 * Creation of the view
+	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		
-		
 		v = inflater.inflate(R.layout.fragment_main_view, null);
-		
-		
-		
-		
 		r = (RelativeLayout)v.findViewById(R.id.rellativIconSpinner);
-		
-		
 		new AsyncDataLoader().execute();
-		  
-	
-	    
-	        
-	 
-	
 		return v;
 	}
 	
@@ -391,7 +379,11 @@ public class MainViewFragment extends Fragment{
 	    r.addView(text);
 	}
 	
-	
+	/**
+	 * Fetch and set the description of the current program and the names
+	 * of the next programs.
+	 * @return The text inside a String
+	 */
 	private String generateText(){
 		String t = "";
 		Channel channel = channelList.get(currentChannelNr);
@@ -409,10 +401,8 @@ public class MainViewFragment extends Fragment{
 				nextNextProgram = program;
 				break;
 			}
-				
-			
-				
 		}
+		
 		if(currentProgram == null)
 			return "";
 		
@@ -442,6 +432,12 @@ public class MainViewFragment extends Fragment{
 		return t;
 	}
 	
+	/**
+	 * Shorten a string to a desired size
+	 * @param s		Original string we want to cut
+	 * @param max	Maximum amount of characters
+	 * @return	The shortened string
+	 */
 	private String trimString(String s, int max){
 		if(s.length() > max){
 			s = s.substring(0, max-4) + "...";
@@ -533,13 +529,9 @@ public class MainViewFragment extends Fragment{
 				public void onSwipeBottom() {
 					// TODO Auto-generated method stub		
 				}
-			});
-		    
-		}
-		
-		
+			});	    
+		}	
 	}
-	
 	
 	
 }

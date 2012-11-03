@@ -23,9 +23,8 @@ import android.widget.TextView;
 
 
 /**
- * DEPRECATED
- *  Main view: View with the channels and their information 
- * 
+ *  Channel information view: View with the information of the channel
+ *  It is shown when we click on an EPG program
  * */
 public class ChannelInformationFragment extends Fragment{
 	LinearLayout h_layout;
