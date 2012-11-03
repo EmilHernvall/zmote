@@ -15,7 +15,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class RemoteControlFragment extends Fragment{
+public class RemoteControlFragment extends Fragment {
 	private Button arrow_up_button;
 	private Button arrow_down_button;
 	private Button arrow_left_button;
@@ -25,13 +25,17 @@ public class RemoteControlFragment extends Fragment{
 	private Button undo_button;
 	private Button mute_volume_button;
 	private Button info_button;
-	private Button exit_button; 
+	private Button exit_button;
 	private MainTabActivity main;
-	
-	public RemoteControlFragment(MainTabActivity main){
+
+	/**
+	 * Creates the remote control
+	 * 
+	 * @param main
+	 */
+	public RemoteControlFragment(MainTabActivity main) {
 		this.main = main;
 	}
-	
 
 	public static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -39,38 +43,43 @@ public class RemoteControlFragment extends Fragment{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		
-		
 		View v = inflater.inflate(R.layout.fragment_remote_control, null);
 
-		
 		btnListeners(v);
 
 		return v;
 	}
 
-
-	public void vibrate(){
+	/**
+	 * adds vibrate function to application
+	 */
+	public void vibrate() {
 		main.vibrate();
 	}
-	
-	public void btnListeners(View v){
-		arrow_up_button=(Button)v.findViewById(R.id.arrow_up_button);
-		arrow_down_button=(Button)v.findViewById(R.id.arrow_down_button);
-		arrow_left_button=(Button)v.findViewById(R.id.arrow_left_button);
-		arrow_right_button=(Button)v.findViewById(R.id.arrow_right_button);
-		confirm_button=(Button)v.findViewById(R.id.confirm_button);
-		store_button=(Button)v.findViewById(R.id.store_button);
-		undo_button=(Button)v.findViewById(R.id.undo_button);
-		mute_volume_button=(Button)v.findViewById(R.id.mute_volume_button);
-		info_button=(Button)v.findViewById(R.id.info_button);
-		exit_button=(Button)v.findViewById(R.id.exit_button);
+
+	/**
+	 * initiate button listeners
+	 * 
+	 * @param v
+	 */
+
+	public void btnListeners(View v) {
+		arrow_up_button = (Button) v.findViewById(R.id.arrow_up_button);
+		arrow_down_button = (Button) v.findViewById(R.id.arrow_down_button);
+		arrow_left_button = (Button) v.findViewById(R.id.arrow_left_button);
+		arrow_right_button = (Button) v.findViewById(R.id.arrow_right_button);
+		confirm_button = (Button) v.findViewById(R.id.confirm_button);
+		store_button = (Button) v.findViewById(R.id.store_button);
+		undo_button = (Button) v.findViewById(R.id.undo_button);
+		mute_volume_button = (Button) v.findViewById(R.id.mute_volume_button);
+		info_button = (Button) v.findViewById(R.id.info_button);
+		exit_button = (Button) v.findViewById(R.id.exit_button);
 
 		arrow_up_button.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				vibrate();
-				RCProxy.instance().up();   
+				RCProxy.instance().up();
 			}
 		});
 
@@ -78,7 +87,7 @@ public class RemoteControlFragment extends Fragment{
 			@Override
 			public void onClick(View v) {
 				vibrate();
-				RCProxy.instance().down();    
+				RCProxy.instance().down();
 			}
 		});
 
@@ -86,7 +95,7 @@ public class RemoteControlFragment extends Fragment{
 			@Override
 			public void onClick(View v) {
 				vibrate();
-				RCProxy.instance().left(); 	 
+				RCProxy.instance().left();
 			}
 		});
 
@@ -94,7 +103,7 @@ public class RemoteControlFragment extends Fragment{
 			@Override
 			public void onClick(View v) {
 				vibrate();
-				RCProxy.instance().right(); 
+				RCProxy.instance().right();
 			}
 		});
 
@@ -102,7 +111,7 @@ public class RemoteControlFragment extends Fragment{
 			@Override
 			public void onClick(View v) {
 				vibrate();
-				RCProxy.instance().ok(); 
+				RCProxy.instance().ok();
 			}
 		});
 
@@ -110,7 +119,7 @@ public class RemoteControlFragment extends Fragment{
 			@Override
 			public void onClick(View v) {
 				vibrate();
-				RCProxy.instance().menu();        
+				RCProxy.instance().menu();
 			}
 		});
 
@@ -118,7 +127,7 @@ public class RemoteControlFragment extends Fragment{
 			@Override
 			public void onClick(View v) {
 				vibrate();
-				RCProxy.instance().back();   
+				RCProxy.instance().back();
 			}
 		});
 
@@ -126,7 +135,7 @@ public class RemoteControlFragment extends Fragment{
 			@Override
 			public void onClick(View v) {
 				vibrate();
-				RCProxy.instance().mute();   
+				RCProxy.instance().mute();
 			}
 		});
 
@@ -134,17 +143,16 @@ public class RemoteControlFragment extends Fragment{
 			@Override
 			public void onClick(View v) {
 				vibrate();
-				RCProxy.instance().info();    
+				RCProxy.instance().info();
 			}
 		});
 		exit_button.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				vibrate();
-				RCProxy.instance().exit();    
+				RCProxy.instance().exit();
 			}
 		});
 	}
-
 
 }
