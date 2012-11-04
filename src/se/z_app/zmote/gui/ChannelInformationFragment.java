@@ -135,7 +135,7 @@ public class ChannelInformationFragment extends Fragment{
         LinearLayout.LayoutParams topInfoLyParams = new LinearLayout.LayoutParams(width_screen-60-icon_size, LayoutParams.WRAP_CONTENT);
         
         // Separator parameters
-        LinearLayout.LayoutParams separatorParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 2);
+        LinearLayout.LayoutParams separatorParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 1);
         
         // Prepare the "white box" for the program information
     	LinearLayout channel_ly = new LinearLayout(view_temp.getContext()); // Check arguments (correct?)
