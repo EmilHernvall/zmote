@@ -4,23 +4,20 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.actionbarsherlock.internal.nineoldandroids.animation.Animator;
+import com.actionbarsherlock.internal.nineoldandroids.animation.Animator.AnimatorListener;
+import com.actionbarsherlock.internal.nineoldandroids.animation.AnimatorSet;
+import com.actionbarsherlock.internal.nineoldandroids.animation.ObjectAnimator;
+
 import se.z_app.stb.Channel;
 import se.z_app.stb.Program;
 import se.z_app.stb.EPG;
-import se.z_app.stb.STB;
-import se.z_app.stb.api.RemoteControl;
-import se.z_app.zmote.epg.EPGQuery;
-import android.animation.Animator;
-import android.animation.Animator.AnimatorListener;
 
-import android.gesture.Gesture;
-import android.gesture.GestureLibraries;
-import android.gesture.GestureLibrary;
+import se.z_app.zmote.epg.EPGQuery;
+
 import android.gesture.GestureOverlayView;
 import android.gesture.GestureOverlayView.OnGestureListener;
-import android.gesture.GestureOverlayView.OnGesturePerformedListener;
-import android.gesture.Prediction;
-import android.graphics.Color;
+
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -28,13 +25,13 @@ import android.os.Bundle;
 
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.GestureDetector;
+
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
+
 import android.view.ViewGroup;
-import android.widget.Button;
+
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
@@ -165,8 +162,8 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 		if(currentChannelNr == channelNr)
 			return;
 
-		Log.i("TestZ", "Current nr: " +currentChannelNr );
-		Log.i("TestZ", "Targer nr: " +channelNr );
+		//Log.i("TestZ", "Current nr: " +currentChannelNr );
+		//Log.i("TestZ", "Targer nr: " +channelNr );
 
 		int can1 = 0;
 		int can2 = 0;
@@ -222,21 +219,30 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 		newLeft.setLayoutParams(params1);
 		newLeft.setVisibility(View.VISIBLE);
 		newLeft.setAlpha(defaultAlpha);
-		//r.removeView(newLeft);
+		
 		
 		try{
 			r.addView(newLeft);
 		}catch(RuntimeException e){}
 		newLeft.invalidate();
 
-
-		right.animate().y(-300).x(rightX + 300).setListener(new AnimatorListener() {
+		
+		
+		AnimatorSet rightAnimation = new AnimatorSet();
+		rightAnimation.playTogether(
+				ObjectAnimator.ofFloat(right, "x", rightX + 300),
+				ObjectAnimator.ofFloat(right, "y", -300)
+				);
+		
+		tmpInt = turns;
+		rightAnimation.addListener(new AnimatorListener() {
 			ImageView tmp = right;
-
-
+			int turns = tmpInt;
+			
 			@Override
 			public void onAnimationStart(Animator animation) {
 				isAnimationRunning = true;
+				text.setText("");
 			}
 
 			@Override
@@ -246,6 +252,13 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 			public void onAnimationEnd(Animator animation) {
 				r.removeView(tmp);
 				isAnimationRunning = false;	
+				
+				turns--;
+				if(turns>0){
+					rotateRight(turns);
+				}else{
+					text.setText(generateText());
+				}
 
 			}
 
@@ -253,43 +266,57 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 			public void onAnimationCancel(Animator animation) {
 				r.removeView(tmp);
 				isAnimationRunning = false;
-
-			}
-		});
-
-
-		center.animate().x(rightX).y(rightY).scaleX(rightScale).scaleY(rightScale).alpha(defaultAlpha).setListener(null);
-
-
-		tmpInt = turns;
-		left.animate().x(centerX).y(centerY).scaleX(centerScale).scaleY(centerScale).alpha(alpha).setListener(new AnimatorListener() {
-			int turns = tmpInt;
-			@Override
-			public void onAnimationStart(Animator animation) {
-				text.setText("");
-			}
-
-			@Override
-			public void onAnimationRepeat(Animator animation) {}
-
-			@Override
-			public void onAnimationEnd(Animator animation) {
-
+				
 				turns--;
 				if(turns>0){
 					rotateRight(turns);
 				}else{
 					text.setText(generateText());
 				}
-			}
 
-			@Override
-			public void onAnimationCancel(Animator animation) {}
+			}
+		
 		});
 
-		newLeft.animate().x(leftX).y(leftY).scaleX(leftScale).scaleY(leftScale).setListener(null);
+		
 
+		AnimatorSet centerAnimation = new AnimatorSet();
+		centerAnimation.playTogether(
+				ObjectAnimator.ofFloat(center, "x", rightX),
+				ObjectAnimator.ofFloat(center, "y", rightY),
+				ObjectAnimator.ofFloat(center, "scaleX", rightScale),
+				ObjectAnimator.ofFloat(center, "scaleY", rightScale),
+				ObjectAnimator.ofFloat(center, "alpha", defaultAlpha)
+			);
+		
 
+		
+		AnimatorSet leftAnimation = new AnimatorSet();
+		leftAnimation.playTogether(
+				ObjectAnimator.ofFloat(left, "x", centerX),
+				ObjectAnimator.ofFloat(left, "y", centerY),
+				ObjectAnimator.ofFloat(left, "scaleX", centerScale),
+				ObjectAnimator.ofFloat(left, "scaleY", centerScale),
+				ObjectAnimator.ofFloat(left, "alpha", alpha)
+			);
+		
+
+		
+		AnimatorSet newLeftAnimation = new AnimatorSet();
+		newLeftAnimation.playTogether(
+				ObjectAnimator.ofFloat(newLeft, "x", leftX),
+				ObjectAnimator.ofFloat(newLeft, "y", leftY),
+				ObjectAnimator.ofFloat(newLeft, "scaleX", leftScale),
+				ObjectAnimator.ofFloat(newLeft, "scaleY", leftScale),
+				ObjectAnimator.ofFloat(newLeft, "alpha", defaultAlpha)
+			);
+		
+		
+//Playing animation
+		newLeftAnimation.start();
+		centerAnimation.start();
+		leftAnimation.start();
+		rightAnimation.start();
 
 		right = center;
 		center = left;
@@ -301,7 +328,9 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 	}
 
 	private void rotateLeft(int turns){
-
+		
+	
+		 
 		if(isAnimationRunning){
 			return;
 		}
@@ -329,13 +358,21 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 		newRight.invalidate();
 
 
-
-		left.animate().y(-300).x(-300).setListener(new AnimatorListener() {
+	
+		AnimatorSet leftAnimation = new AnimatorSet();
+		leftAnimation.playTogether(
+				ObjectAnimator.ofFloat(left, "x", -300),
+				ObjectAnimator.ofFloat(left, "y", -300)
+			);
+		
+		tmpInt = turns;
+		leftAnimation.addListener(new AnimatorListener() {
 			ImageView tmp = left;
-
+			int turns = tmpInt;
 			@Override
 			public void onAnimationStart(Animator animation) {
 				isAnimationRunning = true;
+				text.setText("");
 			}
 
 			@Override
@@ -345,31 +382,6 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 			public void onAnimationEnd(Animator animation) {
 				r.removeView(tmp);	
 				isAnimationRunning = false;
-			}
-
-			@Override
-			public void onAnimationCancel(Animator animation) {
-				r.removeView(tmp);			
-				isAnimationRunning = false;
-			}
-		});
-
-
-
-		center.animate().x(leftX).y(leftY).scaleX(leftScale).scaleY(leftScale).alpha(defaultAlpha).setListener(null);
-		tmpInt = turns;
-		right.animate().x(centerX).y(centerY).scaleX(centerScale).scaleY(centerScale).alpha(alpha).setListener(new AnimatorListener() {
-			int turns = tmpInt;
-			@Override
-			public void onAnimationStart(Animator animation) {
-				text.setText("");
-			}
-
-			@Override
-			public void onAnimationRepeat(Animator animation) {}
-
-			@Override
-			public void onAnimationEnd(Animator animation) {
 				turns--;
 				if(turns>0){
 					rotateLeft(turns);
@@ -379,10 +391,54 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 			}
 
 			@Override
-			public void onAnimationCancel(Animator animation) {}
+			public void onAnimationCancel(Animator animation) {
+				r.removeView(tmp);			
+				isAnimationRunning = false;
+				turns--;
+				if(turns>0){
+					rotateLeft(turns);
+				}else{
+					text.setText(generateText());
+				}
+			}
 		});
+		
+		
+	
+		AnimatorSet centerAnimation = new AnimatorSet();
+		leftAnimation.playTogether(
+				ObjectAnimator.ofFloat(center, "x", leftX),
+				ObjectAnimator.ofFloat(center, "y", leftY),
+				ObjectAnimator.ofFloat(center, "scaleX", leftScale),
+				ObjectAnimator.ofFloat(center, "scaleY", leftScale),
+				ObjectAnimator.ofFloat(center, "alpha", defaultAlpha)
+			);
 
-		newRight.animate().x(rightX).y(rightY).scaleX(rightScale).scaleY(rightScale).setListener(null);
+
+		AnimatorSet rightAnimation = new AnimatorSet();
+		leftAnimation.playTogether(
+				ObjectAnimator.ofFloat(right, "x", centerX),
+				ObjectAnimator.ofFloat(right, "y", centerY),
+				ObjectAnimator.ofFloat(right, "scaleX", centerScale),
+				ObjectAnimator.ofFloat(right, "scaleY", centerScale),
+				ObjectAnimator.ofFloat(right, "alpha", alpha)
+			);
+		
+		
+		AnimatorSet newRightAnimation = new AnimatorSet();
+		leftAnimation.playTogether(
+				ObjectAnimator.ofFloat(newRight, "x", rightX),
+				ObjectAnimator.ofFloat(newRight, "y", rightY),
+				ObjectAnimator.ofFloat(newRight, "scaleX", rightScale),
+				ObjectAnimator.ofFloat(newRight, "scaleY", rightScale),
+				ObjectAnimator.ofFloat(newRight, "alpha", defaultAlpha)
+			);
+		
+//Playing Animation		
+		newRightAnimation.start();
+		rightAnimation.start();
+		centerAnimation.start();
+		leftAnimation.start();
 
 
 
@@ -391,7 +447,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 		center = right;
 		right = newRight;
 
-
+		
 
 
 	}
