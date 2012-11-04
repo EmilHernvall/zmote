@@ -43,5 +43,6 @@
     <string name="title_activity_main_tab">MainTabActivity</string>
     <string name="add_stb_dot">.</string>
     <string name="add_stb_text">Add STB</string>
+    <string name="top_lists">Top lists</string>
 
 </resources>

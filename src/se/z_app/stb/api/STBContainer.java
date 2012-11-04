@@ -40,8 +40,9 @@ public class STBContainer extends Observable implements Iterable<STB>{
 	}
 	
 	public void setActiveSTB(STB stb){
-		if(this.stb != null && this.stb.equals(stb)) return;
-		
+		if(this.stb != null && this.stb.equals(stb)){
+			return;
+		}		
 		this.stb = stb;
 		setChanged();
 		notifyObservers();
