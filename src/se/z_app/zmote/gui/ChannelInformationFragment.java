@@ -214,6 +214,14 @@ public class ChannelInformationFragment extends Fragment{
     	
     	// BOTTOM BUTTONS SECTION
     	// Now we add the Imdb, Fav and Social buttons
+    	LinearLayout.LayoutParams but_params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+    	but_params.setMargins(0, 0, 0, 0);
+    	LinearLayout.LayoutParams but_left_space_params = new LinearLayout.LayoutParams(width_screen-205, LayoutParams.WRAP_CONTENT);
+    	but_left_space_params.setMargins(0, 0, 0, 0);
+    	LinearLayout but_left_space = new LinearLayout(view_temp.getContext());
+    	but_left_space.setOrientation(1);
+    	LinearLayout but_space = new LinearLayout(view_temp.getContext());
+    	but_space.setOrientation(0);
     	LinearLayout but_menu = new LinearLayout(view_temp.getContext());
     	but_menu.setOrientation(0);	// Vertical 1; Horizontal 0
     	but_menu.setPadding(15, 15, 15, 5);
@@ -225,6 +233,7 @@ public class ChannelInformationFragment extends Fragment{
     	fav_but = new ImageButton(view_temp.getContext());
     	fav_but.setImageResource(R.drawable.rating_not_favorite);
     	fav_but.setBackgroundResource(0);
+    	fav_but.setPadding(0, 10, 0, 0);
     	imdb_but = new ImageButton(view_temp.getContext());
     	imdb_but.setImageResource(R.drawable.imdb_icon);
     	imdb_but.setBackgroundResource(0);
@@ -274,10 +283,12 @@ public class ChannelInformationFragment extends Fragment{
 		});
     	
     	// Add the buttons to the layout
-    	but_menu.addView(imdb_but);
-    	but_menu.addView(fav_but);
-    	but_menu.addView(social_but);
-    	channel_info_ly.addView(but_menu);
+    	but_menu.addView(imdb_but, but_params);
+    	but_menu.addView(fav_but, but_params);
+    	but_menu.addView(social_but, but_params);
+    	but_space.addView(but_left_space, but_left_space_params);
+    	but_space.addView(but_menu);
+    	channel_info_ly.addView(but_space);
     	// Now we can add the rest of the programs info
     	
     	// TODO: Shorten the above code
