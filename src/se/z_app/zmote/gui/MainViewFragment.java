@@ -484,9 +484,9 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 		params1.setMargins(50, 30, 30, 30);
 		left.setLayoutParams(params1);
 		
-		ObjectAnimator.ofFloat(left, "ScaleX", 2F).setDuration(0).start();
-		ObjectAnimator.ofFloat(left, "ScaleY", 2F).setDuration(0).start();
-		ObjectAnimator.ofFloat(left, "Alpha", defaultAlpha).setDuration(0).start();
+		ObjectAnimator.ofFloat(left, "scaleX", 2F).setDuration(0).start();
+		ObjectAnimator.ofFloat(left, "scaleY", 2F).setDuration(0).start();
+		ObjectAnimator.ofFloat(left, "alpha", defaultAlpha).setDuration(0).start();
 		leftScale = 2F;
 
 		params1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -495,9 +495,9 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 
 		
 		center.setLayoutParams(params1);
-		ObjectAnimator.ofFloat(center, "ScaleX", 4.5F).setDuration(0).start();
-		ObjectAnimator.ofFloat(center, "ScaleY", 4.5F).setDuration(0).start();
-		ObjectAnimator.ofFloat(center, "Alpha", alpha).setDuration(0).start();
+		ObjectAnimator.ofFloat(center, "scaleX", 4.5F).setDuration(0).start();
+		ObjectAnimator.ofFloat(center, "scaleY", 4.5F).setDuration(0).start();
+		ObjectAnimator.ofFloat(center, "alpha", alpha).setDuration(0).start();
 		centerScale = 4.5F;
 
 		params1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -505,9 +505,9 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 		params1.setMargins(30, 30, 50, 30);
 		right.setLayoutParams(params1);
 
-		ObjectAnimator.ofFloat(right, "ScaleX", 2F).setDuration(0).start();
-		ObjectAnimator.ofFloat(right, "ScaleY", 2F).setDuration(0).start();
-		ObjectAnimator.ofFloat(right, "Alpha", defaultAlpha).setDuration(0).start();
+		ObjectAnimator.ofFloat(right, "scaleX", 2F).setDuration(0).start();
+		ObjectAnimator.ofFloat(right, "scaleY", 2F).setDuration(0).start();
+		ObjectAnimator.ofFloat(right, "alpha", defaultAlpha).setDuration(0).start();
 		rightScale = 2F;
 
 
