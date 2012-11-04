@@ -224,7 +224,7 @@ public class ChannelInformationFragment extends Fragment{
     	but_space.setOrientation(0);
     	LinearLayout but_menu = new LinearLayout(view_temp.getContext());
     	but_menu.setOrientation(0);	// Vertical 1; Horizontal 0
-    	but_menu.setPadding(15, 15, 15, 5);
+    	but_menu.setPadding(15, 0, 15, 5);
     	
     	// Buttons
     	social_but = new ImageButton(view_temp.getContext());
