@@ -1,6 +1,7 @@
 package se.z_app.zmote.gui;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.ActionBar.TabListener;
@@ -9,6 +10,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 
 
+import se.z_app.stb.STB;
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.stb.api.STBContainer;
 import se.z_app.stb.api.RemoteControl.Button;
@@ -38,6 +40,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	private Tab tabFav;
 	private Tab tabWeb;
 	private Spinner mySpinner;
+	private ArrayList<String> STBNames;
 	private Vibrator vibe;
     private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
 
@@ -77,29 +80,32 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        actionBar = getSupportActionBar();
-        
+    	actionBar = getSupportActionBar();
 
-        
-        
-        View myView = getLayoutInflater().inflate(R.layout.activity_main_tab_actionbar, null);
-        mySpinner = (Spinner) myView.findViewById(R.id.action_bar_spinner);
-        
-        System.out.println("The spinner has been created: " +(mySpinner!=null));
-        
-        
-		//ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, );
 
-		// Specify the layout to use when the list of choices appears
-		//adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		// Apply the adapter to the spinner
-		System.out.println("The spinner has been created: " +(mySpinner!=null));
+
+
+    	View myView = getLayoutInflater().inflate(R.layout.activity_main_tab_actionbar, null);
+    	mySpinner = (Spinner) myView.findViewById(R.id.action_bar_spinner);
+
+    	
+
+    	Iterator<STB> iterator = STBContainer.instance().iterator();
+    	STBNames = new ArrayList<String>();
+    	
+    	while(iterator.hasNext()){
+    		STBNames.add(iterator.next().getBoxName());
+    	}
+    	
+    	ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, STBNames);
+
+    	// Specify the layout to use when the list of choices appears
+    	adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    	// Apply the adapter to the spinner
+		mySpinner.setAdapter(adapter);
 		
-		//mySpinner.setAdapter(adapter);
-		
-		System.out.println("The spinner has been created: " +(mySpinner!=null));
+
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        ;
         actionBar.setCustomView(myView);
         
         
