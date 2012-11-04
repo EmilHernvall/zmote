@@ -26,6 +26,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 
@@ -52,10 +53,6 @@ public class ChannelInformationFragment extends Fragment{
 	private Program nextProgram3 = null;
 	private Program nextProgram4 = null;
 	public ProgramInfo programInf[] = new ProgramInfo[10];	//We will see the next 10 programs
-
-	private ArrayList<ImageView> imageList = new ArrayList<ImageView>();
-	private ArrayList<Channel> channelList = new ArrayList<Channel>();
-	private int currentChannelNr;
 	
 	public ChannelInformationFragment(){
 		
@@ -122,11 +119,11 @@ public class ChannelInformationFragment extends Fragment{
 	 */
     public void addChannelItemToLayout(Channel ch){
     
-    	float x = getResources().getDisplayMetrics().density;
-    	System.out.println(x);
+    	// Get the width of the screen
+    	int width_screen = getResources().getDisplayMetrics().widthPixels;
     	
     	// "White box" parameters
-    	LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(400, LayoutParams.MATCH_PARENT);
+    	LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width_screen-40, LayoutParams.MATCH_PARENT);
         layoutParams.setMargins(15, 15, 15, 30);
         
         // Standard parameters
@@ -140,6 +137,12 @@ public class ChannelInformationFragment extends Fragment{
     	channel_ly.setBackgroundColor(0xFFFFFFFF);
     	channel_ly.setPadding(10, 5, 10, 5);
     	channel_ly.setOrientation(1);	// Vertical 1; Horizontal 0
+    	
+    	// The information part of the box will be scrollable
+    	ScrollView channel_content = new ScrollView(view_temp.getContext());
+        LinearLayout channel_info_ly = new LinearLayout(view_temp.getContext());
+        channel_info_ly.setOrientation(1);
+        // Check if we need to set up the parameters in the previous ones
     	
     	// Head of the info (Current program + Channel icon)
     	LinearLayout top_ly = new LinearLayout(view_temp.getContext());
@@ -201,9 +204,12 @@ public class ChannelInformationFragment extends Fragment{
     	top_info_ly.addView(cur_name);
     	top_ly.addView(top_info_ly, wrapContentParams);
     	top_ly.addView(new_btn, wrapContentParams);
+    	
     	channel_ly.addView(top_ly);
     	channel_ly.addView(separator, separatorParams);
-    	channel_ly.addView(cur_info);
+    	
+    	//channel_info_ly.addView(cur_info);
+    	channel_info_ly.addView(cur_info);
     	
     	// BOTTOM BUTTONS SECTION
     	// Now we add the Imdb, Fav and Social buttons
@@ -214,7 +220,7 @@ public class ChannelInformationFragment extends Fragment{
     	// Button
     	
     	
-    	channel_ly.addView(but_menu);
+    	channel_info_ly.addView(but_menu);
     	// Now we can add the rest of the programs info
     	
     	// TODO: Shorten the above code
@@ -237,10 +243,12 @@ public class ChannelInformationFragment extends Fragment{
     		nextName.setTextColor(0xFF000000);
     		nextName.setPadding(15, 5, 15, 5);
     		// Add both informations to the screen
-    		channel_ly.addView(separator_temp, separatorParams);
-    		channel_ly.addView(nextName);
+    		channel_info_ly.addView(separator_temp, separatorParams);
+    		channel_info_ly.addView(nextName);
     	}
     	
+    	channel_content.addView(channel_info_ly);
+    	channel_ly.addView(channel_content);
     	content_layout.addView(channel_ly, layoutParams);
     	
     }
