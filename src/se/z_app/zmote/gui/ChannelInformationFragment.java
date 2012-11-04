@@ -135,7 +135,7 @@ public class ChannelInformationFragment extends Fragment{
         LinearLayout.LayoutParams topInfoLyParams = new LinearLayout.LayoutParams(width_screen-60-icon_size, LayoutParams.WRAP_CONTENT);
         
         // Separator parameters
-        LinearLayout.LayoutParams separatorParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 2);
+        LinearLayout.LayoutParams separatorParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 1);
         
         // Prepare the "white box" for the program information
     	LinearLayout channel_ly = new LinearLayout(view_temp.getContext()); // Check arguments (correct?)
@@ -253,6 +253,24 @@ public class ChannelInformationFragment extends Fragment{
     		nextInfo.setText(pr[i].getLongText());
     		nextInfo.setTextColor(0xFF444444);	// A little of grey for the non-current channel descriptions
     		nextInfo.setPadding(15, 5, 15, 5);
+    		nextInfo.setId(ch.getNr()*pr[i].getEventID());
+    		nextInfo.setVisibility(TextView.GONE);
+    		i_tmp = ch.getNr()*pr[i].getEventID();
+    		
+    		// Show/hide program information by clickin on its name
+    		nextName.setClickable(true);
+    		nextName.setOnClickListener(new View.OnClickListener() {
+				int id = i_tmp;
+				@Override
+				public void onClick(View v) {
+					
+					TextView x = (TextView)view_temp.findViewById(id);
+					if(x.getVisibility() == TextView.GONE)
+						x.setVisibility(TextView.VISIBLE);
+					else
+						x.setVisibility(TextView.GONE);
+				}
+			});
 
     		// Add both informations to the screen
     		channel_info_ly.addView(separator_temp, separatorParams);
