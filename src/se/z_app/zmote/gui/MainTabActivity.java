@@ -1,11 +1,16 @@
 package se.z_app.zmote.gui;
 
+import java.util.ArrayList;
+
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.ActionBar.TabListener;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+
 
 import se.z_app.stb.api.RemoteControl;
+import se.z_app.stb.api.STBContainer;
 import se.z_app.stb.api.RemoteControl.Button;
 import android.app.ActionBar;
 
@@ -18,16 +23,21 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import android.view.KeyEvent;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 
 
 public class MainTabActivity extends SherlockFragmentActivity implements TabListener {
 
+	private com.actionbarsherlock.app.ActionBar actionBar;
 	private Tab tabRC;
 	private Tab tabMain;
 	private Tab tabEPG;
 	private Tab tabFav;
 	private Tab tabWeb;
+	private Spinner mySpinner;
 	private Vibrator vibe;
     private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
 
@@ -67,11 +77,38 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-       //getMenuInflater().inflate(R.menu.activity_main_tab, menu);
-     // Set up the action bar.
-        final com.actionbarsherlock.app.ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar = getSupportActionBar();
+        
+
+        
+        
+        View myView = getLayoutInflater().inflate(R.layout.activity_main_tab_actionbar, null);
+        mySpinner = (Spinner) myView.findViewById(R.id.action_bar_spinner);
+        
+        System.out.println("The spinner has been created: " +(mySpinner!=null));
+        
+        
+		//ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, );
+
+		// Specify the layout to use when the list of choices appears
+		//adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		// Apply the adapter to the spinner
+		System.out.println("The spinner has been created: " +(mySpinner!=null));
+		
+		//mySpinner.setAdapter(adapter);
+		
+		System.out.println("The spinner has been created: " +(mySpinner!=null));
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        ;
+        actionBar.setCustomView(myView);
+        
+        
+        actionBar.setLogo(R.drawable.green_button);
+        actionBar.setDisplayUseLogoEnabled(true);        
+        actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setDisplayShowTitleEnabled(false);
+        
+        
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         // For each of the sections in the app, add a tab to the action bar.
@@ -81,22 +118,21 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
         tabFav = actionBar.newTab().setIcon(R.drawable.rating_favourite);
         tabWeb = actionBar.newTab().setIcon(R.drawable.location_web_site);
         
+        // Add the tabs to the action bar
         actionBar.addTab(tabRC.setTabListener(this));
         actionBar.addTab(tabEPG.setTabListener(this));
         actionBar.addTab(tabMain.setTabListener(this));
         actionBar.addTab(tabWeb.setTabListener(this));
         actionBar.addTab(tabFav.setTabListener(this));
         
-        
-        
         return true;
     }
 
-    
-
-    
-    
-
+  
+    /**
+     * Used to bind events to the physical volum buttons of the device.
+     * In this case, it increase and decreases the volum of the STB.
+     */
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
 		int action = event.getAction();
@@ -129,6 +165,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
     	if(tab.equals(tabRC)){
     		Log.i("FragmentLog", "RC");
     		fragment = new RemoteControlFragment(this);
+    		
     	}
     	else if(tab.equals(tabEPG)){
     		Log.i("FragmentLog", "EPG");
@@ -140,7 +177,6 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
     	}
 		else if(tab.equals(tabFav)){
 			Log.i("FragmentLog", "Fav");
-			
 			//WARNING! : provisional function 
 			fragment = new ChannelInformationFragment(this);
 			
