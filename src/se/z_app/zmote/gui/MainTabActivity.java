@@ -178,7 +178,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
     		fragment = new EPGFragment(this);
     	}
     	else if(tab.equals(tabWeb)){
-    		Log.i("FragmentLog", "Web");
+    	
     		return;
     	}
 		else if(tab.equals(tabFav)){
