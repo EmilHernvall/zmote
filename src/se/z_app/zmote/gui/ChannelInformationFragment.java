@@ -52,14 +52,24 @@ public class ChannelInformationFragment extends Fragment{
 	private Program nextProgram3 = null;
 	private Program nextProgram4 = null;
 	
+	/**
+	 * Default constructor of ChannelInformationFragment
+	 */
 	public ChannelInformationFragment(){
 		
 	}
 	
+	/**
+	 * Default constructor of ChannelInformationFragment
+	 * @param main
+	 */
 	public ChannelInformationFragment(MainTabActivity main){
 		this.main = main;
 	}
 	
+	/**
+	 * This to do when the instance of ChannelInformationFragment is created
+	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -349,16 +359,22 @@ public class ChannelInformationFragment extends Fragment{
     	
     }
     
-    
+    /**
+     * Extension of AsyncTask created to load asynchronously the EPG data
+     *
+     */
 	private class AsyncDataLoader extends AsyncTask<Integer, Integer, EPG>{
 
+		/**
+		 * Fetch the EPG asynchronously
+		 */
 		@Override
 		protected EPG doInBackground(Integer... params) {
 			return getFullEPG();
 		}
 		
 		/**
-		 * Fetch the EPG information asynchronously
+		 * Add the channels information when the EPG is fetched
 		 */
 		@Override
 		protected void onPostExecute(EPG epgPassed) {
