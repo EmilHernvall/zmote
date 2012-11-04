@@ -1,0 +1,150 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <EditText
+        android:id="@+id/activity_add_stb_editNameid"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="15dp"
+        android:ems="10"
+        android:hint="@string/activity_edit_stb_hintName"
+        android:singleLine="true"
+        android:text="@string/activity_edit_stb_editName"
+        tools:context=".EditSTBActivity" />
+
+    <TextView
+        android:id="@+id/activity_add_stb_dot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="false"
+        android:text="@string/add_stb_dot"
+        tools:context=".EditSTBActivity" />
+
+    <requestFocus />
+
+    <TextView
+        android:id="@+id/activity_add_stb_textNameid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/activity_edit_stb_staticName"
+        tools:context=".EditSTBActivity" />
+
+    <TextView
+        android:id="@+id/activity_add_stb_staticIPid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/activity_add_stb_editNameid"
+        android:layout_marginTop="17dp"
+        android:text="@string/activity_edit_stb_staticIP"
+        tools:context=".EditSTBActivity" />
+
+    <EditText
+        android:id="@+id/Add_stb_IP1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/activity_add_stb_staticIPid"
+        android:layout_toRightOf="@+id/activity_add_stb_staticIPid"
+        android:ems="3"
+        android:hint="@string/activity_edit_stb_hintName"
+        android:inputType="number"
+        android:maxLength="3"
+        android:singleLine="true"
+        android:text="@string/activity_edit_stb_editName"
+        tools:context=".EditSTBActivity" >
+
+        <requestFocus />
+    </EditText>
+
+    <Button
+        android:id="@+id/activity_add_stb_save_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/Add_stb_IP1"
+        android:layout_marginTop="26dp"
+        android:text="@string/activity_edit_stb_saveButton" />
+
+    <EditText
+        android:id="@+id/Add_stb_IP2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/activity_add_stb_staticIPid"
+        android:layout_toRightOf="@+id/Add_stb_IP1"
+        android:ems="3"
+        android:hint="@string/activity_edit_stb_hintName"
+        android:inputType="number"
+        android:maxLength="3"
+        android:singleLine="true"
+        android:text="@string/activity_edit_stb_editName"
+        tools:context=".EditSTBActivity" />
+
+    <EditText
+        android:id="@+id/Add_stb_IP3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/activity_add_stb_save_button"
+        android:layout_toRightOf="@+id/Add_stb_IP2"
+        android:ems="3"
+        android:hint="@string/activity_edit_stb_hintName"
+        android:inputType="number"
+        android:maxLength="3"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:text="@string/activity_edit_stb_editName"
+        tools:context=".EditSTBActivity" />
+
+    <EditText
+        android:id="@+id/Add_stb_IP4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/activity_add_stb_save_button"
+        android:layout_toRightOf="@+id/Add_stb_IP3"
+        android:ems="3"
+        android:hint="@string/activity_edit_stb_hintName"
+        android:inputType="number"
+        android:maxLength="3"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:text="@string/activity_edit_stb_editName"
+        tools:context=".EditSTBActivity" />
+
+    <TextView
+        android:id="@+id/activity_add_stb_dot2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/Add_stb_IP2"
+        android:layout_alignLeft="@+id/Add_stb_IP2"
+        android:text="@string/add_stb_dot"
+        tools:context=".EditSTBActivity" />
+
+    <TextView
+        android:id="@+id/activity_add_stb_dot1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/activity_add_stb_save_button"
+        android:layout_alignLeft="@+id/Add_stb_IP3"
+        android:text="@string/add_stb_dot"
+        tools:context=".EditSTBActivity" />
+
+    <TextView
+        android:id="@+id/TextView02"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/activity_add_stb_save_button"
+        android:layout_alignLeft="@+id/Add_stb_IP4"
+        android:text="@string/add_stb_dot"
+        tools:context=".EditSTBActivity" />
+
+    <Button
+        android:id="@+id/activity_add_stb_cancel_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/activity_add_stb_save_button"
+        android:text="@string/activity_edit_stb_cancelButton" />
+
+</RelativeLayout>

@@ -70,6 +70,12 @@ public class STBContainer extends Observable implements Iterable<STB>{
 		return stbs.iterator();
 	}
 	
+	public STB[] getSTBs(){
+		STB stbToBeReturned[] = new STB[stbs.size()];
+		stbs.toArray(stbToBeReturned);
+		return stbToBeReturned;
+	}
+	
 	public void reset(){
 		stbs = new LinkedList<STB>();
 		stb = null;
