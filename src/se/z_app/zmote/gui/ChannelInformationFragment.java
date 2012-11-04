@@ -1,7 +1,6 @@
 package se.z_app.zmote.gui;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -10,12 +9,8 @@ import se.z_app.stb.EPG;
 import se.z_app.stb.Program;
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.zmote.epg.EPGQuery;
-import android.R.color;
-import android.R.drawable;
 
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -25,7 +20,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -57,7 +51,6 @@ public class ChannelInformationFragment extends Fragment{
 	private Program nextProgram2 = null;
 	private Program nextProgram3 = null;
 	private Program nextProgram4 = null;
-	public ProgramInfo programInf[] = new ProgramInfo[10];	//We will see the next 10 programs
 	
 	public ChannelInformationFragment(){
 		
@@ -135,7 +128,7 @@ public class ChannelInformationFragment extends Fragment{
         // WrapContent parameters
         LinearLayout.LayoutParams wrapContentParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
        
-        // Top-info-ly parameters
+        // Top_info_ly parameters
         // Width is the screen size minus the margin(40) minus the padding(20)
         LinearLayout.LayoutParams topInfoLyParams = new LinearLayout.LayoutParams(width_screen-60-icon_size, LayoutParams.WRAP_CONTENT);
         
@@ -221,9 +214,17 @@ public class ChannelInformationFragment extends Fragment{
     	
     	// BOTTOM BUTTONS SECTION
     	// Now we add the Imdb, Fav and Social buttons
+    	LinearLayout.LayoutParams but_params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+    	but_params.setMargins(0, 0, 0, 0);
+    	LinearLayout.LayoutParams but_left_space_params = new LinearLayout.LayoutParams(width_screen-205, LayoutParams.WRAP_CONTENT);
+    	but_left_space_params.setMargins(0, 0, 0, 0);
+    	LinearLayout but_left_space = new LinearLayout(view_temp.getContext());
+    	but_left_space.setOrientation(1);
+    	LinearLayout but_space = new LinearLayout(view_temp.getContext());
+    	but_space.setOrientation(0);
     	LinearLayout but_menu = new LinearLayout(view_temp.getContext());
     	but_menu.setOrientation(0);	// Vertical 1; Horizontal 0
-    	but_menu.setPadding(15, 15, 15, 5);
+    	but_menu.setPadding(15, 0, 15, 5);
     	
     	// Buttons
     	social_but = new ImageButton(view_temp.getContext());
@@ -232,6 +233,7 @@ public class ChannelInformationFragment extends Fragment{
     	fav_but = new ImageButton(view_temp.getContext());
     	fav_but.setImageResource(R.drawable.rating_not_favorite);
     	fav_but.setBackgroundResource(0);
+    	fav_but.setPadding(0, 10, 0, 0);
     	imdb_but = new ImageButton(view_temp.getContext());
     	imdb_but.setImageResource(R.drawable.imdb_icon);
     	imdb_but.setBackgroundResource(0);
@@ -244,7 +246,7 @@ public class ChannelInformationFragment extends Fragment{
 			public void onClick(View v) {
 				
 				// We will use setTag to associate custom data to the button
-				// In this case, the custom data is if its favourite or not
+				// In this case, the custom data is if its favorite or not
 				if(thisOne.getTag() == (Object)0){
 					thisOne.setTag(1);
 					thisOne.setImageResource(R.drawable.favorite_icon);
@@ -281,10 +283,12 @@ public class ChannelInformationFragment extends Fragment{
 		});
     	
     	// Add the buttons to the layout
-    	but_menu.addView(imdb_but);
-    	but_menu.addView(fav_but);
-    	but_menu.addView(social_but);
-    	channel_info_ly.addView(but_menu);
+    	but_menu.addView(imdb_but, but_params);
+    	but_menu.addView(fav_but, but_params);
+    	but_menu.addView(social_but, but_params);
+    	but_space.addView(but_left_space, but_left_space_params);
+    	but_space.addView(but_menu);
+    	channel_info_ly.addView(but_space);
     	// Now we can add the rest of the programs info
     	
     	// TODO: Shorten the above code
@@ -317,7 +321,7 @@ public class ChannelInformationFragment extends Fragment{
     		nextInfo.setVisibility(TextView.GONE);
     		i_tmp = ch.getNr()*pr[i].getEventID();
     		
-    		// Show/hide program information by clickin on its name
+    		// Show/hide program information by clicking on its name
     		nextName.setClickable(true);
     		nextName.setOnClickListener(new View.OnClickListener() {
 				int id = i_tmp;
@@ -354,7 +358,7 @@ public class ChannelInformationFragment extends Fragment{
 		}
 		
 		/**
-		 * Fetch de EPG information asynchronously
+		 * Fetch the EPG information asynchronously
 		 */
 		@Override
 		protected void onPostExecute(EPG epgPassed) {
@@ -401,35 +405,5 @@ public class ChannelInformationFragment extends Fragment{
 		//END*/
 	}
 	
-	
-	public String setText(Program p){
-		String t ="";
-		t.concat(p.getName());
-		t.concat(new SimpleDateFormat("HH:mm").format(p.getStart()));
-		t.concat(p.getLongText());
-		return t;
-	}
-	/**
-	 * Shorten a string to a desired size
-	 * @param s		Original string we want to cut
-	 * @param max	Maximum amount of characters
-	 * @return	The shortened string
-	 */
-	private String trimString(String s, int max){
-		if(s.length() > max){
-			s = s.substring(0, max-4) + "...";
-		}
-		return s;
-	}
-	
-	public class ProgramInfo{
-		public String name;
-		public String info;
-		public String date;
-		
-		public void setName(String n){
-			name = n;
-		}
-	}
 
 }
