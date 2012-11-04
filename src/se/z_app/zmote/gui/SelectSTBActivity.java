@@ -205,6 +205,13 @@ public class SelectSTBActivity extends Activity {
 								
 					new_stb.setIP(final_ip);
 					
+					/*
+					 * TODO 
+					 * Needs to provide a choice of type for the user. 
+					 * A suggestion is to implement a drop down list (spinner).
+					 * That gets all the STB enums and just choices a BOX.
+					 */
+					new_stb.setType(STB.STBEnum.ZENTERIO);
 					
 					STB tempStb[] = new STB[1];
 					tempStb[0] = new_stb;
