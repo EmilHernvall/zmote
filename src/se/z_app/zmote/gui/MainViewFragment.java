@@ -14,6 +14,7 @@ import se.z_app.stb.Program;
 import se.z_app.stb.EPG;
 
 import se.z_app.zmote.epg.EPGQuery;
+import se.z_app.zmote.gui.R.drawable;
 
 import android.gesture.GestureOverlayView;
 import android.gesture.GestureOverlayView.OnGestureListener;
@@ -212,13 +213,22 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 		currentChannelNr = (currentChannelNr+imageList.size()-1)%imageList.size();
 
 		ImageView newLeft = imageList.get((currentChannelNr+imageList.size()-1)%imageList.size());
-		newLeft.setY(-300);
-		newLeft.setX(-300);
-		LayoutParams params1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		params1.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-		newLeft.setLayoutParams(params1);
+		//newLeft.setY(-300);
+		//newLeft.setX(-300);
+		//LayoutParams params1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		//params1.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+		//params1.leftMargin = -300;
+		//params1.topMargin = -300;
+		//newLeft.setLayoutParams(params1);
+		//newLeft.setVisibility(View.VISIBLE);
+		//newLeft.setAlpha(defaultAlpha);
+		
+		newLeft.setVisibility(View.INVISIBLE);
+		
+		ObjectAnimator.ofFloat(newLeft, "x", -300).setDuration(0).start();
+		ObjectAnimator.ofFloat(newLeft, "y", -300).setDuration(0).start();
+		
 		newLeft.setVisibility(View.VISIBLE);
-		newLeft.setAlpha(defaultAlpha);
 		
 		
 		try{
@@ -343,19 +353,28 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 
 		currentChannelNr = (currentChannelNr+1)%imageList.size();
 		ImageView newRight = imageList.get((currentChannelNr+1)%imageList.size());
-		newRight.setY(-300);
-		newRight.setX(rightX+300);
-		LayoutParams params1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		params1.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-		newRight.setLayoutParams(params1);
+		//newRight.setY(-300);
+		//newRight.setX(rightX+300);
+		//LayoutParams params1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		//params1.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+		//params1.leftMargin = 100;//(int)(rightX + 300);
+		//params1.topMargin = 100;//-300;
+		//newRight.setLayoutParams(params1);
+		//newRight.setVisibility(View.VISIBLE);
+		//newRight.setAlpha(defaultAlpha);
+		
+		newRight.setVisibility(View.INVISIBLE);
+		
+		ObjectAnimator.ofFloat(newRight, "x", (rightX + 300)).setDuration(0).start();
+		ObjectAnimator.ofFloat(newRight, "y", -300).setDuration(0).start();
+		
 		newRight.setVisibility(View.VISIBLE);
-		newRight.setAlpha(defaultAlpha);
 		
 		try{
 			r.addView(newRight);
 		}catch(RuntimeException e){}
 		
-		newRight.invalidate();
+		//newRight.invalidate();
 
 
 	
@@ -459,36 +478,37 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 		right = imageList.get((1+currentChannelNr)%imageList.size());
 
 
-		left.setScaleX(2F);
-		left.setScaleY(2F);
-		//left.setPadding(10, 10, 10, 10);
+		
 		LayoutParams params1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		params1.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 		params1.setMargins(50, 30, 30, 30);
-		left.setAlpha(defaultAlpha);
 		left.setLayoutParams(params1);
-
+		
+		ObjectAnimator.ofFloat(left, "ScaleX", 2F).setDuration(0).start();
+		ObjectAnimator.ofFloat(left, "ScaleY", 2F).setDuration(0).start();
+		ObjectAnimator.ofFloat(left, "Alpha", defaultAlpha).setDuration(0).start();
+		leftScale = 2F;
 
 		params1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		params1.addRule(RelativeLayout.CENTER_HORIZONTAL);
 		params1.setMargins(10, 400, 10, 10);
 
-
-		center.setAlpha(alpha);
+		
 		center.setLayoutParams(params1);
-		center.setScaleX(4.5F);
-		center.setScaleY(4.5F);
-
-
-
-		right.setScaleX(2F);
-		right.setScaleY(2F);
+		ObjectAnimator.ofFloat(center, "ScaleX", 4.5F).setDuration(0).start();
+		ObjectAnimator.ofFloat(center, "ScaleY", 4.5F).setDuration(0).start();
+		ObjectAnimator.ofFloat(center, "Alpha", alpha).setDuration(0).start();
+		centerScale = 4.5F;
 
 		params1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		params1.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 		params1.setMargins(30, 30, 50, 30);
-		right.setAlpha(defaultAlpha);
 		right.setLayoutParams(params1);
+
+		ObjectAnimator.ofFloat(right, "ScaleX", 2F).setDuration(0).start();
+		ObjectAnimator.ofFloat(right, "ScaleY", 2F).setDuration(0).start();
+		ObjectAnimator.ofFloat(right, "Alpha", defaultAlpha).setDuration(0).start();
+		rightScale = 2F;
 
 
 		r.addView(left);
@@ -508,7 +528,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 
 		text.setText(generateText());
 		text.setTextColor(0xFFFFFFFF);
-		text.setAlpha(1);
+		//text.setAlpha(1);
 
 		r.addView(text);
 	}
@@ -573,17 +593,17 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 
 
 	private void setVariables(){
-		leftX = left.getX();
-		leftY = left.getY();
-		leftScale = left.getScaleX();
+		leftX = left.getLeft();
+		leftY = left.getTop();
+		//leftScale = left.getScaleX();
 
-		centerX = center.getX();
-		centerY = center.getY();
-		centerScale = center.getScaleX();
+		centerX = center.getLeft();
+		centerY = center.getTop();
+		//centerScale = center.getScaleX();
 
-		rightX = right.getX();
-		rightY = right.getY();
-		rightScale = right.getScaleX();
+		rightX = right.getLeft();
+		rightY = right.getTop();
+		//rightScale = right.getScaleX();
 	}
 
 
