@@ -1,11 +1,14 @@
 package se.z_app.zmote.gui;
 
+import javax.xml.datatype.Duration;
+
 import se.z_app.stb.Channel;
 import se.z_app.stb.EPG;
 import se.z_app.stb.Program;
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.zmote.epg.EPGQuery;
 
+import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -13,6 +16,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -77,16 +81,20 @@ public class EPGFragment extends Fragment{
 void mainEPG(){
 	
 	for (Channel channel : epg) {
-		counter+=1;	
+		//counter+=1;	
 		//g_layout.setRowCount(counter);
 		addIconToLayout(channel);
 		p_layout = new LinearLayout(v.getContext());
+		/*LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT);
+		p_layout.setLayoutParams(params);*/
 		p_layout.setOrientation(LinearLayout.HORIZONTAL);
-    	for (Program program : channel) {
+		for (Program program : channel) {
 			addProgramsToLayout(program);	
 		}
-    	vt_scroll.addView(p_layout);
-	
+		
+		vt_scroll.addView(p_layout);
+    	
      }	
 }
 
@@ -118,21 +126,37 @@ void addIconToLayout(Channel ch){
 
 }
 
+int i =0;
+
+//TODO:
+//Make sure it's no space between buttons and they are aligned properly
 void addProgramsToLayout(Program pg){
 	Button new_btn2 = new Button(v.getContext());
-	new_btn2.setText(pg.getName());
+	
+	new_btn2.setText(pg.getName()+" "+pg.getStart());
 	new_btn2.setClickable(true);
-	new_btn2.setWidth(55);
-	new_btn2.setHeight(40);
+	//new_btn2.setWidth(pg.getDuration()/30);
+	//new_btn2.setHeight(80);
+	
+	
+	LinearLayout.LayoutParams rel_button1 = new LinearLayout.LayoutParams(pg.getDuration()/10, 80);
+	rel_button1.setMargins(0, 0, 0, 0);
+	//rel_button1.height = 80;
+	//rel_button1.width = pg.getDuration()/10;
+	
+	new_btn2.setLayoutParams(rel_button1);
+	
+	
 	new_btn2.setOnClickListener(new View.OnClickListener() {
+	
 		
-		@Override
+	@Override
 		public void onClick(View v) {
 		
 		}
 		});
-	
-	p_layout.addView(new_btn2);
+
+	p_layout.addView(new_btn2, rel_button1);
 
 	
 }
