@@ -122,6 +122,9 @@ public class ChannelInformationFragment extends Fragment{
 	 */
     public void addChannelItemToLayout(Channel ch){
     
+    	float x = getResources().getDisplayMetrics().density;
+    	System.out.println(x);
+    	
     	// "White box" parameters
     	LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(400, LayoutParams.MATCH_PARENT);
         layoutParams.setMargins(15, 15, 15, 30);
@@ -259,34 +262,7 @@ public class ChannelInformationFragment extends Fragment{
 			epg = epgPassed;
 			addAllChannelsInformationToLayout();
 			
-			currentChannelNr = 0;
-			for (Channel channel : epg) {
-				Drawable draw = new BitmapDrawable(channel.getIcon());
-				ImageView i = new ImageView(view_temp.getContext());
-				i.setImageDrawable(draw);	
-				i.setBackgroundColor(0xFFFFFFFF );
-				i.setAdjustViewBounds(true);
-				i.setMaxHeight(150);
-				i.setMaxHeight(150);
-				i.invalidate();
-				
-				
-				imageList.add(i);
-				channelList.add(channel);
-				
-				i.setOnClickListener(new View.OnClickListener() {
-					int i = currentChannelNr;
-					@Override
-					public void onClick(View v) {
-						//setChannel(i);
-						// Change STB to the channel we clicked on	
-					}
-				});
-				
-				currentChannelNr++;
-			}	// END of FOR loop
-			
-		}	//End of OnPostExecute
+		}
 		
 	} // End of class definition
 
