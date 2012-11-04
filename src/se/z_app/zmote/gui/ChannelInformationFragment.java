@@ -121,14 +121,19 @@ public class ChannelInformationFragment extends Fragment{
     
     	// Get the width of the screen
     	int width_screen = getResources().getDisplayMetrics().widthPixels;
+    	int icon_size = ch.getIcon().getWidth();
     	
     	// "White box" parameters
     	LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width_screen-40, LayoutParams.MATCH_PARENT);
         layoutParams.setMargins(15, 15, 15, 30);
         
-        // Standard parameters
+        // WrapContent parameters
         LinearLayout.LayoutParams wrapContentParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
        
+        // Top-info-ly parameters
+        // Width is the screen size minus the margin(40) minus the padding(20)
+        LinearLayout.LayoutParams topInfoLyParams = new LinearLayout.LayoutParams(width_screen-60-icon_size, LayoutParams.WRAP_CONTENT);
+        
         // Separator parameters
         LinearLayout.LayoutParams separatorParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 2);
         
@@ -202,7 +207,7 @@ public class ChannelInformationFragment extends Fragment{
     	top_info_ly.addView(cur_date);
     	top_info_ly.addView(cur_time);
     	top_info_ly.addView(cur_name);
-    	top_ly.addView(top_info_ly, wrapContentParams);
+    	top_ly.addView(top_info_ly, topInfoLyParams);
     	top_ly.addView(new_btn, wrapContentParams);
     	
     	channel_ly.addView(top_ly);
