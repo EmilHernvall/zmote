@@ -13,7 +13,6 @@
             android:id="@+id/list_over_stb"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="30dp"
@@ -36,5 +35,12 @@
         android:textColor="#FFFFFFFF"
         android:textSize="12sp"
         android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/button_addstb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/button_scanforstb"
+        android:layout_toRightOf="@+id/button_scanforstb"/>
 
 </RelativeLayout>
