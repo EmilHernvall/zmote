@@ -42,5 +42,6 @@
     <string name="title_section1">Section 1</string>
     <string name="title_activity_main_tab">MainTabActivity</string>
     <string name="add_stb_dot">.</string>
+    <string name="add_stb_text">Add STB</string>
 
 </resources>

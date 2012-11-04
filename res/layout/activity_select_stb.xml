@@ -28,8 +28,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="23dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="21dp"
+        android:layout_marginLeft="79dp"
         android:drawableTop="@drawable/ic_action_search"
         android:text="@string/search_stb_text"
         android:textColor="#FFFFFFFF"
@@ -40,7 +41,13 @@
         android:id="@+id/button_addstb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/button_scanforstb"
-        android:layout_toRightOf="@+id/button_scanforstb"/>
+        android:layout_alignBaseline="@+id/button_scanforstb"
+        android:layout_alignBottom="@+id/button_scanforstb"
+        android:layout_toRightOf="@+id/button_scanforstb"
+        android:drawableTop="@android:drawable/ic_menu_add"
+        android:minWidth="80dip"
+        android:text="@string/add_stb_text"
+        android:textSize="12sp"
+        android:textStyle="bold" />
 
 </RelativeLayout>
