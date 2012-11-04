@@ -240,16 +240,25 @@ public class ChannelInformationFragment extends Fragment{
     		
     		// Separator between program names
     		View separator_temp = new View(view_temp.getContext());
+    		View separator_temp2 = new View(view_temp.getContext());
         	separator_temp.setBackgroundColor(0xFF000000);
+        	separator_temp2.setBackgroundColor(0xFF000000);
         	// Program name
     		String time = new SimpleDateFormat("HH:mm").format(pr[i].getStart());
     		TextView nextName = new TextView(view_temp.getContext());
+    		TextView nextInfo = new TextView(view_temp.getContext());
     		nextName.setText(time+" - "+pr[i].getName());
     		nextName.setTextColor(0xFF000000);
     		nextName.setPadding(15, 5, 15, 5);
+    		nextInfo.setText(pr[i].getLongText());
+    		nextInfo.setTextColor(0xFF444444);	// A little of grey for the non-current channel descriptions
+    		nextInfo.setPadding(15, 5, 15, 5);
+
     		// Add both informations to the screen
     		channel_info_ly.addView(separator_temp, separatorParams);
     		channel_info_ly.addView(nextName);
+    		channel_info_ly.addView(separator_temp2, separatorParams);
+    		channel_info_ly.addView(nextInfo);
     	}
     	
     	channel_content.addView(channel_info_ly);
