@@ -253,8 +253,9 @@ public class ChannelInformationFragment extends Fragment{
     		nextInfo.setText(pr[i].getLongText());
     		nextInfo.setTextColor(0xFF444444);	// A little of grey for the non-current channel descriptions
     		nextInfo.setPadding(15, 5, 15, 5);
-    		nextInfo.setId(pr[i].getEventID());
-    		i_tmp = pr[i].getEventID();
+    		nextInfo.setId(ch.getNr()*pr[i].getEventID());
+    		nextInfo.setVisibility(TextView.GONE);
+    		i_tmp = ch.getNr()*pr[i].getEventID();
     		
     		// Show/hide program information by clickin on its name
     		nextName.setClickable(true);
