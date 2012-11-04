@@ -36,6 +36,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
@@ -50,7 +52,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 	private ImageView center;
 	private ImageView right;
 	private ImageView rightright;
-	private TextView text;
+	
 	private int screenwidth;
 	private int screenheight;
 	private int imagewidth = -1;
@@ -86,6 +88,11 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 	
 	private boolean isAnimationRunning = false;
 	private int animationDuration = 400;
+	
+	private ProgressBar programProgress; 
+	private TextView programText;
+	private LinearLayout programWrapper;
+	private TextView channelName;
 
 
 	private ArrayList<ImageView> imageList = new ArrayList<ImageView>();
@@ -165,9 +172,6 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 		v = inflater.inflate(R.layout.fragment_main_view, null);
 		r = (RelativeLayout)v.findViewById(R.id.rellativIconSpinner);
 	
-		
-		screenwidth = v.getResources().getDisplayMetrics().widthPixels;
-		screenheight = v.getResources().getDisplayMetrics().heightPixels;
 		
 		GestureOverlayView gestures = (GestureOverlayView) v.findViewById(R.id.gestures);
 		gestures.addOnGestureListener(this);	
@@ -275,7 +279,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 			@Override
 			public void onAnimationStart(Animator animation) {
 				isAnimationRunning = true;
-				text.setText("");
+				hideText();
 			}
 
 			@Override
@@ -290,7 +294,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 				if(turns>0){
 					rotateRight(turns);
 				}else{
-					text.setText(generateText());
+					showText();
 				}
 
 			}
@@ -304,7 +308,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 				if(turns>0){
 					rotateRight(turns);
 				}else{
-					text.setText(generateText());
+					showText();
 				}
 
 			}
@@ -414,7 +418,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 			@Override
 			public void onAnimationStart(Animator animation) {
 				isAnimationRunning = true;
-				text.setText("");
+				hideText();
 			}
 
 			@Override
@@ -428,7 +432,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 				if(turns>0){
 					rotateLeft(turns);
 				}else{
-					text.setText(generateText());
+					showText();
 				}
 			}
 
@@ -440,7 +444,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 				if(turns>0){
 					rotateLeft(turns);
 				}else{
-					text.setText(generateText());
+					showText();
 				}
 			}
 		});
@@ -511,7 +515,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 			imagewidth = 96;
 		}
 		
-		int padding = 20;
+		int padding = 10;
 		
 		leftleft = imageList.get((currentChannelNr+imageList.size()-2)%imageList.size());
 		left = imageList.get((currentChannelNr+imageList.size()-1)%imageList.size());
@@ -519,11 +523,14 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 		right = imageList.get((1+currentChannelNr)%imageList.size());
 		rightright = imageList.get((2+currentChannelNr)%imageList.size());
 
+		screenwidth = r.getMeasuredWidth();
+		screenheight = r.getMeasuredHeight();
+		
 		Log.i("Screen", "Screen width = " + screenwidth);
 		Log.i("Screen", "Screen height = " + screenheight);
 		Log.i("Screen", "Image width = " + imagewidth);
 		Log.i("Screen", "Image hight = " + imagehight);
-		
+				
 		
 //LeftLeft
 		
@@ -531,6 +538,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 		leftleftScale = 5*screenwidth/imagewidth/19; //screenheight/imagehight/6;
 		LayoutParams params1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		params1.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+		params1.setMargins((int)(imagewidth*(leftleftScale-1)/2), (int)(imagehight*(leftleftScale-1)/2), 0, 0);
 		//params1.setMargins((int)(imagewidth*leftleftScale/4), (int)((imagehight*leftleftScale/4)), 0, 0);
 		leftleft.setLayoutParams(params1);
 		
@@ -540,11 +548,11 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 		
 		
 //Left		
-		leftScale = (float)screenwidth/(float)imagewidth/(float)2;
+		leftScale = 3*(float)screenwidth/(float)imagewidth/(float)7;
 		params1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		params1.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-		params1.setMargins((int)(imagewidth*leftScale/4), (int)((imagehight*leftScale/4)+imagehight*leftleftScale+padding), 0, 0);
-		//params1.setMargins(0, (int)(imagehight*rightScale/4)+imagehight+padding, (int)(imagewidth*rightScale/4), 0);
+		params1.setMargins((int)(imagewidth*leftScale/4), (int)((imagehight*leftScale/2)+imagehight*leftleftScale/2+padding), 0, 0);
+		
 		left.setLayoutParams(params1);
 		
 		ObjectAnimator.ofFloat(left, "scaleX", leftScale).setDuration(0).start();
@@ -554,6 +562,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 		
 //Center
 		centerScale = (float) (screenwidth/imagewidth);
+		int centerHight = (int)(imagehight*centerScale);
 		
 		params1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		params1.addRule(RelativeLayout.CENTER_HORIZONTAL);
@@ -561,7 +570,8 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 		//params1.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		int voldownHight = v.findViewById(R.id.imageVolDown).getMeasuredHeight();
 		
-		params1.setMargins(0, 0, 0, (int)((imagehight*centerScale/4)+voldownHight));
+		params1.setMargins(0, 0, 
+							0, voldownHight + (int)((imagehight*(centerScale)/4)));
 		center.setLayoutParams(params1);
 		
 		ObjectAnimator.ofFloat(center, "scaleX", centerScale).setDuration(0).start();
@@ -569,13 +579,25 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 		ObjectAnimator.ofFloat(center, "alpha", alpha).setDuration(0).start();
 		
 
+//RightRight		
+
+		rightrightScale = 5*screenwidth/imagewidth/19;
+		params1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		params1.setMargins(0, (int)(imagehight*(rightrightScale-1)/2), (int)(imagewidth*(rightrightScale-1)/2), 0);
+		params1.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);	
+		rightright.setLayoutParams(params1);
+		
+		ObjectAnimator.ofFloat(rightright, "scaleX", rightrightScale).setDuration(0).start();
+		ObjectAnimator.ofFloat(rightright, "scaleY", rightrightScale ).setDuration(0).start();
+		ObjectAnimator.ofFloat(rightright, "alpha", defaultAlpha).setDuration(0).start();
+		
 		
 //Right	
-		rightScale = (float)screenwidth/(float)imagewidth/(float)2;
+		rightScale = 3*(float)screenwidth/(float)imagewidth/(float)7;
 		params1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		params1.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 	
-		params1.setMargins(0, (int)(imagehight*rightScale/4)+imagehight+padding, (int)(imagewidth*rightScale/4), 0);
+		params1.setMargins(0, (int)((imagehight*rightScale/2)+imagehight*rightrightScale/2+padding), (int)(imagewidth*(rightScale-1)/2), 0);
 		
 		right.setLayoutParams(params1);
 
@@ -588,16 +610,6 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 		
 		
 		
-//RightRight		
-		
-		params1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		params1.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);	
-		rightright.setLayoutParams(params1);
-		rightrightScale = 5*screenwidth/imagewidth/19;
-		ObjectAnimator.ofFloat(rightright, "scaleX", rightrightScale).setDuration(0).start();
-		ObjectAnimator.ofFloat(rightright, "scaleY", rightrightScale ).setDuration(0).start();
-		ObjectAnimator.ofFloat(rightright, "alpha", defaultAlpha).setDuration(0).start();
-		
 
 		r.addView(leftleft);
 		r.addView(left);
@@ -605,28 +617,40 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 		r.addView(right);
 		r.addView(rightright);
 		
-
-		text = new TextView(v.getContext());
-		params1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		//params1.addRule(RelativeLayout.CENTER_HORIZONTAL);
-		//params1.addRule(RelativeLayout.ABOVE, R.id.imageVolDown);
-		//params1.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		
-		params1.setMargins(20, screenheight/2-voldownHight, 20, 20);
 		
-		text.setLayoutParams(params1);
-
-		text.setText(generateText());
-		text.setTextColor(0xFFFFFFFF);
-		//text.setAlpha(1);
-
-		r.addView(text);
+		programWrapper = new LinearLayout(r.getContext());
+		programWrapper.setOrientation(LinearLayout.VERTICAL);
+		params1 = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		params1.setMargins(20, screenheight-centerHight-voldownHight+2*padding, 20, voldownHight);
+		
+		programWrapper.setLayoutParams(params1);
+		
+		
+		channelName = new TextView(v.getContext());
+		channelName.setTextColor(0xFFFFFFFF);
+		programProgress = new ProgressBar(v.getContext(), null, android.R.attr.progressBarStyleHorizontal);	
+		programText = new TextView(v.getContext());
+		programText.setTextColor(0xFFFFFFFF);
+		
+		showText();
+		
+		programWrapper.addView(channelName);
+		programWrapper.addView(programProgress);
+		programWrapper.addView(programText);
+		
+		r.addView(programWrapper);
 	}
 
+	private void hideText(){
+		programWrapper.setVisibility(View.INVISIBLE);
+	}
 
-	private String generateText(){
+	private void showText(){
 		String t = "";
 		Channel channel = channelList.get(currentChannelNr);
+		channelName.setText(channel.getName());
+		
 		Program currentProgram = null;
 		Program nextProgram = null;
 		Program nextNextProgram = null;
@@ -645,8 +669,9 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 
 
 		}
-		if(currentProgram == null)
-			return "";
+		if(currentProgram == null)	
+			return;
+		
 
 		String name = currentProgram.getName();
 		String startTime = new SimpleDateFormat("HH:mm").format(currentProgram.getStart());
@@ -671,7 +696,18 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 			t += "> " + nextNextStartTime +  " - " + nextNextName;
 		}
 
-		return t;
+		programText.setText(t);
+		
+		long startMilliTime = currentProgram.getStart().getTime();
+		long endMilliTime = startMilliTime + currentProgram.getDuration()*1000;
+		long nowMilliTime = System.currentTimeMillis();
+		
+		programProgress.setMax((int)(endMilliTime-startMilliTime));
+		programProgress.setProgress((int)(nowMilliTime-startMilliTime));
+		
+		programWrapper.setVisibility(View.VISIBLE);
+		programWrapper.bringToFront();
+		
 	}
 
 	private String trimString(String s, int max){
@@ -772,12 +808,13 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 
 			EPGQuery query = new EPGQuery();
 			Channel target = query.getCurrentChannel();
-			
-			currentChannelNr = 24;
-			for(int i = 0; i< channelList.size(); i++){
-				if(target.getUrl().contains(channelList.get(i).getUrl())){
-					currentChannelNr = i;
-					break;
+			currentChannelNr = 0;
+			if(target != null){
+				for(int i = 0; i< channelList.size(); i++){
+					if(target.getUrl().contains(channelList.get(i).getUrl())){
+						currentChannelNr = i;
+						break;
+					}
 				}
 			}
 			
