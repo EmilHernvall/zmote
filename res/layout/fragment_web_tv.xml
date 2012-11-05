@@ -31,10 +31,16 @@
         
       <Button
           android:id="@+id/button1"
-          android:layout_width="wrap_content"
+          android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:background="@color/black"
           android:drawableRight="@android:drawable/btn_star"
-          android:text="@string/top_lists" />
+          android:gravity="center_vertical|center_horizontal|left"
+          android:maxEms="12"
+          android:paddingLeft="10dp"
+          android:paddingRight="200dp"
+          android:text="@string/top_lists"
+          android:textStyle="bold" />
       
     </LinearLayout>
 
