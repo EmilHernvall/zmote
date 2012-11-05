@@ -7,7 +7,10 @@ import se.z_app.stb.Program;
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.zmote.epg.EPGQuery;
 
+import android.R.color;
+import android.app.ActionBar.Tab;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,7 +24,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 /**
  * 
@@ -65,8 +68,6 @@ public class EPGFragment extends Fragment{
 	void mainEPG(){
 		
 		for (Channel channel : epg) {
-			//counter+=1;	
-			//g_layout.setRowCount(counter);
 			addIconToLayout(channel);
 			p_layout = new LinearLayout(v.getContext());
 			/*LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
@@ -111,7 +112,7 @@ public class EPGFragment extends Fragment{
 	
 	}
 	
-	int i =0;
+	
 	
 	//TODO:
 	//Make sure it's no space between buttons and they are aligned properly
@@ -121,26 +122,41 @@ public class EPGFragment extends Fragment{
 	 */
 	void addProgramsToLayout(Program pg){
 		Button new_btn2 = new Button(v.getContext());
-		
 		new_btn2.setText(pg.getName()+" "+pg.getStart());
 		new_btn2.setSingleLine();
 		new_btn2.setHorizontallyScrolling(true);
 		new_btn2.setEllipsize(TextUtils.TruncateAt.END);
 		new_btn2.setClickable(true);
-		//new_btn2.setWidth(pg.getDuration()/30);
-		//new_btn2.setHeight(80);
+		
+		//new_btn2.setBackgroundColor(0xFF610B38);
+		//new_btn2.setPadding(-5, -5, 5, 5);
 		
 		LinearLayout.LayoutParams rel_button1 = new LinearLayout.LayoutParams(pg.getDuration()/10, 80);
-		rel_button1.setMargins(0, 0, 0, 0);
-		//rel_button1.height = 80;
-		//rel_button1.width = pg.getDuration()/10;
-		
+		rel_button1.setMargins(0, 0, -7, -7);
 		new_btn2.setLayoutParams(rel_button1);
 		new_btn2.setOnClickListener(new View.OnClickListener() {
 		
 			
 		@Override
-			public void onClick(View v) {
+		public void onClick (View v) {
+		/*	Fragment fragment = null;
+			
+			fragment = new ChannelInformationFragment();
+			
+			Bundle args = new Bundle();
+	        
+	        fragment.setArguments(args);
+	        getFragmentManager().beginTransaction()
+	                .replace(R.id.container, fragment)
+	                .commit();*/
+			
+			//setContentView(R.layout.fragment_channel_information);
+			
+			//v = View.inflate(this, R.layout.fragment_channel_information, null);
+			
+		//	Fragment fragment = null;
+			
+		//	fragment = new ChannelInformationFragment();
 			
 			}
 			});
