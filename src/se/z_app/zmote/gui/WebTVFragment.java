@@ -10,10 +10,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 
 public class WebTVFragment extends Fragment {
@@ -65,7 +68,7 @@ public class WebTVFragment extends Fragment {
 	public void search(){
 		
 		// We can set a progress bar to show the user that we are searching
-		 pb = (ProgressBar)view_temp.findViewById(R.id.progressLodingEpgChannelInformation);
+		pb = (ProgressBar)view_temp.findViewById(R.id.progressLodingEpgChannelInformation);
 		EditText search_box = (EditText)view_temp.findViewById(R.id.search_box_webtv);
 		String search_for_this = search_box.getText().toString();
 		
@@ -73,46 +76,49 @@ public class WebTVFragment extends Fragment {
 		WebTVQuery query = new WebTVQuery();
 		WebTVService service[] = query.getService();
 		
-		System.out.println(service[0].getName().toString());
-		System.out.println(query.getService().toString());
-		WebTVItem[] elemnts= query.search("Gamgan style", service[0]);
-		System.out.println(elemnts[0].getTitle().toString());
-		
-		//ArrayList<WebTVItem> getResultsWebSearch(String searchForThis, String web_service);
+		//System.out.println(service[0].getName().toString());
+		//System.out.println(query.getService().toString());
+		WebTVItem[] elements= query.search(search_for_this, service[0]);
+		//System.out.println(elements[0].getTitle().toString());
 		
 		// After getting the results
 		// pb.setVisibility(View.GONE);	// Quit the progress bar
-		// int type = decideType(web_service);
-		// showResults();
+		showResults(elements);
+		
 	}
 	
 	/**
 	 * Print the results of the search on the screen
 	 * @param res Set of results to show
-	 * @param type Type of the results: 1-video, 2-Image, 3-Song
 	 */
-	/*public void showResults(ArrayList<Result> res, int type){
-		// Types: 1 - video, 2-Image, 3-Song
+	public void showResults(WebTVItem[] res){
 		
+		LinearLayout results_ly = (LinearLayout) view_temp.findViewById(R.id.search_results_ly);
+		LinearLayout.LayoutParams item_container_params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);
+		item_container_params.setMargins(4, 4, 4, 0);
+		LinearLayout.LayoutParams item_params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
 		
-	}*/
-	
-	/**
-	 * Decides the type of the result looking at the service we are looking at
-	 * @param web_service	The web service set at the moment
-	 * @return The type of result we should show
-	 */
-	public int decideType(String web_service){
-		int type = 0;
-		if(web_service.compareTo("Youtube") == 0){
-			type = 1;
-		}else if(web_service.compareTo("Spotify") == 0){
-			type = 3;
-		}else if(web_service.compareTo("TED") == 0){
-			type = 1;
-		}
+		for(WebTVItem x: res){
+			LinearLayout item_container = new LinearLayout(view_temp.getContext());
+			item_container.setBackgroundColor(0xFF999999);
+			item_container.setPadding(4, 4, 4, 4);
+			LinearLayout item = new LinearLayout(view_temp.getContext());
+			item.setPadding(4, 4, 4, 4);
+			item.setBackgroundColor(0xFF666666);
+			item.setMinimumHeight(30);
+			ImageView icon = new ImageView(view_temp.getContext());
+			icon.setImageBitmap(x.getIcon());
+			TextView title = new TextView(view_temp.getContext());
+			title.setText(x.getTitle());
+			title.setTextColor(0xFF000000);
+			
+			item.addView(icon);
+			item.addView(title);
+			item_container.addView(item, item_params);
+			results_ly.addView(item_container, item_container_params);
+		}	
 		
-		return type;
 	}
+	
 	
 }
