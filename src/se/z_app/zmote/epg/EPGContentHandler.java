@@ -41,11 +41,17 @@ public class EPGContentHandler implements Runnable, Observer{
 	
 	public EPG getEPG(){	
 		synchronized (currentEPG) {
+			if(currentEPG == null){
+				EPGData.instance().populateWithChannelIcon(currentEPG);
+				EPGData.instance().populateAbsentChannelIcon(currentEPG);
+			}
 			return currentEPG;
 		}
 	}
 	public Channel getCurrentChannel(){	
 		synchronized (currentChannel) {
+			if(currentChannel == null)
+				currentChannel = EPGData.instance().getCurrentChannel();
 			return currentChannel;
 		}
 	
@@ -57,18 +63,19 @@ public class EPGContentHandler implements Runnable, Observer{
 			
 			if(STBContainer.instance().getActiveSTB() != null){
 				synchronized (currentEPG) {
-					currentEPG = EPGData.instance().getEPG();
-					if(currentEPG != null){
-						EPGData.instance().populateWithChannelIcon(currentEPG);
-						EPGData.instance().populateAbsentChannelIcon(currentEPG);
-					}else{
-						currentEPG = new EPG();
+					synchronized (currentChannel) {
+						currentEPG = EPGData.instance().getEPG();
+						if(currentEPG != null){
+							EPGData.instance().populateWithChannelIcon(currentEPG);
+							EPGData.instance().populateAbsentChannelIcon(currentEPG);
+						}else{
+							currentEPG = new EPG();
+						}
+					
+						currentChannel = EPGData.instance().getCurrentChannel();
+						if(currentChannel == null)
+							currentChannel = new Channel();
 					}
-				}
-				synchronized (currentChannel) {
-					currentChannel = EPGData.instance().getCurrentChannel();
-					if(currentChannel == null)
-						currentChannel = new Channel();
 				}
 								
 			}
