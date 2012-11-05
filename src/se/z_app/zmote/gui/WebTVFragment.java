@@ -1,12 +1,17 @@
 package se.z_app.zmote.gui;
 
 
+import se.z_app.stb.WebTVItem;
+import se.z_app.stb.WebTVService;
+import se.z_app.zmote.webtv.WebTVQuery;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
@@ -37,8 +42,19 @@ public class WebTVFragment extends Fragment {
 		view_temp = inflater.inflate(R.layout.fragment_web_tv, null);
 		content_layout = (LinearLayout)view_temp.findViewById(R.id.content_ly);
 			
-	//	pb = (ProgressBar)view_temp.findViewById(R.id.progressLodingEpgChannelInformation);
-	//	new AsyncDataLoader().execute();
+		// Set the listener for the search button
+		ImageButton search_button = (ImageButton)view_temp.findViewById(R.id.search_button_webtv);
+		search_button.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// Start a new search
+				search();
+			}
+		});
+		
+		// pb = (ProgressBar)view_temp.findViewById(R.id.progressLodingEpgChannelInformation);
+		// new AsyncDataLoader().execute();
 	
     	return view_temp;
     }    
@@ -54,7 +70,15 @@ public class WebTVFragment extends Fragment {
 		String search_for_this = search_box.getText().toString();
 		
 		// Here we should call a function like this
-		// ArrayList<Result> getResultsWebSearch(String searchForThis, String web_service);
+		WebTVQuery query = new WebTVQuery();
+		WebTVService service[] = query.getService();
+		
+		System.out.println(service[0].getName().toString());
+		System.out.println(query.getService().toString());
+		WebTVItem[] elemnts= query.search("Gamgan style", service[0]);
+		System.out.println(elemnts[0].getTitle().toString());
+		
+		//ArrayList<WebTVItem> getResultsWebSearch(String searchForThis, String web_service);
 		
 		// After getting the results
 		// pb.setVisibility(View.GONE);	// Quit the progress bar

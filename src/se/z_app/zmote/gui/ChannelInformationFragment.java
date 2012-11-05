@@ -150,6 +150,7 @@ public class ChannelInformationFragment extends Fragment{
     	channel_ly.setBackgroundColor(0xFFFFFFFF);
     	channel_ly.setPadding(10, 5, 10, 5);
     	channel_ly.setOrientation(1);	// Vertical 1; Horizontal 0
+    	channel_ly.setId(ch.getNr()*1000);	// The ID of the channel information box is ChannelNR*1000
     	
     	// The information part of the box will be scrollable
     	ScrollView channel_content = new ScrollView(view_temp.getContext());
@@ -327,7 +328,7 @@ public class ChannelInformationFragment extends Fragment{
     		nextInfo.setText(pr[i].getLongText());
     		nextInfo.setTextColor(0xFF444444);	// A little of grey for the non-current channel descriptions
     		nextInfo.setPadding(15, 5, 15, 5);
-    		nextInfo.setId(ch.getNr()*pr[i].getEventID());
+    		nextInfo.setId(ch.getNr()*pr[i].getEventID());	// Program info ID = ch.getNr()*pr[i].getEventID()
     		nextInfo.setVisibility(TextView.GONE);
     		i_tmp = ch.getNr()*pr[i].getEventID();
     		
@@ -418,8 +419,34 @@ public class ChannelInformationFragment extends Fragment{
 		}
 
 		return 0;
-		//END*/
 	}
 	
+	/**
+	 * Set the focus on a specific item
+	 * @param id	Item we want to set the focus on
+	 */
+	public void focusOnLinearLayout(int id){
+		LinearLayout elem = (LinearLayout) view_temp.findViewById(id);
+		elem.setFocusableInTouchMode(true);
+		elem.requestFocus();
+	}
+	
+	/**
+	 * Show specific item
+	 * @param id	Item we want to set the focus on
+	 */
+	public void showInformation(int id){
+		TextView elem = (TextView) view_temp.findViewById(id);
+		elem.setVisibility(TextView.VISIBLE);
+	}
+	
+	/**
+	 * Hide specific item
+	 * @param id	Item we want to set the focus on
+	 */
+	public void hideInformation(int id){
+		TextView elem = (TextView) view_temp.findViewById(id);
+		elem.setVisibility(TextView.GONE);
+	}
 
 }
