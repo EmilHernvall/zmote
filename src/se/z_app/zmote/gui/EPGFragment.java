@@ -1,6 +1,8 @@
 package se.z_app.zmote.gui;
 
 
+import java.text.SimpleDateFormat;
+
 import se.z_app.stb.Channel;
 import se.z_app.stb.EPG;
 import se.z_app.stb.Program;
@@ -14,11 +16,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 
@@ -35,9 +39,6 @@ public class EPGFragment extends Fragment{
 	private MainTabActivity main;
 	private LinearLayout i_layout;
 	private LinearLayout p_layout;
-	private GridLayout g_layout;
-	private int counter=0;
-	private HorizontalScrollView hz_scroll;
 	private LinearLayout vt_scroll;
 	private int height=80;
 	private int width=80;
@@ -65,8 +66,7 @@ public class EPGFragment extends Fragment{
 	void mainEPG(){
 		
 		for (Channel channel : epg) {
-			//counter+=1;	
-			//g_layout.setRowCount(counter);
+			
 			addIconToLayout(channel);
 			p_layout = new LinearLayout(v.getContext());
 			/*LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
@@ -74,7 +74,7 @@ public class EPGFragment extends Fragment{
 			p_layout.setLayoutParams(params);*/
 			p_layout.setOrientation(LinearLayout.HORIZONTAL);
 			for (Program program : channel) {
-				addProgramsToLayout(program);	
+				addProgramToLayout(program);	
 			}
 			
 			vt_scroll.addView(p_layout);
@@ -88,7 +88,9 @@ public class EPGFragment extends Fragment{
 	 */
 	void addIconToLayout(Channel ch){
 		
+		
 		ImageButton new_btn = new ImageButton(v.getContext());
+		new_btn.setPadding(0, 0, 0, 0);
 		new_btn.setId(ch.getNr()+200);	// ID of the button: ChannelNr+200
 		new_btn.setImageBitmap(getResizedBitmap(ch.getIcon(),height,width));
 		new_btn.setBackgroundResource(0);	// Set the background transparent
@@ -119,34 +121,34 @@ public class EPGFragment extends Fragment{
 	 * Adding programs to the layout
 	 * @param pg
 	 */
-	void addProgramsToLayout(Program pg){
-		Button new_btn2 = new Button(v.getContext());
+	void addProgramToLayout(Program pg){
 		
-		new_btn2.setText(pg.getName()+" "+pg.getStart());
-		new_btn2.setSingleLine();
-		new_btn2.setHorizontallyScrolling(true);
-		new_btn2.setEllipsize(TextUtils.TruncateAt.END);
-		new_btn2.setClickable(true);
-		//new_btn2.setWidth(pg.getDuration()/30);
-		//new_btn2.setHeight(80);
+		LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT );
+		textParams.setMargins(2,1,2,1);
+		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(pg.getDuration()/10, 80);
+		params.setMargins(0, 0, 0, 0);
 		
-		LinearLayout.LayoutParams rel_button1 = new LinearLayout.LayoutParams(pg.getDuration()/10, 80);
-		rel_button1.setMargins(0, 0, 0, 0);
-		//rel_button1.height = 80;
-		//rel_button1.width = pg.getDuration()/10;
+		LinearLayout container = new LinearLayout(v.getContext());
+		container.setBackgroundColor(0xFF777777);
 		
-		new_btn2.setLayoutParams(rel_button1);
-		new_btn2.setOnClickListener(new View.OnClickListener() {
+		TextView text = new TextView(v.getContext());
+		text.setText(new SimpleDateFormat("HH:mm").format(pg.getStart())+" "+pg.getName());
+		text.setLines(2);
+		text.setPadding(2, 1, 2, 1);
+		text.setClickable(true);
+		text.setTextColor(0xFFFFFFFF);
+		text.setBackgroundColor(0xFF222222);
 		
-			
-		@Override
+		text.setOnClickListener(new View.OnClickListener() {
+		
+			@Override
 			public void onClick(View v) {
 			
 			}
-			});
-	
-		p_layout.addView(new_btn2, rel_button1);
-	
+		});
+		
+		container.addView(text, textParams);
+		p_layout.addView(container, params);
 		
 	}
 	
