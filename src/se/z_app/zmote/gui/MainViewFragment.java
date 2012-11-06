@@ -111,12 +111,10 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 	boolean activeGest = false;
 	@Override
 	public void onGesture(GestureOverlayView overlay, MotionEvent event) {
-		// TODO Auto-generated method stub
 		if(activeGest){
 			float currentX = event.getX();
-			float currentY = event.getY(); //TODO use with volume
-			//TODO Get CurrenChannel +/- 1 from channelList, add new channel when rotating, 
-			//rotate first, change channel on TV next to currentChannel
+			float currentY = event.getY(); 
+
 			float dirX = x-currentX;
 			float dirY = y-currentY;
 			
@@ -145,7 +143,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 	}
 	@Override
 	public void onGestureCancelled(GestureOverlayView overlay, MotionEvent event) {
-		// TODO Auto-generated method stub
+		
 		activeGest = false;
 	}
 	@Override
@@ -157,12 +155,9 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 	float y;
 	@Override
 	public void onGestureStarted(GestureOverlayView overlay, MotionEvent event) {
-		
 		activeGest = true;
 		x = event.getX();
 		y = event.getY();
-		
-		
 	}
 	
 	@Override
@@ -200,9 +195,6 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 		if(currentChannelNr == channelNr)
 			return;
 
-		//Log.i("TestZ", "Current nr: " +currentChannelNr );
-		//Log.i("TestZ", "Targer nr: " +channelNr );
-
 		int can1 = 0;
 		int can2 = 0;
 		int fin = 0;
@@ -224,6 +216,9 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 			rotateRight(fin*(-1));
 		else
 			rotateLeft(fin);
+		
+		Channel channel = channelList.get(channelNr);
+		RemoteControl.instance().launch(channel);
 
 	}
 
@@ -362,6 +357,8 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 		
 //Playing animation
 		animatorSet.setDuration(animationDuration).start();
+
+		
 		
 		rightright = right;
 		right = center;
@@ -797,8 +794,6 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 					@Override
 					public void onClick(View v) {
 						setChannel(i);
-						Channel channel = channelList.get(i);
-						RemoteControl.instance().launch(channel);
 					}
 				});
 
