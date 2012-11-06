@@ -73,7 +73,6 @@ public class EPGFragment extends Fragment{
 			}
 			
 			vt_scroll.addView(p_layout);
-	    	
 	     }	
 	}
 
@@ -82,7 +81,6 @@ public class EPGFragment extends Fragment{
 	 * @param ch
 	 */
 	void addIconToLayout(Channel ch){
-		
 		
 		ImageButton new_btn = new ImageButton(v.getContext());
 		new_btn.setPadding(0, 0, 0, 0);
@@ -99,8 +97,8 @@ public class EPGFragment extends Fragment{
 			@Override
 			public void onClick(View v) {
 				
-			RemoteControl.instance().launch(url);
-			main.vibrate();
+				RemoteControl.instance().launch(url);
+				main.vibrate();
 			}
 		});
 		
@@ -144,19 +142,16 @@ public class EPGFragment extends Fragment{
 			/*		
 			@Override
 			public void onClick (View v) {
+			
 				Fragment fragment = null;
-				
 				fragment = new ChannelInformationFragment();
-				
 				Bundle args = new Bundle();
-		        
 		        fragment.setArguments(args);
 		        getFragmentManager().beginTransaction()
 		                .replace(R.id.container, fragment)
 		                .commit();
 				
 				//setContentView(R.layout.fragment_channel_information);
-				
 				//v = View.inflate(this, R.layout.fragment_channel_information, null);
 				
 			//	Fragment fragment = null;
@@ -181,21 +176,21 @@ public class EPGFragment extends Fragment{
 	 */
 	public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
 	
-	int width = bm.getWidth();
-	int height = bm.getHeight();
-	float scaleWidth = ((float) newWidth) / width;
-	float scaleHeight = ((float) newHeight) / height;
-	
-	// Create a matrix for the manipulation
-	Matrix matrix = new Matrix();
-	
-	// Resize the bit map
-	matrix.postScale(scaleWidth, scaleHeight);
-	
-	// Recreate the new Bitmap
-	Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
-	
-	return resizedBitmap;
+		int width = bm.getWidth();
+		int height = bm.getHeight();
+		float scaleWidth = ((float) newWidth) / width;
+		float scaleHeight = ((float) newHeight) / height;
+		
+		// Create a matrix for the manipulation
+		Matrix matrix = new Matrix();
+		
+		// Resize the bit map
+		matrix.postScale(scaleWidth, scaleHeight);
+		
+		// Recreate the new Bitmap
+		Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+		
+		return resizedBitmap;
 	
 	}
 
