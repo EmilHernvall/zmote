@@ -4,9 +4,17 @@ package se.z_app.zmote.gui;
 import java.util.ArrayList;
 import java.util.List;
 
+import se.z_app.stb.Channel;
+import se.z_app.stb.EPG;
 import se.z_app.stb.WebTVItem;
 import se.z_app.stb.WebTVService;
+import se.z_app.zmote.epg.EPGQuery;
 import se.z_app.zmote.webtv.WebTVQuery;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -32,7 +40,7 @@ public class WebTVFragment extends Fragment {
 	private String web_service;  // To know in what service are we currently (youtube, spotify...)
 	private ProgressBar pb;
 	private Spinner spinner;
-	private ArrayAdapter<String> dataAdapter;
+	private ArrayAdapter<Drawable> dataAdapter;
 	
 	
 	public WebTVFragment(){
@@ -50,7 +58,8 @@ public class WebTVFragment extends Fragment {
 
 		view_temp = inflater.inflate(R.layout.fragment_web_tv, null);
 		content_layout = (LinearLayout)view_temp.findViewById(R.id.content_ly);
-		addItemsOnSpinner();
+		
+		new AsyncWebServiceLoader().execute();
 		
 		// Set the listener for the search button
 		ImageButton search_button = (ImageButton)view_temp.findViewById(R.id.search_button_webtv);
@@ -129,37 +138,76 @@ public class WebTVFragment extends Fragment {
 	}
 	
 	/* add items into spinner (drop-down menu with services) dynamically*/
-	public void addItemsOnSpinner() {
+	public void addItemsOnSpinner(WebTVService services[]) {
 		 
 			spinner = (Spinner)view_temp.findViewById(R.id.webtv_spinner);
-			List<String> list = new ArrayList<String>();
+			List<Bitmap> list = new ArrayList<Bitmap>();
 			
-			/*TODO: add youtube, spotify and TED dynamically*/
-			list.add("Youtube");
-			list.add("Spotify");
-			list.add("TED");
-			
-			WebTVQuery query = new WebTVQuery();
-			WebTVService services[] = query.getService(); //I think this is the problem! probably WebTVQuery functions?À?
-			
-		/*		Adding the icons to the spinner -> NOT WORKING
-		 * 
-		 *  	query.populateWithIcon(services);
-		 *  	
-		 *  	for(WebTVService ser : services){
-		 *  		list.add(serv.getIcon());
-		 *  	}
-		 */
+		   	
+		   	for(WebTVService serv : services){
+		   		list.add(serv.getIcon());
+		   	}
+		 
 		
+		   	
+		   	Bitmap servicesImg[] = new Bitmap[list.size()];
+		   	list.toArray(servicesImg);
 
-				
+			ImageAdapter ia = new ImageAdapter(this.getActivity(), android.R.layout.simple_spinner_item, servicesImg);	
 			Spinner spinner = (Spinner)view_temp.findViewById(R.id.webtv_spinner); // this returns null
 		
-			 dataAdapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, list);
+			 //dataAdapter = new ArrayAdapter<Drawable>(this.getActivity(), android.R.layout.simple_spinner_item, list);
 			
-			dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-			spinner.setAdapter(dataAdapter);
+			//dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			
+			ia.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			spinner.setAdapter(ia);
 			
 		  }
+	
+	
+	public class ImageAdapter extends ArrayAdapter<Bitmap>{
+		
+		Bitmap[] services;
+        public ImageAdapter(Context context, int textViewResourceId, Bitmap[] services) {
+            super(context, textViewResourceId, services);
+            this.services = services;
+        }
+ 
+        @Override
+        public View getDropDownView(int position, View convertView,ViewGroup parent) {
+            return getCustomView(position, convertView, parent);
+        }
+ 
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            return getCustomView(position, convertView, parent);
+        }
+ 
+        public View getCustomView(int position, View convertView, ViewGroup parent) {
+ 
+    		ImageView icon = new ImageView(view_temp.getContext());
+    		icon.setImageBitmap(services[position]);
+    		
+ 
+            return icon;
+            }
+        }
+
+	private class AsyncWebServiceLoader extends AsyncTask<Integer, Integer, WebTVService[]>{
+
+		@Override
+		protected WebTVService[] doInBackground(Integer... params) {
+			WebTVQuery query = new WebTVQuery();
+			WebTVService services[] = query.getService();
+			query.populateWithIcon(services);
+			return services;
+		}
+
+		@Override
+		protected void onPostExecute(WebTVService services[]) {
+			addItemsOnSpinner(services);
+		}
+	}
 	
 }
