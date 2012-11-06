@@ -131,7 +131,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 						rotateLeft();
 					
 					Channel channel = channelList.get(currentChannelNr);
-					RemoteControl.instance().launch(channel.getUrl());
+					RemoteControl.instance().launch(channel);
 				}else{
 					//Changing Volume from swipe
 					if(dirY < 0 )
@@ -798,7 +798,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 					public void onClick(View v) {
 						setChannel(i);
 						Channel channel = channelList.get(i);
-						RemoteControl.instance().launch(channel.getUrl());
+						RemoteControl.instance().launch(channel);
 					}
 				});
 
