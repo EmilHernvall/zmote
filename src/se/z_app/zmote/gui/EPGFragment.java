@@ -9,7 +9,10 @@ import se.z_app.stb.Program;
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.zmote.epg.EPGQuery;
 
+import android.R.color;
+import android.app.ActionBar.Tab;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,7 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 /**
  * 
@@ -66,7 +69,7 @@ public class EPGFragment extends Fragment{
 	void mainEPG(){
 		
 		for (Channel channel : epg) {
-			
+
 			addIconToLayout(channel);
 			p_layout = new LinearLayout(v.getContext());
 			/*LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
@@ -113,7 +116,7 @@ public class EPGFragment extends Fragment{
 	
 	}
 	
-	int i =0;
+	
 	
 	//TODO:
 	//Make sure it's no space between buttons and they are aligned properly
@@ -127,7 +130,7 @@ public class EPGFragment extends Fragment{
 		textParams.setMargins(2,1,2,1);
 		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(pg.getDuration()/10, 80);
 		params.setMargins(0, 0, 0, 0);
-		
+
 		LinearLayout container = new LinearLayout(v.getContext());
 		container.setBackgroundColor(0xFF777777);
 		
@@ -139,12 +142,37 @@ public class EPGFragment extends Fragment{
 		text.setTextColor(0xFFFFFFFF);
 		text.setBackgroundColor(0xFF222222);
 		
+
 		text.setOnClickListener(new View.OnClickListener() {
 		
 			@Override
 			public void onClick(View v) {
 			
 			}
+			/*		
+			@Override
+			public void onClick (View v) {
+				Fragment fragment = null;
+				
+				fragment = new ChannelInformationFragment();
+				
+				Bundle args = new Bundle();
+		        
+		        fragment.setArguments(args);
+		        getFragmentManager().beginTransaction()
+		                .replace(R.id.container, fragment)
+		                .commit();
+				
+				//setContentView(R.layout.fragment_channel_information);
+				
+				//v = View.inflate(this, R.layout.fragment_channel_information, null);
+				
+			//	Fragment fragment = null;
+				
+			//	fragment = new ChannelInformationFragment();
+			}
+			*/
+			
 		});
 		
 		container.addView(text, textParams);

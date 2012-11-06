@@ -3,6 +3,7 @@ package se.z_app.stb.api;
 import java.util.Observable;
 import java.util.Observer;
 
+import se.z_app.stb.Channel;
 import se.z_app.stb.STB;
 
 /**
@@ -50,5 +51,9 @@ public class RemoteControl implements Observer {
 		if(remoteImpl != null)
 			remoteImpl.launch(url);
 	
+	}
+	
+	public void launch(Channel channel){
+		launch(channel.getUrl());	
 	}
 }
