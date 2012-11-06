@@ -47,10 +47,6 @@ public class ChannelInformationFragment extends Fragment{
 	private ImageButton social_but;
 	
 	private Program currentProgram = null;
-	private Program nextProgram = null;
-	private Program nextProgram2 = null;
-	private Program nextProgram3 = null;
-	private Program nextProgram4 = null;
 	
 	/**
 	 * Default constructor of ChannelInformationFragment
@@ -175,6 +171,7 @@ public class ChannelInformationFragment extends Fragment{
     	new_btn.setImageBitmap(ch.getIcon());
     	new_btn.setBackgroundResource(0);	// Set the background transparent
     	new_btn.setClickable(true);
+    	new_btn.setPadding(0, 0, 0, 0);
     	
     	// Set listeners to execute this
     	//RemoteControl.instance().launch(ch.getUrl()); //
@@ -193,7 +190,7 @@ public class ChannelInformationFragment extends Fragment{
     	
     	// GETTING THE PROGRAM INFORMATION
     	// Preparing text of the white box
-    	getPrograms(ch);
+    	getCurrentProgram(ch);
     	TextView cur_info = new TextView(view_temp.getContext());
     	TextView cur_name = new TextView(view_temp.getContext());
     	TextView cur_time = new TextView(view_temp.getContext());
@@ -242,48 +239,52 @@ public class ChannelInformationFragment extends Fragment{
     	
     	// Separator parameters
         LinearLayout.LayoutParams separatorParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 1);
-        
+        Date now = new Date(System.currentTimeMillis());
+
+			
     	for(Program program: ch){
     		
-    		// Separator between program names
-    		View separator_temp = new View(view_temp.getContext());
-    		View separator_temp2 = new View(view_temp.getContext());
-        	separator_temp.setBackgroundColor(0xFF000000);
-        	separator_temp2.setBackgroundColor(0xFF000000);
-        	// Program name
-    		String time = new SimpleDateFormat("HH:mm").format(program.getStart());
-    		TextView nextName = new TextView(view_temp.getContext());
-    		TextView nextInfo = new TextView(view_temp.getContext());
-    		nextName.setText(time+" - "+program.getName());
-    		nextName.setTextColor(0xFF000000);
-    		nextName.setPadding(15, 5, 15, 5);
-    		nextInfo.setText(program.getLongText());
-    		nextInfo.setTextColor(0xFF444444);	// A little of grey for the non-current channel descriptions
-    		nextInfo.setPadding(15, 5, 15, 5);
-    		nextInfo.setId(ch.getNr()*program.getEventID());	// Program info ID = ch.getNr()*pr[i].getEventID()
-    		nextInfo.setVisibility(TextView.GONE);
-    		i_tmp = ch.getNr()*program.getEventID();
-    		
-    		// Show/hide program information by clicking on its name
-    		nextName.setClickable(true);
-    		nextName.setOnClickListener(new View.OnClickListener() {
-				int id = i_tmp;
-				@Override
-				public void onClick(View v) {
-					
-					TextView x = (TextView)view_temp.findViewById(id);
-					if(x.getVisibility() == TextView.GONE)
-						x.setVisibility(TextView.VISIBLE);
-					else
-						x.setVisibility(TextView.GONE);
-				}
-			});
-
-    		// Add both informations to the screen
-    		channel_info_ly.addView(separator_temp, separatorParams);
-    		channel_info_ly.addView(nextName);
-    		channel_info_ly.addView(separator_temp2, separatorParams);
-    		channel_info_ly.addView(nextInfo);
+    		if(now.compareTo(program.getStart()) < 0){
+	    		// Separator between program names
+	    		View separator_temp = new View(view_temp.getContext());
+	    		View separator_temp2 = new View(view_temp.getContext());
+	        	separator_temp.setBackgroundColor(0xFF000000);
+	        	separator_temp2.setBackgroundColor(0xFF000000);
+	        	// Program name
+	    		String time = new SimpleDateFormat("HH:mm").format(program.getStart());
+	    		TextView nextName = new TextView(view_temp.getContext());
+	    		TextView nextInfo = new TextView(view_temp.getContext());
+	    		nextName.setText(time+" - "+program.getName());
+	    		nextName.setTextColor(0xFF000000);
+	    		nextName.setPadding(15, 5, 15, 5);
+	    		nextInfo.setText(program.getLongText());
+	    		nextInfo.setTextColor(0xFF444444);	// A little of grey for the non-current channel descriptions
+	    		nextInfo.setPadding(15, 5, 15, 5);
+	    		nextInfo.setId(ch.getNr()*program.getEventID());	// Program info ID = ch.getNr()*pr[i].getEventID()
+	    		nextInfo.setVisibility(TextView.GONE);
+	    		i_tmp = ch.getNr()*program.getEventID();
+	    		
+	    		// Show/hide program information by clicking on its name
+	    		nextName.setClickable(true);
+	    		nextName.setOnClickListener(new View.OnClickListener() {
+					int id = i_tmp;
+					@Override
+					public void onClick(View v) {
+						
+						TextView x = (TextView)view_temp.findViewById(id);
+						if(x.getVisibility() == TextView.GONE)
+							x.setVisibility(TextView.VISIBLE);
+						else
+							x.setVisibility(TextView.GONE);
+					}
+				});
+	
+	    		// Add both informations to the screen
+	    		channel_info_ly.addView(separator_temp, separatorParams);
+	    		channel_info_ly.addView(nextName);
+	    		channel_info_ly.addView(separator_temp2, separatorParams);
+	    		channel_info_ly.addView(nextInfo);
+	    	}
     	}
     }
     
@@ -402,11 +403,10 @@ public class ChannelInformationFragment extends Fragment{
 	} // End of class definition
 
 	/**
-	 * Fetch and set the description of the current program and the names
-	 * of the next programs.
+	 * Get the current program
 	 * @return Success of the operation
 	 */
-	private int getPrograms(Channel ch){
+	private int getCurrentProgram(Channel ch){
 		
 		Channel channel = ch;
 		Date now = new Date(System.currentTimeMillis());
@@ -415,14 +415,6 @@ public class ChannelInformationFragment extends Fragment{
 		for (Program program : channel) {
 			if(now.compareTo(program.getStart()) >= 0){
 				currentProgram = program;
-			}else if(nextProgram == null){
-				nextProgram = program;
-			}else if(nextProgram2 == null){
-				nextProgram2 = program;
-			}else if(nextProgram3 == null){
-				nextProgram3 = program;
-			}else if(nextProgram4 == null){
-				nextProgram4 = program;
 			}else{
 				break;
 			}
