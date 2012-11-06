@@ -1,6 +1,7 @@
 package se.z_app.zmote.webtv;
 
 
+import android.graphics.Bitmap;
 import se.z_app.stb.WebTVItem;
 import se.z_app.stb.WebTVService;
 import se.z_app.stb.api.WebTVCommand;
@@ -16,6 +17,19 @@ public class WebTVQuery {
 	
 	public WebTVService[] getService(){
 		return WebTVCommand.instance().getSevice();
+	}
+	
+	public Bitmap populateWithIcon(WebTVService service){
+		Bitmap b = WebTVCommand.instance().getIcon(service);
+		service.setIcon(b);
+		return b;
+	}
+	
+	public void populateWithIcon(WebTVService services[]){
+		for(WebTVService serv : services){
+			Bitmap b = WebTVCommand.instance().getIcon(serv);
+			serv.setIcon(b);		
+		}
 	}
 	
 	public WebTVItem[] search(String q, WebTVService s){

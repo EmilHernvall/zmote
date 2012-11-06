@@ -1,6 +1,9 @@
 package se.z_app.zmote.gui;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import se.z_app.stb.WebTVItem;
 import se.z_app.stb.WebTVService;
 import se.z_app.zmote.webtv.WebTVQuery;
@@ -11,11 +14,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 
@@ -26,7 +31,8 @@ public class WebTVFragment extends Fragment {
 	private MainTabActivity main;
 	private String web_service;  // To know in what service are we currently (youtube, spotify...)
 	private ProgressBar pb;
-
+	private Spinner spinner;
+	private ArrayAdapter<String> dataAdapter;
 	
 	
 	public WebTVFragment(){
@@ -44,10 +50,12 @@ public class WebTVFragment extends Fragment {
 
 		view_temp = inflater.inflate(R.layout.fragment_web_tv, null);
 		content_layout = (LinearLayout)view_temp.findViewById(R.id.content_ly);
-			
+		addItemsOnSpinner();
+		
 		// Set the listener for the search button
 		ImageButton search_button = (ImageButton)view_temp.findViewById(R.id.search_button_webtv);
 		search_button.setOnClickListener(new View.OnClickListener() {
+			
 			
 			@Override
 			public void onClick(View v) {
@@ -120,5 +128,38 @@ public class WebTVFragment extends Fragment {
 		
 	}
 	
+	/* add items into spinner (drop-down menu with services) dynamically*/
+	public void addItemsOnSpinner() {
+		 
+			spinner = (Spinner)view_temp.findViewById(R.id.webtv_spinner);
+			List<String> list = new ArrayList<String>();
+			
+			/*TODO: add youtube, spotify and TED dynamically*/
+			list.add("Youtube");
+			list.add("Spotify");
+			list.add("TED");
+			
+			WebTVQuery query = new WebTVQuery();
+			WebTVService services[] = query.getService(); //I think this is the problem! probably WebTVQuery functions?À?
+			
+		/*		Adding the icons to the spinner -> NOT WORKING
+		 * 
+		 *  	query.populateWithIcon(services);
+		 *  	
+		 *  	for(WebTVService ser : services){
+		 *  		list.add(serv.getIcon());
+		 *  	}
+		 */
+		
+
+				
+			Spinner spinner = (Spinner)view_temp.findViewById(R.id.webtv_spinner); // this returns null
+		
+			 dataAdapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, list);
+			
+			dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			spinner.setAdapter(dataAdapter);
+			
+		  }
 	
 }
