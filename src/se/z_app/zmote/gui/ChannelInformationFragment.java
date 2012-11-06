@@ -224,6 +224,72 @@ public class ChannelInformationFragment extends Fragment{
     	channel_info_ly.addView(cur_info);
     	
     	// BOTTOM BUTTONS SECTION
+    	channel_info_ly.addView(addProgramButtons());
+    	// Now we can add the rest of the programs info
+    	
+    	// TODO: Shorten the above code
+    	
+    	// Adding the rest of the programs
+    	Program[] pr = new Program[5];
+    	pr[1] = nextProgram;	// We prefer the programs in an array
+    	pr[2] = nextProgram2;	// this way we can use a for loop
+    	pr[3] = nextProgram3;	// Don't used array as global variable because
+    	pr[4] = nextProgram4;	// we were unable to avoid a weird error
+    	
+    	for(int i=1; i<5; ++i){
+    		
+    		// Separator between program names
+    		View separator_temp = new View(view_temp.getContext());
+    		View separator_temp2 = new View(view_temp.getContext());
+        	separator_temp.setBackgroundColor(0xFF000000);
+        	separator_temp2.setBackgroundColor(0xFF000000);
+        	// Program name
+    		String time = new SimpleDateFormat("HH:mm").format(pr[i].getStart());
+    		TextView nextName = new TextView(view_temp.getContext());
+    		TextView nextInfo = new TextView(view_temp.getContext());
+    		nextName.setText(time+" - "+pr[i].getName());
+    		nextName.setTextColor(0xFF000000);
+    		nextName.setPadding(15, 5, 15, 5);
+    		nextInfo.setText(pr[i].getLongText());
+    		nextInfo.setTextColor(0xFF444444);	// A little of grey for the non-current channel descriptions
+    		nextInfo.setPadding(15, 5, 15, 5);
+    		nextInfo.setId(ch.getNr()*pr[i].getEventID());	// Program info ID = ch.getNr()*pr[i].getEventID()
+    		nextInfo.setVisibility(TextView.GONE);
+    		i_tmp = ch.getNr()*pr[i].getEventID();
+    		
+    		// Show/hide program information by clicking on its name
+    		nextName.setClickable(true);
+    		nextName.setOnClickListener(new View.OnClickListener() {
+				int id = i_tmp;
+				@Override
+				public void onClick(View v) {
+					
+					TextView x = (TextView)view_temp.findViewById(id);
+					if(x.getVisibility() == TextView.GONE)
+						x.setVisibility(TextView.VISIBLE);
+					else
+						x.setVisibility(TextView.GONE);
+				}
+			});
+
+    		// Add both informations to the screen
+    		channel_info_ly.addView(separator_temp, separatorParams);
+    		channel_info_ly.addView(nextName);
+    		channel_info_ly.addView(separator_temp2, separatorParams);
+    		channel_info_ly.addView(nextInfo);
+    	}
+    	
+    	channel_content.addView(channel_info_ly);
+    	channel_ly.addView(channel_content);
+    	content_layout.addView(channel_ly, layoutParams);
+    	
+    }
+    
+    public View addProgramButtons(){
+    	
+    	// Get the width of the screen
+    	int width_screen = getResources().getDisplayMetrics().widthPixels;
+    	
     	// Now we add the Imdb, Fav and Social buttons
     	LinearLayout.LayoutParams but_params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
     	but_params.setMargins(0, 0, 0, 0);
@@ -299,65 +365,7 @@ public class ChannelInformationFragment extends Fragment{
     	but_menu.addView(social_but, but_params);
     	but_space.addView(but_left_space, but_left_space_params);
     	but_space.addView(but_menu);
-    	channel_info_ly.addView(but_space);
-    	// Now we can add the rest of the programs info
-    	
-    	// TODO: Shorten the above code
-    	
-    	// Adding the rest of the programs
-    	Program[] pr = new Program[5];
-    	pr[1] = nextProgram;	// We prefer the programs in an array
-    	pr[2] = nextProgram2;	// this way we can use a for loop
-    	pr[3] = nextProgram3;	// Don't used array as global variable because
-    	pr[4] = nextProgram4;	// we were unable to avoid a weird error
-    	
-    	for(int i=1; i<5; ++i){
-    		
-    		// Separator between program names
-    		View separator_temp = new View(view_temp.getContext());
-    		View separator_temp2 = new View(view_temp.getContext());
-        	separator_temp.setBackgroundColor(0xFF000000);
-        	separator_temp2.setBackgroundColor(0xFF000000);
-        	// Program name
-    		String time = new SimpleDateFormat("HH:mm").format(pr[i].getStart());
-    		TextView nextName = new TextView(view_temp.getContext());
-    		TextView nextInfo = new TextView(view_temp.getContext());
-    		nextName.setText(time+" - "+pr[i].getName());
-    		nextName.setTextColor(0xFF000000);
-    		nextName.setPadding(15, 5, 15, 5);
-    		nextInfo.setText(pr[i].getLongText());
-    		nextInfo.setTextColor(0xFF444444);	// A little of grey for the non-current channel descriptions
-    		nextInfo.setPadding(15, 5, 15, 5);
-    		nextInfo.setId(ch.getNr()*pr[i].getEventID());	// Program info ID = ch.getNr()*pr[i].getEventID()
-    		nextInfo.setVisibility(TextView.GONE);
-    		i_tmp = ch.getNr()*pr[i].getEventID();
-    		
-    		// Show/hide program information by clicking on its name
-    		nextName.setClickable(true);
-    		nextName.setOnClickListener(new View.OnClickListener() {
-				int id = i_tmp;
-				@Override
-				public void onClick(View v) {
-					
-					TextView x = (TextView)view_temp.findViewById(id);
-					if(x.getVisibility() == TextView.GONE)
-						x.setVisibility(TextView.VISIBLE);
-					else
-						x.setVisibility(TextView.GONE);
-				}
-			});
-
-    		// Add both informations to the screen
-    		channel_info_ly.addView(separator_temp, separatorParams);
-    		channel_info_ly.addView(nextName);
-    		channel_info_ly.addView(separator_temp2, separatorParams);
-    		channel_info_ly.addView(nextInfo);
-    	}
-    	
-    	channel_content.addView(channel_info_ly);
-    	channel_ly.addView(channel_content);
-    	content_layout.addView(channel_ly, layoutParams);
-    	
+    	return but_space;
     }
     
     /**
