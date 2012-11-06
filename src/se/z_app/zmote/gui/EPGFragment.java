@@ -9,10 +9,7 @@ import se.z_app.stb.Program;
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.zmote.epg.EPGQuery;
 
-import android.R.color;
-import android.app.ActionBar.Tab;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,15 +17,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.Button;
-import android.widget.GridLayout;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 /**
  * 
