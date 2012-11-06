@@ -111,11 +111,8 @@ public class ChannelInformationFragment extends Fragment{
 	 * Add all channels information to the layout
 	 */
     public void addAllChannelsInformationToLayout(){
-    	
-    	Iterator<Channel> itr = epg.iteratorByNr();
-    	
-    	while(itr.hasNext()){
-    		Channel channel = itr.next();
+
+    	for(Channel channel: epg){
     		addChannelItemToLayout(channel);
     	}
 
@@ -225,18 +222,28 @@ public class ChannelInformationFragment extends Fragment{
     	
     	// BOTTOM BUTTONS SECTION
     	channel_info_ly.addView(addProgramButtons());
+    	
     	// Now we can add the rest of the programs info
-    	
-    	// TODO: Shorten the above code
-    	
     	// Adding the rest of the programs
-    	Program[] pr = new Program[5];
-    	pr[1] = nextProgram;	// We prefer the programs in an array
-    	pr[2] = nextProgram2;	// this way we can use a for loop
-    	pr[3] = nextProgram3;	// Don't used array as global variable because
-    	pr[4] = nextProgram4;	// we were unable to avoid a weird error
+    	addNextPrograms(channel_info_ly, ch);
     	
-    	for(int i=1; i<5; ++i){
+    	channel_content.addView(channel_info_ly);
+    	channel_ly.addView(channel_content);
+    	content_layout.addView(channel_ly, layoutParams);
+    	
+    }
+    
+    /**
+     * Adds the information of the next programs (the non-current ones)
+     * @param channel_info_ly	Layout where it will add the information
+     * @param ch				Channel whose programs we want to add
+     */
+    public void addNextPrograms(LinearLayout channel_info_ly, Channel ch){
+    	
+    	// Separator parameters
+        LinearLayout.LayoutParams separatorParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 1);
+        
+    	for(Program program: ch){
     		
     		// Separator between program names
     		View separator_temp = new View(view_temp.getContext());
@@ -244,18 +251,18 @@ public class ChannelInformationFragment extends Fragment{
         	separator_temp.setBackgroundColor(0xFF000000);
         	separator_temp2.setBackgroundColor(0xFF000000);
         	// Program name
-    		String time = new SimpleDateFormat("HH:mm").format(pr[i].getStart());
+    		String time = new SimpleDateFormat("HH:mm").format(program.getStart());
     		TextView nextName = new TextView(view_temp.getContext());
     		TextView nextInfo = new TextView(view_temp.getContext());
-    		nextName.setText(time+" - "+pr[i].getName());
+    		nextName.setText(time+" - "+program.getName());
     		nextName.setTextColor(0xFF000000);
     		nextName.setPadding(15, 5, 15, 5);
-    		nextInfo.setText(pr[i].getLongText());
+    		nextInfo.setText(program.getLongText());
     		nextInfo.setTextColor(0xFF444444);	// A little of grey for the non-current channel descriptions
     		nextInfo.setPadding(15, 5, 15, 5);
-    		nextInfo.setId(ch.getNr()*pr[i].getEventID());	// Program info ID = ch.getNr()*pr[i].getEventID()
+    		nextInfo.setId(ch.getNr()*program.getEventID());	// Program info ID = ch.getNr()*pr[i].getEventID()
     		nextInfo.setVisibility(TextView.GONE);
-    		i_tmp = ch.getNr()*pr[i].getEventID();
+    		i_tmp = ch.getNr()*program.getEventID();
     		
     		// Show/hide program information by clicking on its name
     		nextName.setClickable(true);
@@ -278,13 +285,12 @@ public class ChannelInformationFragment extends Fragment{
     		channel_info_ly.addView(separator_temp2, separatorParams);
     		channel_info_ly.addView(nextInfo);
     	}
-    	
-    	channel_content.addView(channel_info_ly);
-    	channel_ly.addView(channel_content);
-    	content_layout.addView(channel_ly, layoutParams);
-    	
     }
     
+    /**
+     * Returs the set of buttons for a program (Fav, Imdb, Social)
+     * @return	View containig the buttons
+     */
     public View addProgramButtons(){
     	
     	// Get the width of the screen
