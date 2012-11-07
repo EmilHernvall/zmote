@@ -41,6 +41,8 @@ public class EPGFragment extends Fragment{
 	private int height=80;
 	private int width=80;
 	private Program program_temp;
+	
+	private int screen_width = 0;
 
 	public EPGFragment(){
 		
@@ -58,38 +60,39 @@ public class EPGFragment extends Fragment{
 		i_layout = (LinearLayout)v.findViewById(R.id.channel_icons);
 		vt_scroll = (LinearLayout)v.findViewById(R.id.channel_programs);
 		
+		// Get the size of the screen in pixels
+		screen_width = getResources().getDisplayMetrics().widthPixels;
+		
 		new AsyncDataLoader().execute();
 		
 		return v;
 	}
 
-    public void setProgramTimeBar(){
+    /**
+     * Sets the timeBar in 30min intervals starting from the hour passed by "start"
+     * @param start		Starting time for the time bar
+     */
+    public void setProgramTimeBar(Date start){
     	
     	LinearLayout program_timebar = new LinearLayout(v.getContext());
     	LinearLayout.LayoutParams pt_params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,30);
     	program_timebar.setOrientation(0);
     	
-    	Date start = new Date(2012,10,10,12,0);
-		Date now = new Date(System.currentTimeMillis());
-		// Get the size of the screen in pixels
-		int width_screen = getResources().getDisplayMetrics().widthPixels;
-
-    	// Get the greater start time of the first program  (ugly way)
-		// --- DO IT HERE --
+		//Date now = new Date(System.currentTimeMillis());
     	
-    	for(int i=0; i<24; ++i){
+    	for(int i=0; i<48; ++i){
 			
 			TextView time = new TextView(v.getContext());
 			time.setTextColor(0xFFFFFFFF);
 			time.setText(new SimpleDateFormat("HH:mm").format(start) );
-			time.setWidth(width_screen);
+			time.setWidth(screen_width/2);
 			time.setHeight(30);
 			program_timebar.addView(time);
 			
     		// Adding 1 hour
 		    Calendar calendar = Calendar.getInstance();
 		    calendar.setTime(start);
-		    calendar.add(Calendar.HOUR, 1);
+		    calendar.add(Calendar.MINUTE, 30);
 		    start = calendar.getTime();
     	}
     	
@@ -102,8 +105,11 @@ public class EPGFragment extends Fragment{
      */
 	void mainEPG(){
 		
-		setProgramTimeBar();
+		// First of all, we add the time bar
+		Date start = new Date(2012,10,10,12,0);
+		setProgramTimeBar(start);
 		
+		// Then, we add the channel information
 		for (Channel channel : epg) {
 
 			addIconToLayout(channel);
@@ -156,19 +162,18 @@ public class EPGFragment extends Fragment{
 	 */
 	void addProgramToLayout(Program pg){
 		
-		// Get the size of the screen in pixels
-		int width_screen = getResources().getDisplayMetrics().widthPixels;
 		Date start = new Date(2012,10,10,12,0);	// Starting hour (12:00)
 		
 		LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT );
-		textParams.setMargins(2,1,2,1);
+		textParams.setMargins(1,1,1,1);
 		
 		int hours_of_difference = 0;
 		int minutes_of_difference = 0;
 		LinearLayout.LayoutParams params = null;
+		long end = pg.getStart().getTime() + pg.getDuration()*1000;
 		if( pg.getStart().getHours() < start.getHours()){
 			
-				hours_of_difference = start.getHours() - pg.getStart().getHours();
+				hours_of_difference = start.getHours() - pg.getStart().getHours() -1;
 				minutes_of_difference = 60 - pg.getStart().getMinutes();
 				
 		}else if( pg.getStart().getHours() == start.getHours()){
@@ -176,7 +181,11 @@ public class EPGFragment extends Fragment{
 				minutes_of_difference = 60 - pg.getStart().getMinutes();
 			}
 		}
-		float length = pg.getDuration()*width_screen/3600 - hours_of_difference*width_screen - minutes_of_difference*width_screen/60;
+		/*System.out.println(pg.getName()+" empieza:"+pg.getStart().getHours()+
+				":"+pg.getStart().getMinutes()+" y dura:"+pg.getDuration()/60+"min");
+		System.out.println("Diferencia con hora de comienzo:"+hours_of_difference+":"+minutes_of_difference);
+		*/
+		float length = pg.getDuration()*screen_width/3600 - hours_of_difference*screen_width - minutes_of_difference*screen_width/60;
 		params= new LinearLayout.LayoutParams((int)length, 80);
 		params.setMargins(0, 0, 0, 0);
 
