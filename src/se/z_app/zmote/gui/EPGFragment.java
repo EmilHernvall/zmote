@@ -113,9 +113,12 @@ public class EPGFragment extends Fragment{
 	 */
 	void addProgramToLayout(Program pg){
 		
+		// Get the size of the screen in pixels
+		int width_screen = getResources().getDisplayMetrics().widthPixels;
+		
 		LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT );
 		textParams.setMargins(2,1,2,1);
-		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(pg.getDuration()/10, 80);
+		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(pg.getDuration()*width_screen/3600, 80);
 		params.setMargins(0, 0, 0, 0);
 
 		LinearLayout container = new LinearLayout(v.getContext());
