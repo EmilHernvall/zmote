@@ -47,6 +47,8 @@ public class ChannelInformationFragment extends Fragment{
 	private ImageButton social_but;
 	
 	private Program currentProgram = null;
+	private ScrollView channel_content = null;
+	private LinearLayout scrollTo = null;
 	
 	/**
 	 * Default constructor of ChannelInformationFragment
@@ -146,7 +148,7 @@ public class ChannelInformationFragment extends Fragment{
     	channel_ly.setId(ch.getNr()*1000);	// The ID of the channel information box is ChannelNR*1000
     	
     	// The information part of the box will be scrollable
-    	ScrollView channel_content = new ScrollView(view_temp.getContext());
+    	channel_content = new ScrollView(view_temp.getContext());
         LinearLayout channel_info_ly = new LinearLayout(view_temp.getContext());
         channel_info_ly.setOrientation(1);
         // Check if we need to set up the parameters in the previous ones
@@ -191,7 +193,6 @@ public class ChannelInformationFragment extends Fragment{
     	// GETTING THE PROGRAM INFORMATION
     	// Preparing text of the white box
     	getCurrentProgram(ch);
-    	TextView cur_info = new TextView(view_temp.getContext());
     	TextView cur_name = new TextView(view_temp.getContext());
     	TextView cur_time = new TextView(view_temp.getContext());
     	TextView cur_date = new TextView(view_temp.getContext());
@@ -202,9 +203,6 @@ public class ChannelInformationFragment extends Fragment{
     	cur_time.setTextColor(0xFF000000);
     	cur_name.setText(currentProgram.getName());
     	cur_name.setTextColor(0xFF000000);
-    	cur_info.setText(currentProgram.getLongText());
-    	cur_info.setTextColor(0xFF000000);
-    	cur_info.setPadding(15, 5, 15, 5);
     	
     	// Adding the view elements
     	top_info_ly.addView(cur_date);
@@ -215,16 +213,21 @@ public class ChannelInformationFragment extends Fragment{
     	
     	channel_ly.addView(top_ly);
     	channel_ly.addView(separator, separatorParams);
-    	channel_info_ly.addView(cur_info);
-    	
-    	// BOTTOM BUTTONS SECTION
-    	channel_info_ly.addView(addProgramButtons());
     	
     	// Now we can add the rest of the programs info
     	// Adding the rest of the programs
     	addNextPrograms(channel_info_ly, ch);
     	
     	channel_content.addView(channel_info_ly);
+    	channel_content.post(new Runnable() {
+    		ScrollView x = channel_content;
+    		LinearLayout i = scrollTo;
+            public void run() {
+            	System.out.println(i.getTop());
+            	x.scrollTo(0, i.getTop());
+            }
+        });
+    	
     	channel_ly.addView(channel_content);
     	content_layout.addView(channel_ly, layoutParams);
     	
@@ -239,53 +242,66 @@ public class ChannelInformationFragment extends Fragment{
     	
     	// Separator parameters
         LinearLayout.LayoutParams separatorParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 1);
-        Date now = new Date(System.currentTimeMillis());
-
-			
+		
     	for(Program program: ch){
     		
-    		if(now.compareTo(program.getStart()) < 0){
-	    		// Separator between program names
-	    		View separator_temp = new View(view_temp.getContext());
-	    		View separator_temp2 = new View(view_temp.getContext());
-	        	separator_temp.setBackgroundColor(0xFF000000);
-	        	separator_temp2.setBackgroundColor(0xFF000000);
-	        	// Program name
-	    		String time = new SimpleDateFormat("HH:mm").format(program.getStart());
-	    		TextView nextName = new TextView(view_temp.getContext());
-	    		TextView nextInfo = new TextView(view_temp.getContext());
-	    		nextName.setText(time+" - "+program.getName());
-	    		nextName.setTextColor(0xFF000000);
-	    		nextName.setPadding(15, 5, 15, 5);
-	    		nextInfo.setText(program.getLongText());
-	    		nextInfo.setTextColor(0xFF444444);	// A little of grey for the non-current channel descriptions
-	    		nextInfo.setPadding(15, 5, 15, 5);
-	    		nextInfo.setId(ch.getNr()*program.getEventID());	// Program info ID = ch.getNr()*pr[i].getEventID()
-	    		nextInfo.setVisibility(TextView.GONE);
-	    		i_tmp = ch.getNr()*program.getEventID();
-	    		
-	    		// Show/hide program information by clicking on its name
-	    		nextName.setClickable(true);
-	    		nextName.setOnClickListener(new View.OnClickListener() {
-					int id = i_tmp;
-					@Override
-					public void onClick(View v) {
-						
-						TextView x = (TextView)view_temp.findViewById(id);
-						if(x.getVisibility() == TextView.GONE)
-							x.setVisibility(TextView.VISIBLE);
-						else
-							x.setVisibility(TextView.GONE);
-					}
-				});
-	
-	    		// Add both informations to the screen
-	    		channel_info_ly.addView(separator_temp, separatorParams);
-	    		channel_info_ly.addView(nextName);
-	    		channel_info_ly.addView(separator_temp2, separatorParams);
-	    		channel_info_ly.addView(nextInfo);
-	    	}
+    		LinearLayout nextInfo_container = new LinearLayout(view_temp.getContext());
+    		nextInfo_container.setOrientation(1);
+    		
+    		// Separator between program names
+    		View separator_temp = new View(view_temp.getContext());
+    		View separator_temp2 = new View(view_temp.getContext());
+        	separator_temp.setBackgroundColor(0xFF000000);
+        	separator_temp2.setBackgroundColor(0xFF000000);
+        	// Program name
+    		String time = new SimpleDateFormat("HH:mm").format(program.getStart());
+    		TextView nextName = new TextView(view_temp.getContext());
+    		TextView nextInfo = new TextView(view_temp.getContext());
+    		nextName.setText(time+" - "+program.getName());
+    		nextName.setTextColor(0xFF000000);
+    		nextName.setPadding(15, 5, 15, 5);
+    		nextInfo.setText(program.getLongText());
+    		nextInfo.setTextColor(0xFF444444);	// A little of grey for the non-current channel descriptions
+    		nextInfo.setPadding(15, 5, 15, 5);
+    		nextInfo_container.setId(ch.getNr()*program.getEventID());	// Program info ID = ch.getNr()*pr[i].getEventID()
+    		
+    		// We want to initially display only the information of the current program
+    		if(currentProgram == program){
+    			nextName.setTypeface(null, Typeface.BOLD);
+    			nextInfo_container.setVisibility(LinearLayout.VISIBLE);
+    			scrollTo = nextInfo_container;
+    		}else{
+    			nextInfo_container.setVisibility(LinearLayout.GONE);
+    		}
+    		
+    		
+    		i_tmp = ch.getNr()*program.getEventID();
+    		
+    		// Show/hide program information by clicking on its name
+    		nextName.setClickable(true);
+    		nextName.setOnClickListener(new View.OnClickListener() {
+				int id = i_tmp;
+				@Override
+				public void onClick(View v) {
+					
+					LinearLayout x = (LinearLayout)view_temp.findViewById(id);
+					if(x.getVisibility() == LinearLayout.GONE)
+						x.setVisibility(LinearLayout.VISIBLE);
+					else
+						x.setVisibility(LinearLayout.GONE);
+				}
+			});
+
+    		// Add both informations to the screen
+    		channel_info_ly.addView(separator_temp, separatorParams);
+    		channel_info_ly.addView(nextName);
+    		channel_info_ly.addView(separator_temp2, separatorParams);
+    		nextInfo_container.addView(nextInfo);
+        	nextInfo_container.addView(addProgramButtons());	// BOTTOM BUTTONS SECTION
+    		channel_info_ly.addView(nextInfo_container);
+    		
     	}
+
     }
     
     /**
