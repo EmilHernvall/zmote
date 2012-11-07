@@ -37,6 +37,7 @@ public class EPGFragment extends Fragment{
 	private LinearLayout vt_scroll;
 	private int height=80;
 	private int width=80;
+	private Program program_temp;
 
 	
 	public EPGFragment(MainTabActivity main){
@@ -128,9 +129,10 @@ public class EPGFragment extends Fragment{
 		text.setTextColor(0xFFFFFFFF);
 		text.setBackgroundColor(0xFF222222);
 		
-
+		program_temp = pg;
 		text.setOnClickListener(new View.OnClickListener() {
-		
+			
+			Program p = program_temp;
 			/*
 			 * TODO: Send parameters to load the specific clicked channel/program
 			 * 
@@ -138,7 +140,7 @@ public class EPGFragment extends Fragment{
 			@Override
 			public void onClick(View v) {
 			
-				Fragment fragment = new ChannelInformationFragment();
+				Fragment fragment = new ChannelInformationFragment(p);
 				android.support.v4.app.FragmentManager fragmentManager = getFragmentManager();
 				android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 				fragmentTransaction.replace(R.id.container, fragment);

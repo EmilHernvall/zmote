@@ -49,12 +49,23 @@ public class ChannelInformationFragment extends Fragment{
 	private Program currentProgram = null;
 	private ScrollView channel_content = null;
 	private LinearLayout scrollTo = null;
+	private Program focusOnThis = null;
+	private TextView scrollToFocused = null;
+	private LinearLayout ly_temp = null;
 	
 	/**
 	 * Default constructor of ChannelInformationFragment
 	 */
 	public ChannelInformationFragment(){
 		
+	}
+	
+	/**
+	 * Default constructor of ChannelInformationFragment
+	 * @param program Program in which we want to focus
+	 */
+	public ChannelInformationFragment(Program program){
+		focusOnThis = program;
 	}
 	
 	/**
@@ -217,14 +228,25 @@ public class ChannelInformationFragment extends Fragment{
     	// Now we can add the rest of the programs info
     	// Adding the rest of the programs
     	addNextPrograms(channel_info_ly, ch);
+    	ly_temp = channel_info_ly;
     	
     	channel_content.addView(channel_info_ly);
     	channel_content.post(new Runnable() {
+    		LinearLayout channel_info_ly = ly_temp;
     		ScrollView x = channel_content;
     		LinearLayout i = scrollTo;
+    		TextView scroll_when_focused = scrollToFocused;
             public void run() {
-            	System.out.println(i.getTop());
-            	x.scrollTo(0, i.getTop());
+            	
+            	// If we have a focus target and its parent is the current channel
+            	if(scroll_when_focused != null && scroll_when_focused.getParent() == channel_info_ly){
+            		x.scrollTo(0, scroll_when_focused.getTop());
+            		x.setFocusableInTouchMode(true);
+            		x.requestFocus();
+            	}else{
+            		x.scrollTo(0, i.getTop());
+            	}
+            	
             }
         });
     	
@@ -274,6 +296,11 @@ public class ChannelInformationFragment extends Fragment{
     			nextInfo_container.setVisibility(LinearLayout.GONE);
     		}
     		
+    		// Focus on the program we clicked on
+    		if(focusOnThis != null && focusOnThis == program){
+    			nextInfo_container.setVisibility(LinearLayout.VISIBLE);
+    			scrollToFocused = nextName;
+    		}
     		
     		i_tmp = ch.getNr()*program.getEventID();
     		
