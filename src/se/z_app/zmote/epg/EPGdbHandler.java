@@ -159,7 +159,7 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 		int iterationCounter=0;
 		if(cursor.moveToFirst()) {
 			do{
-			Program program =new Program();
+			Program program =new Program(new Channel()); //TODO: this should bee the channel the program is realated to
 			program.setName(cursor.getString(cursor.getColumnIndex(PROGRAM_NAME)));
 			program.setEventID(cursor.getInt(cursor.getColumnIndex(PROGRAM_EVENTID)));
 			int temp = cursor.getInt(cursor.getColumnIndex(PROGRAM_START));

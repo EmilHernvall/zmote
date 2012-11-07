@@ -11,6 +11,15 @@ public class Program{
 	private int duration = -1;
 	private String shortText;
 	private String longText;
+	private Channel channel;
+	
+	public Program(Channel parentChannel){
+		this.channel = channel;
+	}
+	
+	public Channel getParentChannel(){
+		return channel;
+	}
 	
 	public String getName() {
 		return name;
@@ -51,6 +60,12 @@ public class Program{
 	}
 	public void setLongText(String longText) {
 		this.longText = longText;
+	}
+	public Channel getChannel() {
+		return channel;
+	}
+	public void setChannel(Channel channel) {
+		this.channel = channel;
 	}
 
 	

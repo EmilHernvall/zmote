@@ -57,7 +57,7 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 				JSONArray jsonPrograms = jsonChannel.getJSONArray("programs");
 				for(int j = 0; j < jsonPrograms.length(); j++){
 					JSONObject jsonProgram = jsonPrograms.getJSONObject(j);
-					Program program = new Program();
+					Program program = new Program(channel);
 					program.setName(jsonProgram.getString("name"));
 					program.setShortText(jsonProgram.getString("shorttext"));
 					program.setLongText(jsonProgram.getString("exttext"));
