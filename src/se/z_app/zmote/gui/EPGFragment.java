@@ -2,6 +2,8 @@ package se.z_app.zmote.gui;
 
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import se.z_app.stb.Channel;
 import se.z_app.stb.EPG;
@@ -55,15 +57,52 @@ public class EPGFragment extends Fragment{
 		v = inflater.inflate(R.layout.fragment_epg, null);
 		i_layout = (LinearLayout)v.findViewById(R.id.channel_icons);
 		vt_scroll = (LinearLayout)v.findViewById(R.id.channel_programs);
+		
 		new AsyncDataLoader().execute();
-	
+		
 		return v;
 	}
 
+    public void setProgramTimeBar(){
+    	
+    	LinearLayout program_timebar = new LinearLayout(v.getContext());
+    	LinearLayout.LayoutParams pt_params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,30);
+    	program_timebar.setOrientation(0);
+    	
+    	Date start = new Date(2012,10,10,12,0);
+		Date now = new Date(System.currentTimeMillis());
+		// Get the size of the screen in pixels
+		int width_screen = getResources().getDisplayMetrics().widthPixels;
+
+    	// Get the greater start time of the first program  (ugly way)
+		// --- DO IT HERE --
+    	
+    	for(int i=0; i<24; ++i){
+			
+			TextView time = new TextView(v.getContext());
+			time.setTextColor(0xFFFFFFFF);
+			time.setText(new SimpleDateFormat("HH:mm").format(start) );
+			time.setWidth(width_screen);
+			time.setHeight(30);
+			program_timebar.addView(time);
+			
+    		// Adding 1 hour
+		    Calendar calendar = Calendar.getInstance();
+		    calendar.setTime(start);
+		    calendar.add(Calendar.HOUR, 1);
+		    start = calendar.getTime();
+    	}
+    	
+    	vt_scroll.addView(program_timebar, pt_params);
+    	
+    }
+    
     /**
      * Fetch the channels
      */
 	void mainEPG(){
+		
+		setProgramTimeBar();
 		
 		for (Channel channel : epg) {
 
@@ -119,10 +158,26 @@ public class EPGFragment extends Fragment{
 		
 		// Get the size of the screen in pixels
 		int width_screen = getResources().getDisplayMetrics().widthPixels;
+		Date start = new Date(2012,10,10,12,0);	// Starting hour (12:00)
 		
 		LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT );
 		textParams.setMargins(2,1,2,1);
-		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(pg.getDuration()*width_screen/3600, 80);
+		
+		int hours_of_difference = 0;
+		int minutes_of_difference = 0;
+		LinearLayout.LayoutParams params = null;
+		if( pg.getStart().getHours() < start.getHours()){
+			
+				hours_of_difference = start.getHours() - pg.getStart().getHours();
+				minutes_of_difference = 60 - pg.getStart().getMinutes();
+				
+		}else if( pg.getStart().getHours() == start.getHours()){
+			if(pg.getStart().getMinutes() < start.getMinutes()){
+				minutes_of_difference = 60 - pg.getStart().getMinutes();
+			}
+		}
+		float length = pg.getDuration()*width_screen/3600 - hours_of_difference*width_screen - minutes_of_difference*width_screen/60;
+		params= new LinearLayout.LayoutParams((int)length, 80);
 		params.setMargins(0, 0, 0, 0);
 
 		LinearLayout container = new LinearLayout(v.getContext());
