@@ -9,8 +9,6 @@ import se.z_app.stb.Program;
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.zmote.epg.EPGQuery;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.os.AsyncTask;
@@ -66,9 +64,6 @@ public class EPGFragment extends Fragment{
 
 			addIconToLayout(channel);
 			p_layout = new LinearLayout(v.getContext());
-			/*LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
-	                LayoutParams.WRAP_CONTENT);
-			p_layout.setLayoutParams(params);*/
 			p_layout.setOrientation(LinearLayout.HORIZONTAL);
 			for (Program program : channel) {
 				addProgramToLayout(program);	
@@ -110,8 +105,7 @@ public class EPGFragment extends Fragment{
 	
 	
 	
-	//TODO:
-	//Make sure it's no space between buttons and they are aligned properly
+	//TODO: Make sure it's no space between buttons and they are aligned properly
 	/**
 	 * Adding programs to the layout
 	 * @param pg
@@ -143,17 +137,12 @@ public class EPGFragment extends Fragment{
 			 * When a program is clicked, the channel information view is loaded*/
 			@Override
 			public void onClick(View v) {
-				
-			//	Bundle args = new Bundle();
 			
-			 Fragment fragment = new ChannelInformationFragment();
-			//fragment.setArguments(args); <-?
-			 android.support.v4.app.FragmentManager fragmentManager = getFragmentManager();
-			 
-			android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-			fragmentTransaction.replace(R.id.container, fragment);
-			fragmentTransaction.commit();
-		
+				Fragment fragment = new ChannelInformationFragment();
+				android.support.v4.app.FragmentManager fragmentManager = getFragmentManager();
+				android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+				fragmentTransaction.replace(R.id.container, fragment);
+				fragmentTransaction.commit();
 			}
 			
 		});
