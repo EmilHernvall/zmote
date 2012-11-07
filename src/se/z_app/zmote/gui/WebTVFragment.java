@@ -149,7 +149,6 @@ public class WebTVFragment extends Fragment {
 		   	}
 		 
 		
-		   	
 		   	Bitmap servicesImg[] = new Bitmap[list.size()];
 		   	list.toArray(servicesImg);
 
