@@ -75,6 +75,7 @@ public class ChannelInformationFragment extends Fragment{
 	public ChannelInformationFragment(MainTabActivity main){
 		this.main = main;
 	}
+
 	
 	/**
 	 * This to do when the instance of ChannelInformationFragment is created
@@ -82,7 +83,8 @@ public class ChannelInformationFragment extends Fragment{
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-
+		
+		
 		view_temp = inflater.inflate(R.layout.fragment_channel_information, null);
 		content_layout = (LinearLayout)view_temp.findViewById(R.id.content_ly);
 		pb = (ProgressBar)view_temp.findViewById(R.id.progressLodingEpgChannelInformation);

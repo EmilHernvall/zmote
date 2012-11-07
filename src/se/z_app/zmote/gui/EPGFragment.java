@@ -9,6 +9,7 @@ import se.z_app.stb.Program;
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.zmote.epg.EPGQuery;
 
+import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.os.AsyncTask;
@@ -39,6 +40,9 @@ public class EPGFragment extends Fragment{
 	private int width=80;
 	private Program program_temp;
 
+	public EPGFragment(){
+		
+	}
 	
 	public EPGFragment(MainTabActivity main){
 		this.main = main;
@@ -146,7 +150,9 @@ public class EPGFragment extends Fragment{
 				Fragment fragment = new ChannelInformationFragment(p);
 				android.support.v4.app.FragmentManager fragmentManager = getFragmentManager();
 				android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
 				fragmentTransaction.replace(R.id.container, fragment);
+				fragmentTransaction.addToBackStack(null);
 				fragmentTransaction.commit();
 			}
 			
