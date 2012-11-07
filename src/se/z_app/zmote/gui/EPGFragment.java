@@ -9,6 +9,8 @@ import se.z_app.stb.Program;
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.zmote.epg.EPGQuery;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.os.AsyncTask;
@@ -135,30 +137,24 @@ public class EPGFragment extends Fragment{
 
 		text.setOnClickListener(new View.OnClickListener() {
 		
+			/*
+			 * TODO: Send parameters to load the specific clicked channel/program
+			 * 
+			 * When a program is clicked, the channel information view is loaded*/
 			@Override
 			public void onClick(View v) {
+				
+			//	Bundle args = new Bundle();
 			
+			 Fragment fragment = new ChannelInformationFragment();
+			//fragment.setArguments(args); <-?
+			 android.support.v4.app.FragmentManager fragmentManager = getFragmentManager();
+			 
+			android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+			fragmentTransaction.replace(R.id.container, fragment);
+			fragmentTransaction.commit();
+		
 			}
-			/*		
-			@Override
-			public void onClick (View v) {
-			
-				Fragment fragment = null;
-				fragment = new ChannelInformationFragment();
-				Bundle args = new Bundle();
-		        fragment.setArguments(args);
-		        getFragmentManager().beginTransaction()
-		                .replace(R.id.container, fragment)
-		                .commit();
-				
-				//setContentView(R.layout.fragment_channel_information);
-				//v = View.inflate(this, R.layout.fragment_channel_information, null);
-				
-			//	Fragment fragment = null;
-				
-			//	fragment = new ChannelInformationFragment();
-			}
-			*/
 			
 		});
 		
