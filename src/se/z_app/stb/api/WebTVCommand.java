@@ -22,7 +22,7 @@ public class WebTVCommand implements Observer{
 	
 	private static class SingletonHolder { 
         public static final WebTVCommand INSTANCE = new WebTVCommand();
-}
+	}
 	public static WebTVCommand instance(){
 		return SingletonHolder.INSTANCE;
 	}
@@ -43,7 +43,7 @@ public class WebTVCommand implements Observer{
 	}
 	
 	
-	public WebTVService[] getSevice(){
+	public WebTVService[] getService(){
 		if(BiCmd != null){
 			return BiCmd.getWebTVServices();
 		}

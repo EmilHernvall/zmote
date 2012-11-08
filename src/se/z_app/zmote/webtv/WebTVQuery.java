@@ -16,7 +16,7 @@ import se.z_app.stb.api.WebTVCommand;
 public class WebTVQuery {
 	
 	public WebTVService[] getService(){
-		return WebTVCommand.instance().getSevice();
+		return WebTVCommand.instance().getService();
 	}
 	
 	public Bitmap populateWithIcon(WebTVService service){
