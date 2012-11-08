@@ -222,7 +222,7 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 				break;
 			case PLAYWEBTV:
 				httpclient = new DefaultHttpClient();
-				httpGet = new HttpGet("http://" + address +"/mdio/webtv/play?url="+arg1);
+				httpGet = new HttpGet("http://" + address +"/mdio/webtv/play?url=webtv:"+arg1);
 			    
 			    try {
 			        httpclient.execute(httpGet);	
@@ -242,7 +242,7 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 				break;
 			case QUEUEWEBTV:
 				httpclient = new DefaultHttpClient();
-				httpGet = new HttpGet("http://" + address +"/mdio/webtv/play?url="+arg1+"&queue=1");
+				httpGet = new HttpGet("http://" + address +"/mdio/webtv/play?url=webtv:"+arg1+"&queue=1");
 			    
 			    try {
 			        httpclient.execute(httpGet);	
