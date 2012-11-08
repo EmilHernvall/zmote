@@ -38,6 +38,7 @@ public class EPGFragment extends Fragment{
 	private LinearLayout i_layout;
 	private LinearLayout p_layout;
 	private LinearLayout vt_scroll;
+	private int height_of_rows = 80;
 	private int height=80;
 	private int width=80;
 	private Program program_temp;
@@ -112,11 +113,19 @@ public class EPGFragment extends Fragment{
 		// Then, we add the channel information
 		for (Channel channel : epg) {
 
+
+			int programs = 0;
+			
 			addIconToLayout(channel);
 			p_layout = new LinearLayout(v.getContext());
 			p_layout.setOrientation(LinearLayout.HORIZONTAL);
 			for (Program program : channel) {
-				addProgramToLayout(program);	
+				addProgramToLayout(program);
+				programs++;
+			}
+			// Add space separation if there is no programs for this channel
+			if(programs == 0){
+				addSpaceBetweenChannels();
 			}
 			
 			vt_scroll.addView(p_layout);
@@ -186,7 +195,7 @@ public class EPGFragment extends Fragment{
 		System.out.println("Diferencia con hora de comienzo:"+hours_of_difference+":"+minutes_of_difference);
 		*/
 		float length = pg.getDuration()*screen_width/3600 - hours_of_difference*screen_width - minutes_of_difference*screen_width/60;
-		params= new LinearLayout.LayoutParams((int)length, 80);
+		params= new LinearLayout.LayoutParams((int)length, height_of_rows);
 		params.setMargins(0, 0, 0, 0);
 
 		LinearLayout container = new LinearLayout(v.getContext());
@@ -225,6 +234,19 @@ public class EPGFragment extends Fragment{
 		container.addView(text, textParams);
 		p_layout.addView(container, params);
 		
+	}
+	
+	/**
+	 * Adds a space in the channel row with the same height of the rest of the rows
+	 */
+	public void addSpaceBetweenChannels(){
+		
+		LinearLayout.LayoutParams params= new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, height_of_rows);
+		params.setMargins(0, 0, 0, 0);
+		
+		LinearLayout container = new LinearLayout(v.getContext());
+		
+		p_layout.addView(container, params);
 	}
 	
 	/**

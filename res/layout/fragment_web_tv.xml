@@ -54,7 +54,8 @@
           android:paddingLeft="10dp"
           android:paddingRight="200dp"
           android:text="@string/top_lists"
-          android:textStyle="bold" />
+          android:textStyle="bold" 
+          android:textColor="#FFFFFF" />
       
     </LinearLayout>
 
