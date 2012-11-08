@@ -124,7 +124,7 @@ public class SelectSTBActivity extends Activity {
 		@Override
 		protected STB[] doInBackground(Integer... params) {
 			STBDiscovery stbDisc = new STBDiscovery(findSubnetAddress());
-			//STBDiscovery stbDisc = new STBDiscovery("130.236.248."); -- Test to scan our test boxes
+			//STBDiscovery stbDisc = new STBDiscovery("130.236.248."); // -- Test to scan our test boxes
 			return stbDisc.find();
 		}
 
