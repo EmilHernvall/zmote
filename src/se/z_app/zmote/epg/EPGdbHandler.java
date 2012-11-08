@@ -107,6 +107,47 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 		return epg;
 	}
 	/**
+	 * A method for updating the EPG in the database
+	 * @param stb The STB to be updated
+	 * @param epg The EPG which to be updated
+	 */
+	public void updateEPG(STB stb, EPG epg){
+		//TODO: Implement me
+//		SQLiteDatabase db = this.getWritableDatabase();
+		
+	}
+	
+	/**
+	 * A method for selecting a channals, return an array with the channals
+	 * @param stb The STB for which to getting the channals from
+	 * @return An array with the channals
+	 */
+	public Channel[] selectChannals(STB stb){
+		SQLiteDatabase db = this.getReadableDatabase();
+		//Cursor cursor = db.rawQuery(selectQuery, null); //old
+		Cursor cursor = db.query(TABLE_CHANNEL,null,""+STB_MAC+"='"+stb.getMAC() + "'", null,null,null,null);
+		Channel[] channelArray = new Channel[cursor.getCount()]; //length is null
+		System.out.println("cursor coint is " +cursor.getCount());
+		int iterationCounter=0;
+		if(cursor.moveToFirst()) {
+			do{
+			Channel channel =new Channel(); //TODO: this should bee the channel the program is realated to
+			channel.setName(cursor.getString(cursor.getColumnIndex(CHANNEL_NAME)));
+			channel.setNr(cursor.getInt(cursor.getColumnIndex(CHANNEL_NR)));
+			channel.setOnid(cursor.getInt(cursor.getColumnIndex(CHANNEL_ONID)));
+			channel.setSid(cursor.getInt(cursor.getColumnIndex(CHANNEL_SID)));
+			channel.setTsid(cursor.getInt(cursor.getColumnIndex(CHANNEL_TSID)));
+			channelArray[iterationCounter]=channel; 
+			iterationCounter++;
+		}while (cursor.moveToNext());
+			
+			
+		}
+		return channelArray;
+	}
+		
+	
+	/**
 	 * A method for update the a channel in the database, given an STB, TODO: to test if this overwrite the old channel or just creates a new record
 	 * @param stb The STB in which the Channel should be update
 	 * @param channel The channel to be updated
