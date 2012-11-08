@@ -19,7 +19,8 @@ public class Discovery implements DiscoveryInterface {
 	/* Number of threads to scan */
 	private static int NUMBEROFSCANTHREADS = 32;
 	private static boolean ISRUNNING = false;
-	private static int threadCount = 0;
+	private static int threadCountSTBObj = 0;
+	private static int threadCountFindIP = 0;
 	private String subNetAddress;
 	long t1, t2, t3; //for timing measurement
 	
@@ -46,12 +47,12 @@ public class Discovery implements DiscoveryInterface {
 		try { // Creates a thread for every box to gather info
 			for (int i=0;i<boxes.size();i++) {
 				stbThread = new createSTBObjectThread(boxes.get(i));
-				threadCount++;
+				threadCountSTBObj++;
 				stbThread.start();
 				threads.add(stbThread);
 			}
 			
-			while(threadCount > 0) {
+			while(threadCountSTBObj > 0) {
 				try {
 					Thread.sleep(20);
 				} catch (InterruptedException e) { e.printStackTrace(); }
@@ -69,21 +70,6 @@ public class Discovery implements DiscoveryInterface {
 	}
 
 	/**
-	 * Checks if all threads are still scanning. 
-	 * @param objects
-	 * @return
-	 */
-	private boolean isScanning(LinkedList<ScanObjectThread> objects) {
-		int count = 0;
-		for (int i=0;i<NUMBEROFSCANTHREADS;i++) {
-			if (objects.get(i).isScanning() || ISRUNNING) {
-				return true;
-			}
-		}
-		
-		return false;
-	}
-	/**
 	 * Finds the IP addresses of any STB boxes in the sub network.
 	 * Returns a LinkedList with the IP addresses of the boxes.
 	 * @return
@@ -95,11 +81,12 @@ public class Discovery implements DiscoveryInterface {
 		ISRUNNING = true;
 		for (int j=0;j<NUMBEROFSCANTHREADS;j++) {
 			scanner = new ScanObjectThread(j);
+			threadCountFindIP++;
 			scanner.start();
 			objects.add(scanner);
 		}
 		t1 = System.nanoTime();
-		while(isScanning(objects)) {
+		while(threadCountFindIP > 0) {
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) { e.printStackTrace(); }
@@ -111,6 +98,7 @@ public class Discovery implements DiscoveryInterface {
 				break;
 			}
 		}
+		System.out.println("Ending scan");
 		return boxes;
 		
 	}
@@ -154,7 +142,6 @@ public class Discovery implements DiscoveryInterface {
 		private LinkedList<InetAddress> boxes = new LinkedList<InetAddress>();
 		private BufferedReader row = null;
 		private int rangeIndex;
-		private boolean isScanning = true;
 		
 		public ScanObjectThread (int rangeIndex) {
 			this.rangeIndex = rangeIndex;
@@ -175,14 +162,12 @@ public class Discovery implements DiscoveryInterface {
 		public LinkedList<InetAddress> getBoxes() {
 			return boxes;
 		}
-		public boolean isScanning() {
-			return isScanning;
-		}	
+	
 		public void run() {
 			for (int i = calculateStartRange(rangeIndex);i<calculateEndRange(rangeIndex) && ISRUNNING;i++) {
 				try {
 					addr = InetAddress.getByName(subNetAddress+Integer.toString(i));
-					
+					System.out.println("Trying: " + addr.toString());
 					if(addr.isReachable(TIMEOUTINMS)) {
 						if ((row = isZenterioSTB(addr)) != null) {
 							ISRUNNING = false;
@@ -197,13 +182,13 @@ public class Discovery implements DiscoveryInterface {
 				    			}
 				    		}
 				    		row.close();
-				    		isScanning = false;
 				    		break;
 						}
 					}
 				} catch(Exception e) {  /*e.printStackTrace();*/  }
 			}
-			isScanning = false;
+			
+			threadCountFindIP--;
 		}
 	}
 	
@@ -215,21 +200,17 @@ public class Discovery implements DiscoveryInterface {
 	private class createSTBObjectThread extends Thread {
 		private InetAddress addr;
 		private STB stb;
-		private boolean stillRunning = true;
 		
 		public createSTBObjectThread(InetAddress addr) {
 			this.addr = addr;
 		}
-		public boolean isRunning() {
-			return stillRunning;
-		}
+
 		public STB getBox() {
 			return stb;
 		}
 		public void run() {
 			stb = createSTBObject(addr);
-			stillRunning = false;
-			threadCount--;
+			threadCountSTBObj--;
 		}
 		/**
 		 * Creates an STB object
