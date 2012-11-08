@@ -14,6 +14,7 @@ import se.z_app.zmote.epg.EPGQuery;
 import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -59,7 +60,6 @@ public class EPGFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
     	
-    	LinearLayout.LayoutParams x = new android.widget.LinearLayout.LayoutParams(width,LayoutParams.MATCH_PARENT);
 		v = inflater.inflate(R.layout.fragment_epg, null);
 		i_layout = (LinearLayout)v.findViewById(R.id.channel_icons);
 		i_layout.setBackgroundColor(0x66000000);
@@ -88,7 +88,8 @@ public class EPGFragment extends Fragment{
     	for(int i=0; i<48; ++i){
 			
 			TextView time = new TextView(v.getContext());
-			time.setTextColor(0xFFFFFFFF);
+			time.setTextColor(0xFFFF8000);
+			time.setTypeface(null, Typeface.BOLD);
 			time.setText(new SimpleDateFormat("HH:mm").format(start) );
 			time.setWidth(screen_width/2);
 			time.setHeight(30);
@@ -108,10 +109,12 @@ public class EPGFragment extends Fragment{
     public void setNowLine(){
     
     	Date now = new Date(System.currentTimeMillis());
-    	int distance = 50;
+    	int start = 12;	// Starting time of the timeBar
+    	int distance = (now.getHours()-start)*screen_width + now.getMinutes()*screen_width/60;
     	
+    	// We just change the margin of the line according to the current time
     	RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(2,height_of_rows*number_of_channels);
-    	params.setMargins(distance+80, 30, 0, 0);
+    	params.setMargins(distance, 30, 0, 0);
     	LinearLayout line = (LinearLayout)v.findViewById(R.id.now_line);
     	line.setLayoutParams(params);
     	//line.invalidate();	// Not sure if needed
