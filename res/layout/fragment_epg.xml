@@ -3,40 +3,52 @@
     android:layout_height="fill_parent" >
 
     <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/epg_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbarAlwaysDrawVerticalTrack="true"
         android:scrollbars="vertical" >
-
-        <LinearLayout
-            android:id="@+id/channel_icons"
-            android:orientation="vertical" 
-       		android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="30dp">
-        </LinearLayout>
-
+            
         <HorizontalScrollView
 		     	android:id="@+id/hz_scroll"
 				android:layout_width="fill_parent"
 				android:layout_height="fill_parent"
-				android:layout_toRightOf="@id/channel_icons"
+				
 				android:fillViewport="true">
-       
-        <LinearLayout
-            android:id="@+id/channel_programs"
-            android:orientation="vertical" 
-       		android:layout_width="wrap_content"
-				android:layout_height="wrap_content">
-            
-        </LinearLayout>        
-        
-        
-       	
+              <RelativeLayout 
+	            android:id="@+id/hz_relative"
+	            android:layout_width="wrap_content"
+	            android:layout_height="match_parent"
+	            android:paddingLeft="80dp" >
+		        <LinearLayout
+		            android:id="@+id/channel_programs"
+		            android:orientation="vertical" 
+		       		android:layout_width="wrap_content"
+						android:layout_height="wrap_content">
+		            
+		        </LinearLayout>        
+	       	
+				  <LinearLayout
+			          android:id="@+id/now_line"
+			          android:layout_width="2dp"
+			          android:layout_height="400dp"
+			          android:layout_marginTop="30dp"
+			          android:layout_marginLeft="50dp"
+			          android:background="#FF8000">
+			          
+			      </LinearLayout>
+	         </RelativeLayout>
     	</HorizontalScrollView>
 
+      <LinearLayout
+			android:id="@+id/channel_icons"
+			android:orientation="vertical" 
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="30dp">
+              
+      </LinearLayout>
+        
       <ProgressBar
            android:id="@+id/progressEPGView"
            android:layout_width="wrap_content"

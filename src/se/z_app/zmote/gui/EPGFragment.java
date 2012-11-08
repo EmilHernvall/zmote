@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.support.v4.app.Fragment;
 
@@ -39,6 +40,7 @@ public class EPGFragment extends Fragment{
 	private LinearLayout p_layout;
 	private LinearLayout vt_scroll;
 	private int height_of_rows = 80;
+	private int number_of_channels = 0;
 	private int height=80;
 	private int width=80;
 	private Program program_temp;
@@ -56,9 +58,11 @@ public class EPGFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-
+    	
+    	LinearLayout.LayoutParams x = new android.widget.LinearLayout.LayoutParams(width,LayoutParams.MATCH_PARENT);
 		v = inflater.inflate(R.layout.fragment_epg, null);
 		i_layout = (LinearLayout)v.findViewById(R.id.channel_icons);
+		i_layout.setBackgroundColor(0x66000000);
 		vt_scroll = (LinearLayout)v.findViewById(R.id.channel_programs);
 		
 		// Get the size of the screen in pixels
@@ -101,6 +105,19 @@ public class EPGFragment extends Fragment{
     	
     }
     
+    public void setNowLine(){
+    
+    	Date now = new Date(System.currentTimeMillis());
+    	int distance = 50;
+    	
+    	RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(2,height_of_rows*number_of_channels);
+    	params.setMargins(distance+80, 30, 0, 0);
+    	LinearLayout line = (LinearLayout)v.findViewById(R.id.now_line);
+    	line.setLayoutParams(params);
+    	//line.invalidate();	// Not sure if needed
+
+    }
+    
     /**
      * Fetch the channels
      */
@@ -109,6 +126,7 @@ public class EPGFragment extends Fragment{
 		// First of all, we add the time bar
 		Date start = new Date(2012,10,10,12,0);
 		setProgramTimeBar(start);
+		number_of_channels = 0;		// Initialization 
 		
 		// Then, we add the channel information
 		for (Channel channel : epg) {
@@ -129,7 +147,9 @@ public class EPGFragment extends Fragment{
 			}
 			
 			vt_scroll.addView(p_layout);
-	     }	
+			number_of_channels++;
+	     }
+		setNowLine();
 	}
 
 	/**
