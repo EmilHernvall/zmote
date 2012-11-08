@@ -125,7 +125,14 @@ public class SelectSTBActivity extends Activity {
 		protected STB[] doInBackground(Integer... params) {
 			STBDiscovery stbDisc = new STBDiscovery(findSubnetAddress());
 			//STBDiscovery stbDisc = new STBDiscovery("130.236.248."); // -- Test to scan our test boxes
-			return stbDisc.find();
+			
+			long timer = System.currentTimeMillis();
+			
+			
+			STB[] tbr = stbDisc.find();
+			
+			System.out.println("Time to scan network: " + (System.currentTimeMillis()-timer) + "ms");
+			return tbr;
 		}
 
 		protected void onPreExecute() {

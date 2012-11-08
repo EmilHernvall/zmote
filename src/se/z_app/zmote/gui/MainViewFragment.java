@@ -793,6 +793,8 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 					int i = currentChannelNr;
 					@Override
 					public void onClick(View v) {
+						if(i != currentChannelNr && !isAnimationRunning)
+							main.vibrate();
 						setChannel(i);
 					}
 				});
