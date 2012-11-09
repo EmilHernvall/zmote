@@ -19,7 +19,7 @@
 	            android:id="@+id/hz_relative"
 	            android:layout_width="wrap_content"
 	            android:layout_height="match_parent"
-	            android:paddingLeft="80dp" >
+	            android:paddingLeft="80px" >
 		        <LinearLayout
 		            android:id="@+id/channel_programs"
 		            android:orientation="vertical" 
@@ -34,7 +34,8 @@
 			          android:layout_height="400dp"
 			          android:layout_marginTop="30dp"
 			          android:layout_marginLeft="50dp"
-			          android:background="#FF8000">
+			          android:background="#FF8000"
+			          android:visibility="gone">
 			          
 			      </LinearLayout>
 	         </RelativeLayout>
@@ -45,7 +46,7 @@
 			android:orientation="vertical" 
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginTop="30dp">
+			android:layout_marginTop="30px">
               
       </LinearLayout>
         
@@ -53,7 +54,7 @@
            android:id="@+id/progressEPGView"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
-           android:layout_alignParentTop="true"
+           android:layout_centerVertical="true"
            android:layout_centerHorizontal="true" />
     
     </RelativeLayout>

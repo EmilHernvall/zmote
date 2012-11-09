@@ -116,6 +116,7 @@ public class EPGFragment extends Fragment{
     	RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(2,height_of_rows*number_of_channels);
     	params.setMargins(distance, 30, 0, 0);
     	LinearLayout line = (LinearLayout)v.findViewById(R.id.now_line);
+    	line.setVisibility(LinearLayout.VISIBLE);
     	line.setLayoutParams(params);
     	//line.invalidate();	// Not sure if needed
 
