@@ -59,7 +59,7 @@ public class MainTestActivity extends Activity {
 			}
 		});
         
-        Button stb2 = (Button) findViewById(R.id.bLoadSTB1);
+        Button stb2 = (Button) findViewById(R.id.bLoadSTB2);
         stb2.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

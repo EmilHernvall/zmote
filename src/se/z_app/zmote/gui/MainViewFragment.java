@@ -124,18 +124,16 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 				if(Math.abs(dirX) > Math.abs(dirY)){	
 					//Changing Channel from swipe
 					if(dirX < 0 )
-						rotateRight();
+						setChannel(currentChannelNr-1);
 					else if (dirX > 0)	
-						rotateLeft();
-					
-					Channel channel = channelList.get(currentChannelNr);
-					RemoteControl.instance().launch(channel);
+						setChannel(currentChannelNr+1);
+
 				}else{
 					//Changing Volume from swipe
 					if(dirY < 0 )
-						RemoteControl.instance().sendButton(Button.VOLPLUS);
-					else if (dirY > 0)
 						RemoteControl.instance().sendButton(Button.VOLMINUS);
+					else if (dirY > 0)
+						RemoteControl.instance().sendButton(Button.VOLPLUS);
 				}
 			}
 		}
@@ -212,13 +210,23 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 			can1++;
 		}
 
-		if(fin < 0)
+		Button b;
+		if(fin < 0){
 			rotateRight(fin*(-1));
-		else
+			b = Button.CHANNELMINUS;
+		}
+		else{
 			rotateLeft(fin);
+			b = Button.CHANNELPLUS;
+		}
 		
-		Channel channel = channelList.get(channelNr);
-		RemoteControl.instance().launch(channel);
+		for(int i = 0; i < Math.abs(fin); i++){
+			RemoteControl.instance().sendButton(b);
+		}
+			
+		//Channel channel = channelList.get(channelNr);
+		//RemoteControl.instance().launch(channel);
+		
 
 	}
 
@@ -793,9 +801,10 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 					int i = currentChannelNr;
 					@Override
 					public void onClick(View v) {
-						if(i != currentChannelNr && !isAnimationRunning)
+						if(i != currentChannelNr && !isAnimationRunning){
 							main.vibrate();
-						setChannel(i);
+							setChannel(i);
+						}
 					}
 				});
 
@@ -808,10 +817,12 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 			currentChannelNr = 0;
 			if(target != null){
 				for(int i = 0; i< channelList.size(); i++){
-					if(target.getUrl().contains(channelList.get(i).getUrl())){
-						currentChannelNr = i;
-						break;
-					}
+					if(channelList.get(i) != null)
+						if(channelList.get(i).getUrl() != null)
+							if(target.getUrl().contains(channelList.get(i).getUrl())){
+								currentChannelNr = i;
+								break;
+							}	
 				}
 			}
 			
