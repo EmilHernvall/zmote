@@ -11,62 +11,100 @@ import se.z_app.stb.Channel;
 import se.z_app.stb.EPG;
 import se.z_app.stb.STB;
 
-
+/**
+ * Class that handles communication with an STB and its EPG
+ * @author marcus
+ */
 public class EPGData implements Observer{
 	private STB stb;
 	private BiDirectionalCmdInterface com;
 	
-	//Singleton and adding itself as an observer
+	/**
+	 * Singleton and it observes itself
+	 */
 	private static class SingletonHolder { 
         public static final EPGData INSTANCE = new EPGData();
 	}
-		
+	
+	/**
+	 * Get the instance of this class
+	 * @return the instance
+	 */
 	public static EPGData instance(){
 		return SingletonHolder.INSTANCE;
 	}
 	
+	/**
+	 * Private constructor, since it's a singleton
+	 */
 	private EPGData(){
 		STBContainer.instance().addObserver(this);
 	}
 	
-	
+	/**
+	 * Update the EPGData with a (possibly) new STB and command interface
+	 */
+	@Override
 	public void update(Observable observable, Object data) {
 		stb = STBContainer.instance().getActiveSTB();
 		com = AbstractAPIFactory.getFactory(stb).getBiDirectional();
 	}
 	
+	/**
+	 * Get the current EPG
+	 * @return the EPG
+	 */
 	public EPG getEPG(){
 		Log.i("SearchTest", "STB box name ->" + stb.getBoxName());
 		Log.i("SearchTest", "com ->" + com.getClass().getName());
 		
-		if(com == null)
+		if(com == null) {
 			return null;
-		
+		}
 		
 		EPG epg = com.getEPG();
-		if(epg != null)
+		if(epg != null) {
 			epg.setStb(stb);
+		}
 		
 		return epg; 
 	}
 	
+	/**
+	 * Get the current channel
+	 * @return the current channel
+	 */
 	public Channel getCurrentChannel(){
 		if(com == null)
 			return null;
 		return com.getCurrentChannel();
 	}
+	
+	/**
+	 * Get the icon for a channel
+	 * @param channel
+	 * @return the icon as a bitmap
+	 */
 	public Bitmap getChannelIcon(Channel channel){
 		if(com == null || channel == null)
 			return null;
 		return com.getChannelIcon(channel);
 	}
 	
+	/**
+	 * Get the icon for a channel, and set that channels icon to it
+	 * @param channel
+	 */
 	public void populateWithChannelIcon(Channel channel){
 		if(com == null || channel == null)
 			return;
 		channel.setIcon(getChannelIcon(channel));
 	}
 	
+	/**
+	 * Populate all channels in an EPG with icons
+	 * @param epg
+	 */
 	public void populateWithChannelIcon(EPG epg){
 		if(com == null || epg == null)
 			return;
@@ -76,6 +114,10 @@ public class EPGData implements Observer{
 		}
 	}
 	
+	/**
+	 * Populate channels without icons with the appropriate icons
+	 * @param epg
+	 */
 	public void populateAbsentChannelIcon(EPG epg){
 		if(com == null || epg == null)
 			return;
