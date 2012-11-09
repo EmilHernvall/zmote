@@ -13,14 +13,14 @@ import se.z_app.stb.STB;
 
 /**
  * Class that handles communication with an STB and its EPG
- * @author marcus
+ * @author ?
  */
 public class EPGData implements Observer{
 	private STB stb;
 	private BiDirectionalCmdInterface com;
 	
 	/**
-	 * Singleton and it observes itself
+	 * Singleton
 	 */
 	private static class SingletonHolder { 
         public static final EPGData INSTANCE = new EPGData();
