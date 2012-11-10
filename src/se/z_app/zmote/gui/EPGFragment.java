@@ -282,6 +282,8 @@ public class EPGFragment extends Fragment{
 	 */
 	public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
 	
+		if(bm == null)
+			return null;
 		int width = bm.getWidth();
 		int height = bm.getHeight();
 		float scaleWidth = ((float) newWidth) / width;
