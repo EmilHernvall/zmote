@@ -2,6 +2,7 @@ package se.z_app.zmote.gui;
 
 
 import se.z_app.stb.api.RemoteControl;
+import se.z_app.zmote.epg.EPGContentHandler;
 import android.os.Bundle;
 import android.os.Handler;
 import android.app.Activity;
@@ -27,6 +28,8 @@ public class SplashActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    	EPGContentHandler.setContext(this.getApplicationContext());
+        EPGContentHandler.instance();
         setContentView(R.layout.activity_splash);
     }
 
