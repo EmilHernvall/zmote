@@ -7,9 +7,9 @@ import se.z_app.stb.STBEvent;
 
 /**
  * 
- * @author Leonard Jansson, Viktor von Zeipel, refractord by Rasmus Holm, Linus back
+ * @author Leonard Jansson, Viktor von Zeipel, refractored by Rasmus Holm, Linus Back
  * 
- *
+ * TODO: Implementation.
  */
 public class RCProxy implements Observer{
 
