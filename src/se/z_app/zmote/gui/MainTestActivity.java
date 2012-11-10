@@ -75,6 +75,23 @@ public class MainTestActivity extends Activity {
 			}
 		});
         
+        Button stb3 = (Button) findViewById(R.id.LoadLocalSTB);
+        stb3.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// Write in your local STB
+				STB stb = new STB();
+				stb.setBoxName("Zenterio15");
+				stb.setIP("192.168.0.15");
+				stb.setType(STBEnum.ZENTERIO);
+				stb.setMAC("00:07:67:9B:EB:2F");
+			
+				STBContainer.instance().setActiveSTB(stb);
+				
+			}
+		});
+        
         Button splash = (Button) findViewById(R.id.bSplash);
         splash.setOnClickListener(new View.OnClickListener() {
 			@Override
