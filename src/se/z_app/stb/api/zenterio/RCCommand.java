@@ -2,6 +2,7 @@ package se.z_app.stb.api.zenterio;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -137,10 +138,11 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 		 * @param address
 		 * @param arg1
 		 */
+		@SuppressWarnings("deprecation")
 		public RCCommandRunnable(Method method, String address, String arg1){
 			this.method = method;
 			this.address = address;
-			this.arg1 = arg1;
+			this.arg1 = URLEncoder.encode(arg1);
 		}
 		/**
 		 * Constructor with 2 arguments.
@@ -149,11 +151,12 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 		 * @param arg1
 		 * @param arg2
 		 */
+		@SuppressWarnings("deprecation")
 		public RCCommandRunnable(Method method, String address, String arg1, String arg2){
 			this.method = method;
 			this.address = address;
-			this.arg1 = arg1;
-			this.arg2 = arg2;
+			this.arg1 = URLEncoder.encode(arg1);
+			this.arg2 = URLEncoder.encode(arg2);
 			
 		}
 		/**
@@ -164,12 +167,13 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 		 * @param arg2
 		 * @param arg3
 		 */
+		@SuppressWarnings("deprecation")
 		public RCCommandRunnable(Method method, String address, String arg1, String arg2, String arg3){
 			this.method = method;
 			this.address = address;
-			this.arg1 = arg1;
-			this.arg2 = arg2;
-			this.arg3 = arg3;
+			this.arg1 = URLEncoder.encode(arg1);
+			this.arg2 = URLEncoder.encode(arg2);
+			this.arg3 = URLEncoder.encode(arg3);
 			
 		}
 
