@@ -6,6 +6,7 @@ import java.io.InputStream;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 
 import java.util.Date;
 
@@ -169,15 +170,19 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 			return new GetHTTPResponse().getImage(url);
 	}
 
-
+	
 	public Bitmap getWebTVItemIcon(WebTVItem item) {
 		String url = "http://" + ip +"/mdio/webtv/icon?locator=" + item.getIconURL();			
 		return new GetHTTPResponse().getImage(url);
 	}
-
+	/** 
+	 * Serach for WebTv. Input query is the search string and service is the 
+	 * WebTVServis i.e youtube or spotify. 
+	 */
 	public WebTVItem[] searchWebTVService(String query, WebTVService service) {
-		String jsonString = new GetHTTPResponse().getJSON("http://" + ip + 
-				"/mdio/webtv/search?service=" + service.getID() + "&q=" + query);
+		@SuppressWarnings("deprecation")
+		String jsonString = new GetHTTPResponse().getJSON(String.format("http://" + ip + "/mdio/webtv/search?service=" + 
+		service.getID() + "&q=%s", URLEncoder.encode(query)));
 		WebTVItem webResults[] = null;
 		
 		try {
