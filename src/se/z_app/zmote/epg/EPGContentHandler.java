@@ -98,7 +98,6 @@ public class EPGContentHandler implements Runnable, Observer{
 			if(cachedEPG == null || cachedEPG.getDateOfCreation() < System.currentTimeMillis() + updateIntervalMillis) {
 				currentEPG = EPGData.instance().getEPG();
 				if(currentEPG != null) {
-					EPGData.instance().populateWithChannelIcon(currentEPG);
 					EPGData.instance().populateAbsentChannelIcon(currentEPG);
 				}
 				else{
@@ -113,7 +112,6 @@ public class EPGContentHandler implements Runnable, Observer{
 		else {
 			currentEPG = EPGData.instance().getEPG();
 			if(currentEPG != null){
-				EPGData.instance().populateWithChannelIcon(currentEPG);
 				EPGData.instance().populateAbsentChannelIcon(currentEPG);
 			}else{
 				currentEPG = new EPG();
