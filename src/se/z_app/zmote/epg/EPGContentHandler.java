@@ -7,6 +7,9 @@ import se.z_app.stb.Channel;
 import se.z_app.stb.EPG;
 import se.z_app.stb.api.EPGData;
 import se.z_app.stb.api.STBContainer;
+import android.app.Activity;
+import android.content.Context;
+import android.util.Log;
 
 /**
  * Class that contains and controls the current EPG and the current channel
@@ -18,7 +21,10 @@ public class EPGContentHandler implements Runnable, Observer{
 	private Thread thread;
 	private boolean isRunning;
 	private EPG currentEPG;
-	private Channel currentChannel; 
+	private Channel currentChannel;
+	private EPGdbHandler theDatabaseHandler;
+	private static Context theContext;
+	private long updateIntervalMillis = 3600 * 1000;
 
 	/* Singleton */
 	private static class SingletonHolder { 
@@ -34,6 +40,13 @@ public class EPGContentHandler implements Runnable, Observer{
 	}
 	
 	/**
+	 * Set the context for the database
+	 */
+	public static void setContext(Context theContextIn) {
+		theContext = theContextIn;
+	}
+	
+	/**
 	 * The private constructor
 	 */
 	private EPGContentHandler(){	
@@ -41,10 +54,9 @@ public class EPGContentHandler implements Runnable, Observer{
 		isRunning = true;
 		
 		STBContainer.instance().addObserver(this);
-		thread.start();
 		currentEPG = new EPG();
 		currentChannel = new Channel();
-		
+		thread.start();
 	}
 	
 	/**
@@ -79,13 +91,31 @@ public class EPGContentHandler implements Runnable, Observer{
 	/**
 	 * Build the EPG by getting the icons from the box
 	 */
-	private void buildEPG(){
-		currentEPG = EPGData.instance().getEPG();
-		if(currentEPG != null){
-			EPGData.instance().populateWithChannelIcon(currentEPG);
-			EPGData.instance().populateAbsentChannelIcon(currentEPG);
-		}else{
-			currentEPG = new EPG();
+	private void buildEPG() {
+		if(theContext != null) {
+			EPGdbHandler theHandler = new EPGdbHandler(theContext);
+			EPG cachedEPG = theHandler.selectEPG(STBContainer.instance().getActiveSTB());
+			if(cachedEPG == null || cachedEPG.getDateOfCreation() < System.currentTimeMillis() + updateIntervalMillis) {
+				currentEPG = EPGData.instance().getEPG();
+				if(currentEPG != null) {
+					EPGData.instance().populateAbsentChannelIcon(currentEPG);
+				}
+				else{
+					currentEPG = new EPG();
+				}
+				theHandler.updateEPG(STBContainer.instance().getActiveSTB(), currentEPG);
+			}
+			else {
+				currentEPG = cachedEPG;
+			}
+		}
+		else {
+			currentEPG = EPGData.instance().getEPG();
+			if(currentEPG != null){
+				EPGData.instance().populateAbsentChannelIcon(currentEPG);
+			}else{
+				currentEPG = new EPG();
+			}
 		}
 	}
 	
@@ -131,6 +161,22 @@ public class EPGContentHandler implements Runnable, Observer{
 			thread.notifyAll();
 		}	
 		
+	}
+	
+	/**
+	 * Get the current time limit for how long the EPG is valid
+	 * @return milliseconds
+	 */
+	public long getUpdateInterval() {
+		return updateIntervalMillis;
+	}
+	
+	/**
+	 * Set the current time limit for how long the EPG is valid
+	 * @param interval in milliseconds
+	 */
+	public void setUpdateInterval(long intervalIn) {
+		updateIntervalMillis = intervalIn;
 	}
 
 }

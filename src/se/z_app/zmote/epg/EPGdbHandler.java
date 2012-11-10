@@ -98,9 +98,12 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 		epg.setDateOfCreation(cursor.getLong(cursor.getColumnIndex(EPG_DATEOFCREATION)));  //TODO: FAILES HERE
 		System.out.println("the get int from EPG_DATEOFCREATION"+cursor.getLong(cursor.getColumnIndex(EPG_DATEOFCREATION)));  //TODO: REMOVE
 		}
-		
-
+		else {
+			db.close();
+			return null;
+		}
 //		String whereClause = ""+STB_MAC+"='"+stb.getMAC()+"'";
+		cursor.close();
 		cursor = db.query(TABLE_CHANNEL,null,""+STB_MAC+"='"+stb.getMAC() + "'", null,null,null,null);
 //		Channel[] channels = new Channel[cursor.getCount()];
 //		int iterationCounter=0;
@@ -118,6 +121,8 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 		}while (cursor.moveToNext());
 			
 		}
+		cursor.close();
+		db.close();
 		return epg;
 	}
 	/**
@@ -170,6 +175,8 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 			
 			
 		}
+		cursor.close();
+		db.close();
 		return channelArray;
 	}
 		
@@ -244,6 +251,8 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 			
 			
 		}
+		cursor.close();
+		db.close();
 		return programArray;
 	}
 	/**
@@ -268,7 +277,7 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 		if (nrOfRowsAffected==0){
 			db.insert(TABLE_PROGRAM, null,values);
 		}
-
+		db.close();
 	}
 	/**
 	 *A method for update programs
