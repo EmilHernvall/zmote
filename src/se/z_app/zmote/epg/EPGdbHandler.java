@@ -1,6 +1,7 @@
 package se.z_app.zmote.epg;
 
 import java.util.Date;
+import java.util.Iterator;
 
 import se.z_app.stb.Channel;
 import se.z_app.stb.EPG;
@@ -22,7 +23,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class EPGdbHandler extends SQLiteOpenHelper {
 	//	SQLiteDatabase database;
-	private static final int DATABASE_VERSION=6;  //Basically, if one have made any changes to the onCreate(), change version number here will update the db
+	private static final int DATABASE_VERSION=7;  //Basically, if one have made any changes to the onCreate(), change version number here will update the db
 	private static final String DATABASE_Name="EPGData";
 	private static final String TABLE_CHANNEL="channel";
 	private static final String CHANNEL_NAME="name";
@@ -39,6 +40,9 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 	private static final String PROGRAM_DURATION="duration";
 	private static final String PROGRAM_SHORTTEXT="shortText";
 	private static final String PROGRAM_LONGTEXT="longText";
+	
+	private static final String TABLE_EPG ="epg";
+	private static final String EPG_DATEOFCREATION ="dateOfCreation";
 	
 //	private static final String TABLE_STB ="stb";
 //	private static final String STB_TYPE="type";
@@ -61,6 +65,8 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 		db.execSQL(query); 
 		query = "CREATE TABLE " +TABLE_PROGRAM +"("+STB_MAC+" TEXT,"+CHANNEL_NR+" INTEGER,"+PROGRAM_NAME+" TEXT,"+PROGRAM_EVENTID +" INTEGER," +PROGRAM_START +" INTEGER, "+ PROGRAM_DURATION +" INTEGER,"+ PROGRAM_SHORTTEXT +" TEXT,"+PROGRAM_LONGTEXT +" TEXT);"; //TODO: Is the channel_nr uniqe?
 		db.execSQL(query);
+		query = "CREATE TABLE " +TABLE_EPG +"("+STB_MAC+" TEXT,"+EPG_DATEOFCREATION+" INTEGER);"; 
+		db.execSQL(query);
 //		query = "CREATE TABLE " +TABLE_STB +"("+STB_TYPE+" TEXT,"+STB_MAC +" TEXT," +STB_IP +" TEXT, "+ STB_BOXNAME +" TEXT);";
 //		db.execSQL(query);
 	}
@@ -72,6 +78,7 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		db.execSQL("DROP TABLE IF EXISTS "+TABLE_CHANNEL);  //TODO: not correct yet ??not??
 		db.execSQL("DROP TABLE IF EXISTS "+TABLE_PROGRAM);
+		db.execSQL("DROP TABLE IF EXISTS "+TABLE_EPG);
 //		db.execSQL("DROP TABLE IF EXISTS "+TABLE_STB);
 		onCreate(db);
 		}
@@ -84,10 +91,17 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 	public EPG selectEPG(STB stb){
 		EPG epg = new EPG();
 		epg.setStb(stb);
-		
+//		System.out.println(epg.getStb().getBoxName());
 		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.query(TABLE_EPG,null,""+STB_MAC+"='"+stb.getMAC() + "'", null,null,null,null);
+		if (cursor.moveToFirst()){
+		epg.setDateOfCreation(cursor.getLong(cursor.getColumnIndex(EPG_DATEOFCREATION)));  //TODO: FAILES HERE
+		System.out.println("the get int from EPG_DATEOFCREATION"+cursor.getLong(cursor.getColumnIndex(EPG_DATEOFCREATION)));  //TODO: REMOVE
+		}
+		
+
 //		String whereClause = ""+STB_MAC+"='"+stb.getMAC()+"'";
-		Cursor cursor = db.query(TABLE_CHANNEL,null,""+STB_MAC+"='"+stb.getMAC() + "'", null,null,null,null);
+		cursor = db.query(TABLE_CHANNEL,null,""+STB_MAC+"='"+stb.getMAC() + "'", null,null,null,null);
 //		Channel[] channels = new Channel[cursor.getCount()];
 //		int iterationCounter=0;
 		if(cursor.moveToFirst()) {
@@ -112,9 +126,23 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 	 * @param epg The EPG which to be updated
 	 */
 	public void updateEPG(STB stb, EPG epg){
-		//TODO: Implement me
-//		SQLiteDatabase db = this.getWritableDatabase();
+		SQLiteDatabase db = this.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		String whereClause = ""+STB_MAC+"='"+stb.getMAC()+"'";
+		values.put(STB_MAC, stb.getMAC());
+		values.put(EPG_DATEOFCREATION, epg.getDateOfCreation());
 		
+		int nrOfRowsAffected = db.update(TABLE_EPG, values, whereClause, null);
+		if(nrOfRowsAffected==0){
+			db.insert(TABLE_EPG,null,values);
+		}
+		db.close();
+		
+		
+		Iterator<Channel> iterator = epg.iteratorByNr();
+		while(iterator.hasNext()){
+			this.updateChannel(stb, iterator.next());
+		}		
 	}
 	
 	/**
@@ -127,7 +155,6 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 		//Cursor cursor = db.rawQuery(selectQuery, null); //old
 		Cursor cursor = db.query(TABLE_CHANNEL,null,""+STB_MAC+"='"+stb.getMAC() + "'", null,null,null,null);
 		Channel[] channelArray = new Channel[cursor.getCount()]; //length is null
-		System.out.println("cursor coint is " +cursor.getCount());
 		int iterationCounter=0;
 		if(cursor.moveToFirst()) {
 			do{
@@ -139,7 +166,7 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 			channel.setTsid(cursor.getInt(cursor.getColumnIndex(CHANNEL_TSID)));
 			channelArray[iterationCounter]=channel; 
 			iterationCounter++;
-		}while (cursor.moveToNext());
+		} while (cursor.moveToNext());
 			
 			
 		}
@@ -154,21 +181,9 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 	 */
 	public void updateChannel(STB stb, Channel channel){
 		SQLiteDatabase db = this.getWritableDatabase();
-		//TESTING STARTS HERE TODO: REMOVE THIS
-
-		Cursor cursor = db.query(TABLE_CHANNEL, null, null, null, null, null, null);
-		if(cursor.moveToFirst()) {
-			do{
-				System.out.println(cursor.getString(0));
-			}while (cursor.moveToNext());
-
-
-		}
-		//TESTING ENDS HERE
-
+	
 		ContentValues values = new ContentValues();
 		String whereClause = ""+STB_MAC+"='"+stb.getMAC()+"'";
-		System.out.println(whereClause);
 		values.put(STB_MAC, stb.getMAC());
 		values.put(CHANNEL_NAME, channel.getName());
 		values.put(CHANNEL_ICONURL, channel.getIconUrl());
@@ -176,7 +191,6 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 		values.put(CHANNEL_ONID, channel.getOnid());
 		values.put(CHANNEL_TSID, channel.getTsid());
 		values.put(CHANNEL_SID, channel.getSid());
-		System.out.println(channel.getName()); //TODO: remove
 
 		//		db.insert(TABLE_CHANNEL, null, values); //TODO: Remove this, use update instead
 		int nrOfRowsAffected = db.update(TABLE_CHANNEL, values, whereClause, null); //seams to fail, add new records instead of updating
@@ -212,7 +226,6 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 		//Cursor cursor = db.rawQuery(selectQuery, null); //old
 		Cursor cursor = db.query(TABLE_PROGRAM,null,""+STB_MAC+"='"+stb.getMAC() + "' AND "+CHANNEL_NR+"="+channel.getNr()+"", null,null,null,null);
 		Program[] programArray = new Program[cursor.getCount()]; //length is null
-		System.out.println("cursor coint is " +cursor.getCount());
 		int iterationCounter=0;
 		if(cursor.moveToFirst()) {
 			do{
@@ -252,7 +265,6 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 		values.put(PROGRAM_SHORTTEXT, program.getShortText());
 		values.put(PROGRAM_LONGTEXT, program.getLongText());
 		int nrOfRowsAffected = db.update(TABLE_PROGRAM, values, whereClause, null);
-		System.out.println("nr of rows affected="+nrOfRowsAffected);
 		if (nrOfRowsAffected==0){
 			db.insert(TABLE_PROGRAM, null,values);
 		}
