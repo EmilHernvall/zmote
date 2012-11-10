@@ -23,6 +23,7 @@
             android:label="@string/title_activity_main_test" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -32,6 +33,7 @@
             android:theme="@android:style/Theme.NoTitleBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -70,6 +72,15 @@
         <activity
             android:name=".MainTabActivity"
             android:label="@string/title_activity_main_tab" >
+        </activity>
+        <activity
+            android:name=".FacebookLogin"
+            android:label="@string/title_activity_facebook_test" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

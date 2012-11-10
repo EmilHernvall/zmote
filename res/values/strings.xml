@@ -45,5 +45,6 @@
     <string name="add_stb_text">Add STB</string>
     <string name="top_lists">Top lists</string>
     <string name="search">Search</string>
+    <string name="title_activity_facebook_test">FacebookTestActivity</string>
 
 </resources>

@@ -125,6 +125,18 @@ public class MainTestActivity extends Activity {
 			}
 		});
         
+        Button facebook = (Button) findViewById(R.id.button1);
+        facebook.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				System.out.println("clicked the dam facebook button");
+				Intent intent = new Intent(MainTestActivity.this, FacebookLogin.class);
+				MainTestActivity.this.startActivity(intent);
+			}
+		});
+        
+        
+        
     }
 
     @Override
