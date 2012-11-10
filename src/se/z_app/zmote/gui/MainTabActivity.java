@@ -8,8 +8,6 @@ import com.actionbarsherlock.app.ActionBar.TabListener;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 
-
-
 import se.z_app.stb.STB;
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.stb.api.STBContainer;
@@ -32,7 +30,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 
-
+/**
+ * TODO: Fill info
+ * @author 
+ *
+ */
 public class MainTabActivity extends SherlockFragmentActivity implements TabListener{
 
 	private com.actionbarsherlock.app.ActionBar actionBar;

@@ -9,7 +9,8 @@ import se.z_app.stb.STB;
 /**
  * Remote control needs a STB in the STBContainer to be able to send 
  * commands.
- * @author Linus
+ * @author Linus Back
+ * TODO: Add Javadoc comments for functions
  *
  */
 public class RemoteControl implements Observer {
