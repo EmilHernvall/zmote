@@ -21,7 +21,9 @@ public class MainTestActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_test);
         EPGData.instance();
+        EPGContentHandler.setContext(this.getApplicationContext());
         EPGContentHandler.instance();
+        
         STBContainer.instance();
         
         
