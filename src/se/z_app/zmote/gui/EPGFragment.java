@@ -29,7 +29,7 @@ import android.support.v4.app.Fragment;
 
 /**
  * 
- * @author Thed&Ralf
+ * @author Thed, Ralf, Francisco, Maria
  *
  */
 public class EPGFragment extends Fragment{
@@ -110,7 +110,7 @@ public class EPGFragment extends Fragment{
     
     	Date now = new Date(System.currentTimeMillis());
     	int start = 12;	// Starting time of the timeBar
-    	int distance = (now.getHours()-start)*screen_width + now.getMinutes()*screen_width/60;
+    	int distance = (now.getHours()-start)*screen_width + (now.getMinutes()*screen_width)/60;
     	
     	// We just change the margin of the line according to the current time
     	RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(2,height_of_rows*number_of_channels);
@@ -157,7 +157,7 @@ public class EPGFragment extends Fragment{
 	}
 
 	/**
-	 * 
+	 * Adding icon to the layout
 	 * @param ch
 	 */
 	void addIconToLayout(Channel ch){
@@ -282,6 +282,8 @@ public class EPGFragment extends Fragment{
 	 */
 	public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
 	
+		if(bm == null)
+			return null;
 		int width = bm.getWidth();
 		int height = bm.getHeight();
 		float scaleWidth = ((float) newWidth) / width;
