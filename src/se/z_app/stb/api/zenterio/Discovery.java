@@ -17,17 +17,17 @@ import se.z_app.stb.api.DiscoveryInterface;
 /**
  * This implementation is 5 times as fast as the original implementation of Discovery, this is largely due to not reading the
  * last line from a cgi-bin/zids_discovery since that line contains info about others that seams to be render in real time
- * @author raz
+ * @author Rasmus Holm
  *
  */
-public class DiscoveryAlt implements DiscoveryInterface{
+public class Discovery implements DiscoveryInterface{
 
 	private int timeout = 200;
 	private int nrOfThreads = 64;
 	private String network;
 	private static int runningThreads = 0;
 	
-	public DiscoveryAlt(String network){
+	public Discovery(String network){
 		this.network = network;
 	}
 	
