@@ -66,6 +66,8 @@ public class WebTVFragment extends Fragment {
 				linLay.setVisibility(View.GONE);
 				LinearLayout linLayResult = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
 				linLayResult.setVisibility(View.VISIBLE);
+				LinearLayout linLayTopList = (LinearLayout) view_temp.findViewById(R.id.top_list);
+				linLayTopList.setVisibility(View.GONE);
 			}
 		});
 		
@@ -79,8 +81,8 @@ public class WebTVFragment extends Fragment {
 				// Go back to first view
 				LinearLayout linLay = (LinearLayout) view_temp.findViewById(R.id.searchBar);
 				linLay.setVisibility(View.VISIBLE);
-				EditText defaultText = (EditText) view_temp.findViewById(R.id.defaultText);
-				defaultText.setText("What do you want to search for?");
+				LinearLayout linLayTopList = (LinearLayout) view_temp.findViewById(R.id.top_list);
+				linLayTopList.setVisibility(View.VISIBLE);
 				LinearLayout linLayResult = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
 				linLayResult.setVisibility(View.GONE);
 				
