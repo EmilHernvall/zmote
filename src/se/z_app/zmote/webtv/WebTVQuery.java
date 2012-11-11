@@ -32,6 +32,19 @@ public class WebTVQuery {
 		}
 	}
 	
+	public Bitmap populateWebTVItemsWithIcon(WebTVItem item){
+		Bitmap b = WebTVCommand.instance().getIcon(item);
+		item.setIcon(b);
+		return b;
+	}
+	
+	public void populateWebTVItemsWithIcon(WebTVItem item[]){
+		for(WebTVItem ite : item){
+			Bitmap b = WebTVCommand.instance().getIcon(ite);
+			ite.setIcon(b);		
+		}
+	}
+	
 	public WebTVItem[] search(String q, WebTVService s){
 		return WebTVCommand.instance().search(q, s);
 	}
