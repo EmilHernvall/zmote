@@ -1,13 +1,15 @@
 package se.z_app.zmote.gui;
 
+
+
 import se.z_app.stb.STB;
 import se.z_app.stb.STB.STBEnum;
 import se.z_app.stb.api.EPGData;
 import se.z_app.stb.api.STBContainer;
 import se.z_app.zmote.epg.EPGContentHandler;
-import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -84,8 +86,8 @@ public class MainTestActivity extends Activity {
 			public void onClick(View v) {
 				// Write in your local STB
 				STB stb = new STB();
-				stb.setBoxName("Zenterio228");
-				stb.setIP("130.236.248.228");
+				stb.setBoxName("Zenterio227");
+				stb.setIP("130.236.248.227");
 				stb.setType(STBEnum.ZENTERIO);
 				stb.setMAC("00:07:67:9B:EB:35");
 			
@@ -129,9 +131,9 @@ public class MainTestActivity extends Activity {
         facebook.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				System.out.println("clicked the dam facebook button");
 				Intent intent = new Intent(MainTestActivity.this, FacebookLogin.class);
 				MainTestActivity.this.startActivity(intent);
+				;
 			}
 		});
         

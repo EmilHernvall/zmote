@@ -41,6 +41,9 @@ public class WebTVFragment extends Fragment {
 	private ProgressBar pb;
 	private Spinner spinner;
 	private ArrayAdapter<Drawable> dataAdapter;
+	private WebTVService services[];
+	private boolean ready_to_search = false;
+	private String search_for_this;
 	
 	
 	public WebTVFragment(){
@@ -86,20 +89,14 @@ public class WebTVFragment extends Fragment {
 		// We can set a progress bar to show the user that we are searching
 		pb = (ProgressBar)view_temp.findViewById(R.id.progressLodingEpgChannelInformation);
 		EditText search_box = (EditText)view_temp.findViewById(R.id.search_box_webtv);
-		String search_for_this = search_box.getText().toString();
-		
+		search_for_this = search_box.getText().toString();
+
 		// Here we should call a function like this
-		WebTVQuery query = new WebTVQuery();
-		WebTVService service[] = query.getService();
-		
-		//System.out.println(service[0].getName().toString());
-		//System.out.println(query.getService().toString());
-		WebTVItem[] elements= query.search(search_for_this, service[0]);
-		//System.out.println(elements[0].getTitle().toString());
-		
+		new AsyncWebSearch().execute();
+
 		// After getting the results
 		// pb.setVisibility(View.GONE);	// Quit the progress bar
-		showResults(elements);
+		//showResults(elements);
 		
 	}
 	
@@ -113,7 +110,8 @@ public class WebTVFragment extends Fragment {
 		LinearLayout.LayoutParams item_container_params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);
 		item_container_params.setMargins(4, 4, 4, 0);
 		LinearLayout.LayoutParams item_params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
-		
+		LinearLayout.LayoutParams icon_params = new LinearLayout.LayoutParams(100,80);
+
 		for(WebTVItem x: res){
 			LinearLayout item_container = new LinearLayout(view_temp.getContext());
 			item_container.setBackgroundColor(0xFF999999);
@@ -128,7 +126,7 @@ public class WebTVFragment extends Fragment {
 			title.setText(x.getTitle());
 			title.setTextColor(0xFF000000);
 			
-			item.addView(icon);
+			item.addView(icon, icon_params);
 			item.addView(title);
 			item_container.addView(item, item_params);
 			results_ly.addView(item_container, item_container_params);
@@ -197,8 +195,10 @@ public class WebTVFragment extends Fragment {
 		@Override
 		protected WebTVService[] doInBackground(Integer... params) {
 			WebTVQuery query = new WebTVQuery();
-			WebTVService services[] = query.getService();
+			//WebTVService services[] = query.getService();
+			services = query.getService();
 			query.populateWithIcon(services);
+			ready_to_search = true;
 			return services;
 		}
 
@@ -206,6 +206,27 @@ public class WebTVFragment extends Fragment {
 		protected void onPostExecute(WebTVService services[]) {
 			addItemsOnSpinner(services);
 		}
+	}
+	
+	private class AsyncWebSearch extends AsyncTask<Integer, Integer, WebTVItem[]>{
+
+		@Override
+		protected WebTVItem[] doInBackground(Integer... arg0) {
+			
+			WebTVQuery query = new WebTVQuery();
+			System.out.println("Starting search");
+			WebTVItem[] elements= query.search(search_for_this, services[0]);
+			System.out.println("Search finished");
+			System.out.println(services[0].getName().toString());
+			System.out.println(elements[0].getTitle().toString());
+			return elements;
+		}
+		
+		@Override
+		protected void onPostExecute(WebTVItem elements[]) {
+			showResults(elements);
+		}
+		
 	}
 	
 }

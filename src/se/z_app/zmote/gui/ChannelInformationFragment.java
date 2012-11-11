@@ -344,7 +344,7 @@ public class ChannelInformationFragment extends Fragment{
     	// Now we add the Imdb, Fav and Social buttons
     	LinearLayout.LayoutParams but_params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
     	but_params.setMargins(0, 0, 0, 0);
-    	LinearLayout.LayoutParams but_left_space_params = new LinearLayout.LayoutParams(width_screen-205, LayoutParams.WRAP_CONTENT);
+    	LinearLayout.LayoutParams but_left_space_params = new LinearLayout.LayoutParams(width_screen-305, LayoutParams.WRAP_CONTENT);
     	but_left_space_params.setMargins(0, 0, 0, 0);
     	LinearLayout but_left_space = new LinearLayout(view_temp.getContext());
     	but_left_space.setOrientation(1);
