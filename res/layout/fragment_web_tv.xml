@@ -6,6 +6,7 @@
     android:id="@+id/content_ly">
     
     <LinearLayout
+        android:id="@+id/searchBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" 
         android:orientation="horizontal">
@@ -22,6 +23,38 @@
             android:background="@drawable/ic_action_search"
             android:contentDescription="@string/search" />
         
+        <EditText
+            android:id="@+id/search_box_webtv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FFFFFF"
+            android:layout_margin="3dp"
+            android:inputType="text" 
+        	android:textColor="#000000"
+        	android:textSize="15dp"
+        	android:hint = "What do you want to search for?"
+        	android:paddingRight="3dp"
+        	android:paddingLeft="3dp"/>
+        
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/resultsBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:orientation="horizontal">
+        
+	 	<ImageButton        
+            android:id="@+id/search_button_webtv_result"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:background="@drawable/ic_action_search"
+            android:contentDescription="@string/search" />
+	 	
+	 	<ImageView
+            android:id="@+id/webtv_icon_result"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"/>
+                
         <EditText
             android:id="@+id/search_box_webtv"
             android:layout_width="match_parent"
