@@ -13,7 +13,7 @@ import se.z_app.stb.api.DiscoveryInterface;
  * Object that includes all necessary functions for discovering a Zenterio STB.
  * @author Viktor Dahl
  */
-public class Discovery implements DiscoveryInterface {
+public class DiscoveryOld implements DiscoveryInterface {
 	/* Timeout for each ping request when searching for IP addresses in use */
 	private static int TIMEOUTINMS = 200; 
 	/* Number of threads to scan */
@@ -24,7 +24,7 @@ public class Discovery implements DiscoveryInterface {
 	private String subNetAddress;
 	long t1, t2, t3; //for timing measurement
 	
-	public Discovery (String subNetAddress) {
+	public DiscoveryOld (String subNetAddress) {
 		this.subNetAddress = subNetAddress;
 	}
 
@@ -43,7 +43,7 @@ public class Discovery implements DiscoveryInterface {
 		
 		createSTBObjectThread stbThread;
 		t2 = System.nanoTime();
-		LinkedList<createSTBObjectThread> threads = new LinkedList<Discovery.createSTBObjectThread>();
+		LinkedList<createSTBObjectThread> threads = new LinkedList<DiscoveryOld.createSTBObjectThread>();
 		try { // Creates a thread for every box to gather info
 			for (int i=0;i<boxes.size();i++) {
 				stbThread = new createSTBObjectThread(boxes.get(i));
