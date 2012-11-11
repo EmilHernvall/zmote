@@ -1,45 +1,27 @@
 package se.z_app.zmote.gui;
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
-import com.facebook.android.AsyncFacebookRunner;
-import com.facebook.android.DialogError;
-import com.facebook.android.Facebook;
-import com.facebook.android.Facebook.DialogListener;
-import com.facebook.android.FacebookError;
 
-public class FacebookLogin extends Activity {
+//@TargetApi(9)
+public class FacebookLogin extends FragmentActivity {
+	private FacebookFragment mainFragment;
 
-    Facebook facebook = new Facebook("200907146711833");
-    AsyncFacebookRunner mAsyncRunner = new AsyncFacebookRunner(facebook);
-
-    @SuppressWarnings("deprecation")
 	@Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_tab);
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-        facebook.authorize(this, new DialogListener() {
-            @Override
-            public void onComplete(Bundle values) {}
-
-            @Override
-            public void onFacebookError(FacebookError error) {}
-
-            @Override
-            public void onError(DialogError e) {}
-
-            @Override
-            public void onCancel() {}
-        });
-    }
-
-    @SuppressWarnings("deprecation")
-	@Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        facebook.authorizeCallback(requestCode, resultCode, data);
-    }
+		if (savedInstanceState == null) {
+			// Add the fragment on initial activity setup
+			mainFragment = new FacebookFragment();
+			getSupportFragmentManager()
+			.beginTransaction()
+			.add(android.R.id.content, mainFragment)
+			.commit();
+		} else {
+			// Or set the fragment from restored state info
+			mainFragment = (FacebookFragment) getSupportFragmentManager()
+					.findFragmentById(android.R.id.content);
+		}
+	}
 }
