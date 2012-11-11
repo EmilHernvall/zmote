@@ -66,9 +66,30 @@ public class WebTVFragment extends Fragment {
 			public void onClick(View v) {
 				// Start a new search
 				search();
+				LinearLayout linLay = (LinearLayout) view_temp.findViewById(R.id.searchBar);
+				linLay.setVisibility(View.GONE);
+				LinearLayout linLayResult = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
+				linLayResult.setVisibility(View.VISIBLE);
 			}
 		});
-	
+		
+		
+		ImageButton search_button_back = (ImageButton)view_temp.findViewById(R.id.search_button_webtv_result);
+		search_button_back.setOnClickListener(new View.OnClickListener() {
+			
+			
+			@Override
+			public void onClick(View v) {
+				// Go back to first view
+				LinearLayout linLay = (LinearLayout) view_temp.findViewById(R.id.searchBar);
+				linLay.setVisibility(View.VISIBLE);
+				LinearLayout linLayResult = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
+				linLayResult.setVisibility(View.GONE);
+			}
+		});
+		
+		LinearLayout linLayStart = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
+		linLayStart.setVisibility(View.GONE);
     	return view_temp;
     }    
 	
@@ -85,6 +106,8 @@ public class WebTVFragment extends Fragment {
 		
 		search_for_this = search_box.getText().toString();
 		
+		TextView resultText = (TextView) view_temp.findViewById(R.id.result_webtv);
+		resultText.setText("Result for: '"+ search_for_this+"'");
 		// Here we should call a function like this
 		if(search_for_this != null)
 			new AsyncWebSearch().execute();
