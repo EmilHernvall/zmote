@@ -28,7 +28,7 @@ import android.widget.TextView;
 
 /**
  * Class used to display webTV and search on the different webTV items 
- * @author Francisco Valladres, Mar’a Jesœs Platero, Emma Axelsson  
+ * @author Francisco Valladres, Maria Jesus Platero, Emma Axelsson  
  *
  */
 public class WebTVFragment extends Fragment {
@@ -224,7 +224,7 @@ public class WebTVFragment extends Fragment {
 	/**
 	 * Makes a search asynchronously to avoid failure of the execution in newer versions
 	 * of android
-	 * @author Francisco Valladers
+	 * @author Francisco Valladares
 	 *
 	 */
 	private class AsyncWebSearch extends AsyncTask<Integer, Integer, WebTVItem[]>{
@@ -234,6 +234,7 @@ public class WebTVFragment extends Fragment {
 			
 			WebTVQuery query = new WebTVQuery();
 			WebTVItem[] elements= query.search(search_for_this, services[0]);
+			query.populateWebTVItemsWithIcon(elements);
 			//System.out.println(services[0].getName().toString());
 			//System.out.println(elements[0].getTitle().toString());
 			return elements;
