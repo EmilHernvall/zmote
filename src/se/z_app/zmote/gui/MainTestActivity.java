@@ -86,8 +86,8 @@ public class MainTestActivity extends Activity {
 			public void onClick(View v) {
 				// Write in your local STB
 				STB stb = new STB();
-				stb.setBoxName("Zenterio228");
-				stb.setIP("130.236.248.228");
+				stb.setBoxName("Zenterio227");
+				stb.setIP("130.236.248.227");
 				stb.setType(STBEnum.ZENTERIO);
 				stb.setMAC("00:07:67:9B:EB:35");
 			

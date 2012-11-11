@@ -56,7 +56,7 @@ public class RemoteControlFragment extends Fragment {
 		channel_icons_layout = (LinearLayout)v.findViewById(R.id.channel_icons_ly);
 
 		btnListeners(v);
-		addAllChannelsToLayout();
+		//addAllChannelsToLayout();
 
 		return v;
 	}
