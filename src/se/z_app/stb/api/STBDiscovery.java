@@ -1,7 +1,7 @@
 package se.z_app.stb.api;
 
 import se.z_app.stb.STB;
-import se.z_app.stb.api.zenterio.DiscoveryAlt;
+import se.z_app.stb.api.zenterio.Discovery;
 
 /**
  *
@@ -11,14 +11,14 @@ import se.z_app.stb.api.zenterio.DiscoveryAlt;
  */
 public class STBDiscovery {
 	String subNetAddress;
-	DiscoveryAlt disc;
+	Discovery disc;
 	
 	public STBDiscovery(String subNetAddress) {
 		this.subNetAddress = subNetAddress;
 	}
 	
 	public STB[] find() {
-		disc = new DiscoveryAlt(subNetAddress);
+		disc = new Discovery(subNetAddress);
 		return disc.find();
 	}
 	
