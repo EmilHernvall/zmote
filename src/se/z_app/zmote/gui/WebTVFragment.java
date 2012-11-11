@@ -31,7 +31,7 @@ public class WebTVFragment extends Fragment {
 	
 	private View view_temp;
 	private MainTabActivity main;
-	private String web_service;  // To know in what service are we currently (youtube, spotify...)
+	private int web_service = 0;  // To know in what service are we currently (youtube, spotify...)
 	private ProgressBar pb;
 	private WebTVService services[];
 	private String search_for_this = null;
@@ -163,7 +163,11 @@ public class WebTVFragment extends Fragment {
  
     		ImageView icon = new ImageView(view_temp.getContext());
     		icon.setImageBitmap(services[position]);
-    		
+    		// Set the same image for the results image
+    		if(position == web_service){
+	    		ImageView result_icon = (ImageView) view_temp.findViewById(R.id.webtv_icon_result);
+	    		result_icon.setImageBitmap(services[position]);
+    		}
  
             return icon;
             }
