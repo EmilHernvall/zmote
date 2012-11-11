@@ -11,7 +11,6 @@ import se.z_app.stb.Program;
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.zmote.epg.EPGQuery;
 
-import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
@@ -237,10 +236,8 @@ public class EPGFragment extends Fragment{
 		text.setOnClickListener(new View.OnClickListener() {
 			
 			Program p = program_temp;
-			/*
-			 * TODO: Send parameters to load the specific clicked channel/program
-			 * 
-			 * When a program is clicked, the channel information view is loaded*/
+			/* 
+			 * When a program is clicked, the channel information view is loaded */
 			@Override
 			public void onClick(View v) {
 			

@@ -7,6 +7,7 @@ import se.z_app.stb.api.RCProxy;
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.zmote.epg.EPGQuery;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -56,7 +57,7 @@ public class RemoteControlFragment extends Fragment {
 		channel_icons_layout = (LinearLayout)v.findViewById(R.id.channel_icons_ly);
 
 		btnListeners(v);
-		//addAllChannelsToLayout();
+		new AsyncDataLoader().execute();
 
 		return v;
 	}
@@ -211,6 +212,7 @@ public class RemoteControlFragment extends Fragment {
     	new_btn.setImageBitmap(ch.getIcon());
     	new_btn.setBackgroundResource(0);	// Set the background transparent
     	new_btn.setClickable(true);
+    	new_btn.setPadding(0, 0, 0, 0);
     	
     	// Set listeners to execute this
     	//RemoteControl.instance().launch(ch.getUrl()); //
@@ -228,4 +230,26 @@ public class RemoteControlFragment extends Fragment {
     	channel_icons_layout.addView(new_btn);	
     }
 	
+    /**
+	 * Loads the information asynchronously
+	 * @author 
+	 */
+	private class AsyncDataLoader extends AsyncTask<Integer, Integer, EPG>{
+
+		@Override
+		protected EPG doInBackground(Integer... params) {
+			EPGQuery query = new EPGQuery();
+			return query.getEPG();
+		}
+	
+		@Override
+		protected void onPostExecute(EPG epgTemp) {
+			epg = epgTemp;
+			v.findViewById(R.id.progressBarRemote).setVisibility(View.GONE);
+			
+			addAllChannelsToLayout();
+		}	
+
+	}
+    
 }
