@@ -4,20 +4,15 @@ package se.z_app.zmote.gui;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.z_app.stb.Channel;
-import se.z_app.stb.EPG;
+
 import se.z_app.stb.WebTVItem;
 import se.z_app.stb.WebTVService;
-import se.z_app.zmote.epg.EPGQuery;
 import se.z_app.zmote.webtv.WebTVQuery;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,16 +29,12 @@ import android.widget.TextView;
 
 public class WebTVFragment extends Fragment {
 	
-    private LinearLayout content_layout;
 	private View view_temp;
 	private MainTabActivity main;
 	private String web_service;  // To know in what service are we currently (youtube, spotify...)
 	private ProgressBar pb;
-	private Spinner spinner;
-	private ArrayAdapter<Drawable> dataAdapter;
 	private WebTVService services[];
-	private boolean ready_to_search = false;
-	private String search_for_this;
+	private String search_for_this = null;
 	
 	
 	public WebTVFragment(){
@@ -59,7 +50,6 @@ public class WebTVFragment extends Fragment {
 			Bundle savedInstanceState) {
 
 		view_temp = inflater.inflate(R.layout.fragment_web_tv, null);
-		content_layout = (LinearLayout)view_temp.findViewById(R.id.content_ly);
 		
 		new AsyncWebServiceLoader().execute();
 		
@@ -74,9 +64,6 @@ public class WebTVFragment extends Fragment {
 				search();
 			}
 		});
-		
-		// pb = (ProgressBar)view_temp.findViewById(R.id.progressLodingEpgChannelInformation);
-		// new AsyncDataLoader().execute();
 	
     	return view_temp;
     }    
@@ -92,12 +79,11 @@ public class WebTVFragment extends Fragment {
 		search_for_this = search_box.getText().toString();
 
 		// Here we should call a function like this
-		new AsyncWebSearch().execute();
+		if(search_for_this != null)
+			new AsyncWebSearch().execute();
 
 		// After getting the results
-		// pb.setVisibility(View.GONE);	// Quit the progress bar
-		//showResults(elements);
-		
+		// pb.setVisibility(View.GONE);	// Quit the progress bar		
 	}
 	
 	/**
@@ -137,25 +123,18 @@ public class WebTVFragment extends Fragment {
 	/* add items into spinner (drop-down menu with services) dynamically*/
 	public void addItemsOnSpinner(WebTVService services[]) {
 		 
-			spinner = (Spinner)view_temp.findViewById(R.id.webtv_spinner);
 			List<Bitmap> list = new ArrayList<Bitmap>();
 			
 		   	
 		   	for(WebTVService serv : services){
 		   		list.add(serv.getIcon());
 		   	}
-		 
-		
+
 		   	Bitmap servicesImg[] = new Bitmap[list.size()];
 		   	list.toArray(servicesImg);
 
 			ImageAdapter ia = new ImageAdapter(this.getActivity(), android.R.layout.simple_spinner_item, servicesImg);	
 			Spinner spinner = (Spinner)view_temp.findViewById(R.id.webtv_spinner); // this returns null
-		
-			 //dataAdapter = new ArrayAdapter<Drawable>(this.getActivity(), android.R.layout.simple_spinner_item, list);
-			
-			//dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		
 			ia.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			spinner.setAdapter(ia);
 			
@@ -195,10 +174,8 @@ public class WebTVFragment extends Fragment {
 		@Override
 		protected WebTVService[] doInBackground(Integer... params) {
 			WebTVQuery query = new WebTVQuery();
-			//WebTVService services[] = query.getService();
 			services = query.getService();
 			query.populateWithIcon(services);
-			ready_to_search = true;
 			return services;
 		}
 
@@ -208,17 +185,21 @@ public class WebTVFragment extends Fragment {
 		}
 	}
 	
+	/**
+	 * Makes a search asynchronously to avoid failure of the execution in newer versions
+	 * of android
+	 * @author Fran
+	 *
+	 */
 	private class AsyncWebSearch extends AsyncTask<Integer, Integer, WebTVItem[]>{
 
 		@Override
 		protected WebTVItem[] doInBackground(Integer... arg0) {
 			
 			WebTVQuery query = new WebTVQuery();
-			System.out.println("Starting search");
 			WebTVItem[] elements= query.search(search_for_this, services[0]);
-			System.out.println("Search finished");
-			System.out.println(services[0].getName().toString());
-			System.out.println(elements[0].getTitle().toString());
+			//System.out.println(services[0].getName().toString());
+			//System.out.println(elements[0].getTitle().toString());
 			return elements;
 		}
 		
