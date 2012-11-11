@@ -38,9 +38,7 @@ public class WebTVFragment extends Fragment {
 	private int web_service = 0;  // To know in what service are we currently (youtube, spotify...)
 	private ProgressBar pb;
 	private WebTVService services[];
-	private String search_for_this = null;
-	
-	
+	private String search_for_this = null;	
 	public WebTVFragment(){
 		
 	}
@@ -53,8 +51,6 @@ public class WebTVFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {	
 		view_temp = inflater.inflate(R.layout.fragment_web_tv, null);
-		//EditText defaultText = (EditText) view_temp.findViewById(R.id.defaultText);
-		//defaultText.setText("What do you want to search for?");
 		new AsyncWebServiceLoader().execute();
 		
 		// Set the listener for the search button
@@ -83,13 +79,17 @@ public class WebTVFragment extends Fragment {
 				// Go back to first view
 				LinearLayout linLay = (LinearLayout) view_temp.findViewById(R.id.searchBar);
 				linLay.setVisibility(View.VISIBLE);
+				EditText defaultText = (EditText) view_temp.findViewById(R.id.defaultText);
+				defaultText.setText("What do you want to search for?");
 				LinearLayout linLayResult = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
 				linLayResult.setVisibility(View.GONE);
+				
 			}
 		});
 		
 		LinearLayout linLayStart = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
 		linLayStart.setVisibility(View.GONE);
+		
     	return view_temp;
     }    
 	
@@ -132,16 +132,17 @@ public class WebTVFragment extends Fragment {
 
 		for(WebTVItem x: res){
 			LinearLayout item_container = new LinearLayout(view_temp.getContext());
-			item_container.setBackgroundColor(0xFF999999);
+			item_container.setBackgroundColor(0xFFDDDDDD);
 			item_container.setPadding(4, 4, 4, 4);
 			LinearLayout item = new LinearLayout(view_temp.getContext());
 			item.setPadding(4, 4, 4, 4);
-			item.setBackgroundColor(0xFF666666);
+			item.setBackgroundColor(0xFFC0C0C0);
 			item.setMinimumHeight(30);
 			ImageView icon = new ImageView(view_temp.getContext());
 			icon.setImageBitmap(x.getIcon());
 			TextView title = new TextView(view_temp.getContext());
 			title.setText(x.getTitle());
+			title.setPadding(10, 0, 0, 0);
 			title.setTextColor(0xFF000000);
 			
 			item.addView(icon, icon_params);
