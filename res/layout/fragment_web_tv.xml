@@ -13,7 +13,7 @@
         <Spinner
             android:id="@+id/webtv_spinner"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"/>
 
         <ImageButton
             android:id="@+id/search_button_webtv"
@@ -29,13 +29,17 @@
             android:background="#FFFFFF"
             android:layout_margin="2dp"
             android:inputType="text" 
-        	android:textColor="#000000"/>
+        	android:textColor="#000000"
+        	android:hint = "What do you want to search for?"
+        	android:includeFontPadding="true"/>
+        
     </LinearLayout>
     <LinearLayout
        android:layout_width="match_parent"
        android:layout_height="1dp"
        android:background="#BDBDBD"
-       android:orientation="vertical" >
+       android:orientation="vertical">
+     
    </LinearLayout>
     
    <LinearLayout

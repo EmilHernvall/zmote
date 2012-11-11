@@ -50,7 +50,6 @@ public class WebTVFragment extends Fragment {
 	public WebTVFragment(MainTabActivity mainTabActivity) {
 		this.main = main;
 	}
-
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -158,7 +157,7 @@ public class WebTVFragment extends Fragment {
 			 //dataAdapter = new ArrayAdapter<Drawable>(this.getActivity(), android.R.layout.simple_spinner_item, list);
 			
 			//dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-			
+		
 			ia.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			spinner.setAdapter(ia);
 			

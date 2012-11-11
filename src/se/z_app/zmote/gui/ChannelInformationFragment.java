@@ -75,7 +75,6 @@ public class ChannelInformationFragment extends Fragment{
 	public ChannelInformationFragment(MainTabActivity main){
 		this.main = main;
 	}
-
 	
 	/**
 	 * This to do when the instance of ChannelInformationFragment is created
@@ -334,7 +333,7 @@ public class ChannelInformationFragment extends Fragment{
     }
     
     /**
-     * Returs the set of buttons for a program (Fav, Imdb, Social)
+     * Returns the set of buttons for a program (Fav, Imdb, Social)
      * @return	View containig the buttons
      */
     public View addProgramButtons(){
