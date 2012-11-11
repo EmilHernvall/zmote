@@ -3,12 +3,25 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <HorizontalScrollView 
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_margin="0dp"
+        android:padding="0dp">
+        <LinearLayout
+            android:id="@+id/channel_icons_ly"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            
+        </LinearLayout>
+        
+    </HorizontalScrollView>
+    
     <RelativeLayout
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="337dp"
         android:layout_marginBottom="3dp"
-        android:background="@color/black"
         android:minWidth="64dip" >
 
         <Button
