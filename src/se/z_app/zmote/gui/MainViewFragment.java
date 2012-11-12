@@ -192,11 +192,14 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 	public void setChannel(int channelNr){		
 		if(currentChannelNr == channelNr)
 			return;
+		
 
 		int can1 = 0;
 		int can2 = 0;
 		int fin = 0;
 		int size = imageList.size(); 
+		channelNr = (channelNr+size)%size;
+		
 		for(int i = 0; i< size; i++){
 			if((can1+currentChannelNr)%size == channelNr){
 				fin = can1;
@@ -210,22 +213,26 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 			can1++;
 		}
 
-		Button b;
+		
+	
+	//	Button b;
 		if(fin < 0){
 			rotateRight(fin*(-1));
-			b = Button.CHANNELMINUS;
+	//		b = Button.CHANNELMINUS;
 		}
 		else{
 			rotateLeft(fin);
-			b = Button.CHANNELPLUS;
+	//		b = Button.CHANNELPLUS;
 		}
 		
-		for(int i = 0; i < Math.abs(fin); i++){
-			RemoteControl.instance().sendButton(b);
-		}
-			
-		//Channel channel = channelList.get(channelNr);
-		//RemoteControl.instance().launch(channel);
+		
+	//	for(int i = 0; i < Math.abs(fin); i++){
+	//		RemoteControl.instance().sendButton(b);
+	//	}
+	
+		
+		Channel channel = channelList.get(channelNr);
+		RemoteControl.instance().launch(channel);
 		
 
 	}
