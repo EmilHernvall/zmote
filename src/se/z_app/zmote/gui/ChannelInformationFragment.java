@@ -29,6 +29,7 @@ import android.widget.TextView;
 /**
  *  Channel information view: View with the information of the channel
  *  It is shown when we click on an EPG program
+ *  @author Francisco
  * */
 public class ChannelInformationFragment extends Fragment{
 	

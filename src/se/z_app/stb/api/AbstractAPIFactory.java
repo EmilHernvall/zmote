@@ -3,6 +3,12 @@ package se.z_app.stb.api;
 import se.z_app.stb.STB;
 import se.z_app.stb.api.zenterio.APIFactoryZenterio;
 
+
+/**
+ * 
+ * @author Rasmus Holm
+ * TODO: Comment. Why does this exist?
+ */
 public abstract class AbstractAPIFactory {
 	public static synchronized AbstractAPIFactory getFactory(STB stb){
 		if(stb == null){

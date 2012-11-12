@@ -6,9 +6,8 @@ import java.util.Observer;
 import se.z_app.stb.STBEvent;
 
 /**
- * 
+ * needs a descirption here...
  * @author Leonard Jansson, Viktor von Zeipel, refractored by Rasmus Holm, Linus Back
- * 
  * TODO: Implementation.
  */
 public class RCProxy implements Observer{

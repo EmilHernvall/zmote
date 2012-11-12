@@ -7,6 +7,7 @@ import se.z_app.stb.api.RCProxy;
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.zmote.epg.EPGQuery;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -39,8 +40,8 @@ public class RemoteControlFragment extends Fragment {
 
 	/**
 	 * Creates the remote control
-	 * 
 	 * @param main
+	 * @author 
 	 */
 	public RemoteControlFragment(MainTabActivity main) {
 		this.main = main;
@@ -56,24 +57,24 @@ public class RemoteControlFragment extends Fragment {
 		channel_icons_layout = (LinearLayout)v.findViewById(R.id.channel_icons_ly);
 
 		btnListeners(v);
-		//addAllChannelsToLayout();
+		new AsyncDataLoader().execute();
 
 		return v;
 	}
 
 	/**
-	 * adds vibrate function to application
+	 * Adds vibrate function to application
+	 * @author
 	 */
 	public void vibrate() {
 		main.vibrate();
 	}
 
 	/**
-	 * initiate button listeners
-	 * 
+	 * Initiate button listeners
 	 * @param v
+	 * @author 
 	 */
-
 	public void btnListeners(View v) {
 		arrow_up_button = (Button) v.findViewById(R.id.arrow_up_button);
 		arrow_down_button = (Button) v.findViewById(R.id.arrow_down_button);
@@ -167,8 +168,9 @@ public class RemoteControlFragment extends Fragment {
 	}
 
 	
-	/* 
+	/**
 	 * Fetch the EPG from the STB 
+	 * @author Francisco
 	 */
 	public void fetchEPG(){
 		epg = query.getEPG();
@@ -177,8 +179,9 @@ public class RemoteControlFragment extends Fragment {
 		// This way will be fetched only one time and used several times
 	}
 	
-	/*
+	/**
 	 * Return the EPG after fetching it (just do it one time now)
+	 * @author Francisco
 	 */
 	public EPG getFullEPG(){
 		if(!fetched)
@@ -190,6 +193,7 @@ public class RemoteControlFragment extends Fragment {
     /**
      *  This function is suppose to add the whole list of channels to the view
      *  It uses the function addChannelItemToLayout iteratively
+     *  @author Francisco
      */
     public void addAllChannelsToLayout(){
     	
@@ -203,6 +207,7 @@ public class RemoteControlFragment extends Fragment {
 	 *  This function is suppose to load a new channel in the main activity view
 	 *  That means: put the icon of the channel in the list and assign it a function
 	 * @param ch
+	 * @author Francisco
 	 */
     public void addChannelItemToLayout(Channel ch){
     
@@ -211,6 +216,7 @@ public class RemoteControlFragment extends Fragment {
     	new_btn.setImageBitmap(ch.getIcon());
     	new_btn.setBackgroundResource(0);	// Set the background transparent
     	new_btn.setClickable(true);
+    	new_btn.setPadding(0, 0, 0, 0);
     	
     	// Set listeners to execute this
     	//RemoteControl.instance().launch(ch.getUrl()); //
@@ -228,4 +234,26 @@ public class RemoteControlFragment extends Fragment {
     	channel_icons_layout.addView(new_btn);	
     }
 	
+    /**
+	 * Loads the information asynchronously
+	 * @author Francisco
+	 */
+	private class AsyncDataLoader extends AsyncTask<Integer, Integer, EPG>{
+
+		@Override
+		protected EPG doInBackground(Integer... params) {
+			EPGQuery query = new EPGQuery();
+			return query.getEPG();
+		}
+	
+		@Override
+		protected void onPostExecute(EPG epgTemp) {
+			epg = epgTemp;
+			v.findViewById(R.id.progressBarRemote).setVisibility(View.GONE);
+			
+			addAllChannelsToLayout();
+		}	
+
+	}
+    
 }

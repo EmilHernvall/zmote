@@ -12,6 +12,12 @@
             android:id="@+id/channel_icons_ly"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
+
+            <ProgressBar
+                android:id="@+id/progressBarRemote"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
             
         </LinearLayout>
         
@@ -20,8 +26,8 @@
     <RelativeLayout
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="337dp"
-        android:layout_marginBottom="3dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
         android:minWidth="64dip" >
 
         <Button

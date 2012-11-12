@@ -55,6 +55,6 @@ public class RemoteControl implements Observer {
 	}
 	
 	public void launch(Channel channel){
-		launch(channel.getUrl());	
+		launch(channel.getUrl()+"&clid=0");	
 	}
 }
