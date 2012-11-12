@@ -40,8 +40,8 @@ public class RemoteControlFragment extends Fragment {
 
 	/**
 	 * Creates the remote control
-	 * 
 	 * @param main
+	 * @author 
 	 */
 	public RemoteControlFragment(MainTabActivity main) {
 		this.main = main;
@@ -63,18 +63,18 @@ public class RemoteControlFragment extends Fragment {
 	}
 
 	/**
-	 * adds vibrate function to application
+	 * Adds vibrate function to application
+	 * @author
 	 */
 	public void vibrate() {
 		main.vibrate();
 	}
 
 	/**
-	 * initiate button listeners
-	 * 
+	 * Initiate button listeners
 	 * @param v
+	 * @author 
 	 */
-
 	public void btnListeners(View v) {
 		arrow_up_button = (Button) v.findViewById(R.id.arrow_up_button);
 		arrow_down_button = (Button) v.findViewById(R.id.arrow_down_button);
@@ -168,8 +168,9 @@ public class RemoteControlFragment extends Fragment {
 	}
 
 	
-	/* 
+	/**
 	 * Fetch the EPG from the STB 
+	 * @author Francisco
 	 */
 	public void fetchEPG(){
 		epg = query.getEPG();
@@ -178,8 +179,9 @@ public class RemoteControlFragment extends Fragment {
 		// This way will be fetched only one time and used several times
 	}
 	
-	/*
+	/**
 	 * Return the EPG after fetching it (just do it one time now)
+	 * @author Francisco
 	 */
 	public EPG getFullEPG(){
 		if(!fetched)
@@ -191,6 +193,7 @@ public class RemoteControlFragment extends Fragment {
     /**
      *  This function is suppose to add the whole list of channels to the view
      *  It uses the function addChannelItemToLayout iteratively
+     *  @author Francisco
      */
     public void addAllChannelsToLayout(){
     	
@@ -204,6 +207,7 @@ public class RemoteControlFragment extends Fragment {
 	 *  This function is suppose to load a new channel in the main activity view
 	 *  That means: put the icon of the channel in the list and assign it a function
 	 * @param ch
+	 * @author Francisco
 	 */
     public void addChannelItemToLayout(Channel ch){
     
@@ -232,7 +236,7 @@ public class RemoteControlFragment extends Fragment {
 	
     /**
 	 * Loads the information asynchronously
-	 * @author 
+	 * @author Francisco
 	 */
 	private class AsyncDataLoader extends AsyncTask<Integer, Integer, EPG>{
 
