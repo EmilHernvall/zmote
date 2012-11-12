@@ -14,7 +14,10 @@ public class Program{
 	private Channel channel;
 	
 	public Program(Channel parentChannel){
-		this.channel = channel;
+		/*
+		 * @Leonard: Changed the function this.channel = channel; it didn't do anything
+		 */
+		this.channel = parentChannel;
 	}
 	
 	public Channel getParentChannel(){

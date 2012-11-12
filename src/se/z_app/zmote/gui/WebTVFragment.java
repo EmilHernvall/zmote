@@ -42,7 +42,10 @@ public class WebTVFragment extends Fragment {
 	}
 	
 	public WebTVFragment(MainTabActivity mainTabActivity) {
-		this.main = main;
+		/*
+		 * @Leonard: Changed the function this.main = main; it didn't do anything
+		 */
+		this.main = mainTabActivity;
 	}
 	
 	@Override
