@@ -16,6 +16,7 @@ import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,6 +106,9 @@ public class EPGFragment extends Fragment{
     	
     }
     
+    /**
+     * Sets the line that represent the current time
+     */
     public void setNowLine(){
     
     	Date now = new Date(System.currentTimeMillis());
@@ -226,11 +230,12 @@ public class EPGFragment extends Fragment{
 		
 		TextView text = new TextView(v.getContext());
 		text.setText(new SimpleDateFormat("HH:mm").format(pg.getStart())+" "+pg.getName());
-		text.setLines(2);
+		text.setLines(3);
 		text.setPadding(2, 1, 2, 1);
 		text.setClickable(true);
 		text.setTextColor(0xFFFFFFFF);
 		text.setBackgroundColor(0xFF222222);
+		text.setGravity(Gravity.CENTER_VERTICAL);
 		
 		program_temp = pg;
 		text.setOnClickListener(new View.OnClickListener() {
