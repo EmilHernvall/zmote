@@ -28,8 +28,7 @@ import android.widget.TextView;
 
 /**
  * Class used to display webTV and search on the different webTV items 
- * @author Francisco Valladres, Maria Jesus Platero, Emma Axelsson  
- *
+ * @author Francisco Valladres, Maria Jesus Platero, Emma Axelsson
  */
 public class WebTVFragment extends Fragment {
 	
@@ -97,6 +96,7 @@ public class WebTVFragment extends Fragment {
 	
 	/**
 	 * Calls the back-end function to get the results of a search and shows them
+	 * @author Francisco
 	 */
 	public void search(){
 		
@@ -122,6 +122,7 @@ public class WebTVFragment extends Fragment {
 	/**
 	 * Print the results of the search on the screen
 	 * @param res Set of results to show
+	 * @author Francisco & Emma
 	 */
 	public void showResults(WebTVItem[] res){
 		
@@ -155,7 +156,10 @@ public class WebTVFragment extends Fragment {
 		
 	}
 	
-	/* add items into spinner (drop-down menu with services) dynamically*/
+	/**
+	 * Add items into spinner (drop-down menu with services) dynamically
+	 * @author Maria Jesus Platero
+	 */
 	public void addItemsOnSpinner(WebTVService services[]) {
 		 
 			List<Bitmap> list = new ArrayList<Bitmap>();
@@ -175,7 +179,10 @@ public class WebTVFragment extends Fragment {
 			
 		  }
 	
-	
+	/**
+	 * 
+	 * @author Maria Jesus Platero
+	 */
 	public class ImageAdapter extends ArrayAdapter<Bitmap>{
 		
 		Bitmap[] services;
@@ -208,6 +215,10 @@ public class WebTVFragment extends Fragment {
             }
         }
 
+	/**
+	 * 
+	 * @author Maria Jesus Platero
+	 */
 	private class AsyncWebServiceLoader extends AsyncTask<Integer, Integer, WebTVService[]>{
 
 		@Override
@@ -228,7 +239,6 @@ public class WebTVFragment extends Fragment {
 	 * Makes a search asynchronously to avoid failure of the execution in newer versions
 	 * of android
 	 * @author Francisco Valladares
-	 *
 	 */
 	private class AsyncWebSearch extends AsyncTask<Integer, Integer, WebTVItem[]>{
 
