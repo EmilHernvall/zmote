@@ -360,7 +360,7 @@ public class ChannelInformationFragment extends Fragment{
     	social_but.setImageResource(R.drawable.social_icon);
     	social_but.setBackgroundResource(0);
     	fav_but = new ImageButton(view_temp.getContext());
-    	fav_but.setImageResource(R.drawable.rating_not_favorite);
+    	fav_but.setImageResource(R.drawable.not_favorite_icon);
     	fav_but.setBackgroundResource(0);
     	fav_but.setPadding(0, 10, 0, 0);
     	imdb_but = new ImageButton(view_temp.getContext());
@@ -381,7 +381,7 @@ public class ChannelInformationFragment extends Fragment{
 					thisOne.setImageResource(R.drawable.favorite_icon);
 				}else{
 					thisOne.setTag(0);
-					thisOne.setImageResource(R.drawable.rating_not_favorite);
+					thisOne.setImageResource(R.drawable.not_favorite_icon);
 				}
 				/*
 				 * TODO: Add here some code to add this channel to the favorite list
