@@ -216,9 +216,12 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 			URL url;
 			Bitmap theImage = null;
 			try {
+				//TODO: Problem with loading images comes from creating rapid connections, keepAlive should be disable
 				url = new URL(urlStr);
-				InputStream in = url.openStream();
+				InputStream in = url.openConnection().getInputStream();
 				theImage = BitmapFactory.decodeStream(in);
+				in.close();
+				
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -244,6 +247,7 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 				while ((len = in.read(buffer)) != -1) {
 					json = json + new String(buffer, 0, len);
 		    	}
+				
 				in.close();
 			}catch (Exception e) {
 				// TODO: handle exception
