@@ -4,8 +4,10 @@ package se.z_app.stb.api.zenterio;
 import java.io.IOException;
 import java.io.InputStream;
 
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 
 import java.util.Date;
@@ -218,9 +220,14 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 			try {
 				//TODO: Problem with loading images comes from creating rapid connections, keepAlive should be disable
 				url = new URL(urlStr);
-				InputStream in = url.openConnection().getInputStream();
+				HttpURLConnection connection = (HttpURLConnection)url.openConnection(); 
+				InputStream in = connection.getInputStream();
 				theImage = BitmapFactory.decodeStream(in);
 				in.close();
+				//connection.getOutputStream().close();
+				connection.disconnect();
+				
+				
 				
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
