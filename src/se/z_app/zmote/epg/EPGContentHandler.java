@@ -32,11 +32,13 @@ public class EPGContentHandler implements Runnable, Observer{
 	private EPGdbHandler theDatabaseHandler;
 	private static Context theContext;
 	private long updateIntervalMillis = 3600 * 1000;
-
+	private long lastCachingOfIcons = 0;
+	private String defaultDir;
+	
 	/* Singleton */
 	private static class SingletonHolder { 
          public static final EPGContentHandler INSTANCE = new EPGContentHandler();
-	 }	
+	}	
 	
 	/**
 	 * Get the instance of EPGContentHandler
@@ -59,7 +61,8 @@ public class EPGContentHandler implements Runnable, Observer{
 	private EPGContentHandler(){	
 		thread = new Thread(this);
 		isRunning = true;
-		
+		defaultDir = Environment.getExternalStorageDirectory().getAbsolutePath()+"/zmote";
+		new File(defaultDir).mkdirs();
 		STBContainer.instance().addObserver(this);
 		currentEPG = new EPG();
 		currentChannel = new Channel();
@@ -106,10 +109,8 @@ public class EPGContentHandler implements Runnable, Observer{
 				currentEPG = EPGData.instance().getEPG();
 				if(currentEPG != null) {
 					populateChannelIconFromCache(currentEPG);
-					
 					EPGData.instance().populateAbsentChannelIcon(currentEPG);
-					EPGData.instance().populateAbsentChannelIcon(currentEPG);
-					EPGData.instance().populateAbsentChannelIcon(currentEPG);
+				
 				}
 				else{
 					currentEPG = new EPG();
@@ -124,10 +125,8 @@ public class EPGContentHandler implements Runnable, Observer{
 			currentEPG = EPGData.instance().getEPG();
 			if(currentEPG != null){
 				populateChannelIconFromCache(currentEPG);
-				
 				EPGData.instance().populateAbsentChannelIcon(currentEPG);
-				EPGData.instance().populateAbsentChannelIcon(currentEPG);
-				EPGData.instance().populateAbsentChannelIcon(currentEPG);
+
 			}else{
 				currentEPG = new EPG();
 			}
@@ -136,36 +135,40 @@ public class EPGContentHandler implements Runnable, Observer{
 	
 	
 	private void populateChannelIconFromCache(EPG epg){
-		String dir = Environment.getExternalStorageDirectory().getAbsolutePath()+"/zmote";
-		System.out.println("zmote dir: " + dir);
+		
 		for (Channel channel : epg) {
-			String iconPath = dir+"/"+getChannelHash(channel)+".png";
+			String iconPath = defaultDir+"/"+getChannelHash(channel)+".png";
 			File iconFile = new File(iconPath);
 			if(iconFile.exists()){
 				channel.setIcon(BitmapFactory.decodeFile(iconPath));
 			}
 		}
 	}
-	private void saveChannelIconsToCache(EPG epg){
-		String dir = Environment.getExternalStorageDirectory().getAbsolutePath()+"/zmote";
-		File dirFile = new File(dir);
-		System.out.println("Manage to create: " + dirFile.mkdir());
-		System.out.println("zmote dirs: " + dir);
-		for (Channel channel : epg) {
-			if(channel.getIcon() != null){
-				String iconPath = dir+"/"+getChannelHash(channel)+".png";
-				try {
-					FileOutputStream out = new FileOutputStream(iconPath);
-					channel.getIcon().compress(Bitmap.CompressFormat.PNG, 100, out);
-					out.flush();
-					out.close();
-				} catch (FileNotFoundException e) {	} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
+	
+	private void cacheChannelIcons(){
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				//Should implement something that checks that there is a STB active and avalible
+				for (Channel channel : currentEPG) {
+					Bitmap icon = null;
+					while(icon == null)
+						icon = EPGData.instance().getChannelIcon(channel);
+					
+					channel.setIcon(icon);
+					String iconPath = defaultDir+"/"+getChannelHash(channel)+".png";
+					try {
+						FileOutputStream out = new FileOutputStream(iconPath);
+						channel.getIcon().compress(Bitmap.CompressFormat.PNG, 100, out);
+						out.flush();
+						out.close();
+					} 
+					catch (FileNotFoundException e) { } 
+					catch (IOException e) {	}
+					
+				}				
 			}
-		}
+		}).start();
 	}
 	
 	private String getChannelHash(Channel channel){
@@ -190,8 +193,10 @@ public class EPGContentHandler implements Runnable, Observer{
 					}
 				}
 				
-				//TODO: Implement fetching all channel icons from the STB and cache them for reuse.
-				saveChannelIconsToCache(currentEPG);
+				if(lastCachingOfIcons + updateIntervalMillis < System.currentTimeMillis()){
+					lastCachingOfIcons = System.currentTimeMillis();
+					cacheChannelIcons();
+				}
 			}
 			
 			
