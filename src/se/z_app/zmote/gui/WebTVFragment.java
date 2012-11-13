@@ -64,10 +64,13 @@ public class WebTVFragment extends Fragment {
 			public void onClick(View v) {
 				// Start a new search
 				search();
+				
 				LinearLayout linLay = (LinearLayout) view_temp.findViewById(R.id.searchBar);
 				linLay.setVisibility(View.GONE);
+				
 				LinearLayout linLayResult = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
 				linLayResult.setVisibility(View.VISIBLE);
+				
 				LinearLayout linLayTopList = (LinearLayout) view_temp.findViewById(R.id.top_list);
 				linLayTopList.setVisibility(View.GONE);
 			}
@@ -83,8 +86,10 @@ public class WebTVFragment extends Fragment {
 				// Go back to first view
 				LinearLayout linLay = (LinearLayout) view_temp.findViewById(R.id.searchBar);
 				linLay.setVisibility(View.VISIBLE);
+				
 				LinearLayout linLayTopList = (LinearLayout) view_temp.findViewById(R.id.top_list);
 				linLayTopList.setVisibility(View.VISIBLE);
+				
 				LinearLayout linLayResult = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
 				linLayResult.setVisibility(View.GONE);
 				
@@ -133,19 +138,24 @@ public class WebTVFragment extends Fragment {
 		results_ly.removeAllViewsInLayout(); 
 		LinearLayout.LayoutParams item_container_params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);
 		item_container_params.setMargins(4, 4, 4, 0);
+		
 		LinearLayout.LayoutParams item_params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
 		LinearLayout.LayoutParams icon_params = new LinearLayout.LayoutParams(100,80);
 
 		for(WebTVItem x: res){
+			
 			LinearLayout item_container = new LinearLayout(view_temp.getContext());
 			item_container.setBackgroundColor(0xFFDDDDDD);
 			item_container.setPadding(4, 4, 4, 4);
+			
 			LinearLayout item = new LinearLayout(view_temp.getContext());
 			item.setPadding(4, 4, 4, 4);
 			item.setBackgroundColor(0xFFC0C0C0);
 			item.setMinimumHeight(30);
+			
 			ImageView icon = new ImageView(view_temp.getContext());
 			icon.setImageBitmap(x.getIcon());
+			
 			TextView title = new TextView(view_temp.getContext());
 			title.setText(x.getTitle());
 			title.setPadding(10, 0, 0, 0);
@@ -183,7 +193,7 @@ public class WebTVFragment extends Fragment {
 		  }
 	
 	/**
-	 * 
+	 * Method to process the services icons
 	 * @author Maria Jesus Platero
 	 */
 	public class ImageAdapter extends ArrayAdapter<Bitmap>{
@@ -219,7 +229,7 @@ public class WebTVFragment extends Fragment {
         }
 
 	/**
-	 * 
+	 * Asynchronous loader for the WebTV services
 	 * @author Maria Jesus Platero
 	 */
 	private class AsyncWebServiceLoader extends AsyncTask<Integer, Integer, WebTVService[]>{
