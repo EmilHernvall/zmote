@@ -529,6 +529,8 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 		
 		int padding = 10;
 		
+//TODO: imageList == 0 a bug appears, this happens when it dose not get connection to a STB		
+		
 		leftleft = imageList.get((currentChannelNr+imageList.size()-2)%imageList.size());
 		left = imageList.get((currentChannelNr+imageList.size()-1)%imageList.size());
 		center = imageList.get(currentChannelNr);

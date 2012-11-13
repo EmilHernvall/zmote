@@ -1,5 +1,9 @@
 package se.z_app.zmote.epg;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -9,6 +13,9 @@ import se.z_app.stb.api.EPGData;
 import se.z_app.stb.api.STBContainer;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.util.Log;
 
 /**
@@ -98,6 +105,10 @@ public class EPGContentHandler implements Runnable, Observer{
 			if(cachedEPG == null || cachedEPG.getDateOfCreation() < System.currentTimeMillis() + updateIntervalMillis) {
 				currentEPG = EPGData.instance().getEPG();
 				if(currentEPG != null) {
+					populateChannelIconFromCache(currentEPG);
+					
+					EPGData.instance().populateAbsentChannelIcon(currentEPG);
+					EPGData.instance().populateAbsentChannelIcon(currentEPG);
 					EPGData.instance().populateAbsentChannelIcon(currentEPG);
 				}
 				else{
@@ -112,11 +123,53 @@ public class EPGContentHandler implements Runnable, Observer{
 		else {
 			currentEPG = EPGData.instance().getEPG();
 			if(currentEPG != null){
+				populateChannelIconFromCache(currentEPG);
+				
+				EPGData.instance().populateAbsentChannelIcon(currentEPG);
+				EPGData.instance().populateAbsentChannelIcon(currentEPG);
 				EPGData.instance().populateAbsentChannelIcon(currentEPG);
 			}else{
 				currentEPG = new EPG();
 			}
 		}
+	}
+	
+	
+	private void populateChannelIconFromCache(EPG epg){
+		String dir = Environment.getExternalStorageDirectory().getAbsolutePath()+"/zmote";
+		System.out.println("zmote dir: " + dir);
+		for (Channel channel : epg) {
+			String iconPath = dir+"/"+getChannelHash(channel)+".png";
+			File iconFile = new File(iconPath);
+			if(iconFile.exists()){
+				channel.setIcon(BitmapFactory.decodeFile(iconPath));
+			}
+		}
+	}
+	private void saveChannelIconsToCache(EPG epg){
+		String dir = Environment.getExternalStorageDirectory().getAbsolutePath()+"/zmote";
+		File dirFile = new File(dir);
+		System.out.println("Manage to create: " + dirFile.mkdir());
+		System.out.println("zmote dirs: " + dir);
+		for (Channel channel : epg) {
+			if(channel.getIcon() != null){
+				String iconPath = dir+"/"+getChannelHash(channel)+".png";
+				try {
+					FileOutputStream out = new FileOutputStream(iconPath);
+					channel.getIcon().compress(Bitmap.CompressFormat.PNG, 100, out);
+					out.flush();
+					out.close();
+				} catch (FileNotFoundException e) {	} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+		}
+	}
+	
+	private String getChannelHash(Channel channel){
+		return "tsid"+channel.getTsid()+"sid"+channel.getSid()+"onid"+channel.getOnid();
 	}
 	
 	/**
@@ -138,8 +191,9 @@ public class EPGContentHandler implements Runnable, Observer{
 				}
 				
 				//TODO: Implement fetching all channel icons from the STB and cache them for reuse.
-				
+				saveChannelIconsToCache(currentEPG);
 			}
+			
 			
 			
 			try {
