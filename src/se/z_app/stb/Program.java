@@ -14,7 +14,7 @@ public class Program{
 	private Channel channel;
 	
 	public Program(Channel parentChannel){
-		this.channel = channel;
+		this.channel = parentChannel;
 	}
 	
 	public Channel getParentChannel(){
