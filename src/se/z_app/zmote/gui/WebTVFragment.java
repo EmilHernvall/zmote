@@ -26,31 +26,33 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-
+/**
+ * Class used to display webTV and search on the different webTV items 
+ * @author Francisco Valladres, Maria Jesus Platero, Emma Axelsson
+ */
 public class WebTVFragment extends Fragment {
 	
 	private View view_temp;
 	private MainTabActivity main;
-	private String web_service;  // To know in what service are we currently (youtube, spotify...)
+	private int web_service = 0;  // To know in what service are we currently (youtube, spotify...)
 	private ProgressBar pb;
 	private WebTVService services[];
-	private String search_for_this = null;
-	
-	
+	private String search_for_this = null;	
 	public WebTVFragment(){
 		
 	}
 	
 	public WebTVFragment(MainTabActivity mainTabActivity) {
-		this.main = main;
+		/*
+		 * @Leonard: Changed the function this.main = main; it didn't do anything
+		 */
+		this.main = mainTabActivity;
 	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-
+			Bundle savedInstanceState) {	
 		view_temp = inflater.inflate(R.layout.fragment_web_tv, null);
-		
 		new AsyncWebServiceLoader().execute();
 		
 		// Set the listener for the search button
@@ -62,25 +64,64 @@ public class WebTVFragment extends Fragment {
 			public void onClick(View v) {
 				// Start a new search
 				search();
+				
+				LinearLayout linLay = (LinearLayout) view_temp.findViewById(R.id.searchBar);
+				linLay.setVisibility(View.GONE);
+				
+				LinearLayout linLayResult = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
+				linLayResult.setVisibility(View.VISIBLE);
+				
+				LinearLayout linLayTopList = (LinearLayout) view_temp.findViewById(R.id.top_list);
+				linLayTopList.setVisibility(View.GONE);
 			}
 		});
-	
+		
+		
+		ImageButton search_button_back = (ImageButton)view_temp.findViewById(R.id.search_button_webtv_result);
+		search_button_back.setOnClickListener(new View.OnClickListener() {
+			
+			
+			@Override
+			public void onClick(View v) {
+				// Go back to first view
+				LinearLayout linLay = (LinearLayout) view_temp.findViewById(R.id.searchBar);
+				linLay.setVisibility(View.VISIBLE);
+				
+				LinearLayout linLayTopList = (LinearLayout) view_temp.findViewById(R.id.top_list);
+				linLayTopList.setVisibility(View.VISIBLE);
+				
+				LinearLayout linLayResult = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
+				linLayResult.setVisibility(View.GONE);
+				
+			}
+		});
+		
+		LinearLayout linLayStart = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
+		linLayStart.setVisibility(View.GONE);
+		
     	return view_temp;
     }    
 	
 	/**
 	 * Calls the back-end function to get the results of a search and shows them
+	 * @author Francisco
 	 */
 	public void search(){
 		
+		
 		// We can set a progress bar to show the user that we are searching
 		pb = (ProgressBar)view_temp.findViewById(R.id.progressLodingEpgChannelInformation);
+		
 		EditText search_box = (EditText)view_temp.findViewById(R.id.search_box_webtv);
+		
 		search_for_this = search_box.getText().toString();
-
+		
+		TextView resultText = (TextView) view_temp.findViewById(R.id.result_webtv);
+		resultText.setText("Result for: '"+ search_for_this+"'");
 		// Here we should call a function like this
 		if(search_for_this != null)
 			new AsyncWebSearch().execute();
+		
 
 		// After getting the results
 		// pb.setVisibility(View.GONE);	// Quit the progress bar		
@@ -89,27 +130,35 @@ public class WebTVFragment extends Fragment {
 	/**
 	 * Print the results of the search on the screen
 	 * @param res Set of results to show
+	 * @author Francisco & Emma
 	 */
 	public void showResults(WebTVItem[] res){
 		
 		LinearLayout results_ly = (LinearLayout) view_temp.findViewById(R.id.search_results_ly);
+		results_ly.removeAllViewsInLayout(); 
 		LinearLayout.LayoutParams item_container_params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);
 		item_container_params.setMargins(4, 4, 4, 0);
+		
 		LinearLayout.LayoutParams item_params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
 		LinearLayout.LayoutParams icon_params = new LinearLayout.LayoutParams(100,80);
 
 		for(WebTVItem x: res){
+			
 			LinearLayout item_container = new LinearLayout(view_temp.getContext());
-			item_container.setBackgroundColor(0xFF999999);
+			item_container.setBackgroundColor(0xFFDDDDDD);
 			item_container.setPadding(4, 4, 4, 4);
+			
 			LinearLayout item = new LinearLayout(view_temp.getContext());
 			item.setPadding(4, 4, 4, 4);
-			item.setBackgroundColor(0xFF666666);
+			item.setBackgroundColor(0xFFC0C0C0);
 			item.setMinimumHeight(30);
+			
 			ImageView icon = new ImageView(view_temp.getContext());
 			icon.setImageBitmap(x.getIcon());
+			
 			TextView title = new TextView(view_temp.getContext());
 			title.setText(x.getTitle());
+			title.setPadding(10, 0, 0, 0);
 			title.setTextColor(0xFF000000);
 			
 			item.addView(icon, icon_params);
@@ -120,7 +169,10 @@ public class WebTVFragment extends Fragment {
 		
 	}
 	
-	/* add items into spinner (drop-down menu with services) dynamically*/
+	/**
+	 * Add items into spinner (drop-down menu with services) dynamically
+	 * @author Maria Jesus Platero
+	 */
 	public void addItemsOnSpinner(WebTVService services[]) {
 		 
 			List<Bitmap> list = new ArrayList<Bitmap>();
@@ -140,7 +192,10 @@ public class WebTVFragment extends Fragment {
 			
 		  }
 	
-	
+	/**
+	 * Method to process the services icons
+	 * @author Maria Jesus Platero
+	 */
 	public class ImageAdapter extends ArrayAdapter<Bitmap>{
 		
 		Bitmap[] services;
@@ -163,12 +218,20 @@ public class WebTVFragment extends Fragment {
  
     		ImageView icon = new ImageView(view_temp.getContext());
     		icon.setImageBitmap(services[position]);
-    		
+    		// Set the same image for the results image
+    		if(position == web_service){
+	    		ImageView result_icon = (ImageView) view_temp.findViewById(R.id.webtv_icon_result);
+	    		result_icon.setImageBitmap(services[position]);
+    		}
  
             return icon;
             }
         }
 
+	/**
+	 * Asynchronous loader for the WebTV services
+	 * @author Maria Jesus Platero
+	 */
 	private class AsyncWebServiceLoader extends AsyncTask<Integer, Integer, WebTVService[]>{
 
 		@Override
@@ -188,8 +251,7 @@ public class WebTVFragment extends Fragment {
 	/**
 	 * Makes a search asynchronously to avoid failure of the execution in newer versions
 	 * of android
-	 * @author Fran
-	 *
+	 * @author Francisco Valladares
 	 */
 	private class AsyncWebSearch extends AsyncTask<Integer, Integer, WebTVItem[]>{
 
@@ -198,6 +260,7 @@ public class WebTVFragment extends Fragment {
 			
 			WebTVQuery query = new WebTVQuery();
 			WebTVItem[] elements= query.search(search_for_this, services[0]);
+			query.populateWebTVItemsWithIcon(elements);
 			//System.out.println(services[0].getName().toString());
 			//System.out.println(elements[0].getTitle().toString());
 			return elements;

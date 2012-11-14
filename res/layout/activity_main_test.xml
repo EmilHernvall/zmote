@@ -103,12 +103,4 @@
         android:text="Local STB needs to be manually set in MainTestActivity at line 83. For faster acess to your local STB"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/bLoadSTB2"
-        android:layout_alignTop="@+id/bMainTabActivity"
-        android:text="Facebook" />
-
 </RelativeLayout>

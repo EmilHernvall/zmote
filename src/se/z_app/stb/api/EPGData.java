@@ -88,7 +88,11 @@ public class EPGData implements Observer{
 	public Bitmap getChannelIcon(Channel channel){
 		if(com == null || channel == null)
 			return null;
-		return com.getChannelIcon(channel);
+		Bitmap icon = null;
+		while(icon == null)
+			icon = com.getChannelIcon(channel);
+		
+		return icon;
 	}
 	
 	/**
