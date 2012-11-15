@@ -128,6 +128,14 @@ public class EPGFragment extends Fragment{
     	// Next lines are the fast way to focus on the current time in the EPG
     	line.setFocusableInTouchMode(true);		// Get the screen to the current time schedule
     	line.requestFocus();
+    	
+    	// Now label
+    	RelativeLayout.LayoutParams text_params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+    	text_params.setMargins(distance-10, 10, 0, 0);
+    	TextView now_text = (TextView)v.findViewById(R.id.now_text);
+    	now_text.setVisibility(TextView.VISIBLE);
+    	now_text.setLayoutParams(text_params);
+    	//now_text.invalidate();	//Not sure if needed
 
     }
     /**

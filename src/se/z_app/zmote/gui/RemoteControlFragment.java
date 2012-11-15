@@ -32,7 +32,7 @@ public class RemoteControlFragment extends Fragment {
 	private MainTabActivity main;
 	private View v;
 	
-	private String temp;
+	private Channel temp;
 	private LinearLayout channel_icons_layout;
 	private EPG epg;
 	private EPGQuery query = new EPGQuery();
@@ -220,13 +220,13 @@ public class RemoteControlFragment extends Fragment {
     	
     	// Set listeners to execute this
     	//RemoteControl.instance().launch(ch.getUrl()); //
-    	temp = ch.getUrl();
+    	temp = ch;
     	new_btn.setOnClickListener(new View.OnClickListener() {
-			String url = temp;
+			Channel channel = temp;
     		@Override
 			public void onClick(View v) {
 				
-				RemoteControl.instance().launch(url);
+				RemoteControl.instance().launch(channel);
 				main.vibrate();
 			}
 		});
