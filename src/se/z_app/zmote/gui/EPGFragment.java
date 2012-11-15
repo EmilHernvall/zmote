@@ -131,10 +131,12 @@ public class EPGFragment extends Fragment{
     	
     	// Now label
     	RelativeLayout.LayoutParams text_params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
-    	text_params.setMargins(distance-10, 10, 0, 0);
+    	text_params.setMargins(distance-15, 0, 0, 0);
     	TextView now_text = (TextView)v.findViewById(R.id.now_text);
     	now_text.setVisibility(TextView.VISIBLE);
     	now_text.setLayoutParams(text_params);
+    	now_text.setTypeface(null, Typeface.BOLD);
+    	now_text.setBackgroundColor(0xBB000000);
     	//now_text.invalidate();	//Not sure if needed
 
     }
