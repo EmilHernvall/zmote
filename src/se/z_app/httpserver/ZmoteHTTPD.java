@@ -25,13 +25,13 @@ public class ZmoteHTTPD extends NanoHTTPD {
 		//Log.i("WebServer", "  files: " + files);
 		ZmoteHTTPDRequestHandler handler;
 		synchronized(handlers){
-			handler = handlers.get(uri).clone();
+			handler = handlers.get(uri);
 		}
 		
 		//Log.i("WebServer", "  handler: " + handler.getURI());
 		if(handler == null)
 			return serveFile( uri, header, wwwroot, true );
-		return handler.serve(uri, method, header, parms, files, this);
+		return handler.clone().serve(uri, method, header, parms, files, this);
 	}
 	
 	public void addHandler(ZmoteHTTPDRequestHandler handler){

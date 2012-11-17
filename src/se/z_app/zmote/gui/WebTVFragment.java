@@ -8,8 +8,10 @@ import java.util.List;
 import se.z_app.stb.WebTVItem;
 import se.z_app.stb.WebTVService;
 import se.z_app.zmote.webtv.WebTVQuery;
+import android.R.drawable;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,7 +19,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.webkit.WebView.FindListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -38,6 +42,7 @@ public class WebTVFragment extends Fragment {
 	private ProgressBar pb;
 	private WebTVService services[];
 	private String search_for_this = null;	
+	private float screenWidth = 0; 
 	public WebTVFragment(){
 
 	}
@@ -52,9 +57,11 @@ public class WebTVFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {	
+	
 		view_temp = inflater.inflate(R.layout.fragment_web_tv, null);
+		screenWidth = getResources().getDisplayMetrics().widthPixels;
 		new AsyncWebServiceLoader().execute();
-
+		
 		// Set the listener for the search button
 		ImageButton search_button = (ImageButton)view_temp.findViewById(R.id.search_button_webtv);
 		
@@ -87,12 +94,13 @@ public class WebTVFragment extends Fragment {
 				
 				LinearLayout linLayResult = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
 				linLayResult.setVisibility(View.GONE);
+				
 			}
 		});
 
 		LinearLayout linLayStart = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
 		linLayStart.setVisibility(View.GONE);
-
+		
 		return view_temp;
 	}    
 
@@ -129,19 +137,34 @@ public class WebTVFragment extends Fragment {
 		LinearLayout.LayoutParams item_container_params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);
 		item_container_params.setMargins(4, 4, 4, 0);
 		
-		LinearLayout.LayoutParams item_params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
+//		LinearLayout.LayoutParams item_params = new LinearLayout.LayoutParams(LayoutParams.screenWidth*0,7, LayoutParams.MATCH_PARENT);
+		LinearLayout.LayoutParams item_params = new LinearLayout.LayoutParams((int)(screenWidth*0.8),LayoutParams.MATCH_PARENT);
 		LinearLayout.LayoutParams icon_params = new LinearLayout.LayoutParams(100,80);
-
+		LinearLayout.LayoutParams item_params2 = new LinearLayout.LayoutParams((int)(screenWidth*0.2),LayoutParams.MATCH_PARENT);
+		
 		for(WebTVItem x: res){
 			
 			LinearLayout item_container = new LinearLayout(view_temp.getContext());
 			item_container.setBackgroundColor(0xFFCCCCCC);
 			item_container.setPadding(4, 4, 4, 4);
 			
+			LinearLayout item2 = new LinearLayout(view_temp.getContext());
+		//	item2.setPadding(4, 4, 4, 4); Probably not needed//Emma
+			item2.setBackgroundColor(0xFF999999);
+			item2.setMinimumHeight(30);
+			item2.setClickable(true);
+		
+			ImageButton queueButton = new ImageButton(view_temp.getContext());
+			Drawable d = (Drawable) view_temp.getResources().getDrawable(R.drawable.queue_button);
+			queueButton.setBackgroundDrawable(d); //Check if ok, should not be used with API 16
+			
+			item2.addView(queueButton);
+	
 			LinearLayout item = new LinearLayout(view_temp.getContext());
-			item.setPadding(4, 4, 4, 4);
+	//		item.setPadding(4, 4, 4, 4); Probably not needed//Emma
 			item.setBackgroundColor(0xFF999999);
 			item.setMinimumHeight(30);
+			item.setClickable(true);
 			
 			ImageView icon = new ImageView(view_temp.getContext());
 			icon.setImageBitmap(x.getIcon());
@@ -153,8 +176,22 @@ public class WebTVFragment extends Fragment {
 			
 			item.addView(icon, icon_params);
 			item.addView(title);
+			
 			item_container.addView(item, item_params);
+			item_container.addView(item2, item_params2);
 			results_ly.addView(item_container, item_container_params);
+			
+			item.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View arg0) {		
+					
+					
+					
+					// TODO Auto-generated method stub
+					
+				}
+			});
 		}	
 
 	}
