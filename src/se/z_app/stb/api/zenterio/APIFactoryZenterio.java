@@ -16,7 +16,7 @@ public class APIFactoryZenterio extends AbstractAPIFactory {
 	
 	@Override
 	public DiscoveryInterface getDiscovery() {
-		return new DiscoveryOld(stb.getIP());
+		return new Discovery(stb.getIP());
 	}
 
 	@Override

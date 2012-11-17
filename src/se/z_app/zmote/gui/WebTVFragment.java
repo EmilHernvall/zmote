@@ -63,8 +63,10 @@ public class WebTVFragment extends Fragment {
 			public void onClick(View v) {
 				// Start a new search
 				search();
+				
 				LinearLayout linLay = (LinearLayout) view_temp.findViewById(R.id.searchBar);
 				linLay.setVisibility(View.GONE);
+				
 				LinearLayout linLayResult = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
 				linLayResult.setVisibility(View.VISIBLE);
 //				LinearLayout linLayTopList = (LinearLayout) view_temp.findViewById(R.id.top_list);
@@ -82,6 +84,7 @@ public class WebTVFragment extends Fragment {
 				linLay.setVisibility(View.VISIBLE);
 //				LinearLayout linLayTopList = (LinearLayout) view_temp.findViewById(R.id.top_list);
 //				linLayTopList.setVisibility(View.VISIBLE);
+				
 				LinearLayout linLayResult = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
 				linLayResult.setVisibility(View.GONE);
 			}
@@ -95,6 +98,7 @@ public class WebTVFragment extends Fragment {
 
 	/**
 	 * Calls the back-end function to get the results of a search and shows them
+	 * @author Francisco
 	 */
 	public void search(){
 		// We can set a progress bar to show the user that we are searching
@@ -124,19 +128,24 @@ public class WebTVFragment extends Fragment {
 		results_ly.removeAllViewsInLayout(); 
 		LinearLayout.LayoutParams item_container_params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);
 		item_container_params.setMargins(4, 4, 4, 0);
+		
 		LinearLayout.LayoutParams item_params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
 		LinearLayout.LayoutParams icon_params = new LinearLayout.LayoutParams(100,80);
 
 		for(WebTVItem x: res){
+			
 			LinearLayout item_container = new LinearLayout(view_temp.getContext());
 			item_container.setBackgroundColor(0xFFCCCCCC);
 			item_container.setPadding(4, 4, 4, 4);
+			
 			LinearLayout item = new LinearLayout(view_temp.getContext());
 			item.setPadding(4, 4, 4, 4);
 			item.setBackgroundColor(0xFF999999);
 			item.setMinimumHeight(30);
+			
 			ImageView icon = new ImageView(view_temp.getContext());
 			icon.setImageBitmap(x.getIcon());
+			
 			TextView title = new TextView(view_temp.getContext());
 			title.setText(x.getTitle());
 			title.setPadding(10, 0, 0, 0);
@@ -150,7 +159,10 @@ public class WebTVFragment extends Fragment {
 
 	}
 
-	/* add items into spinner (drop-down menu with services) dynamically*/
+	/**
+	 * Add items into spinner (drop-down menu with services) dynamically
+	 * @author Maria Jesus Platero
+	 */
 	public void addItemsOnSpinner(WebTVService services[]) {
 
 		List<Bitmap> list = new ArrayList<Bitmap>();
@@ -172,6 +184,10 @@ public class WebTVFragment extends Fragment {
 	}
 
 
+	/**
+	 * Method to process the services icons
+	 * @author Maria Jesus Platero
+	 */
 	public class ImageAdapter extends ArrayAdapter<Bitmap>{
 
 		Bitmap[] services;
@@ -204,6 +220,10 @@ public class WebTVFragment extends Fragment {
 		}
 	}
 
+	/**
+	 * Asynchronous loader for the WebTV services
+	 * @author Maria Jesus Platero
+	 */
 	private class AsyncWebServiceLoader extends AsyncTask<Integer, Integer, WebTVService[]>{
 
 		@Override
@@ -224,7 +244,6 @@ public class WebTVFragment extends Fragment {
 	 * Makes a search asynchronously to avoid failure of the execution in newer versions
 	 * of android
 	 * @author Francisco Valladares
-	 *
 	 */
 	private class AsyncWebSearch extends AsyncTask<Integer, Integer, WebTVItem[]>{
 

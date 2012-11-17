@@ -9,7 +9,7 @@ public class ZChatAdapter {
 	
 	//TODO: Implement this with the ZChat server
 	public Feed getFeed(Program program){
-		return null;
+		return new Feed(program);
 	}
 	
 	//TODO: Implement this with ZChat server

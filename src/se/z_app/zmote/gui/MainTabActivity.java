@@ -15,6 +15,7 @@ import se.z_app.stb.api.RemoteControl.Button;
 import android.app.ActionBar;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -31,9 +32,10 @@ import android.widget.Spinner;
 
 
 /**
- * TODO: Fill info
- * @author 
- *
+ * The main Fragment activity, extends the Sherlock library to support compability.
+ * 
+ * @author refrectored by: Linus Back
+ * 
  */
 public class MainTabActivity extends SherlockFragmentActivity implements TabListener{
 
@@ -228,15 +230,15 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
     private void addTheNavigationTabs() {
         // For each of the sections in the app, add a tab to the action bar.
         tabRC = actionBar.newTab().setIcon(R.drawable.ic_dialog_dialer);
-        tabMain = actionBar.newTab().setIcon(R.drawable.av_play);
+        tabMain = actionBar.newTab().setIcon(R.drawable.ic_new_home);
         tabEPG = actionBar.newTab().setIcon(R.drawable.collections_go_to_today);
         tabFav = actionBar.newTab().setIcon(R.drawable.rating_favourite);
         tabWeb = actionBar.newTab().setIcon(R.drawable.location_web_site);
         
         // Add the tabs to the action bar
+        actionBar.addTab(tabMain.setTabListener(this));
         actionBar.addTab(tabRC.setTabListener(this));
         actionBar.addTab(tabEPG.setTabListener(this));
-        actionBar.addTab(tabMain.setTabListener(this));
         actionBar.addTab(tabWeb.setTabListener(this));
         actionBar.addTab(tabFav.setTabListener(this));
 		
@@ -269,6 +271,9 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
     		temp++;
     	}
     	
+    	//Adds the Edit button to the Spinner
+    	STBNames.add("Edit...");
+    	
     	ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
     			android.R.layout.simple_spinner_item, STBNames);
 
@@ -278,6 +283,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
     	// Apply the adapter to the spinner, also aplies a listner.
 		mySpinner.setAdapter(adapter);
 		mySpinner.setSelection(selected);
+
 		mySpinner.setOnItemSelectedListener(new MyOnItemSelectedListener());
 		
 		return myView;				
@@ -307,9 +313,15 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 		@Override
 		public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
 				long arg3) {
-			STBContainer.instance().setActiveSTB(STBContainer.instance().
-					getSTBs()[arg2]);
-			
+			//Checks if the chosen item is the edit one.
+			if(arg2==arg0.getAdapter().getCount()-1){
+                Intent mainIntent = new Intent(MainTabActivity.this,
+                		SelectSTBActivity.class); 
+                MainTabActivity.this.startActivity(mainIntent);
+			}
+			else{
+				STBContainer.instance().setActiveSTB(STBContainer.instance().getSTBs()[arg2]);
+			}
 		}
 		
 		/**

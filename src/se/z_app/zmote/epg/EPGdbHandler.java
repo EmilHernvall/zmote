@@ -32,7 +32,7 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 	private static final String CHANNEL_ONID="onid";
 	private static final String CHANNEL_TSID="tsid";
 	private static final String CHANNEL_SID="sid";
-	
+
 	private static final String TABLE_PROGRAM ="program";
 	private static final String PROGRAM_NAME="name";
 	private static final String PROGRAM_EVENTID="eventID";
@@ -40,20 +40,20 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 	private static final String PROGRAM_DURATION="duration";
 	private static final String PROGRAM_SHORTTEXT="shortText";
 	private static final String PROGRAM_LONGTEXT="longText";
-	
+
 	private static final String TABLE_EPG ="epg";
 	private static final String EPG_DATEOFCREATION ="dateOfCreation";
-	
-//	private static final String TABLE_STB ="stb";
-//	private static final String STB_TYPE="type";
+
+	//	private static final String TABLE_STB ="stb";
+	//	private static final String STB_TYPE="type";
 	private static final String STB_MAC="mac";
-//	private static final String STB_IP="ip";
-//	private static final String STB_BOXNAME="boxName";
-	
+	//	private static final String STB_IP="ip";
+	//	private static final String STB_BOXNAME="boxName";
+
 	public EPGdbHandler(Context context){
 		super(context, DATABASE_Name,null,DATABASE_VERSION);
 	}
-	
+
 
 
 	@Override
@@ -67,21 +67,20 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 		db.execSQL(query);
 		query = "CREATE TABLE " +TABLE_EPG +"("+STB_MAC+" TEXT,"+EPG_DATEOFCREATION+" INTEGER);"; 
 		db.execSQL(query);
-//		query = "CREATE TABLE " +TABLE_STB +"("+STB_TYPE+" TEXT,"+STB_MAC +" TEXT," +STB_IP +" TEXT, "+ STB_BOXNAME +" TEXT);";
-//		db.execSQL(query);
+		//		query = "CREATE TABLE " +TABLE_STB +"("+STB_TYPE+" TEXT,"+STB_MAC +" TEXT," +STB_IP +" TEXT, "+ STB_BOXNAME +" TEXT);";
+		//		db.execSQL(query);
 	}
 
 	@Override
 	/**
-	 * Can be used to update the database, not yet tested
+	 * Used when a new version of the database is created
 	 */
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		db.execSQL("DROP TABLE IF EXISTS "+TABLE_CHANNEL);  //TODO: not correct yet ??not??
+		db.execSQL("DROP TABLE IF EXISTS "+TABLE_CHANNEL); 
 		db.execSQL("DROP TABLE IF EXISTS "+TABLE_PROGRAM);
 		db.execSQL("DROP TABLE IF EXISTS "+TABLE_EPG);
-//		db.execSQL("DROP TABLE IF EXISTS "+TABLE_STB);
 		onCreate(db);
-		}
+	}
 
 	/**
 	 * A method for getting and EPG object given and STB
@@ -91,35 +90,29 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 	public EPG selectEPG(STB stb){
 		EPG epg = new EPG();
 		epg.setStb(stb);
-//		System.out.println(epg.getStb().getBoxName());
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cursor = db.query(TABLE_EPG,null,""+STB_MAC+"='"+stb.getMAC() + "'", null,null,null,null);
 		if (cursor.moveToFirst()){
-		epg.setDateOfCreation(cursor.getLong(cursor.getColumnIndex(EPG_DATEOFCREATION)));  //TODO: FAILES HERE
-		System.out.println("the get int from EPG_DATEOFCREATION"+cursor.getLong(cursor.getColumnIndex(EPG_DATEOFCREATION)));  //TODO: REMOVE
+			epg.setDateOfCreation(cursor.getLong(cursor.getColumnIndex(EPG_DATEOFCREATION)));
 		}
 		else {
 			db.close();
 			return null;
 		}
-//		String whereClause = ""+STB_MAC+"='"+stb.getMAC()+"'";
 		cursor.close();
 		cursor = db.query(TABLE_CHANNEL,null,""+STB_MAC+"='"+stb.getMAC() + "'", null,null,null,null);
-//		Channel[] channels = new Channel[cursor.getCount()];
-//		int iterationCounter=0;
 		if(cursor.moveToFirst()) {
 			do{
-			Channel channel = new Channel();
-			channel.setName(cursor.getString(cursor.getColumnIndex(CHANNEL_NAME)));
-			channel.setIconUrl(cursor.getString(cursor.getColumnIndex(CHANNEL_ICONURL)));
-			channel.setNr(cursor.getInt(cursor.getColumnIndex(CHANNEL_NR)));
-			channel.setOnid(cursor.getInt(cursor.getColumnIndex(CHANNEL_ONID)));
-			channel.setSid(cursor.getInt(cursor.getColumnIndex(CHANNEL_SID)));
-			channel.setTsid(cursor.getInt(cursor.getColumnIndex(CHANNEL_TSID)));
-			epg.addChannel(channel); 
-//			iterationCounter++;
-		}while (cursor.moveToNext());
-			
+				Channel channel = new Channel();
+				channel.setName(cursor.getString(cursor.getColumnIndex(CHANNEL_NAME)));
+				channel.setIconUrl(cursor.getString(cursor.getColumnIndex(CHANNEL_ICONURL)));
+				channel.setNr(cursor.getInt(cursor.getColumnIndex(CHANNEL_NR)));
+				channel.setOnid(cursor.getInt(cursor.getColumnIndex(CHANNEL_ONID)));
+				channel.setSid(cursor.getInt(cursor.getColumnIndex(CHANNEL_SID)));
+				channel.setTsid(cursor.getInt(cursor.getColumnIndex(CHANNEL_TSID)));
+				epg.addChannel(channel); 
+			}while (cursor.moveToNext());
+
 		}
 		cursor.close();
 		db.close();
@@ -136,20 +129,18 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 		String whereClause = ""+STB_MAC+"='"+stb.getMAC()+"'";
 		values.put(STB_MAC, stb.getMAC());
 		values.put(EPG_DATEOFCREATION, epg.getDateOfCreation());
-		
+
 		int nrOfRowsAffected = db.update(TABLE_EPG, values, whereClause, null);
 		if(nrOfRowsAffected==0){
 			db.insert(TABLE_EPG,null,values);
 		}
-		db.close();
-		
-		
+		db.close();				
 		Iterator<Channel> iterator = epg.iteratorByNr();
 		while(iterator.hasNext()){
 			this.updateChannel(stb, iterator.next());
 		}		
 	}
-	
+
 	/**
 	 * A method for selecting a channals, return an array with the channals
 	 * @param stb The STB for which to getting the channals from
@@ -157,30 +148,27 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 	 */
 	public Channel[] selectChannals(STB stb){
 		SQLiteDatabase db = this.getReadableDatabase();
-		//Cursor cursor = db.rawQuery(selectQuery, null); //old
 		Cursor cursor = db.query(TABLE_CHANNEL,null,""+STB_MAC+"='"+stb.getMAC() + "'", null,null,null,null);
-		Channel[] channelArray = new Channel[cursor.getCount()]; //length is null
+		Channel[] channelArray = new Channel[cursor.getCount()];
 		int iterationCounter=0;
 		if(cursor.moveToFirst()) {
 			do{
-			Channel channel =new Channel(); //TODO: this should bee the channel the program is realated to
-			channel.setName(cursor.getString(cursor.getColumnIndex(CHANNEL_NAME)));
-			channel.setNr(cursor.getInt(cursor.getColumnIndex(CHANNEL_NR)));
-			channel.setOnid(cursor.getInt(cursor.getColumnIndex(CHANNEL_ONID)));
-			channel.setSid(cursor.getInt(cursor.getColumnIndex(CHANNEL_SID)));
-			channel.setTsid(cursor.getInt(cursor.getColumnIndex(CHANNEL_TSID)));
-			channelArray[iterationCounter]=channel; 
-			iterationCounter++;
-		} while (cursor.moveToNext());
-			
-			
+				Channel channel =new Channel(); //TODO: this should bee the channel the program is realated to
+				channel.setName(cursor.getString(cursor.getColumnIndex(CHANNEL_NAME)));
+				channel.setNr(cursor.getInt(cursor.getColumnIndex(CHANNEL_NR)));
+				channel.setOnid(cursor.getInt(cursor.getColumnIndex(CHANNEL_ONID)));
+				channel.setSid(cursor.getInt(cursor.getColumnIndex(CHANNEL_SID)));
+				channel.setTsid(cursor.getInt(cursor.getColumnIndex(CHANNEL_TSID)));
+				channelArray[iterationCounter]=channel; 
+				iterationCounter++;
+			} while (cursor.moveToNext());
 		}
 		cursor.close();
 		db.close();
 		return channelArray;
 	}
-		
-	
+
+
 	/**
 	 * A method for update the a channel in the database, given an STB, TODO: to test if this overwrite the old channel or just creates a new record
 	 * @param stb The STB in which the Channel should be update
@@ -188,7 +176,7 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 	 */
 	public void updateChannel(STB stb, Channel channel){
 		SQLiteDatabase db = this.getWritableDatabase();
-	
+
 		ContentValues values = new ContentValues();
 		String whereClause = ""+STB_MAC+"='"+stb.getMAC()+"'";
 		values.put(STB_MAC, stb.getMAC());
@@ -198,9 +186,7 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 		values.put(CHANNEL_ONID, channel.getOnid());
 		values.put(CHANNEL_TSID, channel.getTsid());
 		values.put(CHANNEL_SID, channel.getSid());
-
-		//		db.insert(TABLE_CHANNEL, null, values); //TODO: Remove this, use update instead
-		int nrOfRowsAffected = db.update(TABLE_CHANNEL, values, whereClause, null); //seams to fail, add new records instead of updating
+		int nrOfRowsAffected = db.update(TABLE_CHANNEL, values, whereClause, null);
 		if(nrOfRowsAffected==0){
 			db.insert(TABLE_CHANNEL,null,values);
 		}
@@ -213,12 +199,11 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 	 * @param channels The channels to be updated
 	 */
 	public void updateChannels(STB stb, Channel[] channels){
-//		SQLiteDatabase db = this.getWritableDatabase();
-		for (int i = 0; i<channels.length;i++) { //not tested and I'm tired, starts from 1 or 0??
+		for (int i = 0; i<channels.length;i++) {
 			updateChannel(stb, channels[i]);
 		}
-//		db.close();
 	}
+
 	/**
 	 * A method for selecting programs, given an STB and a channel
 	 * @param stb The STB to get the data from
@@ -227,29 +212,24 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 	 */
 	@SuppressWarnings("deprecation")
 	public Program[] selectPrograms(STB stb, Channel channel){
-		
-		//String selectQuery = "SELECT * FROM " +TABLE_PROGRAM; //no where statement, TODO: add where
 		SQLiteDatabase db = this.getReadableDatabase();
-		//Cursor cursor = db.rawQuery(selectQuery, null); //old
 		Cursor cursor = db.query(TABLE_PROGRAM,null,""+STB_MAC+"='"+stb.getMAC() + "' AND "+CHANNEL_NR+"="+channel.getNr()+"", null,null,null,null);
-		Program[] programArray = new Program[cursor.getCount()]; //length is null
+		Program[] programArray = new Program[cursor.getCount()];
 		int iterationCounter=0;
 		if(cursor.moveToFirst()) {
 			do{
-			Program program =new Program(new Channel()); //TODO: this should bee the channel the program is realated to
-			program.setName(cursor.getString(cursor.getColumnIndex(PROGRAM_NAME)));
-			program.setEventID(cursor.getInt(cursor.getColumnIndex(PROGRAM_EVENTID)));
-			int temp = cursor.getInt(cursor.getColumnIndex(PROGRAM_START));
-			Date tempDate = new Date();
-			tempDate.setDate(temp);
-			program.setStart(tempDate); //TODO: needs testing
-			program.setShortText(cursor.getString(cursor.getColumnIndex(PROGRAM_SHORTTEXT)));
-			program.setLongText(cursor.getString(cursor.getColumnIndex(PROGRAM_LONGTEXT)));
-			programArray[iterationCounter]=program; 
-			iterationCounter++;
-		}while (cursor.moveToNext());
-			
-			
+				Program program =new Program(new Channel()); //TODO: this should bee the channel the program is realated to
+				program.setName(cursor.getString(cursor.getColumnIndex(PROGRAM_NAME)));
+				program.setEventID(cursor.getInt(cursor.getColumnIndex(PROGRAM_EVENTID)));
+				int temp = cursor.getInt(cursor.getColumnIndex(PROGRAM_START));
+				Date tempDate = new Date();
+				tempDate.setDate(temp);
+				program.setStart(tempDate); //TODO: needs testing
+				program.setShortText(cursor.getString(cursor.getColumnIndex(PROGRAM_SHORTTEXT)));
+				program.setLongText(cursor.getString(cursor.getColumnIndex(PROGRAM_LONGTEXT)));
+				programArray[iterationCounter]=program; 
+				iterationCounter++;
+			}while (cursor.moveToNext());
 		}
 		cursor.close();
 		db.close();
@@ -269,7 +249,7 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 		values.put(CHANNEL_NR, channel.getNr());
 		values.put(PROGRAM_NAME, program.getName());
 		values.put(PROGRAM_EVENTID, program.getEventID());
-		values.put(PROGRAM_START, program.getStart().toString()); //will this work to make the date a string, needs testing
+		values.put(PROGRAM_START, program.getStart().toString());
 		values.put(PROGRAM_DURATION, program.getDuration());
 		values.put(PROGRAM_SHORTTEXT, program.getShortText());
 		values.put(PROGRAM_LONGTEXT, program.getLongText());
@@ -286,7 +266,7 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 	 * @param programs The programs to update
 	 */
 	public void updatePrograms(STB stb, Channel channel, Program[] programs){
-		for (int i = 0; i<programs.length;i++) { //not tested and I'm tired, starts from 1 or 0??
+		for (int i = 0; i<programs.length;i++) {
 			updateProgram(stb,channel,programs[i]);
 		}
 	}
