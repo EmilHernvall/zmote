@@ -1,10 +1,7 @@
 package se.z_app.zmote.gui;
 
-
 import java.util.ArrayList;
 import java.util.List;
-
-
 import se.z_app.stb.WebTVItem;
 import se.z_app.stb.WebTVService;
 import se.z_app.zmote.webtv.WebTVQuery;
@@ -29,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import se.z_app.stb.api.*;
 
 /**
  * Class used to display webTV and search on the different webTV items 
@@ -42,7 +40,8 @@ public class WebTVFragment extends Fragment {
 	private ProgressBar pb;
 	private WebTVService services[];
 	private String search_for_this = null;	
-	private float screenWidth = 0; 
+	private float screenWidth = 0;
+	private WebTVItem tempItem;
 	public WebTVFragment(){
 
 	}
@@ -180,14 +179,28 @@ public class WebTVFragment extends Fragment {
 			item_container.addView(item, item_params);
 			item_container.addView(item2, item_params2);
 			results_ly.addView(item_container, item_container_params);
-			
+			tempItem = x;
 			item.setOnClickListener(new View.OnClickListener() {
+			WebTVItem resultItem = tempItem;
 				
 				@Override
 				public void onClick(View arg0) {		
+
+				System.out.println("Item 1 listner");
 					
+					WebTVCommand.instance().play(resultItem);
+					// TODO Auto-generated method stub
 					
+				}
+			});
+			
+			item2.setOnClickListener(new View.OnClickListener() {
+				WebTVItem queueItem = tempItem;
+				@Override
+				public void onClick(View v) {
+					System.out.println("Item 2 listner"); //TODO Don't seam to queue it, can be problem in backend as well 
 					
+					WebTVCommand.instance().queue(queueItem);
 					// TODO Auto-generated method stub
 					
 				}
