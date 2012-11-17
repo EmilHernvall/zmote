@@ -272,7 +272,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
     	}
     	
     	//Adds the Edit button to the Spinner
-    	STBNames.add("Edit..");
+    	STBNames.add("Edit...");
     	
     	ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
     			android.R.layout.simple_spinner_item, STBNames);
@@ -283,6 +283,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
     	// Apply the adapter to the spinner, also aplies a listner.
 		mySpinner.setAdapter(adapter);
 		mySpinner.setSelection(selected);
+
 		mySpinner.setOnItemSelectedListener(new MyOnItemSelectedListener());
 		
 		return myView;				

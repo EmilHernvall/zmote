@@ -1,8 +1,8 @@
 package se.z_app.zmote.gui;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 
 import se.z_app.stb.Channel;
 import se.z_app.stb.EPG;
@@ -54,6 +54,9 @@ public class ChannelInformationFragment extends Fragment{
 	private TextView scrollToFocused = null;
 	private LinearLayout ly_temp = null;
 	
+	private ArrayList<View> res_vector = new ArrayList();
+	private SnapHorizontalScrollView x;
+	
 	/**
 	 * Default constructor of ChannelInformationFragment
 	 */
@@ -84,13 +87,14 @@ public class ChannelInformationFragment extends Fragment{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		
-		
 		view_temp = inflater.inflate(R.layout.fragment_channel_information, null);
 		content_layout = (LinearLayout)view_temp.findViewById(R.id.content_ly);
 		pb = (ProgressBar)view_temp.findViewById(R.id.progressLodingEpgChannelInformation);
 		
 		new AsyncDataLoader().execute();
-	
+		x = new SnapHorizontalScrollView(view_temp.getContext());
+		
+		
     	return view_temp;
     }    
 	
@@ -126,7 +130,8 @@ public class ChannelInformationFragment extends Fragment{
     	for(Channel channel: epg){
     		addChannelItemToLayout(channel);
     	}
-
+    	x.setFeatureItems(res_vector);
+    	content_layout.addView(x);
     }
     
 	/**
@@ -140,8 +145,8 @@ public class ChannelInformationFragment extends Fragment{
     	int icon_size = ch.getIcon().getWidth();
     	
     	// "White box" parameters
-    	LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width_screen-40, LayoutParams.MATCH_PARENT);
-        layoutParams.setMargins(15, 15, 15, 30);
+    	LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width_screen-20, LayoutParams.MATCH_PARENT);
+        layoutParams.setMargins(10,15,10,30);
         
         // WrapContent parameters
         LinearLayout.LayoutParams wrapContentParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -253,7 +258,8 @@ public class ChannelInformationFragment extends Fragment{
         });
     	
     	channel_ly.addView(channel_content);
-    	content_layout.addView(channel_ly, layoutParams);
+    	channel_ly.setLayoutParams(layoutParams);
+    	res_vector.add(channel_ly);
     	
     }
     
@@ -498,6 +504,6 @@ public class ChannelInformationFragment extends Fragment{
 	public void hideInformation(int id){
 		TextView elem = (TextView) view_temp.findViewById(id);
 		elem.setVisibility(TextView.GONE);
-	}
-
+	}	
+	
 }
