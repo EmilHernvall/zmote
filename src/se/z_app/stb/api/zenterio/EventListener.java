@@ -12,7 +12,12 @@ import org.json.JSONObject;
 import se.z_app.stb.STB;
 import se.z_app.stb.STBEvent;
 import se.z_app.stb.api.EventListnerInterface;
-
+/**
+ * Class that handles the events sent from the box.
+ * refactored to work with the new firmware.
+ * @author Linus 
+ *
+ */
 public class EventListener implements EventListnerInterface {
 
 	private String iPaddress;
@@ -20,7 +25,7 @@ public class EventListener implements EventListnerInterface {
 	private Socket socket;
 	private InputStream in;
 	private byte[] buffer;
-	
+
 	/**
 	 * Initializes the event listener.
 	 */
@@ -38,7 +43,7 @@ public class EventListener implements EventListnerInterface {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	/**
@@ -62,7 +67,7 @@ public class EventListener implements EventListnerInterface {
 		}
 		return currentEvent;
 	}
-	
+
 	/**
 	 * Stops the eventListener, needs to be initialized 
 	 * before getNextEvent() can be called again.
@@ -75,22 +80,20 @@ public class EventListener implements EventListnerInterface {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch( RuntimeException e){
-			
+
 		}
-		
+
 	}
-	
+
 	private STBEvent stringToSTBEvent(String eventString){
 
 		try {
 			JSONObject json = new JSONObject(eventString);
 			currentEvent = new STBEvent();
 			currentEvent.setType(json.getString("type"));
-			
-			if(currentEvent.getType().equals("nodeLaunch")){
 			currentEvent.setLabel(json.getString("label"));
 			currentEvent.setUrl(json.getString("url"));
-			}
+
 
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
