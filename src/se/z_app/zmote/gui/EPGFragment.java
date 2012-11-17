@@ -11,6 +11,8 @@ import se.z_app.stb.Program;
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.zmote.epg.EPGQuery;
 
+import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
@@ -61,6 +63,8 @@ public class EPGFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+    	
+    	//main.setOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     	
 		v = inflater.inflate(R.layout.fragment_epg, null);
 		i_layout = (LinearLayout)v.findViewById(R.id.channel_icons);

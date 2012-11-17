@@ -64,6 +64,10 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 
         vibe = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE) ;
 	}
+    
+    public void setOrientation(int i){
+    		setRequestedOrientation(i);
+    }
 
 	
 	/**
@@ -85,7 +89,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	 */
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
-        if (savedInstanceState.containsKey(STATE_SELECTED_NAVIGATION_ITEM)) {
+        if (savedInstanceState.containsKey(STATE_SELECTED_NAVIGATION_ITEM) && (getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)) {
         	getSupportActionBar().setSelectedNavigationItem(
                     savedInstanceState.getInt(STATE_SELECTED_NAVIGATION_ITEM));
         }
