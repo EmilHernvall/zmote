@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.apache.http.protocol.HttpDateGenerator;
 
 import se.z_app.httpserver.NanoHTTPD.Response;
 import se.z_app.httpserver.ZmoteHTTPD;
@@ -38,7 +37,7 @@ public class MediaRequestHandler implements ZmoteHTTPDRequestHandler{
 			return httpd.new Response(httpd.HTTP_NOTFOUND, httpd.MIME_PLAINTEXT, "Not found");
 		}
 				
-		Response response = httpd.serveFile(file.getAbsolutePath(), header, new File("/"), false);
+		Response response = httpd.serveFile("/"+file.getName(), header, file.getParentFile(), false);
 		response.isStreaming = false;
 
 		

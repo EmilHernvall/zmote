@@ -48,7 +48,7 @@ public class MainTestActivity extends Activity {
     	ms.setLocalIP(ip);
         
     	STB stb = new STB();
-		stb.setBoxName("STB Proxy");
+		stb.setBoxName("zen56");
 		stb.setIP("130.236.248.56");
 		stb.setType(STBEnum.ZENTERIO);
 		stb.setMAC("00:07:67:9B:EB:33");

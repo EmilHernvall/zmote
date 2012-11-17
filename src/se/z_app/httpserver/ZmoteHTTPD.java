@@ -20,17 +20,14 @@ public class ZmoteHTTPD extends NanoHTTPD {
 	@Override
 	public synchronized Response serve( String uri, String method, Properties header, Properties parms, Properties files )
 	{
-		//Log.i("WebServer", "serve: " + uri);
-		//Log.i("WebServer", "  parms: " + parms);
-		//Log.i("WebServer", "  files: " + files);
+
 		ZmoteHTTPDRequestHandler handler;
 		synchronized(handlers){
 			handler = handlers.get(uri);
 		}
 		
-		//Log.i("WebServer", "  handler: " + handler.getURI());
 		if(handler == null)
-			return serveFile( uri, header, wwwroot, true );
+			return new Response(HTTP_NOTFOUND, MIME_PLAINTEXT, "404: not found");
 		return handler.clone().serve(uri, method, header, parms, files, this);
 	}
 	
