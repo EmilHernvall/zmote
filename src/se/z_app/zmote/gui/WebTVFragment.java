@@ -149,7 +149,7 @@ public class WebTVFragment extends Fragment {
 			item_container.setPadding(4, 4, 4, 4);
 			
 			LinearLayout item2 = new LinearLayout(view_temp.getContext());
-			item2.setPadding(4, 4, 4, 4);
+		//	item2.setPadding(4, 4, 4, 4); Probably not needed//Emma
 			item2.setBackgroundColor(0xFF999999);
 			item2.setMinimumHeight(30);
 			item2.setClickable(true);
@@ -161,7 +161,7 @@ public class WebTVFragment extends Fragment {
 			item2.addView(queueButton);
 	
 			LinearLayout item = new LinearLayout(view_temp.getContext());
-			item.setPadding(4, 4, 4, 4);
+	//		item.setPadding(4, 4, 4, 4); Probably not needed//Emma
 			item.setBackgroundColor(0xFF999999);
 			item.setMinimumHeight(30);
 			item.setClickable(true);
@@ -185,6 +185,8 @@ public class WebTVFragment extends Fragment {
 				
 				@Override
 				public void onClick(View arg0) {		
+					
+					
 					
 					// TODO Auto-generated method stub
 					
