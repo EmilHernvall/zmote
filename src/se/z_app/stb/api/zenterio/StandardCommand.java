@@ -243,7 +243,7 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 			return getJSON(urlStr, 4096);
 		}
 		public String getJSON(String urlStr, int bufferSize){
-			String json = "";	
+			StringBuilder json = new StringBuilder();	
 			try {
 				URL url = new URL(urlStr);
 				InputStream in = url.openStream();
@@ -252,14 +252,14 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 		    	byte buffer[] = new byte[bufferSize];
 		    	int len;
 				while ((len = in.read(buffer)) != -1) {
-					json = json + new String(buffer, 0, len);
+					json = json.append(new String(buffer, 0, len));
 		    	}
 				
 				in.close();
 			}catch (Exception e) {
 				// TODO: handle exception
 			}
-			return json;
+			return json.toString();
 		}
 	}
 }
