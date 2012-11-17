@@ -33,7 +33,7 @@ import android.support.v4.app.Fragment;
  *
  */
 public class EPGFragment extends Fragment{
-	private String temp;
+	private Channel temp;
 	private EPG epg;
 	private View v;
 	private MainTabActivity main;
@@ -206,16 +206,16 @@ public class EPGFragment extends Fragment{
 		new_btn.setImageBitmap(getResizedBitmap(ch.getIcon(),height,width));
 		new_btn.setBackgroundResource(0);	// Set the background transparent
 		new_btn.setClickable(true);
-		temp = ch.getUrl();
+		temp = ch;
 		
 		//TODO: If you click on an icon you are supposed to change channel
 		new_btn.setOnClickListener(new View.OnClickListener() {
-			String url = temp;
+			Channel tempChannel = temp;
 			@Override
 			public void onClick(View v) {
 				
-				RemoteControl.instance().launch(url);
-				main.vibrate();
+				RemoteControl.instance().launch(tempChannel);
+			//	main.vibrate();
 			}
 		});
 		
