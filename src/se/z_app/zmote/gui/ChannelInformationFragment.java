@@ -36,7 +36,7 @@ public class ChannelInformationFragment extends Fragment{
     private LinearLayout content_layout;
 	private View view_temp;
 	private EPG epg;
-	private String temp;
+	private Channel temp;
 	private int i_tmp;
 	private EPGQuery query = new EPGQuery();
 	private EPG epgFetched;
@@ -143,10 +143,10 @@ public class ChannelInformationFragment extends Fragment{
     	// Get the width of the screen
     	int width_screen = getResources().getDisplayMetrics().widthPixels;
     	int icon_size = ch.getIcon().getWidth();
-    	
+    	temp = ch;
     	// "White box" parameters
     	LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width_screen-20, LayoutParams.MATCH_PARENT);
-        layoutParams.setMargins(10,15,10,30);
+        layoutParams.setMargins(10,15,10,10);
         
         // WrapContent parameters
         LinearLayout.LayoutParams wrapContentParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -163,7 +163,8 @@ public class ChannelInformationFragment extends Fragment{
     	channel_ly.setBackgroundColor(0xFFFFFFFF);
     	channel_ly.setPadding(10, 5, 10, 5);
     	channel_ly.setOrientation(1);	// Vertical 1; Horizontal 0
-    	channel_ly.setId(ch.getNr()*1000);	// The ID of the channel information box is ChannelNR*1000
+    	channel_ly.setId(ch.getNr()*1000-3);	// The ID of the channel information box is ChannelNR*1000
+    	
     	
     	// The information part of the box will be scrollable
     	channel_content = new ScrollView(view_temp.getContext());
@@ -195,16 +196,16 @@ public class ChannelInformationFragment extends Fragment{
     	
     	// Set listeners to execute this
     	//RemoteControl.instance().launch(ch.getUrl()); //
-    	temp = ch.getUrl();
-    	i_tmp = ch.getNr();
+    //	temp = ch;
+    	
     	new_btn.setOnClickListener(new View.OnClickListener() {
     		//int channelNr = i_tmp;
-			String url = temp;
+    		Channel tempChannel = temp;
+    		
     		@Override
-			public void onClick(View v) {
-    			
-				RemoteControl.instance().launch(url);
-				main.vibrate();
+			public void onClick(View v) {			
+				RemoteControl.instance().launch(tempChannel);
+			//	main.vibrate();
 			}
 		});
     	
@@ -341,7 +342,7 @@ public class ChannelInformationFragment extends Fragment{
     
     /**
      * Returns the set of buttons for a program (Fav, Imdb, Social)
-     * @return	View containig the buttons
+     * @return	View containing the buttons
      */
     public View addProgramButtons(){
     	
