@@ -53,6 +53,7 @@ public class ZChatAdapter {
 				thePost.setContent(jsonPost.getString("content"));
 				
 				String usernameID = URLEncoder.encode(jsonPost.getString("user_id"));
+				Log.e("ZCHAT", usernameID);
 				String userURLString = "http://" + serverAdress +"post/get_user_by_id?id="+usernameID;
 				String jsonUser = getJSON(userURLString, 4096);
 				JSONArray theUser = new JSONArray(jsonUser);
@@ -88,11 +89,19 @@ public class ZChatAdapter {
 			
 			return null;
 		}
-		return new Feed(program);
+		return theFeed;
 	}
 	
 	//TODO: Implement this with ZChat server
+	@SuppressWarnings("deprecation")
 	public Feed commitPost(Feed targetFeed, Post newPost){
+		targetFeed.addPost(newPost);
+		String arg1 = URLEncoder.encode(newPost.getUserName());
+		String arg2 = URLEncoder.encode(targetFeed.getProgram().getName());
+		String arg3 = URLEncoder.encode(newPost.getContent());
+		
+		String userURLString = "http://" + serverAdress +"post/insert_post?username="+arg1+"&program_name="+arg2+"&content="+arg3;
+		
 		return targetFeed;
 	}
 	
