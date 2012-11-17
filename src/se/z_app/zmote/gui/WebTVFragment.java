@@ -194,12 +194,11 @@ public class WebTVFragment extends Fragment {
 				}
 			});
 			
-			item2.setOnClickListener(new View.OnClickListener() {
+			queueButton.setOnClickListener(new View.OnClickListener() {
 				WebTVItem queueItem = tempItem;
 				@Override
 				public void onClick(View v) {
 					System.out.println("Item 2 listner"); //TODO Don't seam to queue it, can be problem in backend as well 
-					
 					WebTVCommand.instance().queue(queueItem);
 					// TODO Auto-generated method stub
 					
