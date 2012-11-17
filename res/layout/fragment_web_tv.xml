@@ -16,16 +16,10 @@
             android:layout_width="40dp"
             android:layout_height="match_parent"/>
 
-        <ImageButton
-            android:id="@+id/search_button_webtv"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:background="@drawable/ic_action_search"
-            android:contentDescription="@string/search" />
-        
+                
         <EditText
             android:id="@+id/search_box_webtv"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:background="#FFFFFF"
             android:layout_margin="3dp"
@@ -33,10 +27,19 @@
         	android:textColor="#000000"
         	android:textSize="15dp"
         	android:hint = "What do you want to search for?"
-        	android:paddingRight="3dp"
+        	android:paddingRight="30dp"
         	android:paddingLeft="3dp"/>
         
+        <ImageButton
+            android:id="@+id/search_button_webtv"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:paddingRight="3dp"
+            android:background="@drawable/ic_action_search"
+            android:contentDescription="@string/search" />
+        
     </LinearLayout>
+    
     <LinearLayout
         android:id="@+id/resultsBar"
         android:layout_width="match_parent"
@@ -75,7 +78,7 @@
      
    </LinearLayout>
     
-   <LinearLayout
+ <!--    <LinearLayout  
        	android:id="@+id/top_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" 
@@ -95,12 +98,12 @@
           android:textStyle="bold" 
           android:textColor="#FFFFFF" />
       
-    </LinearLayout>
+    </LinearLayout> -->
 
    <LinearLayout
        android:layout_width="match_parent"
        android:layout_height="1dp"
-       android:background="#BDBDBD"
+       android:background="#33B5E5"
        android:orientation="vertical" >
    </LinearLayout>
 

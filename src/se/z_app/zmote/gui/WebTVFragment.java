@@ -31,7 +31,7 @@ import android.widget.TextView;
  * @author Francisco Valladres, Maria Jesus Platero, Emma Axelsson
  */
 public class WebTVFragment extends Fragment {
-
+	private Spinner spinner;
 	private View view_temp;
 	private MainTabActivity main;
 	private int web_service = 0;  // To know in what service are we currently (youtube, spotify...)
@@ -67,8 +67,8 @@ public class WebTVFragment extends Fragment {
 				linLay.setVisibility(View.GONE);
 				LinearLayout linLayResult = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
 				linLayResult.setVisibility(View.VISIBLE);
-				LinearLayout linLayTopList = (LinearLayout) view_temp.findViewById(R.id.top_list);
-				linLayTopList.setVisibility(View.GONE);
+//				LinearLayout linLayTopList = (LinearLayout) view_temp.findViewById(R.id.top_list);
+//				linLayTopList.setVisibility(View.GONE);
 			}
 		});
 
@@ -80,8 +80,8 @@ public class WebTVFragment extends Fragment {
 				// Go back to first view
 				LinearLayout linLay = (LinearLayout) view_temp.findViewById(R.id.searchBar);
 				linLay.setVisibility(View.VISIBLE);
-				LinearLayout linLayTopList = (LinearLayout) view_temp.findViewById(R.id.top_list);
-				linLayTopList.setVisibility(View.VISIBLE);
+//				LinearLayout linLayTopList = (LinearLayout) view_temp.findViewById(R.id.top_list);
+//				linLayTopList.setVisibility(View.VISIBLE);
 				LinearLayout linLayResult = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
 				linLayResult.setVisibility(View.GONE);
 			}
@@ -104,9 +104,11 @@ public class WebTVFragment extends Fragment {
 		TextView resultText = (TextView) view_temp.findViewById(R.id.result_webtv);
 		resultText.setText("Result for: '"+ search_for_this+"'");
 		// Here we should call a function like this
+		
 		if(search_for_this != null)
 			new AsyncWebSearch().execute();
-
+			
+		
 		// After getting the results
 		// pb.setVisibility(View.GONE);	// Quit the progress bar		
 	}
@@ -162,9 +164,10 @@ public class WebTVFragment extends Fragment {
 		list.toArray(servicesImg);
 
 		ImageAdapter ia = new ImageAdapter(this.getActivity(), android.R.layout.simple_spinner_item, servicesImg);	
-		Spinner spinner = (Spinner)view_temp.findViewById(R.id.webtv_spinner); // this returns null
+		 spinner = (Spinner)view_temp.findViewById(R.id.webtv_spinner); // this returns null
 		ia.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner.setAdapter(ia);
+	
 
 	}
 
@@ -227,9 +230,9 @@ public class WebTVFragment extends Fragment {
 
 		@Override
 		protected WebTVItem[] doInBackground(Integer... arg0) {
-
+			web_service = spinner.getSelectedItemPosition();
 			WebTVQuery query = new WebTVQuery();
-			WebTVItem[] elements= query.search(search_for_this, services[0]);
+			WebTVItem[] elements= query.search(search_for_this, services[web_service]);
 			query.populateWebTVItemsWithIcon(elements);
 			//System.out.println(services[0].getName().toString());
 			//System.out.println(elements[0].getTitle().toString());
