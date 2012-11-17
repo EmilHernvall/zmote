@@ -91,8 +91,24 @@ public class EventListener implements EventListnerInterface {
 			JSONObject json = new JSONObject(eventString);
 			currentEvent = new STBEvent();
 			currentEvent.setType(json.getString("type"));
-			currentEvent.setLabel(json.getString("label"));
-			currentEvent.setUrl(json.getString("url"));
+			if(currentEvent.getType().equals("nodeLaunch")){
+				currentEvent.setLabel(json.getString("label"));
+				currentEvent.setUrl(json.getString("url"));
+			}
+			else if(currentEvent.getType().equals("volume")){
+				currentEvent.setValue(Integer.parseInt(json.getString("value")));
+			}
+			else if(currentEvent.getType().equals("mute")){
+				String value = json.getString("state");
+				if(value.equals("1")){
+					currentEvent.setState(true);
+				}
+				else{
+					currentEvent.setState(false);
+				}
+			}
+			
+			
 
 
 		} catch (JSONException e) {
