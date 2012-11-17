@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URLEncoder;
@@ -340,6 +341,7 @@ public class NanoHTTPD
 				int rlen = is.read(buf, 0, bufsize);
 				if (rlen <= 0) return;
 
+				
 				// Create a BufferedReader for parsing the header.
 				ByteArrayInputStream hbis = new ByteArrayInputStream(buf, 0, rlen);
 				BufferedReader hin = new BufferedReader( new InputStreamReader( hbis ));
@@ -774,7 +776,7 @@ public class NanoHTTPD
 
 				OutputStream out = mySocket.getOutputStream();
 				PrintWriter pw = new PrintWriter( out );
-				pw.print("HTTP/1.0 " + status + " \r\n");
+				pw.print("HTTP/1.1 " + status + " \r\n"); //TODO: change from 1.0 -> 1.1
 
 				if ( mime != null )
 					pw.print("Content-Type: " + mime + "\r\n");
@@ -798,12 +800,14 @@ public class NanoHTTPD
 
 				if ( data != null )
 				{
+					
 					if ( isStreaming == false) {
+						int bufferSize = 2048;//32768; //2048;
 						int pending = data.available(); // This is to support partial sends, see serveFile()
-						byte[] buff = new byte[2048];
+						byte[] buff = new byte[bufferSize];
 						while (pending>0)
 						{
-							int read = data.read( buff, 0, ( (pending>2048) ?  2048 : pending ));
+							int read = data.read( buff, 0, ( (pending>bufferSize) ?  bufferSize : pending ));
 							if (read <= 0)      break;
 							out.write( buff, 0, read );
 							pending -= read;
@@ -1062,6 +1066,21 @@ public class NanoHTTPD
 		return res;
 	}
 
+	public static String getMimeType(File file){
+		String filename = file.getName();
+		int dot = filename.lastIndexOf(".");
+		if(dot == -1 || dot+1 >= filename.length())
+			return "application/octet-stream"; 
+		
+		String extention = filename.substring(dot+1);
+		String mime = (String)theMimeTypes.get(extention);
+		
+		if(mime == null)
+			return "application/octet-stream";
+		
+		return mime; 
+		
+	}
 	/**
 	 * Hashtable mapping (String)FILENAME_EXTENSION -> (String)MIME_TYPE
 	 */
