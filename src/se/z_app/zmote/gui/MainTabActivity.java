@@ -378,8 +378,12 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	}
 
 	public void setAlive(int isAlive){
-		if(actionBar==null){
+
+		if(actionBar == null) //TODO need to fixed, added so it won't crash due to other changes //Emma
 			return;
+		if(isAlive==1){
+			actionBar.setLogo(R.drawable.green_button2);
+
 		}
 		if(isAlive==1){
 			actionBar.setLogo(R.drawable.green_button);
