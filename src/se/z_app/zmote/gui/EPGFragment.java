@@ -66,7 +66,7 @@ public class EPGFragment extends Fragment{
     	
     	super.onCreate(savedInstanceState);
     	
-    	main.setOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+    	//main.setOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     	
 		view = inflater.inflate(R.layout.fragment_epg, null);
 		i_layout = (LinearLayout)view.findViewById(R.id.channel_icons);
@@ -84,13 +84,13 @@ public class EPGFragment extends Fragment{
     @Override
     public void onResume() {
     	
-    	getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+    	//getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     	super.onResume();
     }
     
     @Override
     public void onPause() {
-        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // set the activity back to //whatever it needs to be when going back.
+        //getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // set the activity back to //whatever it needs to be when going back.
         super.onPause();
     }
 

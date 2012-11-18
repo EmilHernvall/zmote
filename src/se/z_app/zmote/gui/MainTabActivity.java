@@ -84,12 +84,10 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 		new Thread(new MyTimedTask()).start();
 	}
 
-
-	
-    
-
-   
-    
+	/**
+	 * Allows you to set the orientation of the screen from outside of the class
+	 * @param i
+	 */
     public void setOrientation(int i){
     		setRequestedOrientation(i);
     }
@@ -125,10 +123,10 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	 */
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
-        /*if (savedInstanceState.containsKey(STATE_SELECTED_NAVIGATION_ITEM) && (getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)) {
+        if (savedInstanceState.containsKey(STATE_SELECTED_NAVIGATION_ITEM) && (getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)) {
         	getSupportActionBar().setSelectedNavigationItem(
                     savedInstanceState.getInt(STATE_SELECTED_NAVIGATION_ITEM));
-        }*/
+        }
     }
 
 	/**
@@ -246,8 +244,8 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 		}else if(tab.equals(tabMain)){
 			Log.i("FragmentLog", "Main");
 			if(mainfragment == null){
-				//mainfragment = new MainViewFragment(this);
-				//isNew = true;
+				mainfragment = new MainViewFragment(this);
+				isNew = true;
 			}
 			fragment = mainfragment;
 		}
