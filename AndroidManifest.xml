@@ -72,7 +72,8 @@
         </activity>
         <activity
             android:name=".MainTabActivity"
-            android:label="@string/title_activity_main_tab" >
+            android:label="@string/title_activity_main_tab"
+            android:configChanges="orientation" >
         </activity>
     </application>
 

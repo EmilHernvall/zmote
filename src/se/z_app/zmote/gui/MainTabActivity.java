@@ -20,6 +20,7 @@ import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -94,6 +95,17 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
     }
 
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+            if(epgfragment!=null && epgfragment.isResumed()){
+                //do nothing here if we're showing the fragment
+            }else{
+                setRequestedOrientation(Configuration.ORIENTATION_PORTRAIT); // otherwise lock in portrait
+            }
+            super.onConfigurationChanged(newConfig);
+        }
+
+    
 	/**
 	 * Vibrates the phone for 95 milliseconds.
 	 */
@@ -113,10 +125,10 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	 */
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
-        if (savedInstanceState.containsKey(STATE_SELECTED_NAVIGATION_ITEM) && (getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)) {
+        /*if (savedInstanceState.containsKey(STATE_SELECTED_NAVIGATION_ITEM) && (getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)) {
         	getSupportActionBar().setSelectedNavigationItem(
                     savedInstanceState.getInt(STATE_SELECTED_NAVIGATION_ITEM));
-        }
+        }*/
     }
 
 	/**
@@ -234,8 +246,8 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 		}else if(tab.equals(tabMain)){
 			Log.i("FragmentLog", "Main");
 			if(mainfragment == null){
-				mainfragment = new MainViewFragment(this);
-				isNew = true;
+				//mainfragment = new MainViewFragment(this);
+				//isNew = true;
 			}
 			fragment = mainfragment;
 		}
@@ -372,7 +384,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 
 	public void setAlive(int isAlive){
 		if(isAlive==1){
-			actionBar.setLogo(R.drawable.green_button2);
+			//actionBar.setLogo(R.drawable.green_button2);
 		}
 		else{
 			actionBar.setLogo(R.drawable.red_dot);

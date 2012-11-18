@@ -64,7 +64,9 @@ public class EPGFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
     	
-    	//main.setOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+    	super.onCreate(savedInstanceState);
+    	
+    	main.setOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     	
 		view = inflater.inflate(R.layout.fragment_epg, null);
 		i_layout = (LinearLayout)view.findViewById(R.id.channel_icons);
@@ -79,6 +81,21 @@ public class EPGFragment extends Fragment{
 		return view;
 	}
 
+    @Override
+    public void onResume() {
+    	
+    	getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+    	super.onResume();
+    }
+    
+    @Override
+    public void onPause() {
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // set the activity back to //whatever it needs to be when going back.
+        super.onPause();
+    }
+
+
+    
     /**
      * Sets the timeBar in 30min intervals starting from the hour passed by "start"
      * @param start		Starting time for the time bar
