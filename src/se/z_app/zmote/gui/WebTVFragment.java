@@ -301,7 +301,7 @@ public class WebTVFragment extends Fragment {
 			web_service = spinner.getSelectedItemPosition();
 			WebTVQuery query = new WebTVQuery();
 			WebTVItem[] elements= query.search(search_for_this, services[web_service]);
-			query.populateWebTVItemsWithIcon(elements);
+			//query.populateWebTVItemsWithIcon(elements);
 			//System.out.println(services[0].getName().toString());
 			//System.out.println(elements[0].getTitle().toString());
 			return elements;

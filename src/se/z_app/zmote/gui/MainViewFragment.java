@@ -44,7 +44,7 @@ import android.widget.TextView;
 
 
 public class MainViewFragment extends Fragment implements OnGestureListener{
-
+	
 	private MainTabActivity main;
 	private View v;
 	private ImageView left;
@@ -163,6 +163,15 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 			Bundle savedInstanceState) {
 
 		v = inflater.inflate(R.layout.fragment_main_view, null);
+		
+//		if(r != null){
+//			r.removeView(left);
+//			r.removeView(leftleft);
+//			r.removeView(center);
+//			r.removeView(rightright);
+//			r.removeView(right);
+//		}
+		
 		r = (RelativeLayout)v.findViewById(R.id.rellativIconSpinner);
 	
 		
@@ -527,6 +536,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 			imagewidth = 96;
 		}
 		
+		
 		int padding = 10;
 		
 //TODO: imageList == 0 a bug appears, this happens when it dose not get connection to a STB		
@@ -624,7 +634,13 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 		
 		
 		
-
+//		r.removeView(leftleft);
+//		r.removeView(left);
+//		r.removeView(center);
+//		r.removeView(right);
+//		r.removeView(rightright);
+		
+		
 		r.addView(leftleft);
 		r.addView(left);
 		r.addView(center);

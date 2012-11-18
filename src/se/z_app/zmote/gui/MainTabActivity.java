@@ -50,7 +50,12 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	private Vibrator vibe;
     private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
 
-    
+	private RemoteControlFragment rcfragment;// = new RemoteControlFragment(this);
+	private EPGFragment epgfragment;// = new EPGFragment(this);
+	private WebTVFragment webfragment;// = new WebTVFragment(this);
+	private MainViewFragment mainfragment;// = new MainViewFragment(this);
+    private ChannelInformationFragment chinfragment;// = new ChannelInformationFragment(this);
+	private Fragment currentFragment;// = mainfragment;
     
     /**
      * Standard create function for the fragment activity.
@@ -157,7 +162,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 		}
 	}
 
-
+	
 	/**
 	 * Sets and displays the fragment that the user selects from the tabs.
 	 * If new fragments are implemented they should be set here.
@@ -165,41 +170,70 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	@Override
 	public void onTabSelected(Tab tab,
 			android.support.v4.app.FragmentTransaction ft) {
-  	Fragment fragment = null;
+		Fragment fragment = null;
+    	boolean isNew = false;
     	
     	if(tab.equals(tabRC)){
     		Log.i("FragmentLog", "RC");
-    		fragment = new RemoteControlFragment(this);
+    		if(rcfragment == null){
+    			rcfragment = new RemoteControlFragment(this);
+    			isNew = true;
+    		}
+    		fragment = rcfragment;
     		
     	}
     	else if(tab.equals(tabEPG)){
     		Log.i("FragmentLog", "EPG");
-    		fragment = new EPGFragment(this);
+    		if(epgfragment == null){
+    			epgfragment = new EPGFragment(this);
+    			isNew = true;
+    		}
+    		fragment = epgfragment;
     	}
     	else if(tab.equals(tabWeb)){
     		Log.i("FragmentLog", "WebTV");
-    		fragment = new WebTVFragment(this);
+    		if(webfragment == null){
+    			webfragment = new WebTVFragment(this);
+    			isNew = true;
+    		}
+    		fragment = webfragment;
     		
     	}
 		else if(tab.equals(tabFav)){
 			Log.i("FragmentLog", "Fav");
-			//WARNING! : provisional function 
-			fragment = new ChannelInformationFragment(this);
+			//WARNING! : provisional function
+			if(chinfragment == null){
+				chinfragment = new ChannelInformationFragment(this);
+				isNew = true;
+    		}
+			fragment = chinfragment;
+					
 			
 		}
 		else if(tab.equals(tabMain)){
 			Log.i("FragmentLog", "Main");
-			fragment = new MainViewFragment(this);
+			if(mainfragment == null){
+				mainfragment = new MainViewFragment(this);
+				isNew = true;
+			}
+			fragment = mainfragment;
 		}
     	
-        
+    	
+		if(fragment != null)
+			if(isNew)
+				getSupportFragmentManager().beginTransaction().add(R.id.container, fragment).commit();
+			else
+				getSupportFragmentManager().beginTransaction().show(fragment).commit();
+    	
+     /*
         Bundle args = new Bundle();
         
         fragment.setArguments(args);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, fragment)
                 .commit();
-		
+		*/
 	}
 
 
@@ -209,7 +243,39 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	@Override
 	public void onTabUnselected(Tab tab,
 			android.support.v4.app.FragmentTransaction ft) {
-
+		
+		Fragment fragment = null;
+		if(tab.equals(tabRC)){
+    		Log.i("Detaching FragmentLog", "RC");
+    		fragment = rcfragment;
+    		
+    	}
+    	else if(tab.equals(tabEPG)){
+    		Log.i("Detaching FragmentLog", "EPG");
+    		fragment = epgfragment;
+    	}
+    	else if(tab.equals(tabWeb)){
+    		Log.i("Detaching FragmentLog", "WebTV");
+    		fragment = webfragment;
+    		
+    	}
+		else if(tab.equals(tabFav)){
+			Log.i("Detaching FragmentLog", "Fav");
+			//WARNING! : provisional function 
+			fragment = chinfragment;
+			
+		}
+		else if(tab.equals(tabMain)){
+			Log.i("Detaching FragmentLog", "Main");
+			fragment = mainfragment;
+		}
+    	
+		if (fragment != null) {
+	         //ft.detach(fragment);
+			
+	        getSupportFragmentManager().beginTransaction().hide(fragment).commit();
+	    }
+    	 
 		
 	}
 
