@@ -2,16 +2,12 @@ package se.z_app.zmote.webtv;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.InetAddress;
 
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.Environment;
 
 import se.z_app.httpserver.ZmoteHTTPD;
 import se.z_app.stb.MediaItem;
-import se.z_app.stb.api.EPGData;
-import se.z_app.stb.api.STBContainer;
+
 
 
 public class MediaStreamer {

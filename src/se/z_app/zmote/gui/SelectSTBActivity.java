@@ -5,6 +5,7 @@ import se.z_app.stb.api.STBContainer;
 import se.z_app.stb.api.STBDiscovery;
 
 
+import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
@@ -38,16 +39,21 @@ public class SelectSTBActivity extends Activity {
     private STB new_stb;
     private ASyncSTBFinder async;
     private ProgressDialog dialog;
-    
+    private String filePath = null;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_stb);
         
+        
+        theView = (SelectSTBListView)findViewById(R.id.list_over_stb);
+        
+             
+        
         Button scan = (Button) findViewById(R.id.button_scanforstb); 	//Scan for STB button
         Button add = (Button) findViewById(R.id.button_addstb); 		//Add manually button
         
-        theView = (SelectSTBListView)findViewById(R.id.list_over_stb);
+        
         scan.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
             	async = new ASyncSTBFinder();
@@ -55,7 +61,7 @@ public class SelectSTBActivity extends Activity {
             }
         });
         
-        theView = (SelectSTBListView)findViewById(R.id.list_over_stb);
+       
         add.setOnClickListener(new View.OnClickListener() {	
         @Override
 			public void onClick(View v) {
@@ -64,12 +70,25 @@ public class SelectSTBActivity extends Activity {
         	}
         });
 	
-        theView.setList(this, STBContainer.instance().getSTBs());
+        theView.setList(this, STBContainer.instance().getSTBs(), filePath);
 		
 		
         dialog = new ProgressDialog(this);
         dialog.setCanceledOnTouchOutside(false);
 
+        //Opening media file to The STB that is selected
+        Intent intent = getIntent();
+        if(intent != null){
+        	Uri data = intent.getData();
+        	if(data != null){
+        		
+        		new Bootstrap(this.getApplicationContext(), (WifiManager) getSystemService(WIFI_SERVICE));
+        		
+        		filePath = data.getEncodedPath();
+        		async = new ASyncSTBFinder();
+            	async.execute();        		
+        	}
+        }
 
 }
     
@@ -85,7 +104,7 @@ public class SelectSTBActivity extends Activity {
  		for(int i = 0; i <  theList.length; i++) {
  			STBContainer.instance().addSTB(theList[i]);
  		}
- 		theView.setList(this, STBContainer.instance().getSTBs());
+ 		theView.setList(this, STBContainer.instance().getSTBs(), filePath);
      }
      @Override
      public boolean onCreateOptionsMenu(Menu menu) {
@@ -123,6 +142,7 @@ public class SelectSTBActivity extends Activity {
 
 		@Override
 		protected STB[] doInBackground(Integer... params) {
+			//System.out.println("Scanning: " + findSubnetAddress());
 			STBDiscovery stbDisc = new STBDiscovery(findSubnetAddress());
 			//STBDiscovery stbDisc = new STBDiscovery("130.236.248."); // -- Test to scan our test boxes
 			
