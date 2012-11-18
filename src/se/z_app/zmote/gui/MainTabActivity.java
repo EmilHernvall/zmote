@@ -20,6 +20,7 @@ import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -83,17 +84,26 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 		new Thread(new MyTimedTask()).start();
 	}
 
-
-	
-    
-
-   
-    
+	/**
+	 * Allows you to set the orientation of the screen from outside of the class
+	 * @param i
+	 */
     public void setOrientation(int i){
     		setRequestedOrientation(i);
     }
 
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+            if(epgfragment!=null && epgfragment.isResumed()){
+                //do nothing here if we're showing the fragment
+            }else{
+                setRequestedOrientation(Configuration.ORIENTATION_PORTRAIT); // otherwise lock in portrait
+            }
+            super.onConfigurationChanged(newConfig);
+        }
+
+    
 	/**
 	 * Vibrates the phone for 95 milliseconds.
 	 */
@@ -144,7 +154,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 		actionBar.setCustomView(dropDownView);
 
 
-		actionBar.setLogo(R.drawable.green_button);
+		actionBar.setLogo(R.drawable.green_button2);
 		actionBar.setDisplayUseLogoEnabled(true);        
 		actionBar.setDisplayShowHomeEnabled(true);
 		actionBar.setDisplayShowTitleEnabled(false);
@@ -233,7 +243,11 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 					
 		}else if(tab.equals(tabMain)){
 			Log.i("FragmentLog", "Main");
-			fragment = new MainViewFragment(this);
+			if(mainfragment == null){
+				mainfragment = new MainViewFragment(this);
+				isNew = true;
+			}
+			fragment = mainfragment;
 		}
 
     	
@@ -340,6 +354,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 		int temp = 0;
 		int selected = 0;
 		STB stb;
+		
 		while(iterator.hasNext()){ 		
 			if(STBContainer.instance().getActiveSTB().equals(stb = iterator.next())){
 				selected = temp;
@@ -367,12 +382,16 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	}
 
 	public void setAlive(int isAlive){
-		if(actionBar == null)
+
+		if(actionBar == null) //TODO need to fixed, added so it won't crash due to other changes //Emma
 			return;
 		if(isAlive==1){
 			actionBar.setLogo(R.drawable.green_button2);
+
 		}
-		else{
+		if(isAlive==1){
+			actionBar.setLogo(R.drawable.green_button);
+		}else{
 			actionBar.setLogo(R.drawable.red_dot);
 		}
 	}
@@ -434,11 +453,13 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 			while(true){
 				try {
 					newBoxactive = Inet4Address.getByName(STBContainer.instance().getActiveSTB().getIP()).isReachable(timeout);
+					
+					if(!newBoxactive)
+						newBoxactive = Inet4Address.getByName(STBContainer.instance().getActiveSTB().getIP()).isReachable(timeout);
+					
 				} catch (UnknownHostException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				if(boxactive == newBoxactive){
@@ -455,7 +476,6 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 				try {
 					Thread.sleep(timer);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

@@ -30,13 +30,14 @@ public class RemoteControlFragment extends Fragment {
 	private Button info_button;
 	private Button exit_button;
 	private MainTabActivity main;
-	private View v;
+	private View view;
 	
 	private Channel temp;
 	private LinearLayout channel_icons_layout;
 	private EPG epg;
 	private EPGQuery query = new EPGQuery();
 	private boolean fetched = false;
+	private ImageButton active;
 
 	/**
 	 * Creates the remote control
@@ -53,13 +54,18 @@ public class RemoteControlFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		v = inflater.inflate(R.layout.fragment_remote_control, null);
-		channel_icons_layout = (LinearLayout)v.findViewById(R.id.channel_icons_ly);
+		/*
+		 * TODO: Follow the current channel in the icon bar
+		 * change the background when changing channel
+		 * */
+		view = inflater.inflate(R.layout.fragment_remote_control, null);
+		channel_icons_layout = (LinearLayout)view.findViewById(R.id.channel_icons_ly);
+		
 
-		btnListeners(v);
+		btnListeners(view);
 		new AsyncDataLoader().execute();
 
-		return v;
+		return view;
 	}
 
 	/**
@@ -75,17 +81,17 @@ public class RemoteControlFragment extends Fragment {
 	 * @param v
 	 * @author 
 	 */
-	public void btnListeners(View v) {
-		arrow_up_button = (Button) v.findViewById(R.id.arrow_up_button);
-		arrow_down_button = (Button) v.findViewById(R.id.arrow_down_button);
-		arrow_left_button = (Button) v.findViewById(R.id.arrow_left_button);
-		arrow_right_button = (Button) v.findViewById(R.id.arrow_right_button);
-		confirm_button = (Button) v.findViewById(R.id.confirm_button);
-		store_button = (Button) v.findViewById(R.id.store_button);
-		undo_button = (Button) v.findViewById(R.id.undo_button);
-		mute_volume_button = (Button) v.findViewById(R.id.mute_volume_button);
-		info_button = (Button) v.findViewById(R.id.info_button);
-		exit_button = (Button) v.findViewById(R.id.exit_button);
+	public void btnListeners(View view) {
+		arrow_up_button = (Button) view.findViewById(R.id.arrow_up_button);
+		arrow_down_button = (Button) view.findViewById(R.id.arrow_down_button);
+		arrow_left_button = (Button) view.findViewById(R.id.arrow_left_button);
+		arrow_right_button = (Button) view.findViewById(R.id.arrow_right_button);
+		confirm_button = (Button) view.findViewById(R.id.confirm_button);
+		store_button = (Button) view.findViewById(R.id.store_button);
+		undo_button = (Button) view.findViewById(R.id.undo_button);
+		mute_volume_button = (Button) view.findViewById(R.id.mute_volume_button);
+		info_button = (Button) view.findViewById(R.id.info_button);
+		exit_button = (Button) view.findViewById(R.id.exit_button);
 
 		arrow_up_button.setOnClickListener(new OnClickListener() {
 			@Override
@@ -170,7 +176,7 @@ public class RemoteControlFragment extends Fragment {
 	
 	/**
 	 * Fetch the EPG from the STB 
-	 * @author Francisco
+	 * @author Francisco Valladares
 	 */
 	public void fetchEPG(){
 		epg = query.getEPG();
@@ -181,7 +187,7 @@ public class RemoteControlFragment extends Fragment {
 	
 	/**
 	 * Return the EPG after fetching it (just do it one time now)
-	 * @author Francisco
+	 * @author Francisco Valladares
 	 */
 	public EPG getFullEPG(){
 		if(!fetched)
@@ -193,50 +199,66 @@ public class RemoteControlFragment extends Fragment {
     /**
      *  This function is suppose to add the whole list of channels to the view
      *  It uses the function addChannelItemToLayout iteratively
-     *  @author Francisco
+     *  @author Francisco Valladares
      */
     public void addAllChannelsToLayout(){
     	
     	getFullEPG();
-    	for(Channel channel: epg)
+    	for(Channel channel: epg){
     		addChannelItemToLayout(channel);
-
+    	}
+    	
     }
 	
 	/**
 	 *  This function is suppose to load a new channel in the main activity view
 	 *  That means: put the icon of the channel in the list and assign it a function
 	 * @param ch
-	 * @author Francisco
+	 * @author Francisco Valladares
 	 */
     public void addChannelItemToLayout(Channel ch){
     
-    	ImageButton new_btn = new ImageButton(v.getContext());
+    	final ImageButton new_btn = new ImageButton(view.getContext());
     	new_btn.setId(ch.getNr()+100);	// ID of the button: ChannelNr+100
     	new_btn.setImageBitmap(ch.getIcon());
     	new_btn.setBackgroundResource(0);	// Set the background transparent
     	new_btn.setClickable(true);
     	new_btn.setPadding(0, 0, 0, 0);
+   
     	
     	// Set listeners to execute this
     	//RemoteControl.instance().launch(ch.getUrl()); //
+
     	temp = ch;
     	new_btn.setOnClickListener(new View.OnClickListener() {
-			Channel channel = temp;
+
+    		Channel channel = temp;
     		@Override
 			public void onClick(View v) {
-				
-				RemoteControl.instance().launch(channel);
+    		
+    			if(new_btn != active && active !=null){
+    				active.setBackgroundResource(0);	
+    			}
+    			
+    			new_btn.setBackgroundResource(R.color.abs__background_holo_light);
+    			RemoteControl.instance().launch(channel);
 				main.vibrate();
+				active = new_btn;
+				
+				
 			}
+    		
 		});
+    	
+    	
+    	
     	
     	channel_icons_layout.addView(new_btn);	
     }
 	
     /**
 	 * Loads the information asynchronously
-	 * @author Francisco
+	 * @author Francisco Valladares
 	 */
 	private class AsyncDataLoader extends AsyncTask<Integer, Integer, EPG>{
 
@@ -249,7 +271,7 @@ public class RemoteControlFragment extends Fragment {
 		@Override
 		protected void onPostExecute(EPG epgTemp) {
 			epg = epgTemp;
-			v.findViewById(R.id.progressBarRemote).setVisibility(View.GONE);
+			view.findViewById(R.id.progressBarRemote).setVisibility(View.GONE);
 			
 			addAllChannelsToLayout();
 		}	

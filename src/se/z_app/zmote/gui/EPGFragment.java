@@ -11,6 +11,8 @@ import se.z_app.stb.Program;
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.zmote.epg.EPGQuery;
 
+import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
@@ -50,10 +52,7 @@ public class EPGFragment extends Fragment{
 	
 	private int screen_width = 0;
 
-	public EPGFragment(){
-		
-	}
-	
+
 	public EPGFragment(MainTabActivity main){
 		this.main = main;
 	}
@@ -61,6 +60,10 @@ public class EPGFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+    	
+    	super.onCreate(savedInstanceState);
+    	
+    	//main.setOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     	
 		view = inflater.inflate(R.layout.fragment_epg, null);
 		i_layout = (LinearLayout)view.findViewById(R.id.channel_icons);
@@ -75,6 +78,21 @@ public class EPGFragment extends Fragment{
 		return view;
 	}
 
+    @Override
+    public void onResume() {
+    	
+    	//getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+    	super.onResume();
+    }
+    
+    @Override
+    public void onPause() {
+        //getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // set the activity back to //whatever it needs to be when going back.
+        super.onPause();
+    }
+
+
+    
     /**
      * Sets the timeBar in 30min intervals starting from the hour passed by "start"
      * @param start		Starting time for the time bar
@@ -216,7 +234,7 @@ public class EPGFragment extends Fragment{
 			public void onClick(View v) {
 				
 				RemoteControl.instance().launch(tempChannel);
-			//	main.vibrate();
+				main.vibrate();
 			}
 		});
 		
@@ -288,7 +306,7 @@ public class EPGFragment extends Fragment{
 			@Override
 			public void onClick(View v) {
 			
-				Fragment fragment = new ChannelInformationFragment(p);
+				Fragment fragment = new ChannelInformationFragment(main, p);
 				android.support.v4.app.FragmentManager fragmentManager = getFragmentManager();
 				android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 

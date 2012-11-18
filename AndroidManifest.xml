@@ -14,6 +14,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_USER_DICTIONARY" />
 
     <application
         android:icon="@drawable/ic_launcher"
@@ -72,7 +73,8 @@
         </activity>
         <activity
             android:name=".MainTabActivity"
-            android:label="@string/title_activity_main_tab" >
+            android:label="@string/title_activity_main_tab"
+            android:configChanges="orientation" >
         </activity>
     </application>
 
