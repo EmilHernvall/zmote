@@ -29,7 +29,7 @@ import android.widget.TextView;
 /**
  *  Channel information view: View with the information of the channel
  *  It is shown when we click on an EPG program
- *  @author Francisco
+ *  @author Francisco Valladares
  * */
 public class ChannelInformationFragment extends Fragment{
 	
@@ -55,7 +55,7 @@ public class ChannelInformationFragment extends Fragment{
 	private LinearLayout ly_temp = null;
 	
 	private ArrayList<View> res_vector = new ArrayList();
-	private SnapHorizontalScrollView x;
+	private SnapHorizontalScrollView snap;
 	
 	/**
 	 * Default constructor of ChannelInformationFragment
@@ -92,7 +92,7 @@ public class ChannelInformationFragment extends Fragment{
 		pb = (ProgressBar)view_temp.findViewById(R.id.progressLodingEpgChannelInformation);
 		
 		new AsyncDataLoader().execute();
-		x = new SnapHorizontalScrollView(view_temp.getContext());
+		snap = new SnapHorizontalScrollView(view_temp.getContext());
 		
 		
     	return view_temp;
@@ -130,8 +130,8 @@ public class ChannelInformationFragment extends Fragment{
     	for(Channel channel: epg){
     		addChannelItemToLayout(channel);
     	}
-    	x.setFeatureItems(res_vector);
-    	content_layout.addView(x);
+    	snap.setFeatureItems(res_vector);
+    	content_layout.addView(snap);
     }
     
 	/**
@@ -163,7 +163,7 @@ public class ChannelInformationFragment extends Fragment{
     	channel_ly.setBackgroundColor(0xFFFFFFFF);
     	channel_ly.setPadding(10, 5, 10, 5);
     	channel_ly.setOrientation(1);	// Vertical 1; Horizontal 0
-    	channel_ly.setId(ch.getNr()*1000-3);	// The ID of the channel information box is ChannelNR*1000
+    	channel_ly.setId(ch.getNr()*1000);	// The ID of the channel information box is ChannelNR*1000
     	
     	
     	// The information part of the box will be scrollable
@@ -188,7 +188,7 @@ public class ChannelInformationFragment extends Fragment{
     	// CHANNEL BUTTON
     	// Prepare the channel icon and its ClickListener
     	ImageButton new_btn = new ImageButton(view_temp.getContext());
-    	new_btn.setId(ch.getNr()+100);	// ID of the button: ChannelNr+100
+    	new_btn.setId(ch.getNr()+3000);	// ID of the button: ChannelNr+100
     	new_btn.setImageBitmap(ch.getIcon());
     	new_btn.setBackgroundResource(0);	// Set the background transparent
     	new_btn.setClickable(true);
@@ -241,18 +241,18 @@ public class ChannelInformationFragment extends Fragment{
     	channel_content.addView(channel_info_ly);
     	channel_content.post(new Runnable() {
     		LinearLayout channel_info_ly = ly_temp;
-    		ScrollView x = channel_content;
-    		LinearLayout i = scrollTo;
+    		ScrollView scroll = channel_content;
+    		LinearLayout linear = scrollTo;
     		TextView scroll_when_focused = scrollToFocused;
             public void run() {
             	
             	// If we have a focus target and its parent is the current channel
             	if(scroll_when_focused != null && scroll_when_focused.getParent() == channel_info_ly){
-            		x.scrollTo(0, scroll_when_focused.getTop());
-            		x.setFocusableInTouchMode(true);
-            		x.requestFocus();
+            		scroll.scrollTo(0, scroll_when_focused.getTop());
+            		scroll.setFocusableInTouchMode(true);
+            		scroll.requestFocus();
             	}else{
-            		x.scrollTo(0, i.getTop());
+            		scroll.scrollTo(0, linear.getTop());
             	}
             	
             }
@@ -379,7 +379,7 @@ public class ChannelInformationFragment extends Fragment{
     	fav_but.setOnClickListener(new OnClickListener() {
 			ImageButton thisOne = fav_but;
 			@Override
-			public void onClick(View v) {
+			public void onClick(View view) {
 				
 				// We will use setTag to associate custom data to the button
 				// In this case, the custom data is if its favorite or not
@@ -399,7 +399,7 @@ public class ChannelInformationFragment extends Fragment{
     	social_but.setOnClickListener(new OnClickListener() {
 			//ImageButton thisOne = social_but;
 			@Override
-			public void onClick(View v) {
+			public void onClick(View view) {
 				
 				/*
 				 * TODO: Add here some code to add this channel to the favorite list
@@ -410,7 +410,7 @@ public class ChannelInformationFragment extends Fragment{
     	imdb_but.setOnClickListener(new OnClickListener() {
 			//ImageButton thisOne = imdb_but;
 			@Override
-			public void onClick(View v) {
+			public void onClick(View view) {
 				
 				/*
 				 * TODO: Add here some code to add this channel to the favorite list
