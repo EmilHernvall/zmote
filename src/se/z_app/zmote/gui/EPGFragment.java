@@ -63,7 +63,7 @@ public class EPGFragment extends Fragment{
     	
     	super.onCreate(savedInstanceState);
     	
-    	//main.setOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+    	main.setOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     	
 		view = inflater.inflate(R.layout.fragment_epg, null);
 		i_layout = (LinearLayout)view.findViewById(R.id.channel_icons);

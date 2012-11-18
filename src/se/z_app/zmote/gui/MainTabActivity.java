@@ -91,7 +91,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
     		setRequestedOrientation(i);
     }
 
-    @Override
+   /* @Override
     public void onConfigurationChanged(Configuration newConfig) {
         if(epgfragment!=null && epgfragment.isResumed()){
             //do nothing here if we're showing the fragment
@@ -100,7 +100,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
             setRequestedOrientation(Configuration.ORIENTATION_PORTRAIT); // otherwise lock in portrait
         }
         super.onConfigurationChanged(newConfig);
-    }
+    }*/
 
 	/**
 	 * Vibrates the phone for 95 milliseconds.
