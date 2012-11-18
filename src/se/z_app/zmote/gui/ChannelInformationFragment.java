@@ -290,7 +290,7 @@ public class ChannelInformationFragment extends Fragment{
     		nextInfo.setText(program.getLongText());
     		nextInfo.setTextColor(0xFF444444);	// A little of grey for the non-current channel descriptions
     		nextInfo.setPadding(15, 5, 15, 5);
-    		nextInfo_container.setId(ch.getNr()*program.getEventID());	// Program info ID = ch.getNr()*pr[i].getEventID()
+    		nextInfo_container.setId((ch.getNr()*10000)+program.getEventID());	// Program info ID = (ch.getNr()*10000)+pr[i].getEventID()
     		
     		// We want to initially display only the information of the current program
     		if(currentProgram == program){
@@ -307,7 +307,7 @@ public class ChannelInformationFragment extends Fragment{
     			scrollToFocused = nextName;
     		}
     		
-    		i_tmp = ch.getNr()*program.getEventID();
+    		i_tmp = (ch.getNr()*10000)+program.getEventID();
     		
     		// Show/hide program information by clicking on its name
     		nextName.setClickable(true);
