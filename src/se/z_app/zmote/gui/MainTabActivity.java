@@ -55,7 +55,12 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	private Vibrator vibe;	
 	private static Handler myHandler;
 	private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
-
+	private RemoteControlFragment rcfragment;// = new RemoteControlFragment(this);
+	private EPGFragment epgfragment;// = new EPGFragment(this);
+	private WebTVFragment webfragment;// = new WebTVFragment(this);
+	private MainViewFragment mainfragment;// = new MainViewFragment(this);
+    private ChannelInformationFragment chinfragment;// = new ChannelInformationFragment(this);
+	private Fragment currentFragment;// = mainfragment;
 
 	/**
 	 * Standard create function for the fragment activity.
@@ -76,10 +81,17 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 			}
 		};
 		new Thread(new MyTimedTask()).start();
-
-
-
 	}
+
+
+	
+    
+
+   
+    
+    public void setOrientation(int i){
+    		setRequestedOrientation(i);
+    }
 
 
 	/**
@@ -99,13 +111,13 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	/**
 	 * Restores the navigation state.
 	 */
-	@Override
-	public void onRestoreInstanceState(Bundle savedInstanceState) {
-		if (savedInstanceState.containsKey(STATE_SELECTED_NAVIGATION_ITEM)) {
-			getSupportActionBar().setSelectedNavigationItem(
-					savedInstanceState.getInt(STATE_SELECTED_NAVIGATION_ITEM));
-		}
-	}
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        if (savedInstanceState.containsKey(STATE_SELECTED_NAVIGATION_ITEM) && (getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)) {
+        	getSupportActionBar().setSelectedNavigationItem(
+                    savedInstanceState.getInt(STATE_SELECTED_NAVIGATION_ITEM));
+        }
+    }
 
 	/**
 	 * Saves the navigation state.
@@ -173,7 +185,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 		}
 	}
 
-
+	
 	/**
 	 * Sets and displays the fragment that the user selects from the tabs.
 	 * If new fragments are implemented they should be set here.
@@ -182,39 +194,55 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	public void onTabSelected(Tab tab,
 			android.support.v4.app.FragmentTransaction ft) {
 		Fragment fragment = null;
-
-		if(tab.equals(tabRC)){
-			Log.i("FragmentLog", "RC");
-			fragment = new RemoteControlFragment(this);
-
-		}
-		else if(tab.equals(tabEPG)){
-			Log.i("FragmentLog", "EPG");
-			fragment = new EPGFragment(this);
-		}
-		else if(tab.equals(tabWeb)){
-			Log.i("FragmentLog", "WebTV");
-			fragment = new WebTVFragment(this);
-
-		}
+    	boolean isNew = false;
+    	
+    	if(tab.equals(tabRC)){
+    		Log.i("FragmentLog", "RC");
+    		if(rcfragment == null){
+    			rcfragment = new RemoteControlFragment(this);
+    			isNew = true;
+    		}
+    		fragment = rcfragment;
+    		
+    	}
+    	else if(tab.equals(tabEPG)){
+    		Log.i("FragmentLog", "EPG");
+    		if(epgfragment == null){
+    			epgfragment = new EPGFragment(this);
+    			isNew = true;
+    		}
+    		fragment = epgfragment;
+    	}
+    	else if(tab.equals(tabWeb)){
+    		Log.i("FragmentLog", "WebTV");
+    		if(webfragment == null){
+    			webfragment = new WebTVFragment(this);
+    			isNew = true;
+    		}
+    		fragment = webfragment;
+    		
+    	}
 		else if(tab.equals(tabFav)){
 			Log.i("FragmentLog", "Fav");
-			//WARNING! : provisional function 
-			fragment = new ChannelInformationFragment(this);
-
-		}
-		else if(tab.equals(tabMain)){
+			//WARNING! : provisional function
+			if(chinfragment == null){
+				chinfragment = new ChannelInformationFragment(this);
+				isNew = true;
+    		}
+			fragment = chinfragment;
+					
+		}else if(tab.equals(tabMain)){
 			Log.i("FragmentLog", "Main");
 			fragment = new MainViewFragment(this);
 		}
 
-
-		Bundle args = new Bundle();
-
-		fragment.setArguments(args);
-		getSupportFragmentManager().beginTransaction()
-		.replace(R.id.container, fragment)
-		.commit();
+    	
+		if(fragment != null)
+			if(isNew)
+				getSupportFragmentManager().beginTransaction().add(R.id.container, fragment).commit();
+			else
+				getSupportFragmentManager().beginTransaction().show(fragment).commit();
+    	
 
 	}
 
@@ -226,6 +254,39 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	public void onTabUnselected(Tab tab,
 			android.support.v4.app.FragmentTransaction ft) {
 
+		Fragment fragment = null;
+		if(tab.equals(tabRC)){
+    		Log.i("Detaching FragmentLog", "RC");
+    		fragment = rcfragment;
+    		
+    	}
+    	else if(tab.equals(tabEPG)){
+    		Log.i("Detaching FragmentLog", "EPG");
+    		fragment = epgfragment;
+    	}
+    	else if(tab.equals(tabWeb)){
+    		Log.i("Detaching FragmentLog", "WebTV");
+    		fragment = webfragment;
+    		
+    	}
+		else if(tab.equals(tabFav)){
+			Log.i("Detaching FragmentLog", "Fav");
+			//WARNING! : provisional function 
+			fragment = chinfragment;
+			
+		}
+		else if(tab.equals(tabMain)){
+			Log.i("Detaching FragmentLog", "Main");
+			fragment = mainfragment;
+		}
+    	
+		if (fragment != null) {
+	         //ft.detach(fragment);
+			
+	        getSupportFragmentManager().beginTransaction().hide(fragment).commit();
+	    }
+    	 
+		
 
 	}
 
@@ -306,6 +367,8 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	}
 
 	public void setAlive(int isAlive){
+		if(actionBar == null)
+			return;
 		if(isAlive==1){
 			actionBar.setLogo(R.drawable.green_button2);
 		}
