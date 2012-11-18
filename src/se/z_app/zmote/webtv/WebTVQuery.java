@@ -139,13 +139,13 @@ public class WebTVQuery {
 	
 	
 	
-	public Bitmap populateWebTVItemsWithIcon(WebTVItem item){
+	public Bitmap populateWithIcon(WebTVItem item){
 		Bitmap b = WebTVCommand.instance().getIcon(item);
 		item.setIcon(b);
 		return b;
 	}
 	
-	public void populateWebTVItemsWithIcon(WebTVItem item[]){
+	public void populateWithIcon(WebTVItem item[]){
 		for(WebTVItem ite : item){
 			Bitmap b = WebTVCommand.instance().getIcon(ite);
 			ite.setIcon(b);		
