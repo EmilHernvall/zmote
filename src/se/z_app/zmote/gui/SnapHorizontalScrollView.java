@@ -1,7 +1,6 @@
 package se.z_app.zmote.gui;
 
 import java.util.ArrayList;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -9,10 +8,15 @@ import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 
+/**
+ * This class extends the functionality of the HorizontalScrollView
+ * and create a new type of view which is able to snap the screen on
+ * the items you pass it in an ArrayList
+ * @author fran
+ */
 public class SnapHorizontalScrollView extends HorizontalScrollView {
     private static final int SWIPE_MIN_DISTANCE = 5;
     private static final int SWIPE_THRESHOLD_VELOCITY = 300;
@@ -21,43 +25,51 @@ public class SnapHorizontalScrollView extends HorizontalScrollView {
     private GestureDetector mGestureDetector;
     private int mActiveFeature = 0;
  
+    /**
+     * Default constructor
+     * @param context
+     * @param attrs
+     * @param defStyle
+     */
     public SnapHorizontalScrollView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
  
+    /**
+     * Default constructor
+     * @param context
+     * @param attrs
+     */
     public SnapHorizontalScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
  
+    /**
+     * Default constructor
+     * @param context
+     */
     public SnapHorizontalScrollView(Context context) {
         super(context);
     }
  
-    public void setFeatureItems(ArrayList items){
-    	int width_screen = getResources().getDisplayMetrics().widthPixels;
-        LinearLayout internalWrapper = new LinearLayout(getContext());
+    /**
+     * Inserts the items in the scroll view
+     * @param items
+     */
+	public void setFeatureItems(ArrayList items){
+    	
+        LinearLayout internalWrapper = new LinearLayout(getContext());	// Main container for the items
         internalWrapper.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
         internalWrapper.setOrientation(LinearLayout.HORIZONTAL);
         addView(internalWrapper);
+        
         this.mItems = items;
         for(int i = 0; i< items.size();i++){
-            //LinearLayout featureLayout = (LinearLayout) View.inflate(this.getContext(),R.layout.homefeature,null);
-            LinearLayout featureLayout = new LinearLayout(this.getContext(), null);
-            featureLayout.setBackgroundColor(0xFFFFFFFF);
-            LinearLayout.LayoutParams par = new LinearLayout.LayoutParams(width_screen,200);
-            par.setMargins(5, 0, 5, 0);
-            
-            LinearLayout smallBox = new LinearLayout(this.getContext());
-            smallBox.setBackgroundColor(0xFF000000);
-            LinearLayout.LayoutParams par2 = new LinearLayout.LayoutParams(190,190);
-            featureLayout.addView(smallBox);
-            
-            //...
-          //Create the view for each screen in the scroll view
-            //...
-            //internalWrapper.addView(featureLayout,par);
+            // Adding the items to the container
             internalWrapper.addView((View) mItems.get(i));
-        }System.out.println("Vector size:"+items.size());
+            
+        }
+        // Now we set the listener to make it snap
         setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -80,7 +92,13 @@ public class SnapHorizontalScrollView extends HorizontalScrollView {
         });
         mGestureDetector = new GestureDetector(new MyGestureDetector());
     }
-        class MyGestureDetector extends SimpleOnGestureListener {
+	
+	/**
+	 * Custom version of SimpleOnGestureListener
+	 * @author fran
+	 */
+    class MyGestureDetector extends SimpleOnGestureListener {
+    	
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             try {
@@ -99,9 +117,10 @@ public class SnapHorizontalScrollView extends HorizontalScrollView {
                     return true;
                 }
             } catch (Exception e) {
-                    Log.e("Fling", "There was an error processing the Fling event:" + e.getMessage());
+                Log.e("Fling", "There was an error processing the Fling event:" + e.getMessage());
             }
             return false;
         }
     }
+    
 }
