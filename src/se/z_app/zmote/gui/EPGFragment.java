@@ -50,10 +50,7 @@ public class EPGFragment extends Fragment{
 	
 	private int screen_width = 0;
 
-	public EPGFragment(){
-		
-	}
-	
+
 	public EPGFragment(MainTabActivity main){
 		this.main = main;
 	}
@@ -216,7 +213,7 @@ public class EPGFragment extends Fragment{
 			public void onClick(View v) {
 				
 				RemoteControl.instance().launch(tempChannel);
-			//	main.vibrate();
+				main.vibrate();
 			}
 		});
 		
@@ -288,7 +285,7 @@ public class EPGFragment extends Fragment{
 			@Override
 			public void onClick(View v) {
 			
-				Fragment fragment = new ChannelInformationFragment(p);
+				Fragment fragment = new ChannelInformationFragment(main, p);
 				android.support.v4.app.FragmentManager fragmentManager = getFragmentManager();
 				android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 

@@ -57,19 +57,15 @@ public class ChannelInformationFragment extends Fragment{
 	private ArrayList<View> res_vector = new ArrayList();
 	private SnapHorizontalScrollView snap;
 	
-	/**
-	 * Default constructor of ChannelInformationFragment
-	 */
-	public ChannelInformationFragment(){
-		
-	}
+
 	
 	/**
 	 * Default constructor of ChannelInformationFragment
 	 * @param program Program in which we want to focus
 	 */
-	public ChannelInformationFragment(Program program){
+	public ChannelInformationFragment(MainTabActivity main, Program program){
 		focusOnThis = program;
+		this.main = main;
 	}
 	
 	/**
@@ -205,7 +201,7 @@ public class ChannelInformationFragment extends Fragment{
     		@Override
 			public void onClick(View v) {			
 				RemoteControl.instance().launch(tempChannel);
-			//	main.vibrate();
+				main.vibrate();
 			}
 		});
     	

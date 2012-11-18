@@ -279,6 +279,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 		int temp = 0;
 		int selected = 0;
 		STB stb;
+		
 		while(iterator.hasNext()){ 		
 			if(STBContainer.instance().getActiveSTB().equals(stb = iterator.next())){
 				selected = temp;
@@ -306,12 +307,15 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	}
 
 	public void setAlive(int isAlive){
-		//if(isAlive==1){
-		//	actionBar.setLogo(R.drawable.green_button);
-		//}
-		//else{
-		//	actionBar.setLogo(R.drawable.red_dot);
-		//}
+		if(actionBar==null){
+			return;
+		}
+		
+		if(isAlive==1){
+			actionBar.setLogo(R.drawable.green_button);
+		}else{
+			actionBar.setLogo(R.drawable.red_dot);
+		}
 	}
 
 
