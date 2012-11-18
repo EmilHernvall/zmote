@@ -11,6 +11,8 @@ import se.z_app.stb.Program;
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.zmote.epg.EPGQuery;
 
+import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
@@ -29,13 +31,13 @@ import android.support.v4.app.Fragment;
 
 /**
  * 
- * @author Thed, Ralf, Francisco, Maria
+ * @author Thed Mannerlof, Ralf Nilsson, Francisco Valladares, Maria Platero
  *
  */
 public class EPGFragment extends Fragment{
 	private Channel temp;
 	private EPG epg;
-	private View v;
+	private View view;
 	private MainTabActivity main;
 	private LinearLayout i_layout;
 	private LinearLayout p_layout;
@@ -62,17 +64,19 @@ public class EPGFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
     	
-		v = inflater.inflate(R.layout.fragment_epg, null);
-		i_layout = (LinearLayout)v.findViewById(R.id.channel_icons);
+    	//main.setOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+    	
+		view = inflater.inflate(R.layout.fragment_epg, null);
+		i_layout = (LinearLayout)view.findViewById(R.id.channel_icons);
 		i_layout.setBackgroundColor(0x66000000);
-		vt_scroll = (LinearLayout)v.findViewById(R.id.channel_programs);
+		vt_scroll = (LinearLayout)view.findViewById(R.id.channel_programs);
 		
 		// Get the size of the screen in pixels
 		screen_width = getResources().getDisplayMetrics().widthPixels;
 		
 		new AsyncDataLoader().execute();
 		
-		return v;
+		return view;
 	}
 
     /**
@@ -82,7 +86,7 @@ public class EPGFragment extends Fragment{
     public void setProgramTimeBar(){
     	
     	Date start = new Date(2012,10,10,start_hour,0);
-    	LinearLayout program_timebar = new LinearLayout(v.getContext());
+    	LinearLayout program_timebar = new LinearLayout(view.getContext());
     	LinearLayout.LayoutParams pt_params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,30);
     	program_timebar.setOrientation(0);
     	
@@ -90,7 +94,7 @@ public class EPGFragment extends Fragment{
     	
     	for(int i=0; i<48; ++i){
 			
-			TextView time = new TextView(v.getContext());
+			TextView time = new TextView(view.getContext());
 			time.setTextColor(0xFFFF8000);
 			time.setTypeface(null, Typeface.BOLD);
 			time.setText(new SimpleDateFormat("HH:mm").format(start) );
@@ -120,7 +124,7 @@ public class EPGFragment extends Fragment{
     	// We just change the margin of the line according to the current time
     	RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(2,height_of_rows*number_of_channels);
     	params.setMargins(distance, 30, 0, 0);
-    	LinearLayout line = (LinearLayout)v.findViewById(R.id.now_line);
+    	LinearLayout line = (LinearLayout)view.findViewById(R.id.now_line);
     	line.setVisibility(LinearLayout.VISIBLE);
     	line.setLayoutParams(params);
     	//line.invalidate();	// Not sure if needed
@@ -132,7 +136,7 @@ public class EPGFragment extends Fragment{
     	// Now label
     	RelativeLayout.LayoutParams text_params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
     	text_params.setMargins(distance-15, 0, 0, 0);
-    	TextView now_text = (TextView)v.findViewById(R.id.now_text);
+    	TextView now_text = (TextView)view.findViewById(R.id.now_text);
     	now_text.setVisibility(TextView.VISIBLE);
     	now_text.setLayoutParams(text_params);
     	now_text.setTypeface(null, Typeface.BOLD);
@@ -142,7 +146,7 @@ public class EPGFragment extends Fragment{
     }
     /**
      * Gets the time of the earlier program of the epg
-     * @author Francisco
+     * @author Francisco Valladares
      */
     void getStartTime(){
     	// We will check the start time of the first program of every channel
@@ -177,8 +181,9 @@ public class EPGFragment extends Fragment{
 			int programs = 0;
 			
 			addIconToLayout(channel);
-			p_layout = new LinearLayout(v.getContext());
+			p_layout = new LinearLayout(view.getContext());
 			p_layout.setOrientation(LinearLayout.HORIZONTAL);
+			
 			for (Program program : channel) {
 				addProgramToLayout(program, programs);
 				programs++;
@@ -200,7 +205,7 @@ public class EPGFragment extends Fragment{
 	 */
 	void addIconToLayout(Channel ch){
 		
-		ImageButton new_btn = new ImageButton(v.getContext());
+		ImageButton new_btn = new ImageButton(view.getContext());
 		new_btn.setPadding(0, 0, 0, 0);
 		new_btn.setId(ch.getNr()+200);	// ID of the button: ChannelNr+200
 		new_btn.setImageBitmap(getResizedBitmap(ch.getIcon(),height,width));
@@ -254,7 +259,7 @@ public class EPGFragment extends Fragment{
 			length = hours_of_difference*screen_width + minutes_of_difference*screen_width/60;
 			params= new LinearLayout.LayoutParams((int)length, height_of_rows);
 			params.setMargins(0, 0, 0, 0);
-			LinearLayout starting_space = new LinearLayout(v.getContext());
+			LinearLayout starting_space = new LinearLayout(view.getContext());
 			p_layout.addView(starting_space, params);
 			/*System.out.println(pg.getName()+" empieza:"+pg.getStart().getHours()+
 					":"+pg.getStart().getMinutes()+" y dura:"+pg.getDuration()/60+"min");
@@ -266,10 +271,10 @@ public class EPGFragment extends Fragment{
 		params= new LinearLayout.LayoutParams((int)length, height_of_rows);
 		params.setMargins(0, 0, 0, 0);
 
-		LinearLayout container = new LinearLayout(v.getContext());
+		LinearLayout container = new LinearLayout(view.getContext());
 		container.setBackgroundColor(0xFF777777);
 		
-		TextView text = new TextView(v.getContext());
+		TextView text = new TextView(view.getContext());
 		text.setText(new SimpleDateFormat("HH:mm").format(pg.getStart())+" "+pg.getName());
 		text.setLines(3);
 		text.setPadding(2, 1, 2, 1);
@@ -310,7 +315,7 @@ public class EPGFragment extends Fragment{
 		
 		LinearLayout.LayoutParams params= new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, height_of_rows);
 		params.setMargins(0, 0, 0, 0);
-		LinearLayout container = new LinearLayout(v.getContext());
+		LinearLayout container = new LinearLayout(view.getContext());
 		p_layout.addView(container, params);
 	}
 	
@@ -319,7 +324,7 @@ public class EPGFragment extends Fragment{
 	 * @param bm
 	 * @param newHeight
 	 * @param newWidth
-	 * @return
+	 * @return resizedBitmap
 	 */
 	public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
 	
@@ -356,7 +361,7 @@ public class EPGFragment extends Fragment{
 		@Override
 		protected void onPostExecute(EPG epgTemp) {
 			epg = epgTemp;
-			v.findViewById(R.id.progressEPGView).setVisibility(View.INVISIBLE);
+			view.findViewById(R.id.progressEPGView).setVisibility(View.INVISIBLE);
 		
 			mainEPG();
 		}	
