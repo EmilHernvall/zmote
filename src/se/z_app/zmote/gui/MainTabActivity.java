@@ -144,7 +144,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 		actionBar.setCustomView(dropDownView);
 
 
-		actionBar.setLogo(R.drawable.green_button);
+		actionBar.setLogo(R.drawable.green_button2);
 		actionBar.setDisplayUseLogoEnabled(true);        
 		actionBar.setDisplayShowHomeEnabled(true);
 		actionBar.setDisplayShowTitleEnabled(false);
@@ -371,6 +371,8 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	}
 
 	public void setAlive(int isAlive){
+		if(actionBar == null)
+			return;
 		if(isAlive==1){
 			actionBar.setLogo(R.drawable.green_button2);
 		}
