@@ -162,13 +162,8 @@ public class SelectSTBActivity extends Activity {
 		 *         "."!)
 		 */
 		private String findSubnetAddress() {
-				WifiManager myWifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
-		    	WifiInfo myWifiInfo = myWifiManager.getConnectionInfo();
-		    	int ipAddress = myWifiInfo.getIpAddress();
-		    	
-		    	@SuppressWarnings("deprecation")
-				String str = android.text.format.Formatter.formatIpAddress(ipAddress);
-		    	return str.substring(0, str.lastIndexOf('.')+1);   	
+				String ip = Bootstrap.getLocalIP();
+		    	return ip.substring(0, ip.lastIndexOf('.')+1);   	
 		}
     }
 	
