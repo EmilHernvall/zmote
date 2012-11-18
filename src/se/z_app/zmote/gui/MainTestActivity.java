@@ -47,13 +47,13 @@ public class MainTestActivity extends Activity {
     	ms = MediaStreamer.instance();
     	ms.setLocalIP(ip);
         
-    	STB stb = new STB();
-		stb.setBoxName("zen56");
-		stb.setIP("130.236.248.56");
-		stb.setType(STBEnum.ZENTERIO);
-		stb.setMAC("00:07:67:9B:EB:33");
+//    	STB stb = new STB();
+//		stb.setBoxName("zen56");
+//		stb.setIP("130.236.248.56");
+//		stb.setType(STBEnum.ZENTERIO);
+//		stb.setMAC("00:07:67:9B:EB:33");
 
-		STBContainer.instance().setActiveSTB(stb);
+//		STBContainer.instance().setActiveSTB(stb);
     	
         
         

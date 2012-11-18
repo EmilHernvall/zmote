@@ -306,12 +306,12 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	}
 
 	public void setAlive(int isAlive){
-		if(isAlive==1){
-			actionBar.setLogo(R.drawable.green_button);
-		}
-		else{
-			actionBar.setLogo(R.drawable.red_dot);
-		}
+		//if(isAlive==1){
+		//	actionBar.setLogo(R.drawable.green_button);
+		//}
+		//else{
+		//	actionBar.setLogo(R.drawable.red_dot);
+		//}
 	}
 
 
