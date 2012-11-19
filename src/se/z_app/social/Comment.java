@@ -7,7 +7,7 @@ import java.util.Date;
  * 
  * @author Rasmus Holm
  */
-public class Comment {
+public class Comment implements PostInterface{
 	
 	private String userName;
 	private String content;

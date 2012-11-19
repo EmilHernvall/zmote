@@ -10,7 +10,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentSkipListMap;
  * 
  * @author Rasmus Holm
  */
-public class Post implements Iterable<Comment>{
+public class Post implements Iterable<Comment>, PostInterface{
 	
 	private ConcurrentSkipListMap comments = new ConcurrentSkipListMap();
 	private String userName;
