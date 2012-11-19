@@ -3,7 +3,7 @@
     android:id="@+id/content_ly"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/searchBar"
@@ -66,14 +66,14 @@
             android:textSize="15dp" />              
  
     </LinearLayout>
-        
+  <!-- Not needed if the top list isn't used   
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#BDBDBD"
+        android:background="#33B5E5"
         android:orientation="vertical" >
     </LinearLayout>
-    
+ -->   
     <!--
     <LinearLayout  
        	android:id="@+id/top_list"
@@ -116,15 +116,14 @@
             android:textSize="15dp" />              
     </LinearLayout>
 	
-
-
-
+    
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="1.5dp"
+        android:layout_height="2dp"
         android:background="#33B5E5"
         android:orientation="vertical" >
     </LinearLayout>
+
 
     <ScrollView
         android:layout_width="match_parent"
