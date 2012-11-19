@@ -136,17 +136,7 @@ public class WebTVFragment extends Fragment {
 		
 		if(search_for_this != null)
 			new AsyncWebSearch().execute();
-	
-/*		else{
-			LinearLayout noSearch = (LinearLayout) view_temp.findViewById(R.id.noSearch);
-			noSearch.setVisibility(View.VISIBLE);
-		}
-		//TODO Fix so work when no search string is entered//Emma
-	*/	
 		
-		
-		// After getting the results
-		// pb.setVisibility(View.GONE);	// Quit the progress bar		
 	}
 
 	/**
@@ -190,15 +180,19 @@ public class WebTVFragment extends Fragment {
 			item.setClickable(true);
 
 			ImageView icon = new ImageView(view_temp.getContext());
-			icon.setImageBitmap(x.getIcon());
+			//icon.setImageBitmap(x.getIcon());
+			
+			
 
 			TextView title = new TextView(view_temp.getContext());
 			title.setText(x.getTitle());
 			title.setPadding(10, 0, 0, 0);
 			title.setTextColor(0xFF000000);
-
+			
 			item.addView(icon, icon_params);
 			item.addView(title);
+			
+			new AsyncImageLoader(icon, x).execute();
 
 			item_container.addView(item, item_params);
 			item_container.addView(item2, item_params2);
@@ -321,9 +315,7 @@ public class WebTVFragment extends Fragment {
 			web_service = spinner.getSelectedItemPosition();
 			WebTVQuery query = new WebTVQuery();
 			WebTVItem[] elements= query.search(search_for_this, services[web_service]);
-			//query.populateWebTVItemsWithIcon(elements);  //disable so pictures won't be loaded (time saving when testing)//Emma
-			//System.out.println(services[0].getName().toString());
-			//System.out.println(elements[0].getTitle().toString());
+
 			return elements;
 		}
 
@@ -332,6 +324,30 @@ public class WebTVFragment extends Fragment {
 			showResults(elements);
 		}
 
+	}
+	
+	
+	
+	private class AsyncImageLoader extends AsyncTask<Integer, Integer, WebTVItem>{
+		private WebTVItem item;
+		private ImageView icon;
+		
+		public AsyncImageLoader(ImageView icon, WebTVItem item){
+			this.icon = icon;
+			this.item = item;
+		}
+		
+		@Override
+		protected WebTVItem doInBackground(Integer... params) {
+			WebTVQuery query = new WebTVQuery();
+			query.populateWithIcon(item);
+			return item;
+		}
+
+		@Override
+		protected void onPostExecute(WebTVItem item) {
+			icon.setImageBitmap(item.getIcon());
+		}
 	}
 
 }

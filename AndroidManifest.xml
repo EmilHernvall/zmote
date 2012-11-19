@@ -49,6 +49,23 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="se.z_app.zmote.gui.MainActivity" />
+            <intent-filter >
+            	<action android:name="android.intent.action.VIEW" />
+		        <category android:name="android.intent.category.DEFAULT" />
+		        <category android:name="android.intent.category.BROWSABLE" />
+		        <data android:scheme="file" 
+		        	android:mimeType="*/*"
+		        	android:pathPattern=".*\\.mp4"  
+		        	android:host="*" />
+		        <data android:scheme="file" 
+		        	android:mimeType="*/*"
+		        	android:pathPattern=".*\\.mp3"  
+		        	android:host="*" />  
+		        	<data android:scheme="file" 
+		        	android:mimeType="*/*"
+		        	android:pathPattern=".*\\.jpg"  
+		        	android:host="*" />      
+            </intent-filter>
         </activity>
         <activity
             android:name=".RemoteControlActivity"

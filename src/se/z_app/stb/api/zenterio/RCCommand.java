@@ -239,7 +239,7 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 			case CREATENODE:
 				httpclient = new DefaultHttpClient();
 				String url = "http://" + address +"/mdio/createnode?name="+arg1 + "&url=" + arg2;
-				System.out.println("URL Sent: " + url);
+				//System.out.println("URL Sent: " + url);
 				httpGet = new HttpGet(url);
 			    
 			    try {
