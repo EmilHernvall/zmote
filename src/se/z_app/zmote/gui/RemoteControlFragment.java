@@ -6,11 +6,15 @@ import se.z_app.stb.EPG;
 import se.z_app.stb.api.RCProxy;
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.zmote.epg.EPGQuery;
+import se.z_app.zmote.gui.SnapHorizontalScrollView.MyGestureDetector;
 
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
@@ -95,42 +99,105 @@ public class RemoteControlFragment extends Fragment {
 		info_button = (Button) view.findViewById(R.id.info_button);
 		exit_button = (Button) view.findViewById(R.id.exit_button);
 
-		arrow_up_button.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				vibrate();
-				RCProxy.instance().up();			
-				highlightChannel();
-			}
-		});
+		// Sanity check
+		if(active_ch == null) active_ch = epg.getChannel(0);
+		
+		// Listener with visual feedback for the button
+		arrow_up_button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                //If the user swipes
+               if(event.getAction() == MotionEvent.ACTION_DOWN){
+            	    vibrate();
+   					RCProxy.instance().up();			
+   					highlightChannel();
+                    arrow_up_button.setBackgroundColor(0xFFFFFFFF);
+                    // Put here the "light" button
+                    //arrow_up_button.setBackgroundResource(R.drawable.remote_up);
+                    return true;
+                }
+                else if(event.getAction() == MotionEvent.ACTION_UP){
+                	arrow_up_button.setBackgroundColor(0xFF000000);
+                	arrow_up_button.setBackgroundResource(R.drawable.remote_up);	
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        });
 
-		arrow_down_button.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				vibrate();
-				RCProxy.instance().down();
-				highlightChannel();
-			}
-		});
+		// Listener with visual feedback for the button
+		arrow_down_button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                //If the user swipes
+               if(event.getAction() == MotionEvent.ACTION_DOWN){
+            	    vibrate();
+					RCProxy.instance().down();
+					highlightChannel();
+                    arrow_down_button.setBackgroundColor(0xFFFFFFFF);
+                    // Put here the "light" button
+                    //arrow_up_button.setBackgroundResource(R.drawable.remote_up);
+                    return true;
+                }
+                else if(event.getAction() == MotionEvent.ACTION_UP){
+                	arrow_down_button.setBackgroundColor(0xFF000000);
+                	arrow_down_button.setBackgroundResource(R.drawable.remote_down);	
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        });
 
-		arrow_left_button.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				vibrate();
-				RCProxy.instance().left();
-				highlightChannel();
-			}
-		});
+		// Visual feedback for the button
+		arrow_left_button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                //If the user swipes
+               if(event.getAction() == MotionEvent.ACTION_DOWN){
+            	   	vibrate();
+   					RCProxy.instance().left();
+   					highlightChannel();
+                    arrow_left_button.setBackgroundColor(0xFFFFFFFF);
+                    // Put here the "light" button
+                    //arrow_up_button.setBackgroundResource(R.drawable.remote_up);
+                    return true;
+                }
+                else if(event.getAction() == MotionEvent.ACTION_UP){
+                	arrow_left_button.setBackgroundColor(0xFF000000);
+                	arrow_left_button.setBackgroundResource(R.drawable.remote_left);	
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        });
 
-		arrow_right_button.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				vibrate();
-				RCProxy.instance().right();
-				highlightChannel();
-			}
-		});
-
+		// Visual feedback for the button
+		arrow_right_button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                //If the user swipes
+               if(event.getAction() == MotionEvent.ACTION_DOWN){
+	            	vibrate();
+	   				RCProxy.instance().right();
+	   				highlightChannel();
+                    arrow_right_button.setBackgroundColor(0xFFFFFFFF);
+                    // Put here the "light" button
+                    //arrow_up_button.setBackgroundResource(R.drawable.remote_up);
+                    return true;
+                }
+                else if(event.getAction() == MotionEvent.ACTION_UP){
+                	arrow_right_button.setBackgroundColor(0xFF000000);
+                	arrow_right_button.setBackgroundResource(R.drawable.remote_right);	
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        });
+		
 		confirm_button.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
