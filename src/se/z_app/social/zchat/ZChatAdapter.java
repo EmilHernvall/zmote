@@ -35,13 +35,26 @@ public class ZChatAdapter {
 		arg2 = URLEncoder.encode(arg2);
 		String channelName = URLEncoder.encode(program.getChannel().getName());
 		
-		String arg3 = URLEncoder.encode(""+program.getDuration());
-		
-		
+		//String arg3 = URLEncoder.encode(program.getStart().toString());
+		String year = "" + program.getStart().getYear();
+		String month = "" + (program.getStart().getMonth() + 1);
+		String day = "" + program.getStart().getDate();
+		String hours = "" + program.getStart().getHours();
+		String minutes = "" + program.getStart().getMinutes();
+		//Log.e("ZCHAT:", "The Date: " + program.getStart().getMonth());
 		//HttpGet httpGet = new GetHTTPResponse().getJSON("http://" + serverAdress +"post/"+arg1+"?program_name="+arg2);
-		String urlStr = "http://" + serverAdress +"/post/"+arg1+"?program_name="+arg2+"&channel_name="+channelName;
+		String urlStr = "http://" + serverAdress +"/post/"+arg1+
+						"?program_name="+arg2+
+						"&channel_name="+channelName+
+						"&year="+year+
+						"&month="+month+
+						"&day="+day+
+						"&hours="+hours+
+						"&minutes="+minutes+
+						"";
+		
 		String json = getJSON(urlStr, 4 * 4096);
-		//Log.e("ZCHAT", "urlStr: " + urlStr);
+		Log.e("ZCHAT", "urlStr: " + urlStr);
 		// Code copied from "StandardCommand"
 
 		try {
@@ -69,6 +82,7 @@ public class ZChatAdapter {
 				dateOfCreation = dateOfCreation.replace("T", "-");
 				String startAr[] = dateOfCreation.split("\\-");
 				
+				/*
 				String lastUpdate = jsonPost.getString("updated_at");
 				lastUpdate = lastUpdate.replace(" ", "-");
 				lastUpdate = lastUpdate.replace(":", "-");
@@ -84,6 +98,8 @@ public class ZChatAdapter {
 						Integer.parseInt(lastUpdateSplit[5].substring(0,  2))
 						);
 				
+				
+						*/
 				Date date = new Date(
 						Integer.parseInt(startAr[0])-1900,
 						Integer.parseInt(startAr[1])-1,
@@ -93,8 +109,8 @@ public class ZChatAdapter {
 						Integer.parseInt(startAr[5].substring(0,  2))
 						);
 				thePost.setDateOfCreation(date);
-				thePost.setLastUpdate(lastUpdateDate);
-				int postID = jsonPost.getInt("id");
+				//thePost.setLastUpdate(lastUpdateDate);
+				//int postID = jsonPost.getInt("id");
 				
 				theFeed.addPost(thePost);
 				
@@ -116,14 +132,24 @@ public class ZChatAdapter {
 		String arg2 = URLEncoder.encode(targetFeed.getProgram().getName());
 		String arg3 = URLEncoder.encode(newPost.getContent());
 		Date theDate = targetFeed.getProgram().getStart();
-		int year = theDate.getYear();
-		int month = theDate.getMonth();
-		int day = theDate.getDay();
-		int hour = theDate.getHours();
-		int minutes = theDate.getMinutes();
+		/*
+		String year = ""+theDate.getYear();
 		
+		String month = "" + (theDate.getMonth() > 9 ? "0" + theDate.getMonth() : theDate.getMonth());
+		String day = "" + (theDate.getDay() > 9 ? "0" + theDate.getDay() : theDate.getDay());
+		String hour = "" + (theDate.getHours() > 9 ? "0" + theDate.getHours() : theDate.getHours());
+		String minutes = "" + (theDate.getMinutes() > 9 ? "0" + theDate.getMinutes() : theDate.getMinutes());
+		*/
+		String dateString = URLEncoder.encode(theDate.toString());
 		
-		String userURLString = "http://" + serverAdress +"/post/insert_post?username="+arg1+"&program_name="+arg2+"&content="+arg3;
+		String userURLString = "http://" + serverAdress +
+								"/post/insert_post?" +
+								"username="+arg1+"" +
+								"&program_name="+arg2+
+								"&content="+arg3+
+								"&starttime="+dateString+
+								"";
+		//Log.e("ZCHAT", "userURLString" + userURLString);
 		try {
 			URL url = new URL(userURLString);
 			url.openStream().close();
