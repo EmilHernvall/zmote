@@ -20,7 +20,6 @@ import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -90,17 +89,6 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
     public void setOrientation(int i){
     		setRequestedOrientation(i);
     }
-
-   /* @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        if(epgfragment!=null && epgfragment.isResumed()){
-            //do nothing here if we're showing the fragment
-        	setRequestedOrientation(Configuration.ORIENTATION_LANDSCAPE);
-        }else{
-            setRequestedOrientation(Configuration.ORIENTATION_PORTRAIT); // otherwise lock in portrait
-        }
-        super.onConfigurationChanged(newConfig);
-    }*/
 
 	/**
 	 * Vibrates the phone for 95 milliseconds.
