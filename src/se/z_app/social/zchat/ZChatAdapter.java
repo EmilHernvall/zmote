@@ -1,6 +1,8 @@
 package se.z_app.social.zchat;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Date;
@@ -31,15 +33,17 @@ public class ZChatAdapter {
 		arg1 = URLEncoder.encode(arg1);
 		String arg2 = program.getName();
 		arg2 = URLEncoder.encode(arg2);
+		String channelName = URLEncoder.encode(program.getChannel().getName());
+		
 		String arg3 = URLEncoder.encode(""+program.getDuration());
 		
 		
 		//HttpGet httpGet = new GetHTTPResponse().getJSON("http://" + serverAdress +"post/"+arg1+"?program_name="+arg2);
-		String urlStr = "http://" + serverAdress +"post/"+arg1+"?program_name="+arg2;
-		String json = getJSON(urlStr, 4096);
-		
+		String urlStr = "http://" + serverAdress +"/post/"+arg1+"?program_name="+arg2+"&channel_name="+channelName;
+		String json = getJSON(urlStr, 4 * 4096);
+		//Log.e("ZCHAT", "urlStr: " + urlStr);
 		// Code copied from "StandardCommand"
-		
+
 		try {
 			JSONArray jsonarray = new JSONArray(json);
 			
@@ -48,13 +52,13 @@ public class ZChatAdapter {
 				
 				Post thePost = new Post();
 				thePost.setFeed(theFeed);
-				theFeed.addPost(thePost);
+				
 				
 				thePost.setContent(jsonPost.getString("content"));
 				
 				String usernameID = URLEncoder.encode(jsonPost.getString("user_id"));
-				Log.e("ZCHAT", usernameID);
-				String userURLString = "http://" + serverAdress +"post/get_user_by_id?id="+usernameID;
+				//Log.e("ZCHAT", usernameID);
+				String userURLString = "http://" + serverAdress +"/post/get_user_by_id?id="+usernameID;
 				String jsonUser = getJSON(userURLString, 4096);
 				JSONArray theUser = new JSONArray(jsonUser);
 				thePost.setUserName(theUser.getJSONObject(0).getString("name"));
@@ -62,25 +66,37 @@ public class ZChatAdapter {
 				String dateOfCreation = jsonPost.getString("created_at");
 				dateOfCreation = dateOfCreation.replace(" ", "-");
 				dateOfCreation = dateOfCreation.replace(":", "-");
+				dateOfCreation = dateOfCreation.replace("T", "-");
 				String startAr[] = dateOfCreation.split("\\-");
-			
+				
+				String lastUpdate = jsonPost.getString("updated_at");
+				lastUpdate = lastUpdate.replace(" ", "-");
+				lastUpdate = lastUpdate.replace(":", "-");
+				lastUpdate = lastUpdate.replace("T", "-");
+				String lastUpdateSplit[] = lastUpdate.split("\\-");
+				
+				Date lastUpdateDate = new Date(
+						Integer.parseInt(lastUpdateSplit[0])-1900,
+						Integer.parseInt(lastUpdateSplit[1])-1,
+						Integer.parseInt(lastUpdateSplit[2]),
+						Integer.parseInt(lastUpdateSplit[3]),
+						Integer.parseInt(lastUpdateSplit[4]),
+						Integer.parseInt(lastUpdateSplit[5].substring(0,  2))
+						);
+				
 				Date date = new Date(
 						Integer.parseInt(startAr[0])-1900,
 						Integer.parseInt(startAr[1])-1,
 						Integer.parseInt(startAr[2]),
 						Integer.parseInt(startAr[3]),
 						Integer.parseInt(startAr[4]),
-						Integer.parseInt(startAr[5])
+						Integer.parseInt(startAr[5].substring(0,  2))
 						);
 				thePost.setDateOfCreation(date);
+				thePost.setLastUpdate(lastUpdateDate);
+				int postID = jsonPost.getInt("id");
 				
-				/*thePost.setName(jsonPost.getString("name"));
-				thePost.setNr(jsonPost.getInt("nr"));
-				thePost.setOnid(jsonPost.getInt("onid"));
-				thePost.setTsid(jsonPost.getInt("tsid"));
-				thePost.setSid(jsonPost.getInt("sid"));
-				thePost.setUrl(jsonPost.getString("url"));
-				*/
+				theFeed.addPost(thePost);
 				
 			}
 			
@@ -99,9 +115,26 @@ public class ZChatAdapter {
 		String arg1 = URLEncoder.encode(newPost.getUserName());
 		String arg2 = URLEncoder.encode(targetFeed.getProgram().getName());
 		String arg3 = URLEncoder.encode(newPost.getContent());
+		Date theDate = targetFeed.getProgram().getStart();
+		int year = theDate.getYear();
+		int month = theDate.getMonth();
+		int day = theDate.getDay();
+		int hour = theDate.getHours();
+		int minutes = theDate.getMinutes();
 		
-		String userURLString = "http://" + serverAdress +"post/insert_post?username="+arg1+"&program_name="+arg2+"&content="+arg3;
 		
+		String userURLString = "http://" + serverAdress +"/post/insert_post?username="+arg1+"&program_name="+arg2+"&content="+arg3;
+		try {
+			URL url = new URL(userURLString);
+			url.openStream().close();
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//Log.e("ZCHAT", "urlStr: " + userURLString);
 		return targetFeed;
 	}
 	
