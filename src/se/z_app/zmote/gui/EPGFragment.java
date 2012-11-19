@@ -12,9 +12,13 @@ import se.z_app.stb.Program;
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.zmote.epg.EPGQuery;
 
+
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.gesture.GestureOverlayView;
+
+import android.content.Intent;
+
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
@@ -24,6 +28,7 @@ import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.OrientationListener;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
@@ -34,6 +39,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.support.v4.app.Fragment;
 
 /**
@@ -57,10 +63,16 @@ public class EPGFragment extends Fragment{
 	private Program program_temp;
 	private int start_hour = 24;
 	private int start_minutes = 0;
+
 	private OnTouchListener toutch;
 	private int screen_width = 0;
 
 	 private int currentX = -1, currentY = -1;
+
+	private OrientationListener orientationListener = null;
+	private int changes = 0;
+	private int orientation_var = 0;	// Horiz: 0 , Vertical: 1
+	private boolean epg_loaded = false;
 
 
 	public EPGFragment(MainTabActivity main){
@@ -72,14 +84,14 @@ public class EPGFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-    	
     	super.onCreate(savedInstanceState);
     	
+
     	main.setOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     	
 		view = (ScrollView) inflater.inflate(R.layout.fragment_epg, null);
 		
-		
+
 		i_layout = (LinearLayout)view.findViewById(R.id.channel_icons);
 		i_layout.setBackgroundColor(0x66000000);
 		vt_scroll = (LinearLayout)view.findViewById(R.id.channel_programs);
@@ -139,7 +151,28 @@ public class EPGFragment extends Fragment{
 		// Get the size of the screen in pixels
 		screen_width = getResources().getDisplayMetrics().widthPixels;
 		
-		
+
+        orientationListener = new OrientationListener(view.getContext()) {
+			
+			@Override
+			public void onOrientationChanged(int orientation) {
+				// TODO Auto-generated method stub
+				if(orientation != ORIENTATION_UNKNOWN && changes != 0 && epg_loaded){
+					Toast.makeText(view.getContext(), "changeeeddd", Toast.LENGTH_SHORT).show();
+					if(orientation_var == 1){
+						Intent intent = new Intent(view.getContext(), EpgHorizontalActivity.class);
+						EPGFragment.this.startActivity(intent);
+						orientation_var = 0;
+					}else if(orientation_var == 0){
+						// Go back to the fragment in some way
+						Toast.makeText(view.getContext(), "Going back", Toast.LENGTH_SHORT).show();
+					}
+				}
+				changes++;
+			}
+		};
+		orientationListener.enable();
+
 		
 		new AsyncDataLoader().execute();
 
@@ -448,7 +481,7 @@ public class EPGFragment extends Fragment{
 		protected void onPostExecute(EPG epgTemp) {
 			epg = epgTemp;
 			view.findViewById(R.id.progressEPGView).setVisibility(View.INVISIBLE);
-		
+			epg_loaded = true;
 			mainEPG();
 		}	
 

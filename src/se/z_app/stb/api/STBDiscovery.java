@@ -17,6 +17,10 @@ public class STBDiscovery {
 		this.subNetAddress = subNetAddress;
 	}
 	
+	/**
+	 * 
+	 * @return An array STB[] with the STB's found.
+	 */
 	public STB[] find() {
 		disc = new Discovery(subNetAddress);
 		return disc.find();

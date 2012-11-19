@@ -3,18 +3,14 @@ package se.z_app.zmote.gui;
 
 
 import java.io.File;
-
 import se.z_app.stb.MediaItem;
 import se.z_app.stb.STB;
 import se.z_app.stb.STB.STBEnum;
-import se.z_app.stb.api.EPGData;
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.stb.api.STBContainer;
-import se.z_app.zmote.epg.EPGContentHandler;
 import se.z_app.zmote.webtv.MediaStreamer;
 import android.app.Activity;
 import android.content.Intent;
-import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.view.Menu;
