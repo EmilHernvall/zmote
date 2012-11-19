@@ -31,31 +31,9 @@ public class MainTestActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_test);
-        EPGData.instance();
-        EPGContentHandler.setContext(this.getApplicationContext());
-        EPGContentHandler.instance();
-        
-        STBContainer.instance();
-        
-        
-		WifiManager myWifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
-    	WifiInfo myWifiInfo = myWifiManager.getConnectionInfo();
-    	int ipAddress = myWifiInfo.getIpAddress();    	
-    	@SuppressWarnings("deprecation")
-		String ip = android.text.format.Formatter.formatIpAddress(ipAddress);
-        
-    	ms = MediaStreamer.instance();
-    	ms.setLocalIP(ip);
-        
-//    	STB stb = new STB();
-//		stb.setBoxName("zen56");
-//		stb.setIP("130.236.248.56");
-//		stb.setType(STBEnum.ZENTERIO);
-//		stb.setMAC("00:07:67:9B:EB:33");
-//
-//		STBContainer.instance().setActiveSTB(stb);
-    	
-        
+       
+        new Bootstrap(this.getApplicationContext(), (WifiManager) getSystemService(WIFI_SERVICE));
+               
         
         Button stbProxy = (Button) findViewById(R.id.bLoadSTBProxy);
         stbProxy.setOnClickListener(new View.OnClickListener() {

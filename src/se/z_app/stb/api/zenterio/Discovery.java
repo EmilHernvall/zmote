@@ -87,41 +87,44 @@ public class Discovery implements DiscoveryInterface{
 		
 		@Override
 		public void run() {
-			for(int i = start; i <= upto && i < 255; i++ ){
-				try {
-					InetAddress address = InetAddress.getByName(network+Integer.toString(i));
-					//System.out.println("Scanning " + address.toString());
-					if(address.isReachable(timeout)) {
-	
-						URL url = new URL("http://"+address.getHostAddress().toString()+"/cgi-bin/zids_discovery/");
-						BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-						
-						String row = in.readLine();
-						if(row.contains("Boxname :")) {
-							STB stb = new STB();
-							stb.setType(STBEnum.ZENTERIO);
-							stb.setIP(address.getHostAddress().toString());
-							stb.setBoxName(row.split(": ", 2)[1]);
+			try{
+				for(int i = start; i <= upto && i < 255; i++ ){
+					try {
+						InetAddress address = InetAddress.getByName(network+Integer.toString(i));
+						//System.out.println("Scanning " + address.toString());
+						if(address.isReachable(timeout)) {
+		
+							URL url = new URL("http://"+address.getHostAddress().toString()+"/cgi-bin/zids_discovery/");
+							BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
 							
-							while((row = in.readLine()) != null){
-								if (row.contains("MAC")) { // Sets the Mac Address
-				    				stb.setMAC(row.split(": ", 2)[1]);
-				    				break;
-				    			}
-							}
-							stbs.add(stb);
-				    	}
-						
-						in.close();
-						
+							String row = in.readLine();
+							if(row.contains("Boxname :")) {
+								STB stb = new STB();
+								stb.setType(STBEnum.ZENTERIO);
+								stb.setIP(address.getHostAddress().toString());
+								stb.setBoxName(row.split(": ", 2)[1]);
+								
+								while((row = in.readLine()) != null){
+									if (row.contains("MAC")) { // Sets the Mac Address
+					    				stb.setMAC(row.split(": ", 2)[1]);
+					    				break;
+					    			}
+								}
+								stbs.add(stb);
+					    	}
+							
+							in.close();
+							
+						}
+					} catch (UnknownHostException e) {
+	
+					} catch (IOException e) {
+	
 					}
-				} catch (UnknownHostException e) {
-
-				} catch (IOException e) {
-
 				}
+			}finally{
+				runningThreads--;
 			}
-			runningThreads--;
 		}
 		
 		

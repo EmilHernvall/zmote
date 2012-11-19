@@ -63,9 +63,10 @@
             android:paddingLeft="3dp"
             android:paddingRight="3dp"
             android:textColor="#FFFFFF"
-            android:textSize="15dp" />
+            android:textSize="15dp" />              
+ 
     </LinearLayout>
-
+        
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -96,6 +97,27 @@
       
     </LinearLayout>
     -->
+    
+	    <LinearLayout
+        android:id="@+id/noSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/result_webtv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="3dp"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
+            android:textColor="#FFFFFF"
+            android:text="Please enter someting in the search field"
+            android:textSize="15dp" />              
+    </LinearLayout>
+	
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -118,4 +140,5 @@
         </LinearLayout>
     </ScrollView>
 
+    
 </LinearLayout>

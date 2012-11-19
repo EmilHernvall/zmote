@@ -57,7 +57,10 @@ public class EventListener implements EventListnerInterface {
 	 * Gets the next event. If not initialized returns current event.
 	 */
 	public STBEvent getNextEvent() {
-		if(socket.isConnected()){
+		if(socket == null){
+			return null;
+		}
+		else if(socket.isConnected()){
 			try {
 				int len = in.read(buffer);
 				currentEvent = stringToSTBEvent(new String(buffer, 0, len));
@@ -65,6 +68,8 @@ public class EventListener implements EventListnerInterface {
 				return null;
 			}
 		}
+		
+
 		return currentEvent;
 	}
 
@@ -73,14 +78,16 @@ public class EventListener implements EventListnerInterface {
 	 * before getNextEvent() can be called again.
 	 */
 	public void stop(){
-		try {
-			in.close();
-			socket.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch( RuntimeException e){
+		if(socket != null){
+			try {
+				in.close();
+				socket.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch( RuntimeException e){
 
+			}
 		}
 
 	}
@@ -107,8 +114,8 @@ public class EventListener implements EventListnerInterface {
 					currentEvent.setState(false);
 				}
 			}
-			
-			
+
+
 
 
 		} catch (JSONException e) {

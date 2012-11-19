@@ -15,10 +15,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 
 /**
- * First draft of the class, needs a lot of testing. Most of the content in the constructor should be removed, the database will have
- * been created earlier and are already available in the app.
- * Had some help from the guide here: www.androidhive.info/2011/11/android-sqlite-database-tutorial
- * @author Christian
+ * A class for handling the connection to the SQLite database. Can do a lot of operations on the database.
+ * @author Christian aka chrte707
  *
  */
 public class EPGdbHandler extends SQLiteOpenHelper {
@@ -32,7 +30,6 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 	private static final String CHANNEL_ONID="onid";
 	private static final String CHANNEL_TSID="tsid";
 	private static final String CHANNEL_SID="sid";
-
 	private static final String TABLE_PROGRAM ="program";
 	private static final String PROGRAM_NAME="name";
 	private static final String PROGRAM_EVENTID="eventID";
@@ -40,21 +37,22 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 	private static final String PROGRAM_DURATION="duration";
 	private static final String PROGRAM_SHORTTEXT="shortText";
 	private static final String PROGRAM_LONGTEXT="longText";
-
 	private static final String TABLE_EPG ="epg";
 	private static final String EPG_DATEOFCREATION ="dateOfCreation";
 
-	//	private static final String TABLE_STB ="stb";
+	//	private static final String TABLE_STB ="stb";  //we can uncomment this if we would like to save the STB in the future
 	//	private static final String STB_TYPE="type";
 	private static final String STB_MAC="mac";
 	//	private static final String STB_IP="ip";
 	//	private static final String STB_BOXNAME="boxName";
 
+	/**
+	 * Constructor for the class, needs a context
+	 * @param context A context
+	 */
 	public EPGdbHandler(Context context){
 		super(context, DATABASE_Name,null,DATABASE_VERSION);
 	}
-
-
 
 	@Override
 	/**
@@ -73,7 +71,7 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 
 	@Override
 	/**
-	 * Used when a new version of the database is created
+	 * Method used when a new version of the database is created
 	 */
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		db.execSQL("DROP TABLE IF EXISTS "+TABLE_CHANNEL); 
@@ -129,7 +127,6 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 		String whereClause = ""+STB_MAC+"='"+stb.getMAC()+"'";
 		values.put(STB_MAC, stb.getMAC());
 		values.put(EPG_DATEOFCREATION, epg.getDateOfCreation());
-
 		int nrOfRowsAffected = db.update(TABLE_EPG, values, whereClause, null);
 		if(nrOfRowsAffected==0){
 			db.insert(TABLE_EPG,null,values);
@@ -142,9 +139,9 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 	}
 
 	/**
-	 * A method for selecting a channals, return an array with the channals
-	 * @param stb The STB for which to getting the channals from
-	 * @return An array with the channals
+	 * A method for selecting a channels, return an array with the channels
+	 * @param stb The STB for which to getting the channels from
+	 * @return An array with the channels
 	 */
 	public Channel[] selectChannals(STB stb){
 		SQLiteDatabase db = this.getReadableDatabase();
@@ -153,7 +150,7 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 		int iterationCounter=0;
 		if(cursor.moveToFirst()) {
 			do{
-				Channel channel =new Channel(); //TODO: this should bee the channel the program is realated to
+				Channel channel =new Channel();				
 				channel.setName(cursor.getString(cursor.getColumnIndex(CHANNEL_NAME)));
 				channel.setNr(cursor.getInt(cursor.getColumnIndex(CHANNEL_NR)));
 				channel.setOnid(cursor.getInt(cursor.getColumnIndex(CHANNEL_ONID)));
@@ -168,15 +165,13 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 		return channelArray;
 	}
 
-
 	/**
-	 * A method for update the a channel in the database, given an STB, TODO: to test if this overwrite the old channel or just creates a new record
+	 * A method for update the a channel in the database, given an STB,	
 	 * @param stb The STB in which the Channel should be update
 	 * @param channel The channel to be updated
 	 */
 	public void updateChannel(STB stb, Channel channel){
 		SQLiteDatabase db = this.getWritableDatabase();
-
 		ContentValues values = new ContentValues();
 		String whereClause = ""+STB_MAC+"='"+stb.getMAC()+"'";
 		values.put(STB_MAC, stb.getMAC());
@@ -218,7 +213,7 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 		int iterationCounter=0;
 		if(cursor.moveToFirst()) {
 			do{
-				Program program =new Program(new Channel()); //TODO: this should bee the channel the program is realated to
+				Program program =new Program(new Channel()); 
 				program.setName(cursor.getString(cursor.getColumnIndex(PROGRAM_NAME)));
 				program.setEventID(cursor.getInt(cursor.getColumnIndex(PROGRAM_EVENTID)));
 				int temp = cursor.getInt(cursor.getColumnIndex(PROGRAM_START));
@@ -236,7 +231,7 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 		return programArray;
 	}
 	/**
-	 * A method for update a program, TODO: check if it overwrites the old program which it should, or just creates a new record
+	 * A method for update a program
 	 * @param stb The given STB
 	 * @param channel The channel to update
 	 * @param program The program to update
