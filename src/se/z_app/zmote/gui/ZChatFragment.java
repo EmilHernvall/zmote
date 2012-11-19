@@ -39,6 +39,8 @@ public class ZChatFragment extends Fragment {
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState){
+				return container;
+		/*
 		v = inflater.inflate(R.layout.fragment_zchat, null);
 		mListView = (ListView) v.findViewById(R.id.list);
 		List<? extends Map<String, ?>> data = GetSampleData();
@@ -72,7 +74,7 @@ public class ZChatFragment extends Fragment {
 		map.put("username", "Ricardo");
 		map.put("usertext", "This is a simple sample for nothing!");
 		list.add(map);
-		return list;
+		return list;*/
 
 	}
 	
