@@ -100,7 +100,7 @@ public class RemoteControlFragment extends Fragment {
 		exit_button = (Button) view.findViewById(R.id.exit_button);
 
 		// Sanity check
-		if(active_ch == null) active_ch = epg.getChannel(0);
+		if(active_ch == null) active_ch = epg.getChannel(1);
 		
 		// Listener with visual feedback for the button
 		arrow_up_button.setOnTouchListener(new View.OnTouchListener() {
@@ -323,7 +323,7 @@ public class RemoteControlFragment extends Fragment {
 					boton.requestFocus();
 				}
 				
-				if(boton != active){				
+				if(boton != active && active != null){				
 					active.setBackgroundResource(0);
 					active = boton;
 				}
