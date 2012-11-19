@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * Class that describes a comment made to a post
  * 
- * @author Rasmus Holm
+ * @author Rasmus Holm, refractored by Linus Back
  */
 public class Comment implements PostInterface{
 	
@@ -93,6 +93,13 @@ public class Comment implements PostInterface{
 	 */
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	/**
+	 * Implemented to easier find out if object is a post or not.
+	 */
+	public boolean isPost() {
+		return false;
 	}
 	
 }
