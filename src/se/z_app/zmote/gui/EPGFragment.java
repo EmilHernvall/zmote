@@ -2,6 +2,7 @@ package se.z_app.zmote.gui;
 
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -13,19 +14,25 @@ import se.z_app.zmote.epg.EPGQuery;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
+import android.gesture.GestureOverlayView;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.support.v4.app.Fragment;
 
@@ -37,11 +44,12 @@ import android.support.v4.app.Fragment;
 public class EPGFragment extends Fragment{
 	private Channel temp;
 	private EPG epg;
-	private View view;
+	private ScrollView view;
 	private MainTabActivity main;
 	private LinearLayout i_layout;
 	private LinearLayout p_layout;
 	private LinearLayout vt_scroll;
+	private HorizontalScrollView hz_scroll;
 	private int height_of_rows = 80;
 	private int number_of_channels = 0;
 	private int height=80;
@@ -49,14 +57,18 @@ public class EPGFragment extends Fragment{
 	private Program program_temp;
 	private int start_hour = 24;
 	private int start_minutes = 0;
-	
+	private OnTouchListener toutch;
 	private int screen_width = 0;
+
+	 private int currentX = -1, currentY = -1;
 
 
 	public EPGFragment(MainTabActivity main){
 		this.main = main;
 	}
     
+	
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -65,15 +77,75 @@ public class EPGFragment extends Fragment{
     	
     	main.setOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     	
-		view = inflater.inflate(R.layout.fragment_epg, null);
+		view = (ScrollView) inflater.inflate(R.layout.fragment_epg, null);
+		
+		
 		i_layout = (LinearLayout)view.findViewById(R.id.channel_icons);
 		i_layout.setBackgroundColor(0x66000000);
 		vt_scroll = (LinearLayout)view.findViewById(R.id.channel_programs);
+		hz_scroll = (HorizontalScrollView)view.findViewById(R.id.hz_scroll);
+		
+
+		
+		
+	
+			
+		//2D Scrolling, TODO: Fling needs to be implemented
+		toutch = new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				
+				synchronized (toutch) {
+					
+				
+					switch (event.getAction()) {
+			        case MotionEvent.ACTION_DOWN: {
+			            currentX = (int) event.getRawX();
+			            currentY = (int) event.getRawY();
+			            break;
+			        }
+	
+			        case MotionEvent.ACTION_MOVE: {
+			            if(currentX == -1 || currentY == -1){
+			            	currentX = (int) event.getRawX();
+				            currentY = (int) event.getRawY();
+			            }
+			        	
+			        	int x2 = (int) event.getRawX();
+			            int y2 = (int) event.getRawY();
+			            view.scrollBy(currentX - x2 , currentY - y2);
+			            hz_scroll.scrollBy(currentX - x2 , currentY - y2);
+			            currentX = x2;
+			            currentY = y2;
+			            break;
+			        }   
+			        case MotionEvent.ACTION_UP: {
+			        	currentX = -1;
+			            currentY = -1;
+			        	break;
+			            
+			        }
+			        }
+					
+			        return true;
+				}
+			}
+		};
+			
+		hz_scroll.setOnTouchListener(toutch);
+		view.setOnTouchListener(toutch);
+		
 		
 		// Get the size of the screen in pixels
 		screen_width = getResources().getDisplayMetrics().widthPixels;
 		
+		
+		
 		new AsyncDataLoader().execute();
+
+		
+
+		
 		
 		return view;
 	}
