@@ -2,13 +2,20 @@ package se.z_app.zmote.gui;
 
 
 
+import java.io.File;
+
+import se.z_app.stb.MediaItem;
 import se.z_app.stb.STB;
 import se.z_app.stb.STB.STBEnum;
 import se.z_app.stb.api.EPGData;
+import se.z_app.stb.api.RemoteControl;
 import se.z_app.stb.api.STBContainer;
 import se.z_app.zmote.epg.EPGContentHandler;
+import se.z_app.zmote.webtv.MediaStreamer;
 import android.app.Activity;
 import android.content.Intent;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -18,16 +25,15 @@ import android.widget.Button;
 //Pleas add your view or setting on this activity to make it easier for testing and accsess 
 public class MainTestActivity extends Activity {
 
+	private MediaStreamer ms;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_test);
-        EPGData.instance();
-        EPGContentHandler.setContext(this.getApplicationContext());
-        EPGContentHandler.instance();
-        
-        STBContainer.instance();
-        
+       
+        new Bootstrap(this.getApplicationContext(), (WifiManager) getSystemService(WIFI_SERVICE));
+               
         
         Button stbProxy = (Button) findViewById(R.id.bLoadSTBProxy);
         stbProxy.setOnClickListener(new View.OnClickListener() {
@@ -127,8 +133,24 @@ public class MainTestActivity extends Activity {
 			}
 		});
         
-          
         
+        Button playClip = (Button) findViewById(R.id.PlayClip);
+        playClip.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				
+				MediaItem item = ms.addFile(new File("/mnt/sdcard/download/test2.mp4"));
+				System.out.println("MediaItem: " + item.getName());
+				System.out.println("MediaItem: " + item.getUrl());
+				
+				RemoteControl.instance().launch(item);				
+				
+			}
+		});
+        
+        
+
         
     }
 

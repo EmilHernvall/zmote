@@ -1,8 +1,8 @@
 package se.z_app.zmote.gui;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 
 import se.z_app.stb.Channel;
 import se.z_app.stb.EPG;
@@ -29,14 +29,14 @@ import android.widget.TextView;
 /**
  *  Channel information view: View with the information of the channel
  *  It is shown when we click on an EPG program
- *  @author Francisco
+ *  @author Francisco Valladares
  * */
 public class ChannelInformationFragment extends Fragment{
 	
     private LinearLayout content_layout;
 	private View view_temp;
 	private EPG epg;
-	private String temp;
+	private Channel temp;
 	private int i_tmp;
 	private EPGQuery query = new EPGQuery();
 	private EPG epgFetched;
@@ -54,19 +54,18 @@ public class ChannelInformationFragment extends Fragment{
 	private TextView scrollToFocused = null;
 	private LinearLayout ly_temp = null;
 	
-	/**
-	 * Default constructor of ChannelInformationFragment
-	 */
-	public ChannelInformationFragment(){
-		
-	}
+	private ArrayList<View> res_vector = new ArrayList();
+	private SnapHorizontalScrollView snap;
+	
+
 	
 	/**
 	 * Default constructor of ChannelInformationFragment
 	 * @param program Program in which we want to focus
 	 */
-	public ChannelInformationFragment(Program program){
+	public ChannelInformationFragment(MainTabActivity main, Program program){
 		focusOnThis = program;
+		this.main = main;
 	}
 	
 	/**
@@ -84,13 +83,14 @@ public class ChannelInformationFragment extends Fragment{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		
-		
 		view_temp = inflater.inflate(R.layout.fragment_channel_information, null);
 		content_layout = (LinearLayout)view_temp.findViewById(R.id.content_ly);
 		pb = (ProgressBar)view_temp.findViewById(R.id.progressLodingEpgChannelInformation);
 		
 		new AsyncDataLoader().execute();
-	
+		snap = new SnapHorizontalScrollView(view_temp.getContext());
+		
+		
     	return view_temp;
     }    
 	
@@ -126,7 +126,8 @@ public class ChannelInformationFragment extends Fragment{
     	for(Channel channel: epg){
     		addChannelItemToLayout(channel);
     	}
-
+    	snap.setFeatureItems(res_vector);
+    	content_layout.addView(snap);
     }
     
 	/**
@@ -138,10 +139,10 @@ public class ChannelInformationFragment extends Fragment{
     	// Get the width of the screen
     	int width_screen = getResources().getDisplayMetrics().widthPixels;
     	int icon_size = ch.getIcon().getWidth();
-    	
+    	temp = ch;
     	// "White box" parameters
-    	LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width_screen-40, LayoutParams.MATCH_PARENT);
-        layoutParams.setMargins(15, 15, 15, 30);
+    	LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width_screen-20, LayoutParams.MATCH_PARENT);
+        layoutParams.setMargins(10,15,10,10);
         
         // WrapContent parameters
         LinearLayout.LayoutParams wrapContentParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -159,6 +160,7 @@ public class ChannelInformationFragment extends Fragment{
     	channel_ly.setPadding(10, 5, 10, 5);
     	channel_ly.setOrientation(1);	// Vertical 1; Horizontal 0
     	channel_ly.setId(ch.getNr()*1000);	// The ID of the channel information box is ChannelNR*1000
+    	
     	
     	// The information part of the box will be scrollable
     	channel_content = new ScrollView(view_temp.getContext());
@@ -182,7 +184,7 @@ public class ChannelInformationFragment extends Fragment{
     	// CHANNEL BUTTON
     	// Prepare the channel icon and its ClickListener
     	ImageButton new_btn = new ImageButton(view_temp.getContext());
-    	new_btn.setId(ch.getNr()+100);	// ID of the button: ChannelNr+100
+    	new_btn.setId(ch.getNr()+3000);	// ID of the button: ChannelNr+100
     	new_btn.setImageBitmap(ch.getIcon());
     	new_btn.setBackgroundResource(0);	// Set the background transparent
     	new_btn.setClickable(true);
@@ -190,15 +192,15 @@ public class ChannelInformationFragment extends Fragment{
     	
     	// Set listeners to execute this
     	//RemoteControl.instance().launch(ch.getUrl()); //
-    	temp = ch.getUrl();
-    	i_tmp = ch.getNr();
+    //	temp = ch;
+    	
     	new_btn.setOnClickListener(new View.OnClickListener() {
     		//int channelNr = i_tmp;
-			String url = temp;
+    		Channel tempChannel = temp;
+    		
     		@Override
-			public void onClick(View v) {
-    			
-				RemoteControl.instance().launch(url);
+			public void onClick(View v) {			
+				RemoteControl.instance().launch(tempChannel);
 				main.vibrate();
 			}
 		});
@@ -235,25 +237,26 @@ public class ChannelInformationFragment extends Fragment{
     	channel_content.addView(channel_info_ly);
     	channel_content.post(new Runnable() {
     		LinearLayout channel_info_ly = ly_temp;
-    		ScrollView x = channel_content;
-    		LinearLayout i = scrollTo;
+    		ScrollView scroll = channel_content;
+    		LinearLayout linear = scrollTo;
     		TextView scroll_when_focused = scrollToFocused;
             public void run() {
             	
             	// If we have a focus target and its parent is the current channel
             	if(scroll_when_focused != null && scroll_when_focused.getParent() == channel_info_ly){
-            		x.scrollTo(0, scroll_when_focused.getTop());
-            		x.setFocusableInTouchMode(true);
-            		x.requestFocus();
+            		scroll.scrollTo(0, scroll_when_focused.getTop());
+            		scroll.setFocusableInTouchMode(true);
+            		scroll.requestFocus();
             	}else{
-            		x.scrollTo(0, i.getTop());
+            		scroll.scrollTo(0, linear.getTop());
             	}
             	
             }
         });
     	
     	channel_ly.addView(channel_content);
-    	content_layout.addView(channel_ly, layoutParams);
+    	channel_ly.setLayoutParams(layoutParams);
+    	res_vector.add(channel_ly);
     	
     }
     
@@ -287,7 +290,7 @@ public class ChannelInformationFragment extends Fragment{
     		nextInfo.setText(program.getLongText());
     		nextInfo.setTextColor(0xFF444444);	// A little of grey for the non-current channel descriptions
     		nextInfo.setPadding(15, 5, 15, 5);
-    		nextInfo_container.setId(ch.getNr()*program.getEventID());	// Program info ID = ch.getNr()*pr[i].getEventID()
+    		nextInfo_container.setId((ch.getNr()*10000)+program.getEventID());	// Program info ID = (ch.getNr()*10000)+pr[i].getEventID()
     		
     		// We want to initially display only the information of the current program
     		if(currentProgram == program){
@@ -304,7 +307,7 @@ public class ChannelInformationFragment extends Fragment{
     			scrollToFocused = nextName;
     		}
     		
-    		i_tmp = ch.getNr()*program.getEventID();
+    		i_tmp = (ch.getNr()*10000)+program.getEventID();
     		
     		// Show/hide program information by clicking on its name
     		nextName.setClickable(true);
@@ -335,7 +338,7 @@ public class ChannelInformationFragment extends Fragment{
     
     /**
      * Returns the set of buttons for a program (Fav, Imdb, Social)
-     * @return	View containig the buttons
+     * @return	View containing the buttons
      */
     public View addProgramButtons(){
     	
@@ -372,7 +375,7 @@ public class ChannelInformationFragment extends Fragment{
     	fav_but.setOnClickListener(new OnClickListener() {
 			ImageButton thisOne = fav_but;
 			@Override
-			public void onClick(View v) {
+			public void onClick(View view) {
 				
 				// We will use setTag to associate custom data to the button
 				// In this case, the custom data is if its favorite or not
@@ -392,7 +395,7 @@ public class ChannelInformationFragment extends Fragment{
     	social_but.setOnClickListener(new OnClickListener() {
 			//ImageButton thisOne = social_but;
 			@Override
-			public void onClick(View v) {
+			public void onClick(View view) {
 				
 				/*
 				 * TODO: Add here some code to add this channel to the favorite list
@@ -403,7 +406,7 @@ public class ChannelInformationFragment extends Fragment{
     	imdb_but.setOnClickListener(new OnClickListener() {
 			//ImageButton thisOne = imdb_but;
 			@Override
-			public void onClick(View v) {
+			public void onClick(View view) {
 				
 				/*
 				 * TODO: Add here some code to add this channel to the favorite list
@@ -498,6 +501,6 @@ public class ChannelInformationFragment extends Fragment{
 	public void hideInformation(int id){
 		TextView elem = (TextView) view_temp.findViewById(id);
 		elem.setVisibility(TextView.GONE);
-	}
-
+	}	
+	
 }

@@ -4,6 +4,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import se.z_app.stb.Channel;
+import se.z_app.stb.MediaItem;
 import se.z_app.stb.STB;
 
 /**
@@ -51,6 +52,12 @@ public class RemoteControl implements Observer {
 	public void launch(String url){
 		if(remoteImpl != null)
 			remoteImpl.launch(url);
+	
+	}
+	
+	public void launch(MediaItem item){
+		if(remoteImpl != null)
+			remoteImpl.launch(item);
 	
 	}
 	

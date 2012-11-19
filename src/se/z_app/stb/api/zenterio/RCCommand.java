@@ -11,6 +11,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+
+import se.z_app.stb.MediaItem;
 import se.z_app.stb.WebTVItem;
 import se.z_app.stb.api.MonoDirectionalCmdInterface;
 import se.z_app.stb.api.RemoteControl.Button;
@@ -22,7 +24,7 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 	private String iPAdress;
 
 	private enum Method{
-		SENDTEXT, SENDBUTTON, LAUNCH, PLAYWEBTV, QUEUEWEBTV, FACEBOOKAUTH, RAWPOST, RAWGET;
+		SENDTEXT, SENDBUTTON, LAUNCH, PLAYWEBTV, QUEUEWEBTV, FACEBOOKAUTH, RAWPOST, RAWGET, CREATENODE;
 	}
 	/**
 	 * Constructor that takes the IP address of the STB as in argument.
@@ -55,6 +57,12 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 		new Thread(new RCCommandRunnable(Method.LAUNCH, iPAdress, url)).start();
 		
 	}
+	
+	@Override
+	public void launch(MediaItem item) {
+		new Thread(new RCCommandRunnable(Method.CREATENODE, iPAdress, item.getName(), item.getUrl())).start();
+		
+	}	
 
 	/**
 	 * Plays the webtvitem.
@@ -96,6 +104,9 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 		new Thread(new RCCommandRunnable(Method.RAWGET, iPAdress, uri)).start();
 		
 	}
+	
+	
+	
 	
 	
 	/**
@@ -225,6 +236,26 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 				}
 			    
 				break;
+			case CREATENODE:
+				httpclient = new DefaultHttpClient();
+				String url = "http://" + address +"/mdio/createnode?name="+arg1 + "&url=" + arg2;
+				//System.out.println("URL Sent: " + url);
+				httpGet = new HttpGet(url);
+			    
+			    try {
+			        httpclient.execute(httpGet);	
+	        
+			        
+			    } catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ClientProtocolException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			case PLAYWEBTV:
 				httpclient = new DefaultHttpClient();
 				httpGet = new HttpGet("http://" + address +"/mdio/webtv/play?url=webtv:"+arg1);
@@ -356,5 +387,9 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 			
 		}
 		
-	}	
+	}
+
+
+
+
 }

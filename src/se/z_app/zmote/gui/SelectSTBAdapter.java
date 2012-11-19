@@ -1,9 +1,13 @@
 package se.z_app.zmote.gui;
 
+import java.io.File;
 import java.util.Vector;
 
+import se.z_app.stb.MediaItem;
 import se.z_app.stb.STB;
+import se.z_app.stb.api.RemoteControl;
 import se.z_app.stb.api.STBContainer;
+import se.z_app.zmote.webtv.MediaStreamer;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -23,16 +27,19 @@ public class SelectSTBAdapter extends BaseAdapter {
     private Vector<STB> data;
     private static LayoutInflater inflater=null; 
     private SelectSTBAdapter theAdapter = this;
-
+    private String filePath;
+    
     /**
      * Constructor
      * @param The current activity
      * @param The list of STBs as a Vector<STB>
      */
-    public SelectSTBAdapter(Activity a, Vector<STB> d) {
+    public SelectSTBAdapter(Activity a, Vector<STB> d, String filePath) {
         activity = a;
         data = d;
+        this.filePath = filePath;
         inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        
     }
  
     /**
@@ -85,6 +92,16 @@ public class SelectSTBAdapter extends BaseAdapter {
 				STBContainer.instance().setActiveSTB(theSelectedSTB);
 				Activity theActivity = (Activity)v.getContext();
 				theActivity.finish();
+				
+				//File path will be other then null if a file is lanched with Zmote as intent
+				if(filePath !=null){
+					File file = new File(filePath);
+					if(file.exists()){
+						MediaItem item = MediaStreamer.instance().addFile(file);
+						RemoteControl.instance().launch(item);
+						//System.out.println("Launching: " + item.getUrl() );
+					}
+				}
 				Intent mainIntent = new Intent(v.getContext(), MainTabActivity.class);
 				theActivity.startActivity(mainIntent);
 			}

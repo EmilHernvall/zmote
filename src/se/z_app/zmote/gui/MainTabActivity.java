@@ -1,5 +1,8 @@
 package se.z_app.zmote.gui;
 
+import java.io.IOException;
+import java.net.Inet4Address;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -17,7 +20,10 @@ import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 
@@ -47,31 +53,62 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	private Tab tabWeb;
 	private Spinner mySpinner;
 	private ArrayList<String> STBNames;
-	private Vibrator vibe;
-    private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
+	private Vibrator vibe;	
+	private static Handler myHandler;
+	private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
+	private RemoteControlFragment rcfragment;// = new RemoteControlFragment(this);
+	private EPGFragment epgfragment;// = new EPGFragment(this);
+	private WebTVFragment webfragment;// = new WebTVFragment(this);
+	private MainViewFragment mainfragment;// = new MainViewFragment(this);
+    private ChannelInformationFragment chinfragment;// = new ChannelInformationFragment(this);
 
-    
-    
-    /**
-     * Standard create function for the fragment activity.
-     * Sets the layout.
-     */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_tab);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+	/**
+	 * Standard create function for the fragment activity.
+	 * Sets the layout.
+	 */
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main_tab);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        vibe = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE) ;
+		vibe = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE) ;
+
+		myHandler = new Handler(){
+			public void handleMessage(Message mst){
+				super.handleMessage(mst);
+				setAlive(mst.what);
+			}
+		};
+		new Thread(new MyTimedTask()).start();
 	}
 
-	
+	/**
+	 * Allows you to set the orientation of the screen from outside of the class
+	 * @param i
+	 */
+    public void setOrientation(int i){
+    		setRequestedOrientation(i);
+    }
+
+   /* @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        if(epgfragment!=null && epgfragment.isResumed()){
+            //do nothing here if we're showing the fragment
+        	setRequestedOrientation(Configuration.ORIENTATION_LANDSCAPE);
+        }else{
+            setRequestedOrientation(Configuration.ORIENTATION_PORTRAIT); // otherwise lock in portrait
+        }
+        super.onConfigurationChanged(newConfig);
+    }*/
+
 	/**
 	 * Vibrates the phone for 95 milliseconds.
 	 */
 	public void vibrate(){
 		vibe.vibrate(95);
 	}
+	
 	/**
 	 * vibrates the phone a number a number of milliseconds.
 	 * @param ms number of milliseconds the the phone vibrates
@@ -79,62 +116,62 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	public void vibrate(int ms){
 		vibe.vibrate(ms);
 	}
-	
+
 	/**
 	 * Restores the navigation state.
 	 */
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
-        if (savedInstanceState.containsKey(STATE_SELECTED_NAVIGATION_ITEM)) {
+        if (savedInstanceState.containsKey(STATE_SELECTED_NAVIGATION_ITEM) && (getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)) {
         	getSupportActionBar().setSelectedNavigationItem(
                     savedInstanceState.getInt(STATE_SELECTED_NAVIGATION_ITEM));
         }
     }
 
-    /**
-     * Saves the navigation state.
-     */
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putInt(STATE_SELECTED_NAVIGATION_ITEM,
-        		getSupportActionBar().getSelectedNavigationIndex());
-    }
-    
-    /**
-     * Creates and shows the Action bar, including the navigations tabs and the
-     * drop-down list.
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-    	actionBar = getSupportActionBar();
-    	
-    	/*Calls the private function to create return the view containing the 
+	/**
+	 * Saves the navigation state.
+	 */
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		outState.putInt(STATE_SELECTED_NAVIGATION_ITEM,
+				getSupportActionBar().getSelectedNavigationIndex());
+	}
+
+	/**
+	 * Creates and shows the Action bar, including the navigations tabs and the
+	 * drop-down list.
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		actionBar = getSupportActionBar();
+
+		/*Calls the private function to create return the view containing the 
     	spinner*/
-    	View dropDownView = createDotAndDropDown();
-    	
-    	actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        actionBar.setCustomView(dropDownView);
-        
-        
-        actionBar.setLogo(R.drawable.green_button);
-        actionBar.setDisplayUseLogoEnabled(true);        
-        actionBar.setDisplayShowHomeEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(false);
-        
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        
-        addTheNavigationTabs();
-        
-        return true;
-    }
+		View dropDownView = createDotAndDropDown();
+
+		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+		actionBar.setCustomView(dropDownView);
+
+
+		actionBar.setLogo(R.drawable.green_button2);
+		actionBar.setDisplayUseLogoEnabled(true);        
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(false);
+
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+		addTheNavigationTabs();
+
+		return true;
+	}
 
 
 
 
 	/**
-     * Used to bind events to the physical volume buttons of the device.
-     * In this case, it increase and decreases the volume of the STB.
-     */
+	 * Used to bind events to the physical volume buttons of the device.
+	 * In this case, it increase and decreases the volume of the STB.
+	 */
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
 		int action = event.getAction();
@@ -157,7 +194,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 		}
 	}
 
-
+	
 	/**
 	 * Sets and displays the fragment that the user selects from the tabs.
 	 * If new fragments are implemented they should be set here.
@@ -165,41 +202,61 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	@Override
 	public void onTabSelected(Tab tab,
 			android.support.v4.app.FragmentTransaction ft) {
-  	Fragment fragment = null;
+		Fragment fragment = null;
+    	boolean isNew = false;
     	
     	if(tab.equals(tabRC)){
     		Log.i("FragmentLog", "RC");
-    		fragment = new RemoteControlFragment(this);
+    		if(rcfragment == null){
+    			rcfragment = new RemoteControlFragment(this);
+    			isNew = true;
+    		}
+    		fragment = rcfragment;
     		
     	}
     	else if(tab.equals(tabEPG)){
     		Log.i("FragmentLog", "EPG");
-    		fragment = new EPGFragment(this);
+    		if(epgfragment == null){
+    			epgfragment = new EPGFragment(this);
+    			isNew = true;
+    		}
+    		fragment = epgfragment;
     	}
     	else if(tab.equals(tabWeb)){
     		Log.i("FragmentLog", "WebTV");
-    		fragment = new WebTVFragment(this);
+    		if(webfragment == null){
+    			webfragment = new WebTVFragment(this);
+    			isNew = true;
+    		}
+    		fragment = webfragment;
     		
     	}
 		else if(tab.equals(tabFav)){
 			Log.i("FragmentLog", "Fav");
-			//WARNING! : provisional function 
-			fragment = new ChannelInformationFragment(this);
-			
-		}
-		else if(tab.equals(tabMain)){
+			//WARNING! : provisional function
+			if(chinfragment == null){
+				chinfragment = new ChannelInformationFragment(this);
+				isNew = true;
+    		}
+			fragment = chinfragment;
+					
+		}else if(tab.equals(tabMain)){
 			Log.i("FragmentLog", "Main");
-			fragment = new MainViewFragment(this);
+			if(mainfragment == null){
+				mainfragment = new MainViewFragment(this);
+				isNew = true;
+			}
+			fragment = mainfragment;
 		}
+
     	
-        
-        Bundle args = new Bundle();
-        
-        fragment.setArguments(args);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, fragment)
-                .commit();
-		
+		if(fragment != null)
+			if(isNew)
+				getSupportFragmentManager().beginTransaction().add(R.id.container, fragment).commit();
+			else
+				getSupportFragmentManager().beginTransaction().show(fragment).commit();
+    	
+
 	}
 
 
@@ -210,7 +267,38 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	public void onTabUnselected(Tab tab,
 			android.support.v4.app.FragmentTransaction ft) {
 
+		Fragment fragment = null;
+		if(tab.equals(tabRC)){
+    		Log.i("Detaching FragmentLog", "RC");
+    		fragment = rcfragment;
+    	}
+    	else if(tab.equals(tabEPG)){
+    		Log.i("Detaching FragmentLog", "EPG");
+    		fragment = epgfragment;
+    	}
+    	else if(tab.equals(tabWeb)){
+    		Log.i("Detaching FragmentLog", "WebTV");
+    		fragment = webfragment;
+    	}
+		else if(tab.equals(tabFav)){
+			Log.i("Detaching FragmentLog", "Fav");
+			//WARNING! : provisional function 
+			fragment = chinfragment;
+			
+		}
+		else if(tab.equals(tabMain)){
+			Log.i("Detaching FragmentLog", "Main");
+			fragment = mainfragment;
+		}
+    	
+		if (fragment != null) {
+	         //ft.detach(fragment);
+			
+	        getSupportFragmentManager().beginTransaction().hide(fragment).commit();
+	    }
+    	 
 		
+
 	}
 
 
@@ -221,77 +309,85 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	public void onTabReselected(Tab tab,
 			android.support.v4.app.FragmentTransaction ft) {
 
-		
+
 	}
-	
-    /**
-     * Adds all the navigation tabs to the action bar.
-     */
-    private void addTheNavigationTabs() {
-        // For each of the sections in the app, add a tab to the action bar.
-        tabRC = actionBar.newTab().setIcon(R.drawable.ic_dialog_dialer);
-        tabMain = actionBar.newTab().setIcon(R.drawable.ic_new_home);
-        tabEPG = actionBar.newTab().setIcon(R.drawable.collections_go_to_today);
-        tabFav = actionBar.newTab().setIcon(R.drawable.rating_favourite);
-        tabWeb = actionBar.newTab().setIcon(R.drawable.location_web_site);
-        
-        // Add the tabs to the action bar
-        actionBar.addTab(tabMain.setTabListener(this));
-        actionBar.addTab(tabRC.setTabListener(this));
-        actionBar.addTab(tabEPG.setTabListener(this));
-        actionBar.addTab(tabWeb.setTabListener(this));
-        actionBar.addTab(tabFav.setTabListener(this));
-		
+
+	/**
+	 * Adds all the navigation tabs to the action bar.
+	 */
+	private void addTheNavigationTabs() {
+		// For each of the sections in the app, add a tab to the action bar.
+		tabRC = actionBar.newTab().setIcon(R.drawable.ic_dialog_dialer);
+		tabMain = actionBar.newTab().setIcon(R.drawable.ic_new_home);
+		tabEPG = actionBar.newTab().setIcon(R.drawable.collections_go_to_today);
+		tabFav = actionBar.newTab().setIcon(R.drawable.rating_favourite);
+		tabWeb = actionBar.newTab().setIcon(R.drawable.location_web_site);
+
+		// Add the tabs to the action bar
+		actionBar.addTab(tabMain.setTabListener(this));
+		actionBar.addTab(tabRC.setTabListener(this));
+		actionBar.addTab(tabEPG.setTabListener(this));
+		actionBar.addTab(tabWeb.setTabListener(this));
+		actionBar.addTab(tabFav.setTabListener(this));
+
 	}
 
 
 	/**
-     * Creates the spinner for the drop down menu.
-     * @return
-     */
-    private View createDotAndDropDown(){
-    	
-    	
-    	View myView = getLayoutInflater().inflate(
-    			R.layout.activity_main_tab_actionbar, null);
-    	mySpinner = (Spinner) myView.findViewById(R.id.action_bar_spinner);
+	 * Creates the spinner for the drop down menu.
+	 * @return
+	 */
+	private View createDotAndDropDown(){
 
-    	/*gets all the boxes from the STB container. And saves the index of the
+		View myView = getLayoutInflater().inflate(
+				R.layout.activity_main_tab_actionbar, null);
+		mySpinner = (Spinner) myView.findViewById(R.id.action_bar_spinner);
+
+		/*gets all the boxes from the STB container. And saves the index of the
     	 selected one so that the spinners defoult value is correct.*/
-    	Iterator<STB> iterator = STBContainer.instance().iterator();
-    	STBNames = new ArrayList<String>();
-    	int temp = 0;
-    	int selected = 0;
-    	STB stb;
-    	while(iterator.hasNext()){ 		
-    		if(STBContainer.instance().getActiveSTB().equals(stb = iterator.next())){
-    			selected = temp;
-    		}
-    		STBNames.add(stb.getBoxName());
-    		temp++;
-    	}
-    	
-    	//Adds the Edit button to the Spinner
-    	STBNames.add("Edit..");
-    	
-    	ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-    			android.R.layout.simple_spinner_item, STBNames);
+		Iterator<STB> iterator = STBContainer.instance().iterator();
+		STBNames = new ArrayList<String>();
+		int temp = 0;
+		int selected = 0;
+		STB stb;
+		
+		while(iterator.hasNext()){ 		
+			if(STBContainer.instance().getActiveSTB().equals(stb = iterator.next())){
+				selected = temp;
+			}
+			STBNames.add(stb.getBoxName());
+			temp++;
+		}
 
-    	// Specify the layout to use when the list of choices appears
-    	adapter.setDropDownViewResource(android.R.layout.
-    			simple_spinner_dropdown_item);
-    	// Apply the adapter to the spinner, also aplies a listner.
+		//Adds the Edit button to the Spinner
+		STBNames.add("Edit...");
+
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_spinner_item, STBNames);
+
+		// Specify the layout to use when the list of choices appears
+		adapter.setDropDownViewResource(android.R.layout.
+				simple_spinner_dropdown_item);
+		// Apply the adapter to the spinner, also aplies a listner.
 		mySpinner.setAdapter(adapter);
 		mySpinner.setSelection(selected);
+
 		mySpinner.setOnItemSelectedListener(new MyOnItemSelectedListener());
-		
+
 		return myView;				
 	}
-	
 
-    
-    
-    
+	public void setAlive(int isAlive){
+
+		if(actionBar == null) //TODO need to fixed, added so it won't crash due to other changes //Emma
+			return;
+		if(isAlive==1){
+			actionBar.setLogo(R.drawable.green_button2);
+		}else{
+			actionBar.setLogo(R.drawable.red_dot);
+		}
+	}
+
 	/**
 	 * Private class that implements OnItemSelectedListener. The reason for this
 	 * is that i got some sort of conflict when i tried to implement this 
@@ -304,7 +400,6 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	 */
 	private class MyOnItemSelectedListener implements OnItemSelectedListener{
 
-		
 		/**
 		 * Sets the active STB in the STB container based on what the user 
 		 * selects in the drop down menu.
@@ -314,25 +409,67 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 				long arg3) {
 			//Checks if the chosen item is the edit one.
 			if(arg2==arg0.getAdapter().getCount()-1){
-                Intent mainIntent = new Intent(MainTabActivity.this,
-                		SelectSTBActivity.class); 
-                MainTabActivity.this.startActivity(mainIntent);
+				Intent mainIntent = new Intent(MainTabActivity.this,
+						SelectSTBActivity.class); 
+				MainTabActivity.this.startActivity(mainIntent);
 			}
 			else{
 				STBContainer.instance().setActiveSTB(STBContainer.instance().getSTBs()[arg2]);
 			}
 		}
-		
+
 		/**
 		 * Autogenerated function. Does nothing right now.
 		 */
 		@Override
 		public void onNothingSelected(AdapterView<?> arg0) {
 
-			
+
 		}
 
-	
+
+	}
+	private class MyTimedTask implements Runnable{
+
+		int timeout= 500;
+		int timer = 100;
+		boolean boxactive = false;
+		boolean newBoxactive = false;
+
+
+		@Override
+		public void run() {
+			while(true){
+				try {
+					newBoxactive = Inet4Address.getByName(STBContainer.instance().getActiveSTB().getIP()).isReachable(timeout);
+					
+					if(!newBoxactive)
+						newBoxactive = Inet4Address.getByName(STBContainer.instance().getActiveSTB().getIP()).isReachable(timeout);
+					
+				} catch (UnknownHostException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				if(boxactive == newBoxactive){
+
+				}
+				else if(newBoxactive){		
+					myHandler.sendEmptyMessage(1);
+					boxactive = newBoxactive;
+				}
+				else{
+					myHandler.sendEmptyMessage(0);
+					boxactive = newBoxactive;
+				}
+				try {
+					Thread.sleep(timer);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+
+		}
 	}
 
 
