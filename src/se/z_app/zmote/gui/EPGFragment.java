@@ -25,6 +25,7 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.DragEvent;
+import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -64,10 +65,12 @@ public class EPGFragment extends Fragment{
 	private int start_hour = 24;
 	private int start_minutes = 0;
 
-	private OnTouchListener toutch;
+	
 	private int screen_width = 0;
-
-	 private int currentX = -1, currentY = -1;
+	
+	private OnTouchListener toutch;
+	private GestureDetector gd;
+	private int currentX = -1, currentY = -1;
 
 	private OrientationListener orientationListener = null;
 	private int changes = 0;
@@ -81,7 +84,8 @@ public class EPGFragment extends Fragment{
     
 	
 
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
@@ -100,10 +104,55 @@ public class EPGFragment extends Fragment{
 
 		
 		
-	
+		
+		
+		gd = new GestureDetector(main, new GestureDetector.OnGestureListener() {
+			
+			@Override
+			public boolean onSingleTapUp(MotionEvent e) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public void onShowPress(MotionEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
+					float distanceY) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public void onLongPress(MotionEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+					float velocityY) {
+				
+				view.fling((int)-velocityY);
+	            hz_scroll.fling((int)-velocityX);
+	            
+				return true;
+			}
+			
+			@Override
+			public boolean onDown(MotionEvent e) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		});
 			
 		//2D Scrolling, TODO: Fling needs to be implemented
 		toutch = new View.OnTouchListener() {
+			long startTime = System.currentTimeMillis();
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				
@@ -114,6 +163,7 @@ public class EPGFragment extends Fragment{
 			        case MotionEvent.ACTION_DOWN: {
 			            currentX = (int) event.getRawX();
 			            currentY = (int) event.getRawY();
+			            startTime = System.currentTimeMillis();
 			            break;
 			        }
 	
@@ -121,6 +171,7 @@ public class EPGFragment extends Fragment{
 			            if(currentX == -1 || currentY == -1){
 			            	currentX = (int) event.getRawX();
 				            currentY = (int) event.getRawY();
+				            startTime = System.currentTimeMillis();
 			            }
 			        	
 			        	int x2 = (int) event.getRawX();
@@ -134,6 +185,9 @@ public class EPGFragment extends Fragment{
 			        case MotionEvent.ACTION_UP: {
 			        	currentX = -1;
 			            currentY = -1;
+			        	long time = System.currentTimeMillis()-startTime;
+			        	if(time < 300)
+			        		return gd.onTouchEvent(event);
 			        	break;
 			            
 			        }
@@ -157,15 +211,16 @@ public class EPGFragment extends Fragment{
 			@Override
 			public void onOrientationChanged(int orientation) {
 				// TODO Auto-generated method stub
+				
 				if(orientation != ORIENTATION_UNKNOWN && changes != 0 && epg_loaded && main.SDK_INT > 10){
 					
 					if(orientation_var == 1){
-						Toast.makeText(view.getContext(), "changeeeddd", Toast.LENGTH_SHORT).show();
-						Intent intent = new Intent(view.getContext(), EpgHorizontalActivity.class);
-						EPGFragment.this.startActivity(intent);
-						orientation_var = 0;
-						changes = 0;
-						orientationListener.disable();
+//						Toast.makeText(view.getContext(), "changeeeddd", Toast.LENGTH_SHORT).show();
+//						Intent intent = new Intent(view.getContext(), EpgHorizontalActivity.class);
+//						EPGFragment.this.startActivity(intent);
+//						orientation_var = 0;
+//						changes = 0;
+//						orientationListener.disable();
 					}else if(orientation_var == 0){
 						// Go back to the fragment in some way
 						Toast.makeText(view.getContext(), "Going back", Toast.LENGTH_SHORT).show();
