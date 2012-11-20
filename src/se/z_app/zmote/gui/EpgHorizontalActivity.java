@@ -12,9 +12,11 @@ import se.z_app.zmote.epg.EPGQuery;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.OrientationListener;
@@ -44,6 +46,7 @@ public class EpgHorizontalActivity extends Activity {
 	private int screen_width = 0;
 	private boolean epg_loaded = false;
 	private OrientationListener orientationListener = null;
+	private int changes = 0;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,23 +61,25 @@ public class EpgHorizontalActivity extends Activity {
 		// Get the size of the screen in pixels
 		screen_width = getResources().getDisplayMetrics().widthPixels;
 		
-		/*orientationListener = new OrientationListener(view.getContext()) {
-			
+		orientationListener = new OrientationListener(view.getContext()) {
 			@Override
 			public void onOrientationChanged(int orientation) {
 				// TODO Auto-generated method stub
-				if(orientation != ORIENTATION_UNKNOWN && epg_loaded && main.SDK_INT > 10){
-					try {
-						this.finalize();
-					} catch (Throwable e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					//finish();
+				int ori_tmp = getResources().getConfiguration().orientation;
+				Log.i("Orientation:"," "+orientation);
+				System.out.println("Orientation:"+orientation);
+				if(orientation != ORIENTATION_UNKNOWN
+						&& ori_tmp == Configuration.ORIENTATION_LANDSCAPE
+						&& changes > 0 
+						&& epg_loaded 
+						&& main.SDK_INT > 10){
+					changes = -1;
+					orientationListener.disable();
+					finish();
 				}
+				changes++;
 			}
 		};
-		orientationListener.enable();*/
 		
 		new AsyncDataLoader().execute();
     }

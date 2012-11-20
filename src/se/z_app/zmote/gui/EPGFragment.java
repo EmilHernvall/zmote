@@ -10,12 +10,14 @@ import se.z_app.stb.Program;
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.zmote.epg.EPGQuery;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -157,22 +159,50 @@ public class EPGFragment extends Fragment{
 			public void onOrientationChanged(int orientation) {
 				// TODO Auto-generated method stub
 				
-				if(orientation != ORIENTATION_UNKNOWN && changes != 0 && epg_loaded && main.SDK_INT > 10){
-					
-					if(orientation_var == 1){
-						Toast.makeText(view.getContext(), "changeeeddd", Toast.LENGTH_SHORT).show();
-						Intent intent = new Intent(view.getContext(), EpgHorizontalActivity.class);
-						EPGFragment.this.startActivity(intent);
-						orientation_var = 0;
-						changes = -1;
-						orientationListener.disable();
-					}else if(orientation_var == 0){
-						// Go back to the fragment in some way
-						Toast.makeText(view.getContext(), "Going back", Toast.LENGTH_SHORT).show();
+				// Just some print of the orientation variable
+				Log.i("Orientation:"," "+orientation);
+				if(orientation == Configuration.ORIENTATION_LANDSCAPE) Log.i("Position: "," landscape");
+				if(orientation == Configuration.ORIENTATION_PORTRAIT) Log.i("Position: "," portrait");
+				if(orientation == Configuration.ORIENTATION_UNDEFINED) Log.i("Position: "," undefined");
+				if(orientation == Configuration.ORIENTATION_SQUARE)	Log.i("Position: "," square");
+				
+				// If we have 3.0 or later
+				if( main.SDK_INT > 10){
+					if(orientation != ORIENTATION_UNKNOWN && changes != 0 && epg_loaded){
 						
+						if(orientation_var == 1){
+							Toast.makeText(view.getContext(), "Changing...", Toast.LENGTH_SHORT).show();
+							Intent intent = new Intent(view.getContext(), EpgHorizontalActivity.class);
+							EPGFragment.this.startActivity(intent);
+							orientation_var = 0;
+							changes = -1;
+							orientationListener.disable();
+						}else if(orientation_var == 0){
+							// Go back to the fragment in some way
+							Toast.makeText(view.getContext(), "Push back button", Toast.LENGTH_SHORT).show();
+							
+						}
+					}
+					changes++;
+				}else{	// If we have 2.3.6 or earlier
+					
+					if( (orientation < 10 || orientation > 270) && epg_loaded){
+						
+						if(orientation > 270) changes++;
+						if(orientation > 270 && changes > 5){
+							//Toast.makeText(view.getContext(), "changeeeddd", Toast.LENGTH_SHORT).show();
+							Intent intent = new Intent(view.getContext(), EpgHorizontalActivity.class);
+							EPGFragment.this.startActivity(intent);
+							orientation_var = 0;
+							changes = -1;
+							orientationListener.disable();
+						}else if(orientation < 9){
+							// Go back to the fragment in some way
+							//Toast.makeText(view.getContext(), "Going back", Toast.LENGTH_SHORT).show();
+							changes = -1;
+						}
 					}
 				}
-				changes++;
 			}
 		};
 		//orientationListener.enable();
