@@ -77,18 +77,19 @@ public class WebTVFragment extends Fragment {
 				web_service = spinner.getSelectedItemPosition();
 				ImageView result_icon = (ImageView) view_temp.findViewById(R.id.webtv_icon_result);
 				result_icon.setImageBitmap(servicesIcons[web_service]);
-				
+
 				LinearLayout linLay = (LinearLayout) view_temp.findViewById(R.id.searchBar);
 				linLay.setVisibility(View.GONE);
 				LinearLayout linLayResult = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
 				linLayResult.setVisibility(View.VISIBLE);
 		//		LinearLayout noSearch = (LinearLayout) view_temp.findViewById(R.id.noSearch);
-		//		noSearch.setVisibility(View.GONE);
+				//		noSearch.setVisibility(View.GONE);
 				//TODO fix so work
 				
 				//				LinearLayout linLayTopList = (LinearLayout) view_temp.findViewById(R.id.top_list);
 				//				linLayTopList.setVisibility(View.GONE);
 			}
+			
 		});
 
 		ImageButton search_button_back = (ImageButton)view_temp.findViewById(R.id.search_button_webtv_result);
@@ -130,13 +131,16 @@ public class WebTVFragment extends Fragment {
 		pb = (ProgressBar)view_temp.findViewById(R.id.progressLodingEpgChannelInformation);
 		EditText search_box = (EditText)view_temp.findViewById(R.id.search_box_webtv);
 		search_for_this = search_box.getText().toString();
+		//String search_for_this_temp = search_for_this; 
 		TextView resultText = (TextView) view_temp.findViewById(R.id.result_webtv);
 		resultText.setText("Result for: '"+ search_for_this+"'");
 		// Here we should call a function like this
+		//TODO If no input in search field, no search shall be done //Emma
 		
-		if(search_for_this != null)
+		if(search_for_this != null){
 			new AsyncWebSearch().execute();
-		
+		}
+		 
 	}
 
 	/**
