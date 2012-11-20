@@ -135,10 +135,6 @@ public class EpgHorizontalActivity extends Activity {
     	line.setLayoutParams(params);
     	//line.invalidate();	// Not sure if needed
     	
-    	// Next lines are the fast way to focus on the current time in the EPG
-    	line.setFocusableInTouchMode(true);		// Get the screen to the current time schedule
-    	line.requestFocus();
-    	
     	// Now label
     	RelativeLayout.LayoutParams text_params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
     	text_params.setMargins(distance-15, 0, 0, 0);
@@ -149,6 +145,9 @@ public class EpgHorizontalActivity extends Activity {
     	now_text.setBackgroundColor(0xBB000000);
     	//now_text.invalidate();	//Not sure if needed
 
+    	// Next lines are the fast way to focus on the current time in the EPG
+    	now_text.setFocusableInTouchMode(true);		// Get the screen to the current time schedule
+    	now_text.requestFocus();
     }
     /**
      * Gets the time of the earlier program of the epg

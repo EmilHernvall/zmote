@@ -164,7 +164,7 @@ public class EPGFragment extends Fragment{
 						Intent intent = new Intent(view.getContext(), EpgHorizontalActivity.class);
 						EPGFragment.this.startActivity(intent);
 						orientation_var = 0;
-						changes = 0;
+						changes = -1;
 						orientationListener.disable();
 					}else if(orientation_var == 0){
 						// Go back to the fragment in some way
@@ -175,7 +175,7 @@ public class EPGFragment extends Fragment{
 				changes++;
 			}
 		};
-		orientationListener.enable();
+		//orientationListener.enable();
 
 		new AsyncDataLoader().execute();
 
@@ -257,10 +257,6 @@ public class EPGFragment extends Fragment{
     	line.setLayoutParams(params);
     	//line.invalidate();	// Not sure if needed
     	
-    	// Next lines are the fast way to focus on the current time in the EPG
-    	line.setFocusableInTouchMode(true);		// Get the screen to the current time schedule
-    	line.requestFocus();
-    	
     	// Now label
     	RelativeLayout.LayoutParams text_params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
     	text_params.setMargins(distance-15, 0, 0, 0);
@@ -270,6 +266,10 @@ public class EPGFragment extends Fragment{
     	now_text.setTypeface(null, Typeface.BOLD);
     	now_text.setBackgroundColor(0xBB000000);
     	//now_text.invalidate();	//Not sure if needed
+    	
+    	// Next lines are the fast way to focus on the current time in the EPG
+    	now_text.setFocusableInTouchMode(true);		// Get the screen to the current time schedule
+    	now_text.requestFocus();
 
     }
     /**
