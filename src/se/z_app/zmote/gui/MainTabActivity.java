@@ -60,7 +60,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	private WebTVFragment webfragment;// = new WebTVFragment(this);
 	private MainViewFragment mainfragment;// = new MainViewFragment(this);
     private ChannelInformationFragment chinfragment;// = new ChannelInformationFragment(this);
-
+    public int SDK_INT = android.os.Build.VERSION.SDK_INT;
 	/**
 	 * Standard create function for the fragment activity.
 	 * Sets the layout.
@@ -230,7 +230,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 					
 		}else if(tab.equals(tabMain)){
 			Log.i("FragmentLog", "Main");
-			if(mainfragment == null){
+			if(mainfragment == null && SDK_INT > 10){
 				mainfragment = new MainViewFragment(this);
 				isNew = true;
 			}

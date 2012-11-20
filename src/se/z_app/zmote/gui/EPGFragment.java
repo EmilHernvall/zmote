@@ -2,29 +2,22 @@ package se.z_app.zmote.gui;
 
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-
 import se.z_app.stb.Channel;
 import se.z_app.stb.EPG;
 import se.z_app.stb.Program;
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.zmote.epg.EPGQuery;
-
-
-import android.app.Activity;
 import android.content.pm.ActivityInfo;
-import android.gesture.GestureOverlayView;
-
+import android.content.res.Configuration;
 import android.content.Intent;
-
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.DragEvent;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -63,15 +56,14 @@ public class EPGFragment extends Fragment{
 	private Program program_temp;
 	private int start_hour = 24;
 	private int start_minutes = 0;
-
-	private OnTouchListener toutch;
 	private int screen_width = 0;
-
-	 private int currentX = -1, currentY = -1;
+	
+	private OnTouchListener toutch;
+	private int currentX = -1, currentY = -1;
 
 	private OrientationListener orientationListener = null;
 	private int changes = 0;
-	private int orientation_var = 0;	// Horiz: 0 , Vertical: 1
+	private int orientation_var = 1;	// Horiz: 0 , Vertical: 1
 	private boolean epg_loaded = false;
 
 
@@ -80,17 +72,13 @@ public class EPGFragment extends Fragment{
 	}
     
 	
-
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
     	
-
-    	main.setOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
-    	
 		view = (ScrollView) inflater.inflate(R.layout.fragment_epg, null);
-		
 
 		i_layout = (LinearLayout)view.findViewById(R.id.channel_icons);
 		i_layout.setBackgroundColor(0x66000000);
@@ -98,12 +86,13 @@ public class EPGFragment extends Fragment{
 		hz_scroll = (HorizontalScrollView)view.findViewById(R.id.hz_scroll);
 		
 
-		
-		
-	
 			
 		//2D Scrolling, TODO: Fling needs to be implemented
 		toutch = new View.OnTouchListener() {
+			long startTime = System.currentTimeMillis();
+
+			int firstX = 0;
+			int firstY = 0;
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				
@@ -111,20 +100,20 @@ public class EPGFragment extends Fragment{
 					
 				
 					switch (event.getAction()) {
-			        case MotionEvent.ACTION_DOWN: {
-			            currentX = (int) event.getRawX();
-			            currentY = (int) event.getRawY();
-			            break;
-			        }
 	
 			        case MotionEvent.ACTION_MOVE: {
 			            if(currentX == -1 || currentY == -1){
 			            	currentX = (int) event.getRawX();
 				            currentY = (int) event.getRawY();
+				            firstX = currentX;
+				            firstY = currentY;
+				            startTime = System.currentTimeMillis();
 			            }
 			        	
 			        	int x2 = (int) event.getRawX();
 			            int y2 = (int) event.getRawY();
+			            
+			            
 			            view.scrollBy(currentX - x2 , currentY - y2);
 			            hz_scroll.scrollBy(currentX - x2 , currentY - y2);
 			            currentX = x2;
@@ -132,8 +121,20 @@ public class EPGFragment extends Fragment{
 			            break;
 			        }   
 			        case MotionEvent.ACTION_UP: {
+			        	
+			        	long time = System.currentTimeMillis()-startTime;
+			        	int vx = 40*(int)((currentX - firstX)/(time/20));
+						int vy = 40*(int)((currentY - firstY)/(time/20));
+						System.out.println("vx: " + vx);
+						System.out.println("vy: " + vy);
 			        	currentX = -1;
 			            currentY = -1;
+			        	
+			        	if(time < 300){
+			        		hz_scroll.fling((int)-vx);
+							view.fling((int)-vy);
+			        	}
+			        		
 			        	break;
 			            
 			        }
@@ -151,52 +152,90 @@ public class EPGFragment extends Fragment{
 		// Get the size of the screen in pixels
 		screen_width = getResources().getDisplayMetrics().widthPixels;
 		
-
+		orientation_var = 1;
         orientationListener = new OrientationListener(view.getContext()) {
 			
 			@Override
 			public void onOrientationChanged(int orientation) {
 				// TODO Auto-generated method stub
-				if(orientation != ORIENTATION_UNKNOWN && changes != 0 && epg_loaded){
-					Toast.makeText(view.getContext(), "changeeeddd", Toast.LENGTH_SHORT).show();
-					if(orientation_var == 1){
-						Intent intent = new Intent(view.getContext(), EpgHorizontalActivity.class);
-						EPGFragment.this.startActivity(intent);
-						orientation_var = 0;
-					}else if(orientation_var == 0){
-						// Go back to the fragment in some way
-						Toast.makeText(view.getContext(), "Going back", Toast.LENGTH_SHORT).show();
+				
+				// Just some print of the orientation variable
+				Log.i("Orientation:"," "+orientation);
+				if(orientation == Configuration.ORIENTATION_LANDSCAPE) Log.i("Position: "," landscape");
+				if(orientation == Configuration.ORIENTATION_PORTRAIT) Log.i("Position: "," portrait");
+				if(orientation == Configuration.ORIENTATION_UNDEFINED) Log.i("Position: "," undefined");
+				if(orientation == Configuration.ORIENTATION_SQUARE)	Log.i("Position: "," square");
+				
+				// If we have 3.0 or later
+				if( main.SDK_INT > 10){
+					if(orientation != ORIENTATION_UNKNOWN && changes != 0 && epg_loaded){
+						
+						if(orientation_var == 1){
+							Toast.makeText(view.getContext(), "Changing...", Toast.LENGTH_SHORT).show();
+							Intent intent = new Intent(view.getContext(), EpgHorizontalActivity.class);
+							EPGFragment.this.startActivity(intent);
+							orientation_var = 0;
+							changes = -1;
+							orientationListener.disable();
+						}else if(orientation_var == 0){
+							// Go back to the fragment in some way
+							Toast.makeText(view.getContext(), "Push back button", Toast.LENGTH_SHORT).show();
+							
+						}
+					}
+					changes++;
+				}else{	// If we have 2.3.6 or earlier
+					
+					if( (orientation < 10 || orientation > 270) && epg_loaded){
+						
+						if(orientation > 270) changes++;
+						if(orientation > 270 && changes > 5){
+							//Toast.makeText(view.getContext(), "changeeeddd", Toast.LENGTH_SHORT).show();
+							Intent intent = new Intent(view.getContext(), EpgHorizontalActivity.class);
+							EPGFragment.this.startActivity(intent);
+							orientation_var = 0;
+							changes = -1;
+							orientationListener.disable();
+						}else if(orientation < 9){
+							// Go back to the fragment in some way
+							//Toast.makeText(view.getContext(), "Going back", Toast.LENGTH_SHORT).show();
+							changes = -1;
+						}
 					}
 				}
-				changes++;
 			}
 		};
-		orientationListener.enable();
+		//orientationListener.enable();
 
-		
 		new AsyncDataLoader().execute();
 
-		
-
-		
-		
 		return view;
 	}
 
     @Override
     public void onResume() {
-    	
-    	//getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+    	orientation_var = 1;
+    	orientationListener.enable();
     	super.onResume();
     }
     
     @Override
     public void onPause() {
-        //getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // set the activity back to //whatever it needs to be when going back.
+    	orientationListener.disable();
         super.onPause();
     }
 
-
+    @Override
+    public void onDestroy(){
+    	orientationListener.disable();
+    	super.onDestroy();
+    }
+    
+    @Override
+    public void onDetach(){
+    	orientationListener.disable();
+    	super.onDetach();
+    }
     
     /**
      * Sets the timeBar in 30min intervals starting from the hour passed by "start"
@@ -248,10 +287,6 @@ public class EPGFragment extends Fragment{
     	line.setLayoutParams(params);
     	//line.invalidate();	// Not sure if needed
     	
-    	// Next lines are the fast way to focus on the current time in the EPG
-    	line.setFocusableInTouchMode(true);		// Get the screen to the current time schedule
-    	line.requestFocus();
-    	
     	// Now label
     	RelativeLayout.LayoutParams text_params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
     	text_params.setMargins(distance-15, 0, 0, 0);
@@ -261,6 +296,10 @@ public class EPGFragment extends Fragment{
     	now_text.setTypeface(null, Typeface.BOLD);
     	now_text.setBackgroundColor(0xBB000000);
     	//now_text.invalidate();	//Not sure if needed
+    	
+    	// Next lines are the fast way to focus on the current time in the EPG
+    	now_text.setFocusableInTouchMode(true);		// Get the screen to the current time schedule
+    	now_text.requestFocus();
 
     }
     /**
@@ -380,10 +419,7 @@ public class EPGFragment extends Fragment{
 			params.setMargins(0, 0, 0, 0);
 			LinearLayout starting_space = new LinearLayout(view.getContext());
 			p_layout.addView(starting_space, params);
-			/*System.out.println(pg.getName()+" empieza:"+pg.getStart().getHours()+
-					":"+pg.getStart().getMinutes()+" y dura:"+pg.getDuration()/60+"min");
-			System.out.println("Diferencia con hora de comienzo:"+hours_of_difference+":"+minutes_of_difference);
-			*/
+
 		}
 		
 		length = pg.getDuration()*screen_width/3600;
@@ -451,8 +487,9 @@ public class EPGFragment extends Fragment{
 			return null;
 		int width = bm.getWidth();
 		int height = bm.getHeight();
-		float scaleWidth = ((float) newWidth) / width;
+		
 		float scaleHeight = ((float) newHeight) / height;
+		float scaleWidth =scaleHeight;// ((float) newWidth) / width;
 		
 		Matrix matrix = new Matrix();		// Create a matrix for the manipulation
 		matrix.postScale(scaleWidth, scaleHeight);	// Resize the bit map
