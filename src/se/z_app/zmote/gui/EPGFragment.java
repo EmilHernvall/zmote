@@ -25,6 +25,7 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.DragEvent;
+import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -64,10 +65,12 @@ public class EPGFragment extends Fragment{
 	private int start_hour = 24;
 	private int start_minutes = 0;
 
-	private OnTouchListener toutch;
+	
 	private int screen_width = 0;
+	
+	private OnTouchListener toutch;
 
-	 private int currentX = -1, currentY = -1;
+	private int currentX = -1, currentY = -1;
 
 	private OrientationListener orientationListener = null;
 	private int changes = 0;
@@ -81,7 +84,8 @@ public class EPGFragment extends Fragment{
     
 	
 
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
@@ -98,12 +102,13 @@ public class EPGFragment extends Fragment{
 		hz_scroll = (HorizontalScrollView)view.findViewById(R.id.hz_scroll);
 		
 
-		
-		
-	
 			
 		//2D Scrolling, TODO: Fling needs to be implemented
 		toutch = new View.OnTouchListener() {
+			long startTime = System.currentTimeMillis();
+
+			int firstX = 0;
+			int firstY = 0;
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				
@@ -111,20 +116,20 @@ public class EPGFragment extends Fragment{
 					
 				
 					switch (event.getAction()) {
-			        case MotionEvent.ACTION_DOWN: {
-			            currentX = (int) event.getRawX();
-			            currentY = (int) event.getRawY();
-			            break;
-			        }
 	
 			        case MotionEvent.ACTION_MOVE: {
 			            if(currentX == -1 || currentY == -1){
 			            	currentX = (int) event.getRawX();
 				            currentY = (int) event.getRawY();
+				            firstX = currentX;
+				            firstY = currentY;
+				            startTime = System.currentTimeMillis();
 			            }
 			        	
 			        	int x2 = (int) event.getRawX();
 			            int y2 = (int) event.getRawY();
+			            
+			            
 			            view.scrollBy(currentX - x2 , currentY - y2);
 			            hz_scroll.scrollBy(currentX - x2 , currentY - y2);
 			            currentX = x2;
@@ -132,8 +137,20 @@ public class EPGFragment extends Fragment{
 			            break;
 			        }   
 			        case MotionEvent.ACTION_UP: {
+			        	
+			        	long time = System.currentTimeMillis()-startTime;
+			        	int vx = 40*(int)((currentX - firstX)/(time/20));
+						int vy = 40*(int)((currentY - firstY)/(time/20));
+						System.out.println("vx: " + vx);
+						System.out.println("vy: " + vy);
 			        	currentX = -1;
 			            currentY = -1;
+			        	
+			        	if(time < 300){
+			        		hz_scroll.fling((int)-vx);
+							view.fling((int)-vy);
+			        	}
+			        		
 			        	break;
 			            
 			        }
@@ -157,6 +174,7 @@ public class EPGFragment extends Fragment{
 			@Override
 			public void onOrientationChanged(int orientation) {
 				// TODO Auto-generated method stub
+				
 				if(orientation != ORIENTATION_UNKNOWN && changes != 0 && epg_loaded && main.SDK_INT > 10){
 					
 					if(orientation_var == 1){
@@ -457,8 +475,9 @@ public class EPGFragment extends Fragment{
 			return null;
 		int width = bm.getWidth();
 		int height = bm.getHeight();
-		float scaleWidth = ((float) newWidth) / width;
+		
 		float scaleHeight = ((float) newHeight) / height;
+		float scaleWidth =scaleHeight;// ((float) newWidth) / width;
 		
 		Matrix matrix = new Matrix();		// Create a matrix for the manipulation
 		matrix.postScale(scaleWidth, scaleHeight);	// Resize the bit map
