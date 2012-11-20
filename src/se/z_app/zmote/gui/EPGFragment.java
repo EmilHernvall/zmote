@@ -69,7 +69,7 @@ public class EPGFragment extends Fragment{
 	private int screen_width = 0;
 	
 	private OnTouchListener toutch;
-	private GestureDetector gd;
+
 	private int currentX = -1, currentY = -1;
 
 	private OrientationListener orientationListener = null;
@@ -102,62 +102,13 @@ public class EPGFragment extends Fragment{
 		hz_scroll = (HorizontalScrollView)view.findViewById(R.id.hz_scroll);
 		
 
-		
-		
-		
-		
-		gd = new GestureDetector(main, new GestureDetector.OnGestureListener() {
-			
-			@Override
-			public boolean onSingleTapUp(MotionEvent e) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-			
-			@Override
-			public void onShowPress(MotionEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
-					float distanceY) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-			
-			@Override
-			public void onLongPress(MotionEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-					float velocityY) {
-				
-				if(Math.abs(velocityX) > Math.abs(velocityY)){
-					hz_scroll.fling((int)-velocityX);
-				}else{
-					view.fling((int)-velocityY);
-				}
-				
-	            
-	            
-				return true;
-			}
-			
-			@Override
-			public boolean onDown(MotionEvent e) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-		});
 			
 		//2D Scrolling, TODO: Fling needs to be implemented
 		toutch = new View.OnTouchListener() {
 			long startTime = System.currentTimeMillis();
+
+			int firstX = 0;
+			int firstY = 0;
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				
@@ -165,22 +116,20 @@ public class EPGFragment extends Fragment{
 					
 				
 					switch (event.getAction()) {
-			        case MotionEvent.ACTION_DOWN: {
-			            currentX = (int) event.getRawX();
-			            currentY = (int) event.getRawY();
-			            startTime = System.currentTimeMillis();
-			            break;
-			        }
 	
 			        case MotionEvent.ACTION_MOVE: {
 			            if(currentX == -1 || currentY == -1){
 			            	currentX = (int) event.getRawX();
 				            currentY = (int) event.getRawY();
+				            firstX = currentX;
+				            firstY = currentY;
 				            startTime = System.currentTimeMillis();
 			            }
 			        	
 			        	int x2 = (int) event.getRawX();
 			            int y2 = (int) event.getRawY();
+			            
+			            
 			            view.scrollBy(currentX - x2 , currentY - y2);
 			            hz_scroll.scrollBy(currentX - x2 , currentY - y2);
 			            currentX = x2;
@@ -188,11 +137,20 @@ public class EPGFragment extends Fragment{
 			            break;
 			        }   
 			        case MotionEvent.ACTION_UP: {
+			        	
+			        	long time = System.currentTimeMillis()-startTime;
+			        	int vx = 40*(int)((currentX - firstX)/(time/20));
+						int vy = 40*(int)((currentY - firstY)/(time/20));
+						System.out.println("vx: " + vx);
+						System.out.println("vy: " + vy);
 			        	currentX = -1;
 			            currentY = -1;
-			        	long time = System.currentTimeMillis()-startTime;
-			        	if(time < 300)
-			        		return gd.onTouchEvent(event);
+			        	
+			        	if(time < 300){
+			        		hz_scroll.fling((int)-vx);
+							view.fling((int)-vy);
+			        	}
+			        		
 			        	break;
 			            
 			        }
