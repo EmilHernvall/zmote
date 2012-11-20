@@ -178,12 +178,12 @@ public class EPGFragment extends Fragment{
 				if(orientation != ORIENTATION_UNKNOWN && changes != 0 && epg_loaded && main.SDK_INT > 10){
 					
 					if(orientation_var == 1){
-//						Toast.makeText(view.getContext(), "changeeeddd", Toast.LENGTH_SHORT).show();
-//						Intent intent = new Intent(view.getContext(), EpgHorizontalActivity.class);
-//						EPGFragment.this.startActivity(intent);
-//						orientation_var = 0;
-//						changes = 0;
-//						orientationListener.disable();
+						Toast.makeText(view.getContext(), "changeeeddd", Toast.LENGTH_SHORT).show();
+						Intent intent = new Intent(view.getContext(), EpgHorizontalActivity.class);
+						EPGFragment.this.startActivity(intent);
+						orientation_var = 0;
+						changes = 0;
+						orientationListener.disable();
 					}else if(orientation_var == 0){
 						// Go back to the fragment in some way
 						Toast.makeText(view.getContext(), "Going back", Toast.LENGTH_SHORT).show();
