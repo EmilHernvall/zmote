@@ -53,7 +53,7 @@ public class EPGFragment extends Fragment{
 	private int screen_width = 0;
 	private OrientationListener orientationListener = null;
 	private int changes = 0;
-	private int orientation_var = 0;	// Horiz: 0 , Vertical: 1
+	private int orientation_var = 1;	// Horiz: 0 , Vertical: 1
 	private boolean epg_loaded = false;
 
 	public EPGFragment(MainTabActivity main){
@@ -73,20 +73,25 @@ public class EPGFragment extends Fragment{
 		// Get the size of the screen in pixels
 		screen_width = getResources().getDisplayMetrics().widthPixels;
 		
+		orientation_var = 1;
         orientationListener = new OrientationListener(view.getContext()) {
 			
 			@Override
 			public void onOrientationChanged(int orientation) {
 				// TODO Auto-generated method stub
-				if(orientation != ORIENTATION_UNKNOWN && changes != 0 && epg_loaded){
-					Toast.makeText(view.getContext(), "changeeeddd", Toast.LENGTH_SHORT).show();
+				if(orientation != ORIENTATION_UNKNOWN && changes != 0 && epg_loaded && main.SDK_INT > 10){
+					
 					if(orientation_var == 1){
+						Toast.makeText(view.getContext(), "changeeeddd", Toast.LENGTH_SHORT).show();
 						Intent intent = new Intent(view.getContext(), EpgHorizontalActivity.class);
 						EPGFragment.this.startActivity(intent);
 						orientation_var = 0;
+						changes = 0;
+						orientationListener.disable();
 					}else if(orientation_var == 0){
 						// Go back to the fragment in some way
 						Toast.makeText(view.getContext(), "Going back", Toast.LENGTH_SHORT).show();
+						
 					}
 				}
 				changes++;
@@ -101,18 +106,28 @@ public class EPGFragment extends Fragment{
 
     @Override
     public void onResume() {
-    	
-    	//getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+    	orientation_var = 1;
+    	orientationListener.enable();
     	super.onResume();
     }
     
     @Override
     public void onPause() {
-        //getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // set the activity back to //whatever it needs to be when going back.
+    	orientationListener.disable();
         super.onPause();
     }
 
-
+    @Override
+    public void onDestroy(){
+    	orientationListener.disable();
+    	super.onDestroy();
+    }
+    
+    @Override
+    public void onDetach(){
+    	orientationListener.disable();
+    	super.onDetach();
+    }
     
     /**
      * Sets the timeBar in 30min intervals starting from the hour passed by "start"
