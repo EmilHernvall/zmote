@@ -2,30 +2,20 @@ package se.z_app.zmote.gui;
 
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-
 import se.z_app.stb.Channel;
 import se.z_app.stb.EPG;
 import se.z_app.stb.Program;
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.zmote.epg.EPGQuery;
-
-
-import android.app.Activity;
 import android.content.pm.ActivityInfo;
-import android.gesture.GestureOverlayView;
-
 import android.content.Intent;
-
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.DragEvent;
-import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -64,12 +54,9 @@ public class EPGFragment extends Fragment{
 	private Program program_temp;
 	private int start_hour = 24;
 	private int start_minutes = 0;
-
-	
 	private int screen_width = 0;
 	
 	private OnTouchListener toutch;
-
 	private int currentX = -1, currentY = -1;
 
 	private OrientationListener orientationListener = null;
@@ -83,18 +70,13 @@ public class EPGFragment extends Fragment{
 	}
     
 	
-
     @SuppressWarnings("deprecation")
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
     	
-
-    	main.setOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
-    	
 		view = (ScrollView) inflater.inflate(R.layout.fragment_epg, null);
-		
 
 		i_layout = (LinearLayout)view.findViewById(R.id.channel_icons);
 		i_layout.setBackgroundColor(0x66000000);
