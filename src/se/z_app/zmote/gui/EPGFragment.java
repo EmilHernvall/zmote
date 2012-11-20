@@ -137,8 +137,13 @@ public class EPGFragment extends Fragment{
 			public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
 					float velocityY) {
 				
-				view.fling((int)-velocityY);
-	            hz_scroll.fling((int)-velocityX);
+				if(Math.abs(velocityX) > Math.abs(velocityY)){
+					hz_scroll.fling((int)-velocityX);
+				}else{
+					view.fling((int)-velocityY);
+				}
+				
+	            
 	            
 				return true;
 			}
@@ -512,8 +517,9 @@ public class EPGFragment extends Fragment{
 			return null;
 		int width = bm.getWidth();
 		int height = bm.getHeight();
-		float scaleWidth = ((float) newWidth) / width;
+		
 		float scaleHeight = ((float) newHeight) / height;
+		float scaleWidth =scaleHeight;// ((float) newWidth) / width;
 		
 		Matrix matrix = new Matrix();		// Create a matrix for the manipulation
 		matrix.postScale(scaleWidth, scaleHeight);	// Resize the bit map
