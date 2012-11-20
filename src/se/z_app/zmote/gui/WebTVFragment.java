@@ -155,9 +155,9 @@ public class WebTVFragment extends Fragment {
 		LinearLayout.LayoutParams item_container_params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);
 	//	item_container_params.setMargins(4, 4, 4, 0);
 
-		LinearLayout.LayoutParams item_params = new LinearLayout.LayoutParams((int)(screenWidth*0.8),LayoutParams.MATCH_PARENT);
+		LinearLayout.LayoutParams item_params = new LinearLayout.LayoutParams((int)(screenWidth*0.85),LayoutParams.MATCH_PARENT);
 		LinearLayout.LayoutParams icon_params = new LinearLayout.LayoutParams(100,80);
-		LinearLayout.LayoutParams item_params2 = new LinearLayout.LayoutParams((int)(screenWidth*0.2),LayoutParams.MATCH_PARENT);
+		LinearLayout.LayoutParams item_params2 = new LinearLayout.LayoutParams((int)(screenWidth*0.15),LayoutParams.MATCH_PARENT);
 
 		for(WebTVItem x: res){
 
