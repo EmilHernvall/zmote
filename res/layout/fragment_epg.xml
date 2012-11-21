@@ -1,71 +1,99 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
-
-    <RelativeLayout
-        android:id="@+id/epg_content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbarAlwaysDrawVerticalTrack="true"
-        android:scrollbars="vertical" >
-            
-        <HorizontalScrollView
-		     	android:id="@+id/hz_scroll"
-				android:layout_width="fill_parent"
-				android:layout_height="fill_parent"
-				
-				android:fillViewport="true">
-              <RelativeLayout 
-	            android:id="@+id/hz_relative"
-	            android:layout_width="wrap_content"
-	            android:layout_height="match_parent"
-	            android:paddingLeft="80px" >
-		        <LinearLayout
-		            android:id="@+id/channel_programs"
-		            android:orientation="vertical" 
-		       		android:layout_width="wrap_content"
-						android:layout_height="wrap_content">
-		            
-		        </LinearLayout>        
-	       	
-		        <TextView 
-		            android:id="@+id/now_text"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:layout_marginTop="10dp"
-			         android:layout_marginLeft="40dp"
-		            android:text="NOW"
-		            android:textColor="#FF8000"
-		            android:visibility="gone"/>
-				  <LinearLayout
-			          android:id="@+id/now_line"
-			          android:layout_width="2dp"
-			          android:layout_height="400dp"
-			          android:layout_marginTop="30dp"
-			          android:layout_marginLeft="50dp"
-			          android:background="#FF8000"
-			          android:visibility="gone">
-			          
-			      </LinearLayout>
-	         </RelativeLayout>
-    	</HorizontalScrollView>
-
-      <LinearLayout
-			android:id="@+id/channel_icons"
-			android:orientation="vertical" 
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="30px">
-              
-      </LinearLayout>
-        
-      <ProgressBar
-           android:id="@+id/progressEPGView"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_centerVertical="true"
-           android:layout_centerHorizontal="true" />
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/epg_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
     
-    </RelativeLayout>
+	<ScrollView
+	    android:id="@+id/scroll_parent"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:paddingTop="20dp" >
+	
+	    <RelativeLayout
+	        android:id="@+id/epg_content"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:scrollbarAlwaysDrawVerticalTrack="true"
+	        android:scrollbars="vertical" >
+	            
+	        <HorizontalScrollView
+			     	android:id="@+id/hz_scroll"
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent"
+					
+					android:fillViewport="true">
+	              <RelativeLayout 
+		            android:id="@+id/hz_relative"
+		            android:layout_width="wrap_content"
+		            android:layout_height="match_parent"
+		            android:paddingLeft="80px" >
+			        <LinearLayout
+			            android:id="@+id/channel_programs"
+			            android:orientation="vertical" 
+			       		android:layout_width="wrap_content"
+							android:layout_height="wrap_content">
+			            
+			        </LinearLayout>        
+		       	
+					  <LinearLayout
+				          android:id="@+id/now_line"
+				          android:layout_width="2dp"
+				          android:layout_height="400dp"
+				          android:layout_marginLeft="50dp"
+				          android:background="#FF8000"
+				          android:visibility="gone">
+				          
+				      </LinearLayout>
+		         </RelativeLayout>
+	    	</HorizontalScrollView>
+	
+	      <LinearLayout
+				android:id="@+id/channel_icons"
+				android:orientation="vertical" 
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content" >
+	              
+	      </LinearLayout>
+	        
+	      <ProgressBar
+	           android:id="@+id/progressEPGView"
+	           android:layout_width="wrap_content"
+	           android:layout_height="wrap_content"
+	           android:layout_centerVertical="true"
+	           android:layout_centerHorizontal="true" />
+	    
+	    </RelativeLayout>
+	
+	</ScrollView>
 
-</ScrollView>
+    <HorizontalScrollView
+      android:id="@+id/hz_timeline_parent"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:fillViewport="true">
+	    <RelativeLayout 
+	        android:id="@+id/relative_parent_of_timeline"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:paddingLeft="80px" >
+	      
+	      <LinearLayout 
+	        android:id="@+id/timebar_hz_scroll"
+	        android:layout_width="wrap_content"
+	        android:layout_height="20dp">
+	        
+	      </LinearLayout>
+   	 	<TextView 
+         	android:id="@+id/now_text"
+	         android:layout_width="wrap_content"
+	         android:layout_height="wrap_content"
+	         android:layout_marginTop="10dp"
+	       	android:layout_marginLeft="40dp"
+	         android:text="NOW"
+	         android:textColor="#FF8000"
+	         android:visibility="gone"/>
+   	 	
+	    </RelativeLayout>
+    </HorizontalScrollView>
+
+</RelativeLayout>

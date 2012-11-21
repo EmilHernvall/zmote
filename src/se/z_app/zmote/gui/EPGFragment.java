@@ -9,7 +9,6 @@ import se.z_app.stb.EPG;
 import se.z_app.stb.Program;
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.zmote.epg.EPGQuery;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -43,12 +42,15 @@ import android.support.v4.app.Fragment;
 public class EPGFragment extends Fragment{
 	private Channel temp;
 	private EPG epg;
-	private ScrollView view;
+	private RelativeLayout view;
+	private ScrollView scroll_view;
 	private MainTabActivity main;
 	private LinearLayout i_layout;
 	private LinearLayout p_layout;
 	private LinearLayout vt_scroll;
 	private HorizontalScrollView hz_scroll;
+	private LinearLayout timebar_hz_scroll;
+	private HorizontalScrollView hz_scroll_time;
 	private int height_of_rows = 80;
 	private int number_of_channels = 0;
 	private int height=80;
@@ -78,12 +80,15 @@ public class EPGFragment extends Fragment{
 			Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
     	
-		view = (ScrollView) inflater.inflate(R.layout.fragment_epg, null);
+		view = (RelativeLayout) inflater.inflate(R.layout.fragment_epg, null);
 
+		scroll_view = (ScrollView)view.findViewById(R.id.scroll_parent);
 		i_layout = (LinearLayout)view.findViewById(R.id.channel_icons);
 		i_layout.setBackgroundColor(0x66000000);
 		vt_scroll = (LinearLayout)view.findViewById(R.id.channel_programs);
 		hz_scroll = (HorizontalScrollView)view.findViewById(R.id.hz_scroll);
+		hz_scroll_time = (HorizontalScrollView)view.findViewById(R.id.hz_timeline_parent);
+		timebar_hz_scroll = (LinearLayout)view.findViewById(R.id.timebar_hz_scroll);
 		
 
 			
@@ -114,8 +119,9 @@ public class EPGFragment extends Fragment{
 			            int y2 = (int) event.getRawY();
 			            
 			            
-			            view.scrollBy(currentX - x2 , currentY - y2);
+			            scroll_view.scrollBy(currentX - x2 , currentY - y2);
 			            hz_scroll.scrollBy(currentX - x2 , currentY - y2);
+			            hz_scroll_time.scrollBy(currentX - x2, 0);	// Synchronization with timebar
 			            currentX = x2;
 			            currentY = y2;
 			            break;
@@ -131,8 +137,9 @@ public class EPGFragment extends Fragment{
 			            currentY = -1;
 			        	
 			        	if(time < 300){
+			        		hz_scroll_time.fling((int)-vx);		// Timebar synch
 			        		hz_scroll.fling((int)-vx);
-							view.fling((int)-vy);
+							scroll_view.fling((int)-vy);
 			        	}
 			        		
 			        	break;
@@ -146,7 +153,7 @@ public class EPGFragment extends Fragment{
 		};
 			
 		hz_scroll.setOnTouchListener(toutch);
-		view.setOnTouchListener(toutch);
+		scroll_view.setOnTouchListener(toutch);
 		
 		
 		// Get the size of the screen in pixels
@@ -160,11 +167,11 @@ public class EPGFragment extends Fragment{
 				// TODO Auto-generated method stub
 				
 				// Just some print of the orientation variable
-				Log.i("Orientation:"," "+orientation);
-				if(orientation == Configuration.ORIENTATION_LANDSCAPE) Log.i("Position: "," landscape");
-				if(orientation == Configuration.ORIENTATION_PORTRAIT) Log.i("Position: "," portrait");
-				if(orientation == Configuration.ORIENTATION_UNDEFINED) Log.i("Position: "," undefined");
-				if(orientation == Configuration.ORIENTATION_SQUARE)	Log.i("Position: "," square");
+				//Log.i("Orientation:"," "+orientation);
+				//if(orientation == Configuration.ORIENTATION_LANDSCAPE) Log.i("Position: "," landscape");
+				//if(orientation == Configuration.ORIENTATION_PORTRAIT) Log.i("Position: "," portrait");
+				//if(orientation == Configuration.ORIENTATION_UNDEFINED) Log.i("Position: "," undefined");
+				//if(orientation == Configuration.ORIENTATION_SQUARE)	Log.i("Position: "," square");
 				
 				// If we have 3.0 or later
 				if( main.SDK_INT > 10){
@@ -185,7 +192,7 @@ public class EPGFragment extends Fragment{
 					}
 					changes++;
 				}else{	// If we have 2.3.6 or earlier
-					
+					/*
 					if( (orientation < 10 || orientation > 270) && epg_loaded){
 						
 						if(orientation > 270) changes++;
@@ -202,6 +209,7 @@ public class EPGFragment extends Fragment{
 							changes = -1;
 						}
 					}
+					*/
 				}
 			}
 		};
@@ -267,7 +275,8 @@ public class EPGFragment extends Fragment{
 		    start = calendar.getTime();
     	}
     	
-    	vt_scroll.addView(program_timebar, pt_params);
+    	timebar_hz_scroll.setBackgroundColor(0xAA000000);	// Transparent background
+    	timebar_hz_scroll.addView(program_timebar, pt_params);
     	
     }
     
@@ -281,7 +290,7 @@ public class EPGFragment extends Fragment{
     	
     	// We just change the margin of the line according to the current time
     	RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(2,height_of_rows*number_of_channels);
-    	params.setMargins(distance, 30, 0, 0);
+    	params.setMargins(distance, 0, 0, 0);
     	LinearLayout line = (LinearLayout)view.findViewById(R.id.now_line);
     	line.setVisibility(LinearLayout.VISIBLE);
     	line.setLayoutParams(params);
@@ -297,9 +306,9 @@ public class EPGFragment extends Fragment{
     	now_text.setBackgroundColor(0xBB000000);
     	//now_text.invalidate();	//Not sure if needed
     	
-    	// Next lines are the fast way to focus on the current time in the EPG
-    	now_text.setFocusableInTouchMode(true);		// Get the screen to the current time schedule
-    	now_text.requestFocus();
+    	// Center the screen on the now line
+    	hz_scroll.scrollTo(distance, 0);
+    	hz_scroll_time.scrollTo(distance, 0);
 
     }
     /**
