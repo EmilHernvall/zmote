@@ -10,10 +10,12 @@ import android.content.ClipData.Item;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -144,12 +146,33 @@ public class WebTVFragment extends Fragment {
 	}
 
 	/**
+	 * Print a "No results" text on the screen
+	 * @author Francisco
+	 */
+	public void showNoResultsText(){
+		
+		LinearLayout results_ly = (LinearLayout) view_temp.findViewById(R.id.search_results_ly);
+		results_ly.removeAllViewsInLayout();
+		
+		LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+		textParams.setMargins((int)screenWidth/2 - 30, 30, 0, 0);
+		
+		TextView noResults = new TextView(view_temp.getContext());
+		noResults.setText("No results");
+		noResults.setTypeface(null,Typeface.BOLD);
+		noResults.setTextColor(0xFFFFFFFF);
+		noResults.setLayoutParams(textParams);
+	
+		results_ly.addView(noResults);
+	}
+	
+	/**
 	 * Print the results of the search on the screen
 	 * @param res Set of results to show
 	 * @author Francisco & Emma
 	 */
 	public void showResults(WebTVItem[] res){
-	
+		
 		LinearLayout results_ly = (LinearLayout) view_temp.findViewById(R.id.search_results_ly);
 		results_ly.removeAllViewsInLayout(); 
 		LinearLayout.LayoutParams item_container_params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);
@@ -325,7 +348,18 @@ public class WebTVFragment extends Fragment {
 
 		@Override
 		protected void onPostExecute(WebTVItem elements[]) {
-			showResults(elements);
+			
+			// Sorry for the ugly way to check if the vector is empty
+			int counter = 0;
+			for(WebTVItem item: elements){
+				counter++;
+				break;
+			}
+			
+			if(counter > 0)
+				showResults(elements);
+			else
+				showNoResultsText();
 		}
 
 	}
