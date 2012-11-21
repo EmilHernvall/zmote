@@ -109,9 +109,9 @@ public class ZChatAdapter {
 						Integer.parseInt(startAr[5].substring(0,  2))
 						);
 				thePost.setDateOfCreation(date);
-				//thePost.setLastUpdate(lastUpdateDate);
-				//int postID = jsonPost.getInt("id");
-				
+				thePost.setLastUpdate(date);
+				int postID = jsonPost.getInt("id");
+				thePost.setId(postID);
 				theFeed.addPost(thePost);
 				
 			}
@@ -131,7 +131,7 @@ public class ZChatAdapter {
 		String arg1 = URLEncoder.encode(newPost.getUserName());
 		String arg2 = URLEncoder.encode(targetFeed.getProgram().getName());
 		String arg3 = URLEncoder.encode(newPost.getContent());
-		Date theDate = targetFeed.getProgram().getStart();
+		//Date theDate = targetFeed.getProgram().getStart();
 		/*
 		String year = ""+theDate.getYear();
 		
@@ -140,16 +140,26 @@ public class ZChatAdapter {
 		String hour = "" + (theDate.getHours() > 9 ? "0" + theDate.getHours() : theDate.getHours());
 		String minutes = "" + (theDate.getMinutes() > 9 ? "0" + theDate.getMinutes() : theDate.getMinutes());
 		*/
-		String dateString = URLEncoder.encode(theDate.toString());
+		String year = "" + targetFeed.getProgram().getStart().getYear();
+		String month = "" + (targetFeed.getProgram().getStart().getMonth() + 1);
+		String day = "" + targetFeed.getProgram().getStart().getDate();
+		String hours = "" + targetFeed.getProgram().getStart().getHours();
+		String minutes = "" + targetFeed.getProgram().getStart().getMinutes();
+		//String dateString = URLEncoder.encode(theDate.toString());
 		
 		String userURLString = "http://" + serverAdress +
 								"/post/insert_post?" +
 								"username="+arg1+"" +
 								"&program_name="+arg2+
 								"&content="+arg3+
-								"&starttime="+dateString+
+								//"&starttime="+dateString+
+								"&year="+year+
+								"&month="+month+
+								"&day="+day+
+								"&hours="+hours+
+								"&minutes="+minutes+
 								"";
-		//Log.e("ZCHAT", "userURLString" + userURLString);
+		Log.e("ZCHAT", "userURLString" + userURLString);
 		try {
 			URL url = new URL(userURLString);
 			url.openStream().close();
