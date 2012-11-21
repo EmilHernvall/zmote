@@ -20,7 +20,6 @@ import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -61,7 +60,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	private WebTVFragment webfragment;// = new WebTVFragment(this);
 	private MainViewFragment mainfragment;// = new MainViewFragment(this);
     private ChannelInformationFragment chinfragment;// = new ChannelInformationFragment(this);
-
+    public int SDK_INT = android.os.Build.VERSION.SDK_INT;
 	/**
 	 * Standard create function for the fragment activity.
 	 * Sets the layout.
@@ -90,17 +89,6 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
     public void setOrientation(int i){
     		setRequestedOrientation(i);
     }
-
-   /* @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        if(epgfragment!=null && epgfragment.isResumed()){
-            //do nothing here if we're showing the fragment
-        	setRequestedOrientation(Configuration.ORIENTATION_LANDSCAPE);
-        }else{
-            setRequestedOrientation(Configuration.ORIENTATION_PORTRAIT); // otherwise lock in portrait
-        }
-        super.onConfigurationChanged(newConfig);
-    }*/
 
 	/**
 	 * Vibrates the phone for 95 milliseconds.
@@ -242,7 +230,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 					
 		}else if(tab.equals(tabMain)){
 			Log.i("FragmentLog", "Main");
-			if(mainfragment == null){
+			if(mainfragment == null && SDK_INT > 10){
 				mainfragment = new MainViewFragment(this);
 				isNew = true;
 			}

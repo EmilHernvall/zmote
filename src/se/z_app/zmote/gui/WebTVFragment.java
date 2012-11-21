@@ -10,10 +10,12 @@ import android.content.ClipData.Item;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,18 +79,19 @@ public class WebTVFragment extends Fragment {
 				web_service = spinner.getSelectedItemPosition();
 				ImageView result_icon = (ImageView) view_temp.findViewById(R.id.webtv_icon_result);
 				result_icon.setImageBitmap(servicesIcons[web_service]);
-				
+
 				LinearLayout linLay = (LinearLayout) view_temp.findViewById(R.id.searchBar);
 				linLay.setVisibility(View.GONE);
 				LinearLayout linLayResult = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
 				linLayResult.setVisibility(View.VISIBLE);
 		//		LinearLayout noSearch = (LinearLayout) view_temp.findViewById(R.id.noSearch);
-		//		noSearch.setVisibility(View.GONE);
+				//		noSearch.setVisibility(View.GONE);
 				//TODO fix so work
 				
 				//				LinearLayout linLayTopList = (LinearLayout) view_temp.findViewById(R.id.top_list);
 				//				linLayTopList.setVisibility(View.GONE);
 			}
+			
 		});
 
 		ImageButton search_button_back = (ImageButton)view_temp.findViewById(R.id.search_button_webtv_result);
@@ -130,30 +133,54 @@ public class WebTVFragment extends Fragment {
 		pb = (ProgressBar)view_temp.findViewById(R.id.progressLodingEpgChannelInformation);
 		EditText search_box = (EditText)view_temp.findViewById(R.id.search_box_webtv);
 		search_for_this = search_box.getText().toString();
+		//String search_for_this_temp = search_for_this; 
 		TextView resultText = (TextView) view_temp.findViewById(R.id.result_webtv);
 		resultText.setText("Result for: '"+ search_for_this+"'");
 		// Here we should call a function like this
+		//TODO If no input in search field, no search shall be done //Emma
 		
-		if(search_for_this != null)
+		if(search_for_this != null){
 			new AsyncWebSearch().execute();
-		
+		}
+		 
 	}
 
+	/**
+	 * Print a "No results" text on the screen
+	 * @author Francisco
+	 */
+	public void showNoResultsText(){
+		
+		LinearLayout results_ly = (LinearLayout) view_temp.findViewById(R.id.search_results_ly);
+		results_ly.removeAllViewsInLayout();
+		
+		LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+		textParams.setMargins((int)screenWidth/2 - 30, 30, 0, 0);
+		
+		TextView noResults = new TextView(view_temp.getContext());
+		noResults.setText("No results");
+		noResults.setTypeface(null,Typeface.BOLD);
+		noResults.setTextColor(0xFFFFFFFF);
+		noResults.setLayoutParams(textParams);
+	
+		results_ly.addView(noResults);
+	}
+	
 	/**
 	 * Print the results of the search on the screen
 	 * @param res Set of results to show
 	 * @author Francisco & Emma
 	 */
 	public void showResults(WebTVItem[] res){
-	
+		
 		LinearLayout results_ly = (LinearLayout) view_temp.findViewById(R.id.search_results_ly);
 		results_ly.removeAllViewsInLayout(); 
 		LinearLayout.LayoutParams item_container_params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);
 	//	item_container_params.setMargins(4, 4, 4, 0);
 
-		LinearLayout.LayoutParams item_params = new LinearLayout.LayoutParams((int)(screenWidth*0.8),LayoutParams.MATCH_PARENT);
+		LinearLayout.LayoutParams item_params = new LinearLayout.LayoutParams((int)(screenWidth*0.85),LayoutParams.MATCH_PARENT);
 		LinearLayout.LayoutParams icon_params = new LinearLayout.LayoutParams(100,80);
-		LinearLayout.LayoutParams item_params2 = new LinearLayout.LayoutParams((int)(screenWidth*0.2),LayoutParams.MATCH_PARENT);
+		LinearLayout.LayoutParams item_params2 = new LinearLayout.LayoutParams((int)(screenWidth*0.15),LayoutParams.MATCH_PARENT);
 
 		for(WebTVItem x: res){
 
@@ -321,7 +348,18 @@ public class WebTVFragment extends Fragment {
 
 		@Override
 		protected void onPostExecute(WebTVItem elements[]) {
-			showResults(elements);
+			
+			// Sorry for the ugly way to check if the vector is empty
+			int counter = 0;
+			for(WebTVItem item: elements){
+				counter++;
+				break;
+			}
+			
+			if(counter > 0)
+				showResults(elements);
+			else
+				showNoResultsText();
 		}
 
 	}
