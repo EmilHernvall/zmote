@@ -10,7 +10,7 @@ import se.z_app.stb.Program;
 /**
  * Class that queries the EPG for programs either currently active
  * 	or containing a certain string
- * @author ?
+ * @author Rasmus Holm
  *
  */
 public class EPGQuery {
