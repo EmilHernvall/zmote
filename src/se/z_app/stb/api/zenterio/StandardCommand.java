@@ -26,7 +26,11 @@ import se.z_app.stb.Program;
 import se.z_app.stb.WebTVItem;
 import se.z_app.stb.WebTVService;
 import se.z_app.stb.api.BiDirectionalCmdInterface;
-
+/**
+ * 
+ * @author Rasmus Holm, Sebastian Rauhala
+ *
+ */
 public class StandardCommand implements BiDirectionalCmdInterface{
 	private String ip;
 
