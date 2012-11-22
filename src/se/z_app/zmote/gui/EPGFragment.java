@@ -167,7 +167,7 @@ public class EPGFragment extends Fragment{
 				// TODO Tune it propertly
 				
 				// Just some print of the orientation variable
-				//Log.i("Orientation:"," "+orientation);
+				Log.i("Orientation:"," "+orientation);
 				//if(orientation == Configuration.ORIENTATION_LANDSCAPE) Log.i("Position: "," landscape");
 				//if(orientation == Configuration.ORIENTATION_PORTRAIT) Log.i("Position: "," portrait");
 				//if(orientation == Configuration.ORIENTATION_UNDEFINED) Log.i("Position: "," undefined");
@@ -191,8 +191,8 @@ public class EPGFragment extends Fragment{
 						}
 					}
 					changes++;
-				}else{	// If we have 2.3.6 or earlier
-					/*
+				/*}else{	// If we have 2.3.6 or earlier
+					
 					if( (orientation < 10 || orientation > 270) && epg_loaded){
 						
 						if(orientation > 270) changes++;
@@ -213,36 +213,12 @@ public class EPGFragment extends Fragment{
 				}
 			}
 		};
-
+		orientationListener.enable();
 		new AsyncDataLoader().execute();
 
 		return view;
 	}
 
-    @Override
-    public void onResume() {
-    	orientation_var = 1;
-    	orientationListener.enable();
-    	super.onResume();
-    }
-    
-    @Override
-    public void onPause() {
-    	orientationListener.disable();
-        super.onPause();
-    }
-
-    @Override
-    public void onDestroy(){
-    	orientationListener.disable();
-    	super.onDestroy();
-    }
-    
-    @Override
-    public void onDetach(){
-    	orientationListener.disable();
-    	super.onDetach();
-    }
     
     /**
      * Sets the timeBar in 30min intervals starting from the hour passed by "start"
@@ -399,7 +375,6 @@ public class EPGFragment extends Fragment{
 		new_btn.setClickable(true);
 		temp = ch;
 		
-		//TODO: If you click on an icon you are supposed to change channel
 		new_btn.setOnClickListener(new View.OnClickListener() {
 			Channel tempChannel = temp;
 			@Override
@@ -414,7 +389,6 @@ public class EPGFragment extends Fragment{
 	
 	}
 
-	//TODO: Make sure it's no space between buttons and they are aligned properly
 	/**
 	 * Adding programs to the layout
 	 * @param pg

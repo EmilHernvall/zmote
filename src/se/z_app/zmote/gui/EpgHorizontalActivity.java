@@ -3,7 +3,6 @@ package se.z_app.zmote.gui;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
 import se.z_app.stb.Channel;
 import se.z_app.stb.EPG;
 import se.z_app.stb.Program;
@@ -12,115 +11,231 @@ import se.z_app.zmote.epg.EPGQuery;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.OrientationListener;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class EpgHorizontalActivity extends Activity {
 
-    private Channel temp;
+	private Channel temp;
 	private EPG epg;
-	private View view;
+	private RelativeLayout view;
+	private ScrollView scroll_view;
 	private MainTabActivity main;
 	private LinearLayout i_layout;
 	private LinearLayout p_layout;
 	private LinearLayout vt_scroll;
+	private HorizontalScrollView hz_scroll;
+	private LinearLayout timebar_hz_scroll;
+	private HorizontalScrollView hz_scroll_time;
 	private int height_of_rows = 80;
 	private int number_of_channels = 0;
 	private int height=80;
 	private int width=80;
 	private Program program_temp;
-	private int start_hour = 24;
-	private int start_minutes = 0;
+	private Date start;
+	private Date end;
 	private int screen_width = 0;
-	private boolean epg_loaded = false;
+	private int schedule_lenght_in_hours = 48;
+	
+	private OnTouchListener toutch;
+	private int currentX = -1, currentY = -1;
+
 	private OrientationListener orientationListener = null;
 	private int changes = 0;
+	private int orientation_var = 1;	// Horiz: 0 , Vertical: 1
+	private boolean epg_loaded = false;
+
+    
 	
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_epg_horizontal);
-        setContentView(R.layout.fragment_epg);
-		view = (RelativeLayout)findViewById(R.id.epg_content);
+    	super.onCreate(savedInstanceState);
+    	
+    	setContentView(R.layout.fragment_epg);
+		view = (RelativeLayout) this.findViewById(R.id.epg_container);
+
+		scroll_view = (ScrollView)view.findViewById(R.id.scroll_parent);
 		i_layout = (LinearLayout)view.findViewById(R.id.channel_icons);
 		i_layout.setBackgroundColor(0x66000000);
 		vt_scroll = (LinearLayout)view.findViewById(R.id.channel_programs);
+		hz_scroll = (HorizontalScrollView)view.findViewById(R.id.hz_scroll);
+		hz_scroll_time = (HorizontalScrollView)view.findViewById(R.id.hz_timeline_parent);
+		timebar_hz_scroll = (LinearLayout)view.findViewById(R.id.timebar_hz_scroll);
+		
+
+			
+		//2D Scrolling, TODO: Fling needs to be implemented
+		toutch = new View.OnTouchListener() {
+			long startTime = System.currentTimeMillis();
+
+			int firstX = 0;
+			int firstY = 0;
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				
+				synchronized (toutch) {
+					
+				
+					switch (event.getAction()) {
+	
+			        case MotionEvent.ACTION_MOVE: {
+			            if(currentX == -1 || currentY == -1){
+			            	currentX = (int) event.getRawX();
+				            currentY = (int) event.getRawY();
+				            firstX = currentX;
+				            firstY = currentY;
+				            startTime = System.currentTimeMillis();
+			            }
+			        	
+			        	int x2 = (int) event.getRawX();
+			            int y2 = (int) event.getRawY();
+			            
+			            
+			            scroll_view.scrollBy(currentX - x2 , currentY - y2);
+			            hz_scroll.scrollBy(currentX - x2 , currentY - y2);
+			            hz_scroll_time.scrollBy(currentX - x2, 0);	// Synchronization with timebar
+			            currentX = x2;
+			            currentY = y2;
+			            break;
+			        }   
+			        case MotionEvent.ACTION_UP: {
+			        	
+			        	long time = System.currentTimeMillis()-startTime;
+			        	int vx = 40*(int)((currentX - firstX)/(time/20));
+						int vy = 40*(int)((currentY - firstY)/(time/20));
+						System.out.println("vx: " + vx);
+						System.out.println("vy: " + vy);
+			        	currentX = -1;
+			            currentY = -1;
+			        	
+			        	if(time < 300){
+			        		hz_scroll_time.fling((int)-vx);		// Timebar synch
+			        		hz_scroll.fling((int)-vx);
+							scroll_view.fling((int)-vy);
+			        	}
+			        		
+			        	break;
+			            
+			        }
+			        }
+					
+			        return true;
+				}
+			}
+		};
+			
+		hz_scroll.setOnTouchListener(toutch);
+		scroll_view.setOnTouchListener(toutch);
+		
 		
 		// Get the size of the screen in pixels
 		screen_width = getResources().getDisplayMetrics().widthPixels;
 		
-		orientationListener = new OrientationListener(view.getContext()) {
+		orientation_var = 1;
+        orientationListener = new OrientationListener(view.getContext()) {
+			
 			@Override
 			public void onOrientationChanged(int orientation) {
-				// TODO Auto-generated method stub
-				int ori_tmp = getResources().getConfiguration().orientation;
-				Log.i("Orientation:"," "+orientation);
-				System.out.println("Orientation:"+orientation);
-				if(orientation != ORIENTATION_UNKNOWN
-						&& ori_tmp == Configuration.ORIENTATION_LANDSCAPE
-						&& changes > 0 
-						&& epg_loaded 
-						&& main.SDK_INT > 10){
-					changes = -1;
-					orientationListener.disable();
-					finish();
+				// TODO Tune it propertly
+				
+				// Just some print of the orientation variable
+				//Log.i("Orientation:"," "+orientation);
+				//if(orientation == Configuration.ORIENTATION_LANDSCAPE) Log.i("Position: "," landscape");
+				//if(orientation == Configuration.ORIENTATION_PORTRAIT) Log.i("Position: "," portrait");
+				//if(orientation == Configuration.ORIENTATION_UNDEFINED) Log.i("Position: "," undefined");
+				//if(orientation == Configuration.ORIENTATION_SQUARE)	Log.i("Position: "," square");
+				
+				// If we have 3.0 or later
+				if( main.SDK_INT > 10){
+					if(orientation != ORIENTATION_UNKNOWN && changes != 0 && epg_loaded){
+						/*
+						if(orientation_var == 1){
+							Toast.makeText(view.getContext(), "Changing...", Toast.LENGTH_SHORT).show();
+							Intent intent = new Intent(view.getContext(), EpgHorizontalActivity.class);
+							EPGFragment.this.startActivity(intent);
+							orientation_var = 0;
+							changes = -1;
+							orientationListener.disable();
+						}else if(orientation_var == 0){
+							// Go back to the fragment in some way
+							Toast.makeText(view.getContext(), "Push back button", Toast.LENGTH_SHORT).show();
+							
+						}*/
+					}
+					changes++;
+				}else{	// If we have 2.3.6 or earlier
+					/*
+					if( (orientation < 10 || orientation > 270) && epg_loaded){
+						
+						if(orientation > 270) changes++;
+						if(orientation > 270 && changes > 5){
+							//Toast.makeText(view.getContext(), "changeeeddd", Toast.LENGTH_SHORT).show();
+							Intent intent = new Intent(view.getContext(), EpgHorizontalActivity.class);
+							EPGFragment.this.startActivity(intent);
+							orientation_var = 0;
+							changes = -1;
+							orientationListener.disable();
+						}else if(orientation < 9){
+							// Go back to the fragment in some way
+							//Toast.makeText(view.getContext(), "Going back", Toast.LENGTH_SHORT).show();
+							changes = -1;
+						}
+					}
+					*/
 				}
-				changes++;
 			}
 		};
-		
-		new AsyncDataLoader().execute();
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_epg_horizontal, menu);
-        return true;
-    }
-  
+		new AsyncDataLoader().execute();
+
+	}
+
+    
     /**
      * Sets the timeBar in 30min intervals starting from the hour passed by "start"
      * @param start		Starting time for the time bar
      */
     public void setProgramTimeBar(){
     	
-    	Date start = new Date(2012,10,10,start_hour,0);
+    	Date start_tmp = start;
     	LinearLayout program_timebar = new LinearLayout(view.getContext());
     	LinearLayout.LayoutParams pt_params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,30);
     	program_timebar.setOrientation(0);
     	
-		//Date now = new Date(System.currentTimeMillis());
-    	
-    	for(int i=0; i<48; ++i){
+    	for(int i=0; i<(schedule_lenght_in_hours*2); ++i){
 			
 			TextView time = new TextView(view.getContext());
 			time.setTextColor(0xFFFF8000);
 			time.setTypeface(null, Typeface.BOLD);
-			time.setText(new SimpleDateFormat("HH:mm").format(start) );
+			time.setText(new SimpleDateFormat("HH:mm").format(start_tmp) );
 			time.setWidth(screen_width/2);
 			time.setHeight(30);
 			program_timebar.addView(time);
 			
     		// Adding 1 hour
 		    Calendar calendar = Calendar.getInstance();
-		    calendar.setTime(start);
+		    calendar.setTime(start_tmp);
 		    calendar.add(Calendar.MINUTE, 30);
-		    start = calendar.getTime();
+		    start_tmp = calendar.getTime();
     	}
     	
-    	vt_scroll.addView(program_timebar, pt_params);
+    	timebar_hz_scroll.setBackgroundColor(0xAA000000);	// Transparent background
+    	timebar_hz_scroll.addView(program_timebar, pt_params);
     	
     }
     
@@ -130,11 +245,12 @@ public class EpgHorizontalActivity extends Activity {
     public void setNowLine(){
     
     	Date now = new Date(System.currentTimeMillis());
-    	int distance = (now.getHours()-start_hour)*screen_width + (now.getMinutes()*screen_width)/60;
+    	long difference = now.getTime() - start.getTime();
+    	int distance = (int)(difference/60000)*(screen_width/60);
     	
     	// We just change the margin of the line according to the current time
     	RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(2,height_of_rows*number_of_channels);
-    	params.setMargins(distance, 30, 0, 0);
+    	params.setMargins(distance+110, 0, 0, 0);	// TODO: Needed some tune here
     	LinearLayout line = (LinearLayout)view.findViewById(R.id.now_line);
     	line.setVisibility(LinearLayout.VISIBLE);
     	line.setLayoutParams(params);
@@ -142,38 +258,60 @@ public class EpgHorizontalActivity extends Activity {
     	
     	// Now label
     	RelativeLayout.LayoutParams text_params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
-    	text_params.setMargins(distance-15, 0, 0, 0);
+    	text_params.setMargins(distance+110, 0, 0, 0);
     	TextView now_text = (TextView)view.findViewById(R.id.now_text);
     	now_text.setVisibility(TextView.VISIBLE);
     	now_text.setLayoutParams(text_params);
     	now_text.setTypeface(null, Typeface.BOLD);
     	now_text.setBackgroundColor(0xBB000000);
     	//now_text.invalidate();	//Not sure if needed
+    	
+    	// Center the screen on the now line
+    	hz_scroll.scrollBy(distance, 0);
+    	hz_scroll_time.scrollBy(distance, 0);
 
-    	// Next lines are the fast way to focus on the current time in the EPG
-    	now_text.setFocusableInTouchMode(true);		// Get the screen to the current time schedule
-    	now_text.requestFocus();
     }
     /**
      * Gets the time of the earlier program of the epg
      * @author Francisco Valladares
      */
     void getStartTime(){
+    	
+    	Calendar cal = Calendar.getInstance(); // creates calendar
+    	start = null;
+    	end = null;
+    	Date temp = null;
     	// We will check the start time of the first program of every channel
     	// and get the starting hour of the earlier one
     	for(Channel channel: epg){
+    		
+    		// Check for the latest and earlier program
     		for(Program prog: channel){
-    			int hours_temp = prog.getStart().getHours();
-    			int minutes_temp = prog.getStart().getMinutes();
-    			if( hours_temp < start_hour){
-    				start_hour = hours_temp;
-    				start_minutes = minutes_temp;
-    			}else if(minutes_temp < start_minutes){
-    				start_minutes = minutes_temp;
+    			
+    			cal.setTime(prog.getStart()); // sets calendar time/date
+    		    cal.add(Calendar.SECOND, prog.getDuration()); // adds one hour
+    		    temp = cal.getTime();
+    		    //Log.i("Program time:",""+prog.getStart().getHours()+"dia "+prog.getStart().getDay());
+    			if(end == null)
+    				end = temp;
+    			else if(end.compareTo(temp) < 0){
+	    		    end = temp;
     			}
-    			break;
+    			
+    			if(start == null)
+    				start = prog.getStart();
+    			else if(start.compareTo(prog.getStart()) > 0)
+    				start = prog.getStart();
     		}
     	}
+    	
+    	// Get the lenght of the schedule in hours
+    	long duration = 0;
+    	if(start != null && end != null)
+    		duration = end.getTime() - start.getTime();		// Duration in milliseconds
+    	schedule_lenght_in_hours = (int) (duration / (60*60*1000));
+    	//Date now = new Date(System.currentTimeMillis());
+
     }
     
     /**
@@ -223,7 +361,6 @@ public class EpgHorizontalActivity extends Activity {
 		new_btn.setClickable(true);
 		temp = ch;
 		
-		//TODO: If you click on an icon you are supposed to change channel
 		new_btn.setOnClickListener(new View.OnClickListener() {
 			Channel tempChannel = temp;
 			@Override
@@ -238,35 +375,28 @@ public class EpgHorizontalActivity extends Activity {
 	
 	}
 
-	//TODO: Make sure it's no space between buttons and they are aligned properly
 	/**
 	 * Adding programs to the layout
 	 * @param pg
 	 */
 	void addProgramToLayout(Program pg, int n_program){
 		
-		Date start = new Date(2012,10,10,start_hour,0);	// Starting hour
 		LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT );
 		textParams.setMargins(1,1,1,1);
-		int hours_of_difference = 0;
-		int minutes_of_difference = 0;
+		long difference = 0;
 		LinearLayout.LayoutParams params = null;
 		float length = 0;
 		
 		if(n_program == 0){	// Only for the first program
 			
-			if( pg.getStart().getHours() > start.getHours()){
-				
-					hours_of_difference = pg.getStart().getHours() - start.getHours();
-					minutes_of_difference = 60 - pg.getStart().getMinutes();
-					
-			}else if( pg.getStart().getHours() == start.getHours()){
-				if(pg.getStart().getMinutes() > start.getMinutes()){
-					minutes_of_difference = pg.getStart().getMinutes();
-				}
+			if( pg.getStart().compareTo(start) > 0){	
+				difference = pg.getStart().getTime() - start.getTime();	
+			}else if( pg.getStart().compareTo(start) == 0){
+				difference = 0;
 			}
 			
-			length = hours_of_difference*screen_width + minutes_of_difference*screen_width/60;
+			length = (int)(difference/60000)*(screen_width/60);
+			
 			params= new LinearLayout.LayoutParams((int)length, height_of_rows);
 			params.setMargins(0, 0, 0, 0);
 			LinearLayout starting_space = new LinearLayout(view.getContext());
@@ -339,8 +469,9 @@ public class EpgHorizontalActivity extends Activity {
 			return null;
 		int width = bm.getWidth();
 		int height = bm.getHeight();
-		float scaleWidth = ((float) newWidth) / width;
+		
 		float scaleHeight = ((float) newHeight) / height;
+		float scaleWidth =scaleHeight;// ((float) newWidth) / width;
 		
 		Matrix matrix = new Matrix();		// Create a matrix for the manipulation
 		matrix.postScale(scaleWidth, scaleHeight);	// Resize the bit map
