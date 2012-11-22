@@ -55,8 +55,8 @@ public class EPGFragment extends Fragment{
 	private int height=80;
 	private int width=80;
 	private Program program_temp;
-	private int start_hour = 24;
-	private int start_minutes = 0;
+	private Date start;
+	private Date end;
 	private int screen_width = 0;
 	private int schedule_lenght_in_hours = 48;
 	
@@ -250,28 +250,26 @@ public class EPGFragment extends Fragment{
      */
     public void setProgramTimeBar(){
     	
-    	Date start = new Date(2012,10,10,start_hour,0);
+    	Date start_tmp = start;
     	LinearLayout program_timebar = new LinearLayout(view.getContext());
     	LinearLayout.LayoutParams pt_params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,30);
     	program_timebar.setOrientation(0);
-    	
-		//Date now = new Date(System.currentTimeMillis());
     	
     	for(int i=0; i<(schedule_lenght_in_hours*2); ++i){
 			
 			TextView time = new TextView(view.getContext());
 			time.setTextColor(0xFFFF8000);
 			time.setTypeface(null, Typeface.BOLD);
-			time.setText(new SimpleDateFormat("HH:mm").format(start) );
+			time.setText(new SimpleDateFormat("HH:mm").format(start_tmp) );
 			time.setWidth(screen_width/2);
 			time.setHeight(30);
 			program_timebar.addView(time);
 			
     		// Adding 1 hour
 		    Calendar calendar = Calendar.getInstance();
-		    calendar.setTime(start);
+		    calendar.setTime(start_tmp);
 		    calendar.add(Calendar.MINUTE, 30);
-		    start = calendar.getTime();
+		    start_tmp = calendar.getTime();
     	}
     	
     	timebar_hz_scroll.setBackgroundColor(0xAA000000);	// Transparent background
@@ -285,11 +283,12 @@ public class EPGFragment extends Fragment{
     public void setNowLine(){
     
     	Date now = new Date(System.currentTimeMillis());
-    	int distance = (now.getHours()-start_hour)*screen_width + (now.getMinutes()*screen_width)/60;
+    	long difference = now.getTime() - start.getTime();
+    	int distance = (int)(difference/60000)*(screen_width/60);
     	
     	// We just change the margin of the line according to the current time
     	RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(2,height_of_rows*number_of_channels);
-    	params.setMargins(distance, 0, 0, 0);
+    	params.setMargins(distance+110, 0, 0, 0);	// TODO: Needed some tune here
     	LinearLayout line = (LinearLayout)view.findViewById(R.id.now_line);
     	line.setVisibility(LinearLayout.VISIBLE);
     	line.setLayoutParams(params);
@@ -297,7 +296,7 @@ public class EPGFragment extends Fragment{
     	
     	// Now label
     	RelativeLayout.LayoutParams text_params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
-    	text_params.setMargins(distance-15, 0, 0, 0);
+    	text_params.setMargins(distance+110, 0, 0, 0);
     	TextView now_text = (TextView)view.findViewById(R.id.now_text);
     	now_text.setVisibility(TextView.VISIBLE);
     	now_text.setLayoutParams(text_params);
@@ -306,8 +305,8 @@ public class EPGFragment extends Fragment{
     	//now_text.invalidate();	//Not sure if needed
     	
     	// Center the screen on the now line
-    	hz_scroll.scrollTo(distance, 0);
-    	hz_scroll_time.scrollTo(distance, 0);
+    	hz_scroll.scrollBy(distance, 0);
+    	hz_scroll_time.scrollBy(distance, 0);
 
     }
     /**
@@ -317,39 +316,30 @@ public class EPGFragment extends Fragment{
     void getStartTime(){
     	
     	Calendar cal = Calendar.getInstance(); // creates calendar
-    	Date start = null;
-    	Date end = null;
+    	start = null;
+    	end = null;
     	Date temp = null;
     	// We will check the start time of the first program of every channel
     	// and get the starting hour of the earlier one
     	for(Channel channel: epg){
-    		// Check for the earlier program
-    		for(Program prog: channel){
-    			int hours_temp = prog.getStart().getHours();
-    			int minutes_temp = prog.getStart().getMinutes();
-    			if( hours_temp < start_hour){
-    				start_hour = hours_temp;
-    				start_minutes = minutes_temp;
-    				start = prog.getStart();
-    			}else if(minutes_temp < start_minutes){
-    				start_minutes = minutes_temp;
-    				start = prog.getStart();
-    			}
-    			break;
-    		}
     		
-    		// Check por the latest program (sorry for the poor efficiency)
+    		// Check for the latest and earlier program
     		for(Program prog: channel){
     			
     			cal.setTime(prog.getStart()); // sets calendar time/date
     		    cal.add(Calendar.SECOND, prog.getDuration()); // adds one hour
     		    temp = cal.getTime();
-    			
+    		    //Log.i("Program time:",""+prog.getStart().getHours()+"dia "+prog.getStart().getDay());
     			if(end == null)
     				end = temp;
     			else if(end.compareTo(temp) < 0){
 	    		    end = temp;
     			}
+    			
+    			if(start == null)
+    				start = prog.getStart();
+    			else if(start.compareTo(prog.getStart()) > 0)
+    				start = prog.getStart();
     		}
     	}
     	
@@ -358,7 +348,8 @@ public class EPGFragment extends Fragment{
     	if(start != null && end != null)
     		duration = end.getTime() - start.getTime();		// Duration in milliseconds
     	schedule_lenght_in_hours = (int) (duration / (60*60*1000));
-    	
+    	//Date now = new Date(System.currentTimeMillis());
+
     }
     
     /**
@@ -430,28 +421,22 @@ public class EPGFragment extends Fragment{
 	 */
 	void addProgramToLayout(Program pg, int n_program){
 		
-		Date start = new Date(2012,10,10,start_hour,0);	// Starting hour
 		LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT );
 		textParams.setMargins(1,1,1,1);
-		int hours_of_difference = 0;
-		int minutes_of_difference = 0;
+		long difference = 0;
 		LinearLayout.LayoutParams params = null;
 		float length = 0;
 		
 		if(n_program == 0){	// Only for the first program
 			
-			if( pg.getStart().getHours() > start.getHours()){
-				
-					hours_of_difference = pg.getStart().getHours() - start.getHours();
-					minutes_of_difference = 60 - pg.getStart().getMinutes();
-					
-			}else if( pg.getStart().getHours() == start.getHours()){
-				if(pg.getStart().getMinutes() > start.getMinutes()){
-					minutes_of_difference = pg.getStart().getMinutes();
-				}
+			if( pg.getStart().compareTo(start) > 0){	
+				difference = pg.getStart().getTime() - start.getTime();	
+			}else if( pg.getStart().compareTo(start) == 0){
+				difference = 0;
 			}
 			
-			length = hours_of_difference*screen_width + minutes_of_difference*screen_width/60;
+			length = (int)(difference/60000)*(screen_width/60);
+			
 			params= new LinearLayout.LayoutParams((int)length, height_of_rows);
 			params.setMargins(0, 0, 0, 0);
 			LinearLayout starting_space = new LinearLayout(view.getContext());

@@ -26,7 +26,7 @@
 		            android:id="@+id/hz_relative"
 		            android:layout_width="wrap_content"
 		            android:layout_height="match_parent"
-		            android:paddingLeft="80px" >
+		            android:paddingLeft="110px" >
 			        <LinearLayout
 			            android:id="@+id/channel_programs"
 			            android:orientation="vertical" 
@@ -75,7 +75,7 @@
 	        android:id="@+id/relative_parent_of_timeline"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:paddingLeft="80px" >
+	        android:paddingLeft="110px" >
 	      
 	      <LinearLayout 
 	        android:id="@+id/timebar_hz_scroll"
