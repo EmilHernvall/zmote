@@ -82,7 +82,7 @@ public class ZChatAdapter {
 				dateOfCreation = dateOfCreation.replace("T", "-");
 				String startAr[] = dateOfCreation.split("\\-");
 				
-				/*
+				
 				String lastUpdate = jsonPost.getString("updated_at");
 				lastUpdate = lastUpdate.replace(" ", "-");
 				lastUpdate = lastUpdate.replace(":", "-");
@@ -99,7 +99,7 @@ public class ZChatAdapter {
 						);
 				
 				
-						*/
+						
 				Date date = new Date(
 						Integer.parseInt(startAr[0])-1900,
 						Integer.parseInt(startAr[1])-1,
@@ -109,9 +109,50 @@ public class ZChatAdapter {
 						Integer.parseInt(startAr[5].substring(0,  2))
 						);
 				thePost.setDateOfCreation(date);
-				thePost.setLastUpdate(date);
+				thePost.setLastUpdate(lastUpdateDate);
 				int postID = jsonPost.getInt("id");
 				thePost.setId(postID);
+				
+				//Log.e("ZCHAT:", "The Date: " + program.getStart().getMonth());
+				String getCommentStr = "http://" + serverAdress +"/post/insert_comment "+
+						"?program_name="+arg2+
+						"";
+				try
+				{
+					String getCommentJSONString = getJSON(getCommentStr, 4096);
+					JSONArray commentJSONArray = new JSONArray(getCommentJSONString);
+					for(int j = 0; j < commentJSONArray.length(); i ++)
+					{
+						JSONObject jsonComment = commentJSONArray.getJSONObject(i);
+						Comment newComment = new Comment(thePost);
+						newComment.setId(jsonComment.getInt("id"));
+						newComment.setContent(jsonComment.getString("content"));
+						newComment.setUserName(jsonComment.getString("username"));
+						
+						String commentDateCreation = jsonComment.getString("created_at");
+						commentDateCreation = commentDateCreation.replace(" ", "-");
+						commentDateCreation = commentDateCreation.replace(":", "-");
+						commentDateCreation = commentDateCreation.replace("T", "-");
+						String splitted[] = commentDateCreation.split("\\-");
+						
+						Date commentDate = new Date(
+								Integer.parseInt(splitted[0])-1900,
+								Integer.parseInt(splitted[1])-1,
+								Integer.parseInt(splitted[2]),
+								Integer.parseInt(splitted[3]),
+								Integer.parseInt(splitted[4]),
+								Integer.parseInt(splitted[5].substring(0,  2))
+								);
+						
+						newComment.setDateOfCreation(commentDate);
+						thePost.addComment(newComment);
+					}
+				}
+				catch (JSONException e) {
+					Log.i("GetComments", "ZChat adapter: JSON Failure: " + e.toString());
+					
+				}
+				
 				theFeed.addPost(thePost);
 				
 			}
@@ -131,6 +172,7 @@ public class ZChatAdapter {
 		String arg1 = URLEncoder.encode(newPost.getUserName());
 		String arg2 = URLEncoder.encode(targetFeed.getProgram().getName());
 		String arg3 = URLEncoder.encode(newPost.getContent());
+		String channelName = URLEncoder.encode(targetFeed.getProgram().getChannel().getName());
 		//Date theDate = targetFeed.getProgram().getStart();
 		/*
 		String year = ""+theDate.getYear();
@@ -151,6 +193,7 @@ public class ZChatAdapter {
 								"/post/insert_post?" +
 								"username="+arg1+"" +
 								"&program_name="+arg2+
+								"&channel_name="+channelName+
 								"&content="+arg3+
 								//"&starttime="+dateString+
 								"&year="+year+
