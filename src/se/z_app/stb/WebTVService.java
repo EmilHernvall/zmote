@@ -1,7 +1,11 @@
 package se.z_app.stb;
 
 import android.graphics.Bitmap;
-
+/**
+ * 
+ * @author Linus Back
+ *
+ */
 public class WebTVService {
 	private String id;
 	private String name;
