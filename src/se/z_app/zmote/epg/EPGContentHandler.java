@@ -20,7 +20,7 @@ import android.util.Log;
 
 /**
  * Class that contains and controls the current EPG and the current channel
- * @author ?
+ * @author Markus Widegren
  *
  */
 public class EPGContentHandler implements Runnable, Observer{
@@ -101,6 +101,7 @@ public class EPGContentHandler implements Runnable, Observer{
 	/**
 	 * Build the EPG by getting the icons from the box
 	 */
+	
 	private void buildEPG() {
 		if(theContext != null) {
 			EPGdbHandler theHandler = new EPGdbHandler(theContext);
