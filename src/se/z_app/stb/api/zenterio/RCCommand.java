@@ -17,6 +17,11 @@ import se.z_app.stb.WebTVItem;
 import se.z_app.stb.api.MonoDirectionalCmdInterface;
 import se.z_app.stb.api.RemoteControl.Button;
 
+/**
+ * 
+ * @author Linus Back
+ *
+ */
 
 public class RCCommand implements MonoDirectionalCmdInterface {
 	
