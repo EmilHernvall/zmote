@@ -7,6 +7,13 @@ import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentSkipListMap;
 
 import android.graphics.Bitmap;
 
+
+/**
+ * 
+ * @author Rasmus Holm
+ *
+ */
+
 public class Channel implements Iterable<Program>{
 	private String name;
 	private Bitmap icon;
