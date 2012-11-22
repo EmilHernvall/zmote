@@ -218,7 +218,24 @@ public class ZChatAdapter {
 	}
 	
 	//TODO: Implement this with ZChat server
+	@SuppressWarnings("deprecation")
 	public Feed commitComment(Feed targetFeed, Post targetPost, Comment newComment){
+		targetPost.addComment(newComment);
+		String commentContent = URLEncoder.encode(newComment.getContent());
+		String postId = ""+newComment.getParentPost().getId();
+		String urlString = "http://rails.z-app.se/post/insert_comment?"+
+							"post_id="+postId+
+							"&content="+commentContent+
+							"&username="+newComment.getUserName()+
+							"";
+		
+		try {
+			URL url = new URL(urlString);
+			url.openStream().close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return targetFeed;
 	}
 	
