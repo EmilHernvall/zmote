@@ -9,7 +9,6 @@ import se.z_app.stb.EPG;
 import se.z_app.stb.Program;
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.zmote.epg.EPGQuery;
-import android.content.res.Configuration;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -59,6 +58,7 @@ public class EPGFragment extends Fragment{
 	private int start_hour = 24;
 	private int start_minutes = 0;
 	private int screen_width = 0;
+	private int schedule_lenght_in_hours = 48;
 	
 	private OnTouchListener toutch;
 	private int currentX = -1, currentY = -1;
@@ -164,7 +164,7 @@ public class EPGFragment extends Fragment{
 			
 			@Override
 			public void onOrientationChanged(int orientation) {
-				// TODO Auto-generated method stub
+				// TODO Tune it propertly
 				
 				// Just some print of the orientation variable
 				//Log.i("Orientation:"," "+orientation);
@@ -213,7 +213,6 @@ public class EPGFragment extends Fragment{
 				}
 			}
 		};
-		//orientationListener.enable();
 
 		new AsyncDataLoader().execute();
 
@@ -258,7 +257,7 @@ public class EPGFragment extends Fragment{
     	
 		//Date now = new Date(System.currentTimeMillis());
     	
-    	for(int i=0; i<48; ++i){
+    	for(int i=0; i<(schedule_lenght_in_hours*2); ++i){
 			
 			TextView time = new TextView(view.getContext());
 			time.setTextColor(0xFFFF8000);
@@ -316,21 +315,50 @@ public class EPGFragment extends Fragment{
      * @author Francisco Valladares
      */
     void getStartTime(){
+    	
+    	Calendar cal = Calendar.getInstance(); // creates calendar
+    	Date start = null;
+    	Date end = null;
+    	Date temp = null;
     	// We will check the start time of the first program of every channel
     	// and get the starting hour of the earlier one
     	for(Channel channel: epg){
+    		// Check for the earlier program
     		for(Program prog: channel){
     			int hours_temp = prog.getStart().getHours();
     			int minutes_temp = prog.getStart().getMinutes();
     			if( hours_temp < start_hour){
     				start_hour = hours_temp;
     				start_minutes = minutes_temp;
+    				start = prog.getStart();
     			}else if(minutes_temp < start_minutes){
     				start_minutes = minutes_temp;
+    				start = prog.getStart();
     			}
     			break;
     		}
+    		
+    		// Check por the latest program (sorry for the poor efficiency)
+    		for(Program prog: channel){
+    			
+    			cal.setTime(prog.getStart()); // sets calendar time/date
+    		    cal.add(Calendar.SECOND, prog.getDuration()); // adds one hour
+    		    temp = cal.getTime();
+    			
+    			if(end == null)
+    				end = temp;
+    			else if(end.compareTo(temp) < 0){
+	    		    end = temp;
+    			}
+    		}
     	}
+    	
+    	// Get the lenght of the schedule in hours
+    	long duration = 0;
+    	if(start != null && end != null)
+    		duration = end.getTime() - start.getTime();		// Duration in milliseconds
+    	schedule_lenght_in_hours = (int) (duration / (60*60*1000));
+    	
     }
     
     /**
