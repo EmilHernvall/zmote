@@ -27,6 +27,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class EpgHorizontalActivity extends Activity {
 
@@ -54,9 +55,6 @@ public class EpgHorizontalActivity extends Activity {
 	private OnTouchListener toutch;
 	private int currentX = -1, currentY = -1;
 
-	private OrientationListener orientationListener = null;
-	private int changes = 0;
-	private int orientation_var = 1;	// Horiz: 0 , Vertical: 1
 	private boolean epg_loaded = false;
 
     
@@ -76,7 +74,6 @@ public class EpgHorizontalActivity extends Activity {
 		hz_scroll = (HorizontalScrollView)view.findViewById(R.id.hz_scroll);
 		hz_scroll_time = (HorizontalScrollView)view.findViewById(R.id.hz_timeline_parent);
 		timebar_hz_scroll = (LinearLayout)view.findViewById(R.id.timebar_hz_scroll);
-		
 
 			
 		//2D Scrolling, TODO: Fling needs to be implemented
@@ -90,7 +87,6 @@ public class EpgHorizontalActivity extends Activity {
 				
 				synchronized (toutch) {
 					
-				
 					switch (event.getAction()) {
 	
 			        case MotionEvent.ACTION_MOVE: {
@@ -142,65 +138,9 @@ public class EpgHorizontalActivity extends Activity {
 		hz_scroll.setOnTouchListener(toutch);
 		scroll_view.setOnTouchListener(toutch);
 		
-		
 		// Get the size of the screen in pixels
 		screen_width = getResources().getDisplayMetrics().widthPixels;
 		
-		orientation_var = 1;
-        orientationListener = new OrientationListener(view.getContext()) {
-			
-			@Override
-			public void onOrientationChanged(int orientation) {
-				// TODO Tune it propertly
-				
-				// Just some print of the orientation variable
-				//Log.i("Orientation:"," "+orientation);
-				//if(orientation == Configuration.ORIENTATION_LANDSCAPE) Log.i("Position: "," landscape");
-				//if(orientation == Configuration.ORIENTATION_PORTRAIT) Log.i("Position: "," portrait");
-				//if(orientation == Configuration.ORIENTATION_UNDEFINED) Log.i("Position: "," undefined");
-				//if(orientation == Configuration.ORIENTATION_SQUARE)	Log.i("Position: "," square");
-				
-				// If we have 3.0 or later
-				if( main.SDK_INT > 10){
-					if(orientation != ORIENTATION_UNKNOWN && changes != 0 && epg_loaded){
-						/*
-						if(orientation_var == 1){
-							Toast.makeText(view.getContext(), "Changing...", Toast.LENGTH_SHORT).show();
-							Intent intent = new Intent(view.getContext(), EpgHorizontalActivity.class);
-							EPGFragment.this.startActivity(intent);
-							orientation_var = 0;
-							changes = -1;
-							orientationListener.disable();
-						}else if(orientation_var == 0){
-							// Go back to the fragment in some way
-							Toast.makeText(view.getContext(), "Push back button", Toast.LENGTH_SHORT).show();
-							
-						}*/
-					}
-					changes++;
-				}else{	// If we have 2.3.6 or earlier
-					/*
-					if( (orientation < 10 || orientation > 270) && epg_loaded){
-						
-						if(orientation > 270) changes++;
-						if(orientation > 270 && changes > 5){
-							//Toast.makeText(view.getContext(), "changeeeddd", Toast.LENGTH_SHORT).show();
-							Intent intent = new Intent(view.getContext(), EpgHorizontalActivity.class);
-							EPGFragment.this.startActivity(intent);
-							orientation_var = 0;
-							changes = -1;
-							orientationListener.disable();
-						}else if(orientation < 9){
-							// Go back to the fragment in some way
-							//Toast.makeText(view.getContext(), "Going back", Toast.LENGTH_SHORT).show();
-							changes = -1;
-						}
-					}
-					*/
-				}
-			}
-		};
-
 		new AsyncDataLoader().execute();
 
 	}

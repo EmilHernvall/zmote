@@ -182,8 +182,8 @@ public class EPGFragment extends Fragment{
 							Intent intent = new Intent(view.getContext(), EpgHorizontalActivity.class);
 							EPGFragment.this.startActivity(intent);
 							orientation_var = 0;
-							changes = -1;
-							orientationListener.disable();
+							changes = 0;
+							//orientationListener.disable();
 						}else if(orientation_var == 0){
 							// Go back to the fragment in some way
 							Toast.makeText(view.getContext(), "Push back button", Toast.LENGTH_SHORT).show();
