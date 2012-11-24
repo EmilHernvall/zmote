@@ -75,9 +75,6 @@ public class STBListener extends Observable implements Observer, Runnable{
 			this.setChanged();
 			this.notifyObservers(event);
 
-		}
-		
+		}		
 	}
-
-
 }

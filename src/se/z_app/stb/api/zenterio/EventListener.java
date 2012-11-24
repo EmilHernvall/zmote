@@ -43,7 +43,9 @@ public class EventListener implements EventListnerInterface {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		System.out.println("Listner is initiater");
+
 	}
 
 	/**
@@ -92,7 +94,6 @@ public class EventListener implements EventListnerInterface {
 
 			}
 		}
-
 	}
 
 	private STBEvent stringToSTBEvent(String eventString){
@@ -117,15 +118,11 @@ public class EventListener implements EventListnerInterface {
 					currentEvent.setState(false);
 				}
 			}
-
-
-
-
+			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return currentEvent;
 	}
-
 }

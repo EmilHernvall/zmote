@@ -90,11 +90,25 @@
 	         android:layout_height="wrap_content"
 	         android:layout_marginTop="10dp"
 	       	android:layout_marginLeft="40dp"
-	         android:text="NOW"
+	         android:text="@string/now_text"
 	         android:textColor="#FF8000"
 	         android:visibility="gone"/>
    	 	
 	    </RelativeLayout>
     </HorizontalScrollView>
 
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" 
+        >
+	    <ImageView 
+	        android:id="@+id/flip_button"
+	        android:src="@android:drawable/ic_menu_always_landscape_portrait"
+	        android:contentDescription="@string/hello_world"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentRight="true"
+	        android:layout_alignParentBottom="true" />
+	    
+    </RelativeLayout>
 </RelativeLayout>
