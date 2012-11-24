@@ -11,6 +11,7 @@ import se.z_app.zmote.epg.EPGQuery;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
@@ -21,6 +22,7 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -138,7 +140,26 @@ public class EpgHorizontalActivity extends Activity {
 
 	}
 
-    
+    /**
+     * Sets the listener for the fliping button
+     */
+    public void setFlipButton(){
+    	
+    	ImageView flipButton = (ImageView) view.findViewById(R.id.flip_button);
+    	//flipButton.setVisibility(View.VISIBLE);
+    	flipButton.setClickable(true);
+    	
+    	flipButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+			
+		});
+	
+    }
+	
     /**
      * Sets the timeBar in 30min intervals starting from the hour passed by "start"
      * @param start		Starting time for the time bar
@@ -362,6 +383,8 @@ public class EpgHorizontalActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 			
+				setResult(p.getEventID());
+				finish();
 				/*Fragment fragment = new ChannelInformationFragment(main, p);
 				android.support.v4.app.FragmentManager fragmentManager = getFragmentManager();
 				android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
