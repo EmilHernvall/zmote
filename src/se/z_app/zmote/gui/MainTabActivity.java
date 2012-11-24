@@ -82,6 +82,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 		new Thread(new MyTimedTask()).start();
 	}
 
+
 	/**
 	 * Allows you to set the orientation of the screen from outside of the class
 	 * @param i
@@ -89,6 +90,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
     public void setOrientation(int i){
     		setRequestedOrientation(i);
     }
+
 
 	/**
 	 * Vibrates the phone for 95 milliseconds.
