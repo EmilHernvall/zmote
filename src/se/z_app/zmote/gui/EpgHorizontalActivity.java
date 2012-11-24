@@ -11,7 +11,6 @@ import se.z_app.zmote.epg.EPGQuery;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
@@ -383,15 +382,8 @@ public class EpgHorizontalActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 			
-				setResult(p.getEventID());
+				EPGFragment.eventProgram = p;
 				finish();
-				/*Fragment fragment = new ChannelInformationFragment(main, p);
-				android.support.v4.app.FragmentManager fragmentManager = getFragmentManager();
-				android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-				fragmentTransaction.replace(R.id.container, fragment);
-				fragmentTransaction.addToBackStack(null);
-				fragmentTransaction.commit();*/
 			}
 			
 		});
