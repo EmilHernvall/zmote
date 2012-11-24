@@ -521,11 +521,15 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 
 		//TODO: imageList == 0 a bug appears, this happens when it dose not get connection to a STB		
 
+		if(imageList.isEmpty()){
+			return;
+		}
 		leftleft = imageList.get((currentChannelNr+imageList.size()-2)%imageList.size());
 		left = imageList.get((currentChannelNr+imageList.size()-1)%imageList.size());
 		center = imageList.get(currentChannelNr);
 		right = imageList.get((1+currentChannelNr)%imageList.size());
 		rightright = imageList.get((2+currentChannelNr)%imageList.size());
+
 
 		screenwidth = r.getMeasuredWidth();
 		screenheight = r.getMeasuredHeight();
@@ -534,7 +538,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 		Log.i("Screen", "Screen height = " + screenheight);
 		Log.i("Screen", "Image width = " + imagewidth);
 		Log.i("Screen", "Image hight = " + imagehight);
-		
+
 		//LeftLeft
 
 		leftleftScale = 5*screenwidth/imagewidth/19; //screenheight/imagehight/6;
