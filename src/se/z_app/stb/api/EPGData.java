@@ -130,7 +130,5 @@ public class EPGData implements Observer{
 				populateWithChannelIcon(channel);
 			}
 		}
-	}
-	
-	
+	}	
 }
