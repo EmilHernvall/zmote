@@ -7,10 +7,6 @@ import java.util.concurrent.ExecutionException;
 import se.z_app.stb.MediaItem;
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.zmote.webtv.MediaStreamer;
-
-
-
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,21 +16,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentSkipListMap;
+
+/**
+ * The fragment from which one can play media form the phone, currently supports .mp3 music and .mp4 videos.
+ * @author Christian Tennstedt & Marcus Widegren
+ *
+ */
 
 public class PlayMediaFilesFragment extends Fragment {
 	private MainTabActivity tab;
 	private float screenWidth = 0;
 	private View view_temp;
-	private ProgressBar pb;
+//	private ProgressBar pb;
 	private File tmpFile;
 
+	/**
+	 * Constructor for the PlayMediaFilesFragment
+	 * @param mainTabActivity The tab
+	 */
 	public PlayMediaFilesFragment(MainTabActivity mainTabActivity) {
 		this.tab = mainTabActivity;
 	}
@@ -55,36 +58,18 @@ public class PlayMediaFilesFragment extends Fragment {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		search();
+//		search();
 		return view_temp;
 		
 	}
 	
-	/**
-	 * TODO: NOT TESTED
-	 */
-	public void search(){
-
-		// We can set a progress bar to show the user that we are searching
-		pb = (ProgressBar)view_temp.findViewById(R.id.progressLodingEpgChannelInformation);
-		EditText search_box = (EditText)view_temp.findViewById(R.id.search_box_webtv);
-//		search_for_this = search_box.getText().toString();
-		TextView resultText = (TextView) view_temp.findViewById(R.id.result_webtv);
-//		resultText.setText("Result for: '"+ search_for_this+"'");
-		// Here we should call a function like this
-
-		//TODO If no input in search field, no search shall be done //Emma
-//		if(search_for_this != null){  //DON'T DO ANYTHING DIFFERENT RAGARDLESS OF INPUT OR NOT 
-//			new AsyncWebSearch().execute();
-//		}
-	}
+//	private void search(){
+//		pb = (ProgressBar)view_temp.findViewById(R.id.progressLodingEpgChannelInformation);
+//		EditText search_box = (EditText)view_temp.findViewById(R.id.search_box_webtv);
+//		TextView resultText = (TextView) view_temp.findViewById(R.id.result_webtv);
+//	}
 	
-	/**
-	 * TODO: NOT TESTED
-	 * @param res
-	 */
-	
-	public void showResults(ConcurrentSkipListMap res){
+	private void showResults(ConcurrentSkipListMap res){
 
 		// some layout stuff
 		Log.i("files","in the showResult()");
@@ -95,9 +80,8 @@ public class PlayMediaFilesFragment extends Fragment {
 		LinearLayout.LayoutParams icon_params = new LinearLayout.LayoutParams(100,80);
 		LinearLayout.LayoutParams item_params2 = new LinearLayout.LayoutParams((int)(screenWidth*0.15),LayoutParams.MATCH_PARENT);
 
-			
 		while(!res.isEmpty()){
-			Object key = res.firstKey();
+			Object key = res.lastKey();
 			File fileToAdd = (File)res.remove(key);
 
 			LinearLayout item_container = new LinearLayout(view_temp.getContext());
