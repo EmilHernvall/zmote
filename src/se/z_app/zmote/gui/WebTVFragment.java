@@ -48,10 +48,12 @@ public class WebTVFragment extends Fragment {
 	private WebTVService services[];
 	private String search_for_this = null;	
 	private float screenWidth = 0;
+	private float screenHeight = 0;
 	private WebTVItem tempItem;
-	public WebTVFragment(){
 
-	}
+	/*	public WebTVFragment(){
+
+	}*/
 
 	public WebTVFragment(MainTabActivity mainTabActivity) {
 		/*
@@ -66,6 +68,7 @@ public class WebTVFragment extends Fragment {
 
 		view_temp = inflater.inflate(R.layout.fragment_web_tv, null);
 		screenWidth = getResources().getDisplayMetrics().widthPixels;
+		screenHeight = getResources().getDisplayMetrics().heightPixels;
 		new AsyncWebServiceLoader().execute();
 
 		// Set the listener for the search button
@@ -84,10 +87,14 @@ public class WebTVFragment extends Fragment {
 				LinearLayout linLay = (LinearLayout) view_temp.findViewById(R.id.searchBar);
 				linLay.setVisibility(View.GONE);
 				LinearLayout linLayResult = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
-				linLayResult.setVisibility(View.VISIBLE);			
-				LinearLayout noSearch = (LinearLayout) view_temp.findViewById(R.id.noSearch);
-				noSearch.setVisibility(View.GONE);
+				linLayResult.setVisibility(View.VISIBLE);		
+				LinearLayout playBarLine = (LinearLayout) view_temp.findViewById(R.id.playBarLine);
+				playBarLine.setVisibility(View.GONE);	
+				LinearLayout playBar = (LinearLayout) view_temp.findViewById(R.id.play_results_ly);
+				playBar.setVisibility(View.GONE);
 
+				//	LinearLayout noSearch = (LinearLayout) view_temp.findViewById(R.id.noSearch);
+				//	noSearch.setVisibility(View.GONE);
 				//TODO set view when noSearch string is entered
 
 				//	LinearLayout linLayTopList = (LinearLayout) view_temp.findViewById(R.id.top_list);
@@ -105,12 +112,13 @@ public class WebTVFragment extends Fragment {
 				// Go back to first view
 				LinearLayout linLay = (LinearLayout) view_temp.findViewById(R.id.searchBar);
 				linLay.setVisibility(View.VISIBLE);
-				//				LinearLayout linLayTopList = (LinearLayout) view_temp.findViewById(R.id.top_list);
-				//				linLayTopList.setVisibility(View.VISIBLE);
-				//TODO Remove commented if the toplist isn't used
-
 				LinearLayout linLayResult = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
 				linLayResult.setVisibility(View.GONE);
+				LinearLayout playBarLine = (LinearLayout) view_temp.findViewById(R.id.playBarLine);
+				playBarLine.setVisibility(View.GONE);
+				LinearLayout playBar = (LinearLayout) view_temp.findViewById(R.id.play_results_ly);
+				playBar.setVisibility(View.GONE);
+
 				LinearLayout noSearch = (LinearLayout) view_temp.findViewById(R.id.noSearch);
 				noSearch.setVisibility(View.GONE);
 				//TODO fix so work
@@ -118,7 +126,11 @@ public class WebTVFragment extends Fragment {
 		});
 
 		LinearLayout linLayStart = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
-		linLayStart.setVisibility(View.GONE);
+		linLayStart.setVisibility(View.GONE);	
+		LinearLayout playBarLine = (LinearLayout) view_temp.findViewById(R.id.playBarLine);
+		playBarLine.setVisibility(View.GONE);
+		LinearLayout playBar = (LinearLayout) view_temp.findViewById(R.id.play_results_ly);
+		playBar.setVisibility(View.GONE);
 		LinearLayout noSearch = (LinearLayout) view_temp.findViewById(R.id.noSearch);
 		noSearch.setVisibility(View.GONE);
 
@@ -139,10 +151,31 @@ public class WebTVFragment extends Fragment {
 		resultText.setText("Result for: '"+ search_for_this+"'");
 		// Here we should call a function like this
 
-		//TODO If no input in search field, no search shall be done //Emma
-		if(search_for_this != null){  //DON'T DO ANYTHING DIFFERENT RAGARDLESS OF INPUT OR NOT 
+		if(checkEmpty(search_box) == false){  //Check if the search box is empty
 			new AsyncWebSearch().execute();
+
 		}
+		else {
+			//		LinearLayout linLayResult = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
+			//		linLayResult.setVisibility(View.GONE);
+			LinearLayout noSearch = (LinearLayout) view_temp.findViewById(R.id.noSearch);
+			noSearch.setVisibility(View.VISIBLE);
+			LinearLayout results_ly = (LinearLayout) view_temp.findViewById(R.id.search_results_ly);
+			results_ly.removeAllViewsInLayout();
+		}
+	}
+
+	/**
+	 * Check if there is an input in the text box or not
+	 * @Author Thed and Ralf 
+	 * @param text from text box
+	 * @return boolean
+	 */
+	private boolean checkEmpty(EditText thaText) {
+		if(thaText.getText().toString().trim().length() > 0)
+			return false;
+		else
+			return true;
 	}
 
 	/**
@@ -174,14 +207,14 @@ public class WebTVFragment extends Fragment {
 
 		LinearLayout results_ly = (LinearLayout) view_temp.findViewById(R.id.search_results_ly);
 		results_ly.removeAllViewsInLayout(); 
-		LinearLayout.LayoutParams item_container_params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);
 
+		LinearLayout.LayoutParams item_container_params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);		
 		LinearLayout.LayoutParams item_params = new LinearLayout.LayoutParams((int)(screenWidth*0.85),LayoutParams.MATCH_PARENT);
 		LinearLayout.LayoutParams icon_params = new LinearLayout.LayoutParams(100,80);
 		LinearLayout.LayoutParams item_params2 = new LinearLayout.LayoutParams((int)(screenWidth*0.15),LayoutParams.MATCH_PARENT);
 
-		for(WebTVItem x: res){
 
+		for(WebTVItem x: res){
 			LinearLayout item_container = new LinearLayout(view_temp.getContext());
 			item_container.setBackgroundColor(0xFFCCCCCC);
 			item_container.setPadding(4, 4, 4, 4);
@@ -202,8 +235,6 @@ public class WebTVFragment extends Fragment {
 			item.setClickable(true);
 
 			ImageView icon = new ImageView(view_temp.getContext());
-			//icon.setImageBitmap(x.getIcon());
-
 			TextView title = new TextView(view_temp.getContext());
 			title.setText(x.getTitle());
 			title.setPadding(10, 0, 0, 0);
@@ -240,7 +271,27 @@ public class WebTVFragment extends Fragment {
 				}
 			});
 		}
+
+		//TODO make buttons work
+//		addPlayBar();
+		
 	}
+
+	/** 
+	 * Method that sets the play/pause/next/forward buttons
+	 * @Author Emma Axelsson
+	 */
+	public void addPlayBar(){
+
+		LinearLayout playBarLine = (LinearLayout) view_temp.findViewById(R.id.playBarLine);
+		LinearLayout playBar = (LinearLayout) view_temp.findViewById(R.id.play_results_ly);
+	//	LinearLayout.LayoutParams buttonContainerParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);
+	//	LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,(int)(screenHeight*0.15));
+
+		playBar.addView(playBarLine);
+
+	}
+
 	/**
 	 * Add items into spinner (drop-down menu with services) dynamically
 	 * @author Maria Jesus Platero
