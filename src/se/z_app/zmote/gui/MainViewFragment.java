@@ -215,6 +215,9 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 		int can1 = 0;
 		int can2 = 0;
 		int fin = 0;
+		if(imageList == null || imageList.isEmpty()){
+			return;
+		}
 		int size = imageList.size(); 
 		channelNr = (channelNr+size)%size;
 
