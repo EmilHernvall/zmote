@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dip"
+        android:background="#CCCCCC"
+        android:orientation="vertical"
+        android:padding="2dip" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="1dip" >
+
+            <TextView
+                android:id="@+id/time_of_feedUpdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                
+                android:text="50 min ago"
+                android:textColor="#000000"
+                android:textSize="8sp" />
+
+            <TextView
+                android:id="@+id/feed_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_centerVertical="true"
+                android:paddingLeft="8dip"
+                android:text="Feed for: The dark knight"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:descendantFocusability="beforeDescendants"
+            android:focusableInTouchMode="true"
+            android:padding="1dip"
+            android:paddingLeft="8dip" >
+
+            <EditText
+                android:id="@+id/new_post"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/post_button"
+                android:background="#FFFFFF"
+                android:ems="10"
+                android:hint="@string/activity_zchat_hintName"
+                android:padding="2dip"
+                android:lines="2"
+                android:layout_marginLeft="6dip"
+                android:text="@string/activity_zchat_new_post"
+                android:textColor="#000000"
+                android:textColorHint="#666666"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/post_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:height="12dip"
+                android:text="@string/button_post_text"
+                android:textColor="#666666" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal" >
+
+        <RelativeLayout
+            android:layout_width="16dip"
+            android:layout_height="match_parent" >
+        </RelativeLayout>
+
+        <ListView
+            android:id="@+id/list_over_post"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:background="#CCCCCC"
+            android:divider="#000000"
+            android:dividerHeight="2dp"
+            android:orientation="vertical" >
+        </ListView>
+    </LinearLayout>
+
+</LinearLayout>

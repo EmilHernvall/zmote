@@ -3,7 +3,7 @@
     android:id="@+id/content_ly"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical" >
 
     <LinearLayout
         android:id="@+id/searchBar"
@@ -63,17 +63,17 @@
             android:paddingLeft="3dp"
             android:paddingRight="3dp"
             android:textColor="#FFFFFF"
-            android:textSize="15dp" />              
- 
+            android:textSize="15dp" />
     </LinearLayout>
-  <!-- Not needed if the top list isn't used   
+    <!--
+    Not needed if the top list isn't used   
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#33B5E5"
         android:orientation="vertical" >
     </LinearLayout>
- -->   
+    -->
     <!--
     <LinearLayout  
        	android:id="@+id/top_list"
@@ -97,8 +97,14 @@
       
     </LinearLayout>
     -->
+<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#33B5E5"
+        android:orientation="vertical" >
+    </LinearLayout>
     
-	    <LinearLayout
+    <LinearLayout
         android:id="@+id/noSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -111,19 +117,59 @@
             android:layout_margin="3dp"
             android:paddingLeft="3dp"
             android:paddingRight="3dp"
-            android:textColor="#FFFFFF"
             android:text="Please enter someting in the search field"
-            android:textSize="15dp" />              
+            android:textColor="#FFFFFF"
+            android:textSize="15dp" />
     </LinearLayout>
-	
-    
+
     <LinearLayout
+        android:id="@+id/noSearchLine"
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="#33B5E5"
         android:orientation="vertical" >
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/play_results_ly"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:background="#000000"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/previous_button"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:background="@drawable/previous_button"
+            android:baselineAlignBottom="false"
+            android:contentDescription="@string/search" />
+
+        <ImageButton
+            android:id="@+id/play_button"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:background="@drawable/play_button"
+            android:baselineAlignBottom="false"
+            android:contentDescription="@string/search" />
+
+        <ImageButton
+            android:id="@+id/next_button"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:background="@drawable/next_button"
+            android:baselineAlignBottom="false"
+            android:contentDescription="@string/search" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/playBarLine"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#33B5E5"
+        android:orientation="vertical" >
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -139,5 +185,4 @@
         </LinearLayout>
     </ScrollView>
 
-    
 </LinearLayout>

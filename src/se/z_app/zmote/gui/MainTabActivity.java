@@ -13,6 +13,7 @@ import com.actionbarsherlock.app.ActionBar.TabListener;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 
+import se.z_app.stb.Program;
 import se.z_app.stb.STB;
 import se.z_app.stb.STBEvent;
 import se.z_app.stb.api.RemoteControl;
@@ -61,11 +62,12 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	private Vibrator vibe;	
 	private static Handler myHandler;
 	private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
-	private RemoteControlFragment rcfragment;// = new RemoteControlFragment(this);
-	private EPGFragment epgfragment;// = new EPGFragment(this);
-	private WebTVFragment webfragment;// = new WebTVFragment(this);
-	private MainViewFragment mainfragment;// = new MainViewFragment(this);
-    private ChannelInformationFragment chinfragment;// = new ChannelInformationFragment(this);
+	private Fragment currentFragmen;
+	private RemoteControlFragment rcfragment;
+	private EPGFragment epgfragment;
+	private WebTVFragment webfragment;
+	private MainViewFragment mainfragment;
+    private ChannelInformationFragment chinfragment;
     private PlayMediaFilesFragment filesfragment;
     private ImageView volumIcon;
     private ProgressBar volumPB;
@@ -86,7 +88,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 				public void run() {
 					if(state){
 						volumIcon.setImageDrawable(getResources().getDrawable(R.drawable.vol_mute));
-					}else{
+					}else{ 
 						volumIcon.setImageDrawable(getResources().getDrawable(R.drawable.vol_up2));
 					}
 					
@@ -99,7 +101,8 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 				int value = tmp;
 				@Override
 				public void run() {
-					volumPB.setProgress(value);					
+					volumPB.setProgress(value);	
+					volumIcon.setImageDrawable(getResources().getDrawable(R.drawable.vol_up2));
 				}
 			});
 		}
@@ -297,6 +300,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 
     	
 		if(fragment != null)
+			currentFragmen = fragment;
 			if(isNew)
 				getSupportFragmentManager().beginTransaction().add(R.id.container, fragment).commit();
 			else
@@ -329,7 +333,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 		else if(tab.equals(tabFav)){
 			Log.i("Detaching FragmentLog", "Fav");
 			//WARNING! : provisional function 
-			fragment = chinfragment;
+			fragment = filesfragment;
 			
 		}
 		else if(tab.equals(tabMain)){
@@ -341,12 +345,26 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	         //ft.detach(fragment);
 			
 	        getSupportFragmentManager().beginTransaction().hide(fragment).commit();
-	    }
-    	 
-		
+	        getSupportFragmentManager().beginTransaction().hide(currentFragmen).commit();
+	    }	
 
 	}
 
+	public void showChannelInformation(Program program){
+		getSupportFragmentManager().beginTransaction().hide(currentFragmen).commit();
+		if(chinfragment == null){
+			chinfragment = new ChannelInformationFragment(this, program);
+			getSupportFragmentManager().beginTransaction().add(R.id.container, chinfragment).commit();
+			
+		}else{
+			chinfragment.focusOnProgram(program);
+			getSupportFragmentManager().beginTransaction().show(chinfragment).commit();
+		}
+		currentFragmen = chinfragment;
+		
+		
+	}
+	
 
 	/**
 	 * Auto-generated method. Does nothing.
@@ -377,6 +395,8 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 		actionBar.addTab(tabFav.setTabListener(this));
 
 	}
+	
+	
 
 
 	/**
@@ -422,6 +442,15 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 		
 		volumPB = (ProgressBar)myView.findViewById(R.id.volume_progressbar);
 		volumIcon = (ImageView)myView.findViewById(R.id.volume_icon);
+		volumIcon.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				RemoteControl.instance().sendButton(Button.MUTE);
+			}
+		});
+		//RemoteControl.instance().sendButton(Button.VOLMINUS);
+		//RemoteControl.instance().sendButton(Button.VOLPLUS);
 		
 
 		return myView;				
