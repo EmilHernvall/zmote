@@ -3,18 +3,14 @@ package se.z_app.zmote.gui;
 
 
 import java.io.File;
-
 import se.z_app.stb.MediaItem;
 import se.z_app.stb.STB;
 import se.z_app.stb.STB.STBEnum;
-import se.z_app.stb.api.EPGData;
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.stb.api.STBContainer;
-import se.z_app.zmote.epg.EPGContentHandler;
 import se.z_app.zmote.webtv.MediaStreamer;
 import android.app.Activity;
 import android.content.Intent;
-import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.view.Menu;
@@ -31,31 +27,9 @@ public class MainTestActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_test);
-        EPGData.instance();
-        EPGContentHandler.setContext(this.getApplicationContext());
-        EPGContentHandler.instance();
-        
-        STBContainer.instance();
-        
-        
-		WifiManager myWifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
-    	WifiInfo myWifiInfo = myWifiManager.getConnectionInfo();
-    	int ipAddress = myWifiInfo.getIpAddress();    	
-    	@SuppressWarnings("deprecation")
-		String ip = android.text.format.Formatter.formatIpAddress(ipAddress);
-        
-    	ms = MediaStreamer.instance();
-    	ms.setLocalIP(ip);
-        
-//    	STB stb = new STB();
-//		stb.setBoxName("zen56");
-//		stb.setIP("130.236.248.56");
-//		stb.setType(STBEnum.ZENTERIO);
-//		stb.setMAC("00:07:67:9B:EB:33");
-//
-//		STBContainer.instance().setActiveSTB(stb);
-    	
-        
+       
+        new Bootstrap(this.getApplicationContext(), (WifiManager) getSystemService(WIFI_SERVICE));
+               
         
         Button stbProxy = (Button) findViewById(R.id.bLoadSTBProxy);
         stbProxy.setOnClickListener(new View.OnClickListener() {

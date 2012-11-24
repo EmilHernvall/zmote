@@ -3,6 +3,7 @@ package se.z_app.zmote.gui;
 
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.zmote.epg.EPGContentHandler;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.app.Activity;
@@ -28,8 +29,9 @@ public class SplashActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    	EPGContentHandler.setContext(this.getApplicationContext());
-        EPGContentHandler.instance();
+        
+        new Bootstrap(this.getApplicationContext(), (WifiManager) getSystemService(WIFI_SERVICE));
+        
         setContentView(R.layout.activity_splash);
     }
 
@@ -55,7 +57,8 @@ public class SplashActivity extends Activity {
         	
             
             public void run() {
-				RemoteControl.instance();
+				
+            	
                
 				//Finish the splash activity so it can't be returned to.
                 SplashActivity.this.finish(); 		

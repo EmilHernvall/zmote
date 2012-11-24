@@ -60,8 +60,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	private WebTVFragment webfragment;// = new WebTVFragment(this);
 	private MainViewFragment mainfragment;// = new MainViewFragment(this);
     private ChannelInformationFragment chinfragment;// = new ChannelInformationFragment(this);
-	private Fragment currentFragment;// = mainfragment;
-
+    public int SDK_INT = android.os.Build.VERSION.SDK_INT;
 	/**
 	 * Standard create function for the fragment activity.
 	 * Sets the layout.
@@ -85,11 +84,21 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 
 
 	/**
+	 * Allows you to set the orientation of the screen from outside of the class
+	 * @param i
+	 */
+    public void setOrientation(int i){
+    		setRequestedOrientation(i);
+    }
+
+
+	/**
 	 * Vibrates the phone for 95 milliseconds.
 	 */
 	public void vibrate(){
 		vibe.vibrate(95);
 	}
+	
 	/**
 	 * vibrates the phone a number a number of milliseconds.
 	 * @param ms number of milliseconds the the phone vibrates
@@ -223,7 +232,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 					
 		}else if(tab.equals(tabMain)){
 			Log.i("FragmentLog", "Main");
-			if(mainfragment == null){
+			if(mainfragment == null && SDK_INT > 10){
 				mainfragment = new MainViewFragment(this);
 				isNew = true;
 			}
@@ -252,7 +261,6 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 		if(tab.equals(tabRC)){
     		Log.i("Detaching FragmentLog", "RC");
     		fragment = rcfragment;
-    		
     	}
     	else if(tab.equals(tabEPG)){
     		Log.i("Detaching FragmentLog", "EPG");
@@ -261,7 +269,6 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
     	else if(tab.equals(tabWeb)){
     		Log.i("Detaching FragmentLog", "WebTV");
     		fragment = webfragment;
-    		
     	}
 		else if(tab.equals(tabFav)){
 			Log.i("Detaching FragmentLog", "Fav");
@@ -322,7 +329,6 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	 */
 	private View createDotAndDropDown(){
 
-
 		View myView = getLayoutInflater().inflate(
 				R.layout.activity_main_tab_actionbar, null);
 		mySpinner = (Spinner) myView.findViewById(R.id.action_bar_spinner);
@@ -334,6 +340,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 		int temp = 0;
 		int selected = 0;
 		STB stb;
+		
 		while(iterator.hasNext()){ 		
 			if(STBContainer.instance().getActiveSTB().equals(stb = iterator.next())){
 				selected = temp;
@@ -361,17 +368,15 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	}
 
 	public void setAlive(int isAlive){
-		if(actionBar == null)
+
+		if(actionBar == null) //TODO need to fixed, added so it won't crash due to other changes //Emma
 			return;
 		if(isAlive==1){
 			actionBar.setLogo(R.drawable.green_button2);
-		}
-		else{
+		}else{
 			actionBar.setLogo(R.drawable.red_dot);
 		}
 	}
-
-
 
 	/**
 	 * Private class that implements OnItemSelectedListener. The reason for this
@@ -384,7 +389,6 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	 *
 	 */
 	private class MyOnItemSelectedListener implements OnItemSelectedListener{
-
 
 		/**
 		 * Sets the active STB in the STB container based on what the user 

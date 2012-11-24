@@ -7,7 +7,11 @@ import java.util.Observer;
 
 import se.z_app.stb.STB;
 
-
+/**
+ * 
+ * @author Rasmus Holm, Linus Back
+ *
+ */
 
 
 public class STBContainer extends Observable implements Iterable<STB>{

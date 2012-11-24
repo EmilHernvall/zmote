@@ -8,7 +8,7 @@
 
     <color name="black">#000000</color>
 
-    <string name="title_activity_select_stb">SelectSTBActivity</string>
+    <string name="title_activity_select_stb">Zmote</string>
     <string name="title_activity_main_activity_view">MainActivityView</string>
     <string name="title_activity_edit_stb">EditSTBActivity</string>
     <string name="title_activity_remote_control">RemoteControlActivity</string>
@@ -45,6 +45,6 @@
     <string name="add_stb_text">Add STB</string>
     <string name="top_lists">Top lists</string>
     <string name="search">Search</string>
-   
+    <string name="title_activity_epg_horizontal">EpgHorizontalActivity</string>
 
 </resources>

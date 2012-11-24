@@ -19,6 +19,7 @@ import android.widget.ListView;
 public class SelectSTBListView extends ListView {
 	Vector<STB> theList = SelectSTBList.instance().getList();
 	SelectSTBAdapter theAdapter;
+	String filePath = null;
 
 	/* Default constructors */
 	public SelectSTBListView(Context context, AttributeSet attrs, int defStyle) {
@@ -34,7 +35,7 @@ public class SelectSTBListView extends ListView {
 	}
 
 	/**
-	 * notify´s the adapter when the list is changed
+	 * notifyï¿½s the adapter when the list is changed
 	 */
 	public void notifyAdapter() {
 		if (theAdapter != null)
@@ -47,14 +48,16 @@ public class SelectSTBListView extends ListView {
 	 * @param theActivity
 	 * @param listIn
 	 */
-	public void setList(Activity theActivity, STB[] listIn) {
+	public void setList(Activity theActivity, STB[] listIn, String filePath) {
 		theList.clear();
 		for (int i = 0; i < listIn.length; i++) {
 			theList.add(listIn[i]);
 		}
 
-		theAdapter = new SelectSTBAdapter(theActivity, theList);
+		theAdapter = new SelectSTBAdapter(theActivity, theList, filePath);
 		this.setAdapter(theAdapter);
 	}
+	
+	
 
 }

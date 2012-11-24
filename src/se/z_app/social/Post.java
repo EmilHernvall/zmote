@@ -8,9 +8,9 @@ import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentSkipListMap;
 /**
  * Class that describes a post made to a feed
  * 
- * @author Rasmus Holm
+ * @author Rasmus Holm, refractored by Linus Back
  */
-public class Post implements Iterable<Comment>{
+public class Post implements Iterable<Comment>, PostInterface{
 	
 	private ConcurrentSkipListMap comments = new ConcurrentSkipListMap();
 	private String userName;
@@ -19,6 +19,7 @@ public class Post implements Iterable<Comment>{
 	private Date lastUpdate;
 	private Feed feed;
 	private int id;
+
 	
 	/**
 	 * Getter for userName
@@ -129,6 +130,14 @@ public class Post implements Iterable<Comment>{
 		com.toArray(tbr);
 		return tbr;
 	}
+	/**
+	 * Get all comments as a collection of an array.
+	 * 
+	 * @return a collection of comments.
+	 */
+	public Collection<Comment> getCommentsAsCollection(){
+		return comments.values();
+	}
 	
 	/**
 	 * Getter for Id
@@ -144,6 +153,14 @@ public class Post implements Iterable<Comment>{
 	 */
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	/**
+	 * Implemented to easier find out if value is a post or not.
+	 */
+	public boolean isPost() {
+		
+		return true;
 	}
 	
 }

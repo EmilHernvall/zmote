@@ -22,7 +22,8 @@
         android:theme="@style/Theme.Sherlock" >
         <activity
             android:name=".MainTestActivity"
-            android:label="@string/title_activity_main_test" >
+            android:label="@string/title_activity_main_test"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,7 +33,8 @@
         <activity
             android:name="SplashActivity"
             android:label="@string/title_activity_splash"
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -41,14 +43,39 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:label="@string/title_activity_main" >
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".SelectSTBActivity"
-            android:label="@string/title_activity_select_stb" >
+            android:label="@string/title_activity_select_stb"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="se.z_app.zmote.gui.MainActivity" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern=".*\\.mp4"
+                    android:scheme="file" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern=".*\\.mp3"
+                    android:scheme="file" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern=".*\\.jpg"
+                    android:scheme="file" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".RemoteControlActivity"
@@ -73,7 +100,14 @@
         </activity>
         <activity
             android:name=".MainTabActivity"
-            android:label="@string/title_activity_main_tab" >
+            android:label="@string/title_activity_main_tab"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".EpgHorizontalActivity"
+            android:label="@string/title_activity_epg_horizontal"
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:screenOrientation="landscape" >
         </activity>
     </application>
 

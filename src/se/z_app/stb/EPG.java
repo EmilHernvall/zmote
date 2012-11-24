@@ -4,6 +4,11 @@ import java.util.Iterator;
 
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentSkipListMap;
 
+/**
+ * 
+ * @author Rasmus Holm
+ *
+ */
 
 public class EPG implements Iterable<Channel> {
 	private long dateOfCreation = System.currentTimeMillis();

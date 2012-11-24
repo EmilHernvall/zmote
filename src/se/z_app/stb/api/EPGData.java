@@ -13,7 +13,7 @@ import se.z_app.stb.STB;
 
 /**
  * Class that handles communication with an STB and its EPG
- * @author ?
+ * @author Markus Widegren, Rasmus Holm
  */
 public class EPGData implements Observer{
 	private STB stb;
@@ -89,7 +89,7 @@ public class EPGData implements Observer{
 		if(com == null || channel == null)
 			return null;
 		Bitmap icon = null;
-		while(icon == null)
+		for(int i = 0; i<6 && icon == null; i++)
 			icon = com.getChannelIcon(channel);
 		
 		return icon;
