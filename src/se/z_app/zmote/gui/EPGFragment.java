@@ -158,6 +158,7 @@ public class EPGFragment extends Fragment{
     	
     	if(eventProgram != null){
     		// Load channel information view and focus on the program
+    		main.showChannelInformation(eventProgram);
     		eventProgram = null;	// And reset variable
     	}
     	super.onResume();
@@ -182,40 +183,6 @@ public class EPGFragment extends Fragment{
 			
 		});
 	
-    }
-    
-    // Launches the channel information view when the app is returning from the horizontal epg
-    @Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data){
-    	super.onActivityResult(requestCode, resultCode, data);
-    	/*
-    	System.out.println(resultCode);
-    	Log.i("Result code:"," "+resultCode);
-        if(resultCode != 0){
-            //finish
-        	System.out.println(resultCode);
-        	Log.i("Result code:"," "+resultCode);
-        	Program progToShow = null;
-        	for(Channel ch: epg){
-        		for(Program prog: ch){
-        			if(prog.getEventID() == resultCode){
-        				progToShow = prog;
-        				break;
-        			}
-        		}
-        	}
-        	
-        	if( progToShow != null){
-	    	 	Fragment fragment = new ChannelInformationFragment(main, progToShow);
-				android.support.v4.app.FragmentManager fragmentManager = getFragmentManager();
-				android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-	
-				fragmentTransaction.replace(R.id.container, fragment);
-				fragmentTransaction.addToBackStack(null);
-				fragmentTransaction.commit();
-        	}
-        	
-        }*/
     }
     
     
@@ -440,14 +407,6 @@ public class EPGFragment extends Fragment{
 			 * When a program is clicked, the channel information view is loaded */
 			@Override
 			public void onClick(View v) {
-			
-//				Fragment fragment = new ChannelInformationFragment(main, p);
-//				android.support.v4.app.FragmentManager fragmentManager = getFragmentManager();
-//				android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//
-//				fragmentTransaction.replace(R.id.container, fragment);
-//				fragmentTransaction.addToBackStack(null);
-//				fragmentTransaction.commit();
 				
 				main.showChannelInformation(p);
 				
