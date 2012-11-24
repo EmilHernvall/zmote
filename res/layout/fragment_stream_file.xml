@@ -33,38 +33,45 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
-        
-    <TextView
+        <TextView
             android:id="@+id/result_webtv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="3dp"
             android:paddingLeft="3dp"
             android:paddingRight="3dp"
-            android:textColor="#FFFFFF"
             android:text="Press a file to play it on the TV"
-            android:textSize="15dp" />             
+            android:textColor="#FFFFFF"
+            android:textSize="15dp" />
     </LinearLayout>
-        
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#33B5E5"
+        android:orientation="vertical" >
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
 
         <LinearLayout
+            android:id="@+id/search_results_ly"
             android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="#33B5E5"
-            android:orientation="vertical" >
+            android:layout_height="wrap_content"
+            android:background="#000000"
+            android:orientation="vertical"
+            android:scrollbars="vertical" >
         </LinearLayout>
+    </ScrollView>
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+    <ProgressBar
+        android:id="@+id/progressBarStream"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="visible" />
 
-            <LinearLayout
-                android:id="@+id/search_results_ly"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#000000"
-                android:orientation="vertical"
-                android:scrollbars="vertical" >
-            </LinearLayout>
-        </ScrollView>
-  </LinearLayout>
+</LinearLayout>
