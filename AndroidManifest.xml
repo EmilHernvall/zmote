@@ -107,12 +107,8 @@
             android:name=".EpgHorizontalActivity"
             android:label="@string/title_activity_epg_horizontal"
             android:theme="@android:style/Theme.NoTitleBar"
-            android:screenOrientation="landscape" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:screenOrientation="landscape"
+            android:launchMode="singleInstance" >
         </activity>
     </application>
 

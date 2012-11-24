@@ -1,7 +1,8 @@
 package se.z_app.stb;
-/*
- * 
+/**
+ * Author Rasmus Holm
  */
+
 public class STB {
 
 	private STBEnum type;

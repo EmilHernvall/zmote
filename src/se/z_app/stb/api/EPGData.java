@@ -13,7 +13,7 @@ import se.z_app.stb.STB;
 
 /**
  * Class that handles communication with an STB and its EPG
- * @author ?
+ * @author Markus Widegren, Rasmus Holm
  */
 public class EPGData implements Observer{
 	private STB stb;

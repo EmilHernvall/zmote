@@ -9,7 +9,7 @@ package se.z_app.stb;
  * and mute have a boolean, true if muted false if not.
  * A better idea might be to have an abstract class and then 
  * depending on the type of event have different classes. 
- * @author Linus
+ * @author Linus Back
  *
  */
 public class STBEvent {

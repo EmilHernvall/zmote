@@ -9,8 +9,10 @@ import java.util.Observer;
 
 import se.z_app.stb.Channel;
 import se.z_app.stb.EPG;
+import se.z_app.stb.STBEvent;
 import se.z_app.stb.api.EPGData;
 import se.z_app.stb.api.STBContainer;
+import se.z_app.stb.api.STBListener;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -20,10 +22,10 @@ import android.util.Log;
 
 /**
  * Class that contains and controls the current EPG and the current channel
- * @author ?
+ * @author Markus Widegren
  *
  */
-public class EPGContentHandler implements Runnable, Observer{
+public class EPGContentHandler extends Observable implements Runnable, Observer{
 	//TODO: Implemnt cacheing of icons
 	private Thread thread;
 	private boolean isRunning;
@@ -64,6 +66,7 @@ public class EPGContentHandler implements Runnable, Observer{
 		defaultDir = Environment.getExternalStorageDirectory().getAbsolutePath()+"/zmote";
 		new File(defaultDir).mkdirs();
 		STBContainer.instance().addObserver(this);
+		STBListener.instance().addObserver(this);
 		currentEPG = new EPG();
 		currentChannel = new Channel();
 		thread.start();
@@ -89,18 +92,33 @@ public class EPGContentHandler implements Runnable, Observer{
 	public Channel getCurrentChannel(){	
 		synchronized (currentChannel) {
 			if(currentChannel == null) {
-				currentChannel = EPGData.instance().getCurrentChannel();
+				findCurrentChannel();
 			}
 			return currentChannel;
 		}
 	
 	}
 
+	
+	private void findCurrentChannel(){
+		currentChannel = EPGData.instance().getCurrentChannel();
+		if(currentChannel.getUrl() != null){
+			for (Channel channel : currentEPG) {
+				if(channel.getUrl().toLowerCase().contains(currentChannel.getUrl().toLowerCase())){
+					currentChannel = channel;
+					break;
+				}
+			}
+		}
+	}
+	
+	
 	//TODO: Implement fetching populating EPG with Icons from cache, as well as putting "Missing image" images if a images
 	//is missing from the STB or cache
 	/**
 	 * Build the EPG by getting the icons from the box
 	 */
+	
 	private void buildEPG() {
 		if(theContext != null) {
 			EPGdbHandler theHandler = new EPGdbHandler(theContext);
@@ -186,10 +204,7 @@ public class EPGContentHandler implements Runnable, Observer{
 				synchronized (currentEPG) {
 					synchronized (currentChannel) {
 						buildEPG();
-						currentChannel = EPGData.instance().getCurrentChannel();
-						if(currentChannel == null) {
-							currentChannel = new Channel();
-						}
+						findCurrentChannel();
 					}
 				}
 				
@@ -216,9 +231,26 @@ public class EPGContentHandler implements Runnable, Observer{
 	 */
 	@Override
 	public void update(Observable observable, Object data) {
-		synchronized (thread) {
-			thread.notifyAll();
-		}	
+		if(observable instanceof STBContainer){
+			synchronized (thread) {
+				thread.notifyAll();
+			}
+		}else if(observable instanceof STBListener){
+			STBEvent event = STBListener.instance().getCurrentEvent();
+			//System.out.println("Evente Recived");
+			if(event.getUrl() != null){
+				System.out.println("Evente Recived URL: " + event.getUrl());
+				for (Channel channel : currentEPG) {
+					if(event.getUrl().toLowerCase().contains(channel.getUrl().toLowerCase())){
+						System.out.println("Found Channel: " + channel.getName());
+						currentChannel = channel;
+						super.setChanged();
+						super.notifyObservers();
+						break;
+					}
+				}
+			}
+		}
 		
 	}
 	

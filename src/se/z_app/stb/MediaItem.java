@@ -1,5 +1,9 @@
 package se.z_app.stb;
-
+/**
+ * 
+ * @author Rasmus Holm
+ *
+ */
 public class MediaItem {
 	private String url;
 	private String name;

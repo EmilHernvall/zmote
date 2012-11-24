@@ -1,10 +1,14 @@
 package se.z_app.zmote.gui;
 
 
+import java.util.Observable;
+import java.util.Observer;
+
 import se.z_app.stb.Channel;
 import se.z_app.stb.EPG;
 import se.z_app.stb.api.RCProxy;
 import se.z_app.stb.api.RemoteControl;
+import se.z_app.zmote.epg.EPGContentHandler;
 import se.z_app.zmote.epg.EPGQuery;
 import se.z_app.zmote.gui.SnapHorizontalScrollView.MyGestureDetector;
 
@@ -22,7 +26,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
-public class RemoteControlFragment extends Fragment {
+public class RemoteControlFragment extends Fragment implements Observer {
 	private Button arrow_up_button;
 	private Button arrow_down_button;
 	private Button arrow_left_button;
@@ -42,6 +46,7 @@ public class RemoteControlFragment extends Fragment {
 	private EPG epg;
 	private EPGQuery query = new EPGQuery();
 	private boolean fetched = false;
+	private boolean muted = false;
 	private ImageButton active;
 
 	/**
@@ -56,9 +61,23 @@ public class RemoteControlFragment extends Fragment {
 	public static final String ARG_SECTION_NUMBER = "section_number";
 
 	@Override
+	public void update(Observable observable, Object data) {
+		main.runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				highlightChannel();
+			}
+		});
+		
+	}
+	
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
+		EPGContentHandler.instance().addObserver(this);
+		
 		/*
 		 * TODO: Follow the current channel in the icon bar
 		 * change the background when changing channel
@@ -113,12 +132,12 @@ public class RemoteControlFragment extends Fragment {
    					highlightChannel();
                     arrow_up_button.setBackgroundColor(0xFFFFFFFF);
                     // Put here the "light" button
-                    //arrow_up_button.setBackgroundResource(R.drawable.remote_up);
+                    arrow_up_button.setBackgroundResource(R.drawable.up_pressed);
                     return true;
                 }
                 else if(event.getAction() == MotionEvent.ACTION_UP){
                 	arrow_up_button.setBackgroundColor(0xFF000000);
-                	arrow_up_button.setBackgroundResource(R.drawable.remote_up);	
+                	arrow_up_button.setBackgroundResource(R.drawable.up_normal);	
                     return true;
                 }else{
                     return false;
@@ -137,12 +156,12 @@ public class RemoteControlFragment extends Fragment {
 					highlightChannel();
                     arrow_down_button.setBackgroundColor(0xFFFFFFFF);
                     // Put here the "light" button
-                    //arrow_up_button.setBackgroundResource(R.drawable.remote_up);
+                    arrow_down_button.setBackgroundResource(R.drawable.down_pressed);
                     return true;
                 }
                 else if(event.getAction() == MotionEvent.ACTION_UP){
                 	arrow_down_button.setBackgroundColor(0xFF000000);
-                	arrow_down_button.setBackgroundResource(R.drawable.remote_down);	
+                	arrow_down_button.setBackgroundResource(R.drawable.down_normal);	
                     return true;
                 }else{
                     return false;
@@ -161,12 +180,12 @@ public class RemoteControlFragment extends Fragment {
    					highlightChannel();
                     arrow_left_button.setBackgroundColor(0xFFFFFFFF);
                     // Put here the "light" button
-                    //arrow_up_button.setBackgroundResource(R.drawable.remote_up);
+                    arrow_left_button.setBackgroundResource(R.drawable.left_pressed);
                     return true;
                 }
                 else if(event.getAction() == MotionEvent.ACTION_UP){
                 	arrow_left_button.setBackgroundColor(0xFF000000);
-                	arrow_left_button.setBackgroundResource(R.drawable.remote_left);	
+                	arrow_left_button.setBackgroundResource(R.drawable.left_normal);	
                     return true;
                 }else{
                     return false;
@@ -185,12 +204,12 @@ public class RemoteControlFragment extends Fragment {
 	   				highlightChannel();
                     arrow_right_button.setBackgroundColor(0xFFFFFFFF);
                     // Put here the "light" button
-                    //arrow_up_button.setBackgroundResource(R.drawable.remote_up);
+                    arrow_right_button.setBackgroundResource(R.drawable.right_pressed);
                     return true;
                 }
                 else if(event.getAction() == MotionEvent.ACTION_UP){
                 	arrow_right_button.setBackgroundColor(0xFF000000);
-                	arrow_right_button.setBackgroundResource(R.drawable.remote_right);	
+                	arrow_right_button.setBackgroundResource(R.drawable.right_normal);	
                     return true;
                 }else{
                     return false;
@@ -198,52 +217,169 @@ public class RemoteControlFragment extends Fragment {
             }
         });
 		
-		confirm_button.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				vibrate();
-				RCProxy.instance().ok();
-			}
-		});
+		// Listener with visual feedback for the button
+		confirm_button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                //If the user swipes
+               if(event.getAction() == MotionEvent.ACTION_DOWN){
+	            	vibrate();
+	            	RCProxy.instance().ok();
+                    confirm_button.setBackgroundColor(0xFFFFFFFF);
+                    
+                    // Put here the "light" button
+                    confirm_button.setBackgroundResource(R.drawable.middle_pressed);
+                    return true;
+                }
+                else if(event.getAction() == MotionEvent.ACTION_UP){
+                	confirm_button.setBackgroundColor(0xFF000000);
+                	confirm_button.setBackgroundResource(R.drawable.middle_normal);	
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        });
 
-		store_button.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				vibrate();
-				RCProxy.instance().menu();
-			}
-		});
+		// Listener with visual feedback for the button
+		store_button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                //If the user swipes
+               if(event.getAction() == MotionEvent.ACTION_DOWN){
+	            	vibrate();
+	            	RCProxy.instance().menu();
+	            	store_button.setBackgroundColor(0xFFFFFFFF);
+                    
+                    // Put here the "light" button
+	            	store_button.setBackgroundResource(R.drawable.settings_pressed);
+                    return true;
+                }
+                else if(event.getAction() == MotionEvent.ACTION_UP){
+                	store_button.setBackgroundColor(0xFF000000);
+                	store_button.setBackgroundResource(R.drawable.settings_normal);	
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        });
 
-		undo_button.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				vibrate();
-				RCProxy.instance().back();
-			}
-		});
+		// Listener with visual feedback for the button
+		undo_button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                //If the user swipes
+               if(event.getAction() == MotionEvent.ACTION_DOWN){
+	            	vibrate();
+	            	RCProxy.instance().back();
+	            	undo_button.setBackgroundColor(0xFFFFFFFF);
+                    
+                    // Put here the "light" button
+	            	undo_button.setBackgroundResource(R.drawable.back_pressed);
+                    return true;
+                }
+                else if(event.getAction() == MotionEvent.ACTION_UP){
+                	undo_button.setBackgroundColor(0xFF000000);
+                	undo_button.setBackgroundResource(R.drawable.back_normal);	
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        });
+	
+		// Listener with visual feedback for the button
+		mute_volume_button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                //If the user swipes
+               if(event.getAction() == MotionEvent.ACTION_DOWN){
+	            	vibrate();
+	            	RCProxy.instance().mute();
+	            	mute_volume_button.setBackgroundColor(0xFFFFFFFF);
+                    
+                    // Put here the "light" button
+	            	if(muted == true){
+	            		mute_volume_button.setBackgroundResource(R.drawable.unmute_pressed);
+	            	}else{
+	            		mute_volume_button.setBackgroundResource(R.drawable.mute_pressed);	
+	            	}
+	            	
+                    return true;
+                    
+                }else if(event.getAction() == MotionEvent.ACTION_UP){
+                	mute_volume_button.setBackgroundColor(0xFF000000);
+                	
+	            	if(muted == true){
+	            		mute_volume_button.setBackgroundResource(R.drawable.unmute_normal);
+	            	}else{
+	            		mute_volume_button.setBackgroundResource(R.drawable.mute_normal);
+	            	}
+	            	 
+	            	if(muted == true){
+	              	   muted = false;
+	                }else{
+	              	   muted = true;
+	                }
+	            	
+                    return true;
+                }else{
+                    return false;
+                }
+               
+              
+            }
+       });
 
-		mute_volume_button.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				vibrate();
-				RCProxy.instance().mute();
-			}
-		});
+		// Listener with visual feedback for the button
+		info_button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                //If the user swipes
+               if(event.getAction() == MotionEvent.ACTION_DOWN){
+	            	vibrate();
+	            	RCProxy.instance().info();
+	            	info_button.setBackgroundColor(0xFFFFFFFF);
+                    
+                    // Put here the "light" button
+	            	info_button.setBackgroundResource(R.drawable.info_pressed);
+                    return true;
+                }
+                else if(event.getAction() == MotionEvent.ACTION_UP){
+                	info_button.setBackgroundColor(0xFF000000);
+                	info_button.setBackgroundResource(R.drawable.info_normal);	
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        });
 
-		info_button.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				vibrate();
-				RCProxy.instance().info();
-			}
-		});
-		exit_button.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				vibrate();
-				RCProxy.instance().exit();
-			}
-		});
+		// Listener with visual feedback for the button
+		exit_button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                //If the user swipes
+               if(event.getAction() == MotionEvent.ACTION_DOWN){
+	            	vibrate();
+	            	RCProxy.instance().exit();
+	            	exit_button.setBackgroundColor(0xFFFFFFFF);
+                    
+                    // Put here the "light" button
+	            	exit_button.setBackgroundResource(R.drawable.cancel_pressed);
+                    return true;
+                }
+                else if(event.getAction() == MotionEvent.ACTION_UP){
+                	exit_button.setBackgroundColor(0xFF000000);
+                	exit_button.setBackgroundResource(R.drawable.cancel_normal);	
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        });
+
 		
 		
 		
@@ -399,5 +535,7 @@ public class RemoteControlFragment extends Fragment {
 		}	
 
 	}
+
+
     
 }
