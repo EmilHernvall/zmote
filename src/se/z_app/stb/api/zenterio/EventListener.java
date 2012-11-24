@@ -43,7 +43,6 @@ public class EventListener implements EventListnerInterface {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 
 	/**
@@ -89,7 +88,6 @@ public class EventListener implements EventListnerInterface {
 
 			}
 		}
-
 	}
 
 	private STBEvent stringToSTBEvent(String eventString){
@@ -114,15 +112,11 @@ public class EventListener implements EventListnerInterface {
 					currentEvent.setState(false);
 				}
 			}
-
-
-
-
+			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return currentEvent;
 	}
-
 }
