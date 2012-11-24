@@ -84,16 +84,6 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	}
 
 
-	
-    
-
-   
-    
-    public void setOrientation(int i){
-    		setRequestedOrientation(i);
-    }
-
-
 	/**
 	 * Vibrates the phone for 95 milliseconds.
 	 */
