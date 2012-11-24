@@ -119,7 +119,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 	public void update(Observable observable, Object data) {
 		Channel channel = EPGContentHandler.instance().getCurrentChannel();
 		long timeDiff = System.currentTimeMillis()-lastChannelChange;
-		System.out.println("Updating for channel: " + channel.getName());
+		//System.out.println("Updating for channel: " + channel.getName());
 		if(timeDiff > 1000){
 			if (!isAnimationRunning) {	
 				for(int i = 0; i< channelList.size(); i++){
