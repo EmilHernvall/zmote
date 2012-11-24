@@ -444,13 +444,16 @@ public class EPGFragment extends Fragment{
 			@Override
 			public void onClick(View v) {
 			
-				Fragment fragment = new ChannelInformationFragment(main, p);
-				android.support.v4.app.FragmentManager fragmentManager = getFragmentManager();
-				android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-				fragmentTransaction.replace(R.id.container, fragment);
-				fragmentTransaction.addToBackStack(null);
-				fragmentTransaction.commit();
+//				Fragment fragment = new ChannelInformationFragment(main, p);
+//				android.support.v4.app.FragmentManager fragmentManager = getFragmentManager();
+//				android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//
+//				fragmentTransaction.replace(R.id.container, fragment);
+//				fragmentTransaction.addToBackStack(null);
+//				fragmentTransaction.commit();
+				
+				main.showChannelInformation(p);
+				
 			}
 			
 		});
