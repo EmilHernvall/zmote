@@ -14,10 +14,8 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
-import android.view.OrientationListener;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
@@ -27,7 +25,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class EpgHorizontalActivity extends Activity {
 
@@ -54,12 +51,8 @@ public class EpgHorizontalActivity extends Activity {
 	
 	private OnTouchListener toutch;
 	private int currentX = -1, currentY = -1;
-
-	private boolean epg_loaded = false;
-
-    
+ 
 	
-    @SuppressWarnings("deprecation")
 	@Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
@@ -76,7 +69,7 @@ public class EpgHorizontalActivity extends Activity {
 		timebar_hz_scroll = (LinearLayout)view.findViewById(R.id.timebar_hz_scroll);
 
 			
-		//2D Scrolling, TODO: Fling needs to be implemented
+		//2D Scrolling
 		toutch = new View.OnTouchListener() {
 			long startTime = System.currentTimeMillis();
 
@@ -190,7 +183,7 @@ public class EpgHorizontalActivity extends Activity {
     	
     	// We just change the margin of the line according to the current time
     	RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(2,height_of_rows*number_of_channels);
-    	params.setMargins(distance+110, 0, 0, 0);	// TODO: Needed some tune here
+    	params.setMargins(distance+110, 0, 0, 0);
     	LinearLayout line = (LinearLayout)view.findViewById(R.id.now_line);
     	line.setVisibility(LinearLayout.VISIBLE);
     	line.setLayoutParams(params);
@@ -440,7 +433,6 @@ public class EpgHorizontalActivity extends Activity {
 		protected void onPostExecute(EPG epgTemp) {
 			epg = epgTemp;
 			view.findViewById(R.id.progressEPGView).setVisibility(View.INVISIBLE);
-			epg_loaded = true;
 			mainEPG();
 		}	
 
