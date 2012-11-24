@@ -59,7 +59,7 @@ public class STBContainer extends Observable implements Iterable<STB>{
 	
 	public boolean addSTB(STB stb){
 		for(STB tmpSTB : stbs)
-			if(tmpSTB.getMAC().equals(stb.getMAC()) || tmpSTB.getIP().equals(stb.getIP()))
+			if(stb.getMAC()!=null && (tmpSTB.getMAC().equals(stb.getMAC())) || tmpSTB.getIP().equals(stb.getIP()))
 				return false;
 		
 		stbs.add(stb);
