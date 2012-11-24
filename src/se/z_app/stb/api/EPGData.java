@@ -55,9 +55,6 @@ public class EPGData implements Observer{
 	 * @return the EPG
 	 */
 	public EPG getEPG(){
-		Log.i("SearchTest", "STB box name ->" + stb.getBoxName());
-		Log.i("SearchTest", "com ->" + com.getClass().getName());
-		
 		if(com == null) {
 			return null;
 		}
