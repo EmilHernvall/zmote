@@ -66,11 +66,12 @@ public class STBListener extends Observable implements Observer, Runnable{
 
 	public void run() {
 		
-		
+		System.out.println("Initiating Listner");
 		eventListener.init(stb);
 		
-		
+		//System.out.println("waiting for events");
 		while((event = eventListener.getNextEvent())!=null){
+			//System.out.println("Recived Event");
 			this.setChanged();
 			this.notifyObservers(event);
 

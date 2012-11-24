@@ -104,7 +104,7 @@ public class EPGContentHandler extends Observable implements Runnable, Observer{
 		currentChannel = EPGData.instance().getCurrentChannel();
 		if(currentChannel.getUrl() != null){
 			for (Channel channel : currentEPG) {
-				if(channel.getIconUrl().toLowerCase().contains(currentChannel.getUrl().toLowerCase())){
+				if(channel.getUrl().toLowerCase().contains(currentChannel.getUrl().toLowerCase())){
 					currentChannel = channel;
 					break;
 				}
@@ -237,10 +237,12 @@ public class EPGContentHandler extends Observable implements Runnable, Observer{
 			}
 		}else if(observable instanceof STBListener){
 			STBEvent event = STBListener.instance().getCurrentEvent();
-			
+			//System.out.println("Evente Recived");
 			if(event.getUrl() != null){
+				System.out.println("Evente Recived URL: " + event.getUrl());
 				for (Channel channel : currentEPG) {
-					if(channel.getIconUrl().toLowerCase().contains(event.getUrl().toLowerCase())){
+					if(event.getUrl().toLowerCase().contains(channel.getUrl().toLowerCase())){
+						System.out.println("Found Channel: " + channel.getName());
 						currentChannel = channel;
 						super.setChanged();
 						super.notifyObservers();

@@ -3,6 +3,8 @@ package se.z_app.zmote.gui;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Observable;
+import java.util.Observer;
 
 import com.actionbarsherlock.internal.nineoldandroids.animation.Animator;
 import com.actionbarsherlock.internal.nineoldandroids.animation.Animator.AnimatorListener;
@@ -15,6 +17,7 @@ import se.z_app.stb.EPG;
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.stb.api.RemoteControl.Button;
 
+import se.z_app.zmote.epg.EPGContentHandler;
 import se.z_app.zmote.epg.EPGQuery;
 import se.z_app.zmote.gui.R.drawable;
 
@@ -47,7 +50,7 @@ import android.widget.TextView;
  * @author Rasmus Holm
  *
  */
-public class MainViewFragment extends Fragment implements OnGestureListener{
+public class MainViewFragment extends Fragment implements OnGestureListener, Observer{
 
 	private MainTabActivity main;
 	private View v;
@@ -101,6 +104,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 	private ArrayList<Channel> channelList = new ArrayList<Channel>();
 
 	private int currentChannelNr;
+	private long lastChannelChange = System.currentTimeMillis();
 
 	/**
 	 * Constructor for the MainViewFragment, 
@@ -109,13 +113,37 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 	public MainViewFragment(MainTabActivity main){
 		this.main = main;
 	}
+	
+	int tmp;
+	@Override
+	public void update(Observable observable, Object data) {
+		Channel channel = EPGContentHandler.instance().getCurrentChannel();
+		long timeDiff = System.currentTimeMillis()-lastChannelChange;
+		System.out.println("Updating for channel: " + channel.getName());
+		if(timeDiff > 1000){
+			if (!isAnimationRunning) {	
+				for(int i = 0; i< channelList.size(); i++){
+					if(channelList.get(i).getUrl().contains(channel.getUrl())){
+						tmp = i;
+						main.runOnUiThread(new Runnable() {
+							int i = tmp;
+							@Override
+							public void run() {
+								rotateToChannel(i);								
+							}
+						});
+						
+						break;
+					}
+				}
+			}
+		}
+	}
+	
 
 	boolean clicked = false;
-
-
 	float threshhold = 20;
 	boolean activeGest = false;
-
 	@Override
 	public void onGesture(GestureOverlayView overlay, MotionEvent event) {
 		if(activeGest){
@@ -165,19 +193,22 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 		y = event.getY();
 	}
 
+	
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		EPGContentHandler.instance().deleteObserver(this);
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
+		EPGContentHandler.instance().addObserver(this);
+		
 		v = inflater.inflate(R.layout.fragment_main_view, null);
-
-		//		if(r != null){
-		//			r.removeView(left);
-		//			r.removeView(leftleft);
-		//			r.removeView(center);
-		//			r.removeView(rightright);
-		//			r.removeView(right);
-		//		}
+		
 
 		r = (RelativeLayout)v.findViewById(R.id.rellativIconSpinner);
 		GestureOverlayView gestures = (GestureOverlayView) v.findViewById(R.id.gestures);
@@ -207,8 +238,20 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 	/**
 	 * A setter for the channel
 	 * @param channelNr The channelNr to be set
-	 */
+	 */	
 	public void setChannel(int channelNr){		
+		lastChannelChange = System.currentTimeMillis();
+		if(currentChannelNr == channelNr){
+			return;
+		}
+		rotateToChannel(channelNr);
+
+		Channel channel = channelList.get(channelNr);
+		RemoteControl.instance().launch(channel);
+	}
+	
+	
+	public void rotateToChannel(int channelNr){		
 		if(currentChannelNr == channelNr){
 			return;
 		}
@@ -234,23 +277,14 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 			can1++;
 		}
 
-		//	Button b;
 		if(fin < 0){
-			rotateRight(fin*(-1));
-			//		b = Button.CHANNELMINUS;
+			rotateRight(fin*(-1));	
 		}
 		else{
-			rotateLeft(fin);
-			//		b = Button.CHANNELPLUS;
+			rotateLeft(fin);	
 		}
-
-		//	for(int i = 0; i < Math.abs(fin); i++){
-		//		RemoteControl.instance().sendButton(b);
-		//	}
-
-		Channel channel = channelList.get(channelNr);
-		RemoteControl.instance().launch(channel);
 	}
+	
 
 
 	private void rotateRight(){
@@ -608,11 +642,6 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 		ObjectAnimator.ofFloat(right, "scaleX", rightScale).setDuration(0).start();
 		ObjectAnimator.ofFloat(right, "scaleY", rightScale ).setDuration(0).start();
 		ObjectAnimator.ofFloat(right, "alpha", middleAlpha).setDuration(0).start();
-		//		r.removeView(leftleft);
-		//		r.removeView(left);
-		//		r.removeView(center);
-		//		r.removeView(right);
-		//		r.removeView(rightright);
 
 		r.addView(leftleft);
 		r.addView(left);
@@ -817,5 +846,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 		}
 
 	}
+
+
 
 }

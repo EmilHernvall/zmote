@@ -31,7 +31,7 @@ public class EventListener implements EventListnerInterface {
 	 */
 	public void init(STB stb) {
 		iPaddress = stb.getIP();
-
+		
 		try {
 			socket = new Socket(iPaddress, 9999);
 			in = socket.getInputStream();
@@ -43,7 +43,7 @@ public class EventListener implements EventListnerInterface {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		System.out.println("Listner is initiater");
 	}
 
 	/**
@@ -60,10 +60,13 @@ public class EventListener implements EventListnerInterface {
 		if(socket == null){
 			return null;
 		}
+		
 		else if(socket.isConnected()){
+			//System.out.println("Waiting for message");
 			try {
 				int len = in.read(buffer);
 				currentEvent = stringToSTBEvent(new String(buffer, 0, len));
+				//System.out.println("Message Recived");
 			} catch (IOException e) {
 				return null;
 			}
