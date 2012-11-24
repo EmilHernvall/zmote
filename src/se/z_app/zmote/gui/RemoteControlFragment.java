@@ -26,6 +26,12 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
+
+/**
+ * Creates the view with the remote control buttons, the channel icons list and some other buttons
+ * @author Thed Mannerlšf & Ralph Nilsson & Mar’a Platero
+ * 
+ */
 public class RemoteControlFragment extends Fragment implements Observer {
 	private Button arrow_up_button;
 	private Button arrow_down_button;
@@ -60,10 +66,14 @@ public class RemoteControlFragment extends Fragment implements Observer {
 
 	public static final String ARG_SECTION_NUMBER = "section_number";
 
+	/**
+	 * Updates and highlight the current channel asynchronously and in other thread
+	 * @author Rasmus
+	 */
 	@Override
 	public void update(Observable observable, Object data) {
+
 		main.runOnUiThread(new Runnable() {
-			
 			@Override
 			public void run() {
 				highlightChannel();
@@ -379,9 +389,6 @@ public class RemoteControlFragment extends Fragment implements Observer {
                 }
             }
         });
-
-		
-		
 		
 	}
 
@@ -471,7 +478,7 @@ public class RemoteControlFragment extends Fragment implements Observer {
 	 *  This function is suppose to load a new channel in the main activity view
 	 *  That means: put the icon of the channel in the list and assign it a function
 	 * @param ch
-	 * @author Francisco Valladares
+	 * @author Francisco Valladares 
 	 */
     public void addChannelItemToLayout(Channel ch){
     
@@ -482,10 +489,7 @@ public class RemoteControlFragment extends Fragment implements Observer {
     	new_btn.setBackgroundResource(0);	// Set the background transparent
     	new_btn.setClickable(true);
     	new_btn.setPadding(0, 0, 0, 0);
-       	
  	
-    	// Set listeners to execute this
-    	//RemoteControl.instance().launch(ch.getUrl()); //
 
     	temp = ch;
     	new_btn.setOnClickListener(new View.OnClickListener() {
@@ -508,9 +512,7 @@ public class RemoteControlFragment extends Fragment implements Observer {
     		
 		});
     	
-    	
-    	
-    	
+
     	channel_icons_layout.addView(new_btn);	
     }
 	
@@ -536,6 +538,4 @@ public class RemoteControlFragment extends Fragment implements Observer {
 
 	}
 
-
-    
 }

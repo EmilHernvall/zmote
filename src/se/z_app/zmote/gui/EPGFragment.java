@@ -37,6 +37,7 @@ import android.support.v4.app.Fragment;
  *
  */
 public class EPGFragment extends Fragment{
+	public static Program eventProgram = null;
 	private Channel temp;
 	private EPG epg;
 	private RelativeLayout view;
@@ -152,6 +153,16 @@ public class EPGFragment extends Fragment{
 		return view;
 	}
 
+    @Override
+    public void onResume(){
+    	
+    	if(eventProgram != null){
+    		// Load channel information view and focus on the program
+    		eventProgram = null;	// And reset variable
+    	}
+    	super.onResume();
+    }
+    
     /**
      * Sets the listener for the fliping button
      */
@@ -244,7 +255,7 @@ public class EPGFragment extends Fragment{
      * Sets the line that represent the current time
      */
     public void setNowLine(){
-    
+    			
     	Date now = new Date(System.currentTimeMillis());
     	long difference = now.getTime() - start.getTime();
     	int distance = (int)(difference/60000)*(screen_width/60);
