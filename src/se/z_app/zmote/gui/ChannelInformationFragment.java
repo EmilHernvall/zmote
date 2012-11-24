@@ -10,6 +10,7 @@ import se.z_app.stb.Program;
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.zmote.epg.EPGQuery;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -333,7 +334,7 @@ public class ChannelInformationFragment extends Fragment{
     		channel_info_ly.addView(nextName);
     		channel_info_ly.addView(separator_temp2, separatorParams);
     		nextInfo_container.addView(nextInfo);
-        	nextInfo_container.addView(addProgramButtons());	// BOTTOM BUTTONS SECTION
+        	nextInfo_container.addView(addProgramButtons(program));	// BOTTOM BUTTONS SECTION
     		channel_info_ly.addView(nextInfo_container);
     		
     	}
@@ -344,7 +345,7 @@ public class ChannelInformationFragment extends Fragment{
      * Returns the set of buttons for a program (Fav, Imdb, Social)
      * @return	View containing the buttons
      */
-    public View addProgramButtons(){
+    public View addProgramButtons(Program program){
     	
     	// Get the width of the screen
     	int width_screen = getResources().getDisplayMetrics().widthPixels;
@@ -396,16 +397,7 @@ public class ChannelInformationFragment extends Fragment{
 			}
 		});
     	
-    	social_but.setOnClickListener(new OnClickListener() {
-			//ImageButton thisOne = social_but;
-			@Override
-			public void onClick(View view) {
-				
-				/*
-				 * TODO: Add here some code to add this channel to the favorite list
-				 */
-			}
-		});
+    	social_but.setOnClickListener(new SocialTVOnClickListener(program));
     	
     	imdb_but.setOnClickListener(new OnClickListener() {
 			//ImageButton thisOne = imdb_but;
@@ -507,4 +499,24 @@ public class ChannelInformationFragment extends Fragment{
 		elem.setVisibility(TextView.GONE);
 	}	
 	
+	private class SocialTVOnClickListener implements OnClickListener{
+		private Program myProgram;
+		
+		public SocialTVOnClickListener(Program myProgram){
+			this.myProgram = myProgram;
+		}
+		
+		@Override
+		public void onClick(View v) {
+			Bundle args = new Bundle();
+			//TODO Add diffrent kinds of arguemnts dependsing on what needs to 
+			//identify the program.
+			args.putString("program", myProgram.getName());
+			Intent intent = new Intent(getActivity(), ZChatActivity.class);
+			intent.putExtras(args);
+			getActivity().startActivity(intent);
+			
+		}
+		
+	}
 }

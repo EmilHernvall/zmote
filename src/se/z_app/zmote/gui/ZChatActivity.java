@@ -4,18 +4,16 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import se.z_app.social.Feed;
-import se.z_app.social.PostInterface;
+
 import se.z_app.social.zchat.ZChatAdapter;
 import se.z_app.social.Post;
-import se.z_app.stb.Program;
-import se.z_app.stb.STB;
-import se.z_app.stb.api.EPGData;
+
 import se.z_app.zmote.epg.EPGContentHandler;
 import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +27,7 @@ public class ZChatActivity extends Activity {
 	private ZChatAdapter zChatadapter;
 	private ListView mListView;
 	private View v;
+	private String programName;
 
 
 
@@ -36,7 +35,8 @@ public class ZChatActivity extends Activity {
 		 super.onCreate(savedInstanceState);
 		 setContentView(R.layout.activity_zchat);
 		 TextView textView = (TextView) findViewById(R.id.feed_name);
-		 textView.setText(getIntent().getExtras().getString("program"));
+		 programName = getIntent().getExtras().getString("program");
+		 textView.setText(programName);
 		 textView = (TextView) findViewById(R.id.time_of_feedUpdate);
 		 textView.setText("50 min ago");
 		 ListView postList = (ListView) findViewById(R.id.list_over_post);
@@ -51,7 +51,6 @@ public class ZChatActivity extends Activity {
 
 		private ZChatActivity zChatActivity;
 		private Feed feed;
-
 		private ArrayList<Post> list;
 
 		
@@ -124,6 +123,8 @@ public class ZChatActivity extends Activity {
 		@Override
 		protected Feed doInBackground(Integer... arg0) {
 			ZChatAdapter adapter = new ZChatAdapter();
+			
+			//return adapter.getFeed(programName);
 			System.out.println(EPGContentHandler.instance().getEPG().iterator().next().iterator().next().getName());
 			return adapter.getFeed(EPGContentHandler.instance().getEPG().iterator().next().iterator().next());
 			
