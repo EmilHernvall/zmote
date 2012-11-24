@@ -8,6 +8,7 @@ import se.z_app.social.Feed;
 
 import se.z_app.social.zchat.ZChatAdapter;
 import se.z_app.social.Post;
+import se.z_app.stb.Program;
 
 import se.z_app.zmote.epg.EPGContentHandler;
 import android.app.Activity;
@@ -26,29 +27,31 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class ZChatActivity extends Activity {
-
-	private MainTabActivity main;
-	private ZChatAdapter zChatadapter;
-	private ListView mListView;
-	private View v;
-	private String programName;
-	private ZChatActivity myActivity;
+	
+	public static Program targetProgram;
+	private final static ZChatAdapter adapter = new ZChatAdapter();
+	
+	private Program myProgram;
 	private Feed myFeed;
 	private String userName = "Linus";
-	private final static ZChatAdapter adapter = new ZChatAdapter();
-
+	
+	public ZChatActivity(){
+		myProgram = targetProgram;
+		targetProgram = null;
+	}
 
 
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
+		
 		ZChatActivity myActivity = this;
 		setContentView(R.layout.activity_zchat);
-		programName = getIntent().getExtras().getString("program");
+	
 
 		ListView postList = (ListView) findViewById(R.id.list_over_post);
 
 		TextView textView = (TextView) findViewById(R.id.feed_name);
-		textView.setText(programName);
+		textView.setText(myProgram.getName());
 
 		//TODO fix so it depends on the last added post.
 		textView = (TextView) findViewById(R.id.time_of_feedUpdate);
