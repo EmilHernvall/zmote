@@ -1,10 +1,14 @@
 package se.z_app.zmote.gui;
 
 
+import java.util.Observable;
+import java.util.Observer;
+
 import se.z_app.stb.Channel;
 import se.z_app.stb.EPG;
 import se.z_app.stb.api.RCProxy;
 import se.z_app.stb.api.RemoteControl;
+import se.z_app.zmote.epg.EPGContentHandler;
 import se.z_app.zmote.epg.EPGQuery;
 import se.z_app.zmote.gui.SnapHorizontalScrollView.MyGestureDetector;
 
@@ -22,7 +26,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
-public class RemoteControlFragment extends Fragment {
+public class RemoteControlFragment extends Fragment implements Observer {
 	private Button arrow_up_button;
 	private Button arrow_down_button;
 	private Button arrow_left_button;
@@ -42,6 +46,7 @@ public class RemoteControlFragment extends Fragment {
 	private EPG epg;
 	private EPGQuery query = new EPGQuery();
 	private boolean fetched = false;
+	private boolean muted = false;
 	private ImageButton active;
 
 	/**
@@ -56,9 +61,23 @@ public class RemoteControlFragment extends Fragment {
 	public static final String ARG_SECTION_NUMBER = "section_number";
 
 	@Override
+	public void update(Observable observable, Object data) {
+		main.runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				highlightChannel();
+			}
+		});
+		
+	}
+	
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
+		EPGContentHandler.instance().addObserver(this);
+		
 		/*
 		 * TODO: Follow the current channel in the icon bar
 		 * change the background when changing channel
@@ -281,18 +300,37 @@ public class RemoteControlFragment extends Fragment {
 	            	mute_volume_button.setBackgroundColor(0xFFFFFFFF);
                     
                     // Put here the "light" button
-	            	mute_volume_button.setBackgroundResource(R.drawable.mute_pressed);
+	            	if(muted == true){
+	            		mute_volume_button.setBackgroundResource(R.drawable.unmute_pressed);
+	            	}else{
+	            		mute_volume_button.setBackgroundResource(R.drawable.mute_pressed);	
+	            	}
+	            	
                     return true;
-                }
-                else if(event.getAction() == MotionEvent.ACTION_UP){
+                    
+                }else if(event.getAction() == MotionEvent.ACTION_UP){
                 	mute_volume_button.setBackgroundColor(0xFF000000);
-                	mute_volume_button.setBackgroundResource(R.drawable.mute_normal);	
+                	
+	            	if(muted == true){
+	            		mute_volume_button.setBackgroundResource(R.drawable.unmute_normal);
+	            	}else{
+	            		mute_volume_button.setBackgroundResource(R.drawable.mute_normal);
+	            	}
+	            	 
+	            	if(muted == true){
+	              	   muted = false;
+	                }else{
+	              	   muted = true;
+	                }
+	            	
                     return true;
                 }else{
                     return false;
                 }
+               
+              
             }
-        });
+       });
 
 		// Listener with visual feedback for the button
 		info_button.setOnTouchListener(new View.OnTouchListener() {
@@ -497,5 +535,7 @@ public class RemoteControlFragment extends Fragment {
 		}	
 
 	}
+
+
     
 }
