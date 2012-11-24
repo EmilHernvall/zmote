@@ -175,20 +175,44 @@ public class EPGFragment extends Fragment{
 				
 				// If we have 3.0 or later
 				if( main.SDK_INT > 10){
-					if(orientation != ORIENTATION_UNKNOWN && changes != 0 && epg_loaded){
+					if(orientation != ORIENTATION_UNKNOWN && changes > 0 && epg_loaded){
 						
-						if(orientation_var == 1){
+						if(orientation > 300 && orientation_var == 1) changes++;
+						else if(orientation > 300 && orientation_var == 0) changes = -1;
+						else if(orientation < 50 && orientation_var == 0) changes++;
+						else if(orientation < 50 && orientation_var == 1) changes = -1;
+						
+						if(orientation > 300 && changes > 0){
 							Toast.makeText(view.getContext(), "Changing...", Toast.LENGTH_SHORT).show();
 							Intent intent = new Intent(view.getContext(), EpgHorizontalActivity.class);
 							EPGFragment.this.startActivity(intent);
 							orientation_var = 0;
-							changes = 0;
+							changes = -1;
+						}else if(orientation < 50 && changes > 0){
+							orientation_var = 1;
+							changes = -1;
+							Toast.makeText(view.getContext(), "Push back button", Toast.LENGTH_SHORT).show();
+						}
+						
+						/*
+						if(orientation_var == 1 && orientation > 300){
+							Toast.makeText(view.getContext(), "Changing...", Toast.LENGTH_SHORT).show();
+							Intent intent = new Intent(view.getContext(), EpgHorizontalActivity.class);
+							EPGFragment.this.startActivity(intent);
+							orientation_var = 0;
+							changes = -1;
 							//orientationListener.disable();
-						}else if(orientation_var == 0){
+							
+							Log.i("Orientation:"," "+orientation);
+							
+						}else if(orientation_var == 0 && orientation < 50){
 							// Go back to the fragment in some way
+							orientation_var = 1;
+							changes = -1;
 							Toast.makeText(view.getContext(), "Push back button", Toast.LENGTH_SHORT).show();
 							
-						}
+							Log.i("Orientation:"," "+orientation);
+						}*/
 					}
 					changes++;
 				/*}else{	// If we have 2.3.6 or earlier
