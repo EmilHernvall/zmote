@@ -79,14 +79,17 @@ public class WebTVFragment extends Fragment {
 			public void onClick(View v) {
 				// Start a new search
 				LinearLayout noSearch = (LinearLayout) view_temp.findViewById(R.id.noSearch);
+				LinearLayout noSearchLine = (LinearLayout) view_temp.findViewById(R.id.noSearchLine);
 				if(!search()){
 					noSearch.setVisibility(View.VISIBLE);
+					noSearchLine.setVisibility(View.VISIBLE);
 					LinearLayout results_ly = (LinearLayout) view_temp.findViewById(R.id.search_results_ly);
 					results_ly.removeAllViewsInLayout();
 					return;
 				}
 				//Loads the correct webTv icon
 				noSearch.setVisibility(View.GONE);
+				noSearchLine.setVisibility(View.GONE);
 				web_service = spinner.getSelectedItemPosition();
 				ImageView result_icon = (ImageView) view_temp.findViewById(R.id.webtv_icon_result);
 				result_icon.setImageBitmap(servicesIcons[web_service]);
@@ -117,6 +120,8 @@ public class WebTVFragment extends Fragment {
 				playBar.setVisibility(View.GONE);
 				LinearLayout noSearch = (LinearLayout) view_temp.findViewById(R.id.noSearch);
 				noSearch.setVisibility(View.GONE);
+				LinearLayout noSearchLine = (LinearLayout) view_temp.findViewById(R.id.noSearchLine);
+				noSearchLine.setVisibility(View.GONE);
 
 			}
 		});
@@ -129,7 +134,9 @@ public class WebTVFragment extends Fragment {
 		playBar.setVisibility(View.GONE);
 		LinearLayout noSearch = (LinearLayout) view_temp.findViewById(R.id.noSearch);
 		noSearch.setVisibility(View.GONE);
-
+		LinearLayout noSearchLine = (LinearLayout) view_temp.findViewById(R.id.noSearchLine);
+		noSearchLine.setVisibility(View.GONE);
+		
 		return view_temp;
 	}    
 
@@ -281,11 +288,6 @@ public class WebTVFragment extends Fragment {
 		playBar.setVisibility(View.VISIBLE);
 		playBar.setBackgroundColor(0x8833B5E5);
 		playBarLine.setVisibility(View.VISIBLE);
-	//	LinearLayout.LayoutParams buttonContainerParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);
-	//	LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,(int)(screenHeight*0.15));
-		System.out.println("TEST 1");
-		//playBar.addView(playBarLine);
-
 	}
 
 	/**
