@@ -119,6 +119,9 @@ public class EPGFragment extends Fragment{
 			        case MotionEvent.ACTION_UP: {
 			        	
 			        	long time = System.currentTimeMillis()-startTime;
+			        	if(time/20==0){
+			        		break;
+			        	}
 			        	int vx = 40*(int)((currentX - firstX)/(time/20));
 						int vy = 40*(int)((currentY - firstY)/(time/20));
 						System.out.println("vx: " + vx);
