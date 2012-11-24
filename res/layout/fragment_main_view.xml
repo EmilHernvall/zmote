@@ -32,12 +32,14 @@
             android:orientation="horizontal" >
             
 	            <ImageView
+	            android:contentDescription="@string/image"
 	            android:id="@+id/imageView1"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:src="@drawable/arrow_down" />
 	             
 	             <ImageView
+	            android:contentDescription="@string/image"
 	            android:id="@+id/imageView4"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
@@ -56,12 +58,14 @@
             android:orientation="horizontal" >
             
 		        <ImageView
+		        android:contentDescription="@string/image"
 	            android:id="@+id/imageView2"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:src="@drawable/arrow_up" />
 	
 	        	<ImageView
+	        	android:contentDescription="@string/image"
 	            android:id="@+id/imageView3"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
