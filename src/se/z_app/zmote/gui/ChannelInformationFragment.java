@@ -192,7 +192,7 @@ public class ChannelInformationFragment extends Fragment{
     	
     	// Set listeners to execute this
     	//RemoteControl.instance().launch(ch.getUrl()); //
-    //	temp = ch;
+    	//	temp = ch;
     	
     	new_btn.setOnClickListener(new View.OnClickListener() {
     		//int channelNr = i_tmp;
