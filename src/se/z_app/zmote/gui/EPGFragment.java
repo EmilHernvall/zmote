@@ -182,13 +182,13 @@ public class EPGFragment extends Fragment{
 						else if(orientation < 50 && orientation_var == 0) changes++;
 						else if(orientation < 50 && orientation_var == 1) changes = -1;
 						
-						if(orientation > 300 && changes > 0){
+						if(orientation > 300 && changes > 10){
 							Toast.makeText(view.getContext(), "Changing...", Toast.LENGTH_SHORT).show();
 							Intent intent = new Intent(view.getContext(), EpgHorizontalActivity.class);
 							EPGFragment.this.startActivity(intent);
 							orientation_var = 0;
 							changes = -1;
-						}else if(orientation < 50 && changes > 0){
+						}else if(orientation < 50 && changes > 10){
 							orientation_var = 1;
 							changes = -1;
 							Toast.makeText(view.getContext(), "Push back button", Toast.LENGTH_SHORT).show();
