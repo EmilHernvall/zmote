@@ -1,6 +1,7 @@
 package se.z_app.zmote.gui;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 
 import se.z_app.social.Feed;
@@ -16,8 +17,11 @@ import android.os.Bundle;
 
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -28,32 +32,47 @@ public class ZChatActivity extends Activity {
 	private ListView mListView;
 	private View v;
 	private String programName;
+	private ZChatActivity myActivity;
+	private Feed myFeed;
+	private String userName = "Linus";
+	private final static ZChatAdapter adapter = new ZChatAdapter();
 
 
 
-	 public void onCreate(Bundle savedInstanceState){
-		 super.onCreate(savedInstanceState);
-		 setContentView(R.layout.activity_zchat);
-		 TextView textView = (TextView) findViewById(R.id.feed_name);
-		 programName = getIntent().getExtras().getString("program");
-		 textView.setText(programName);
-		 textView = (TextView) findViewById(R.id.time_of_feedUpdate);
-		 textView.setText("50 min ago");
-		 ListView postList = (ListView) findViewById(R.id.list_over_post);
+	public void onCreate(Bundle savedInstanceState){
+		super.onCreate(savedInstanceState);
+		ZChatActivity myActivity = this;
+		setContentView(R.layout.activity_zchat);
+		programName = getIntent().getExtras().getString("program");
 
-		 new AsyncDataLoader(this, postList).execute();
-		 
-	 }
-	 
-	
-	
+		ListView postList = (ListView) findViewById(R.id.list_over_post);
+
+		TextView textView = (TextView) findViewById(R.id.feed_name);
+		textView.setText(programName);
+
+		//TODO fix so it depends on the last added post.
+		textView = (TextView) findViewById(R.id.time_of_feedUpdate);
+		textView.setText("50 min ago");
+
+
+		new AsyncDataLoader(this, postList).execute();
+
+
+		
+		Button postButton = (Button) findViewById(R.id.post_button);
+		postButton.setOnClickListener(new PostButtonListener(myActivity, postList));
+
+	}
+
+
+
 	private class FragmentAdabter extends BaseAdapter{
 
 		private ZChatActivity zChatActivity;
 		private Feed feed;
 		private ArrayList<Post> list;
 
-		
+
 		public FragmentAdabter(ZChatActivity zChatActivity , Feed feed){
 			this.zChatActivity = zChatActivity;
 			this.feed = feed;
@@ -63,13 +82,13 @@ public class ZChatActivity extends Activity {
 				list.add(0, iter.next());
 
 			}
-			
-			
+
+
 		}
 
 		@Override
 		public int getCount() {
-			
+
 			return list.size();
 		}
 
@@ -87,31 +106,31 @@ public class ZChatActivity extends Activity {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			System.out.println("The number of comments are: "+list.get(position).getCommentsAsCollection().size());
 
-	        View vi=convertView;
-	        if(convertView==null){
-	            vi = ((LayoutInflater)zChatActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.zchat_list, null);
-	        }
-	        
-	        TextView userName = (TextView) vi.findViewById(R.id.post_user_name);
-	        TextView date = (TextView) vi.findViewById(R.id.post_date);
-	        TextView content = (TextView) vi.findViewById(R.id.post_content);
-	        TextView nrOfComments = (TextView) vi.findViewById(R.id.post_nr_of_comments);
-	        
-	        
-	        userName.setText(list.get(position).getUserName());
-	        date.setText(list.get(position).getDateOfCreation().toString());
-	        content.setText(list.get(position).getContent());
-	        nrOfComments.setText(list.get(position).getComments().length + " comments");
-	        
-	        
-	        
-	        return vi;
+			View vi=convertView;
+			if(convertView==null){
+				vi = ((LayoutInflater)zChatActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.zchat_list, null);
+			}
+
+			TextView userName = (TextView) vi.findViewById(R.id.post_user_name);
+			TextView date = (TextView) vi.findViewById(R.id.post_date);
+			TextView content = (TextView) vi.findViewById(R.id.post_content);
+			TextView nrOfComments = (TextView) vi.findViewById(R.id.post_nr_of_comments);
+
+
+			userName.setText(list.get(position).getUserName());
+			date.setText(list.get(position).getDateOfCreation().toString());
+			content.setText(list.get(position).getContent());
+			nrOfComments.setText(list.get(position).getComments().length + " comments");
+
+
+
+			return vi;
 		}
-		
-		
-		
+
+
+
 	}
-	
+
 	private class AsyncDataLoader extends AsyncTask<Integer, Integer, Feed>{
 
 		private ListView postList;
@@ -122,21 +141,80 @@ public class ZChatActivity extends Activity {
 		}
 		@Override
 		protected Feed doInBackground(Integer... arg0) {
-			ZChatAdapter adapter = new ZChatAdapter();
-			
-			//return adapter.getFeed(programName);
+
+
+			//TODO return adapter.getFeed(programName);
 			System.out.println(EPGContentHandler.instance().getEPG().iterator().next().iterator().next().getName());
 			return adapter.getFeed(EPGContentHandler.instance().getEPG().iterator().next().iterator().next());
-			
+
 
 		}
-		
+
 		protected void onPostExecute(Feed feed){
-			 postList.setAdapter(new FragmentAdabter(activity, feed));
+			myFeed = feed;
+			postList.setAdapter(new FragmentAdabter(activity, feed));
+
+		}
+
+	}
+
+	private class CommitPost extends AsyncTask<Integer, Integer, Feed>{
+		private ListView postList;
+		private ZChatActivity activity;
+		private String content;
+
+		public CommitPost(ZChatActivity activity ,ListView postList, String content){
+			this.postList = postList;
+			this.activity = activity;
+			this.content = content;
+		}
+		@Override
+		protected Feed doInBackground(Integer... arg0) {
+			System.out.println("Starting Do in backround");
+			Post post = new Post();
+			post.setContent(content);
+			post.setFeed(myFeed);
+			post.setUserName(userName);
+			post.setDateOfCreation(new Date());
+			post.setLastUpdate(new Date());
+			System.out.println("Created post");
+			
+			Feed newFeed = adapter.commitPost(myFeed, post);
+			System.out.println("got feed");
+			return newFeed;
+		}
+
+		protected void onPostExecute(Feed feed){
+			//TODO remove te sysout
+			System.out.println("On post on the commitPost was done atleast: " + feed.equals(myFeed));
+			myFeed = feed;
+			postList.setAdapter(new FragmentAdabter(activity, feed));
+
+		}
+	}
+
+	private class PostButtonListener implements OnClickListener{
+
+		private ZChatActivity activity;
+		private ListView postList;
+		private String content;
+		public PostButtonListener(ZChatActivity activity ,ListView postList){
+			this.activity = activity;
+
+			this.postList = postList;
+		}
+		@Override
+		public void onClick(View v) {
+			//TODO remove the sysouyt
+			System.out.println("Post was Pressed mutcherfucker");
+			EditText edit = (EditText) findViewById(R.id.new_post);
+			
+			new CommitPost(activity, postList, edit.getText().toString()).execute();
 			
 		}
-		
+
 	}
+
 }
 
 
