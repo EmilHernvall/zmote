@@ -116,8 +116,7 @@ public class PlayMediaFilesFragment extends Fragment {
 			else{
 				icon.setBackgroundResource(R.drawable.ic_action_search);
 			}
-
-
+			
 			TextView title = new TextView(view_temp.getContext());
 			title.setText(fileToAdd.getName());
 			title.setPadding(10, 0, 0, 0);
