@@ -3,9 +3,14 @@ package se.z_app.zmote.gui;
 
 
 import java.io.File;
+
+import se.z_app.stb.Channel;
+import se.z_app.stb.EPG;
 import se.z_app.stb.MediaItem;
+import se.z_app.stb.Program;
 import se.z_app.stb.STB;
 import se.z_app.stb.STB.STBEnum;
+import se.z_app.stb.api.EPGData;
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.stb.api.STBContainer;
 import se.z_app.zmote.webtv.MediaStreamer;
@@ -134,13 +139,34 @@ public class MainTestActivity extends Activity {
         playClip.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
 				
-				MediaItem item = ms.addFile(new File("/mnt/sdcard/download/test2.mp4"));
+				STB temp = new STB();
+				temp.setIP("192.168.0.193");
+				temp.setBoxName("Temp");
+				temp.setType(STBEnum.ZENTERIO);
+				STBContainer.instance().setActiveSTB(temp);
+				MediaItem item = MediaStreamer.instance().addFile(new File("/storage/extSDCard/betaHouse.mp4"));
 				System.out.println("MediaItem: " + item.getName());
 				System.out.println("MediaItem: " + item.getUrl());
 				
 				RemoteControl.instance().launch(item);				
+				
+			}
+		});
+        
+        Button zchat = (Button) findViewById(R.id.Zchat_button);
+        zchat.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+
+				
+				Bundle args = new Bundle();
+
+				args.putString("program", "Batman");
+				Intent intent = new Intent(MainTestActivity.this, ZChatActivity.class);
+				intent.putExtras(args);
+				MainTestActivity.this.startActivity(intent);
 				
 			}
 		});

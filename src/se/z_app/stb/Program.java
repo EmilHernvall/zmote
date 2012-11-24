@@ -1,10 +1,15 @@
 package se.z_app.stb;
 
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Program{
+public class Program implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2985783355705993721L;
 	private String name;
 	private int eventID = -1;
 	private Date start;

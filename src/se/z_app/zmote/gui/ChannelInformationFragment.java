@@ -76,6 +76,10 @@ public class ChannelInformationFragment extends Fragment{
 		this.main = main;
 	}
 	
+	public void focusOnProgram(Program program){
+		
+	}
+	
 	/**
 	 * This to do when the instance of ChannelInformationFragment is created
 	 */
@@ -192,7 +196,7 @@ public class ChannelInformationFragment extends Fragment{
     	
     	// Set listeners to execute this
     	//RemoteControl.instance().launch(ch.getUrl()); //
-    //	temp = ch;
+    	//	temp = ch;
     	
     	new_btn.setOnClickListener(new View.OnClickListener() {
     		//int channelNr = i_tmp;

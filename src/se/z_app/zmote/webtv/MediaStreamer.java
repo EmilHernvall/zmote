@@ -52,8 +52,13 @@ public class MediaStreamer {
 	public MediaItem addFile(File file){
 		
 		
-		
-		String uri = "/"+file.getName();
+		String filename = file.getName();
+		String extention = "";
+		int index = filename.lastIndexOf(".");
+		if(index>0){
+			extention = filename.substring(index);
+		}
+		String uri = "/"+System.currentTimeMillis()+extention;
 		MediaRequestHandler handler = new MediaRequestHandler(file, uri);
 		
 		httpd.addHandler(handler);

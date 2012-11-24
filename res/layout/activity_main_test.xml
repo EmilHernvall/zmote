@@ -111,4 +111,13 @@
         android:layout_alignLeft="@+id/LoadLocalSTB"
         android:text="PlayClip" />
 
+    <Button
+        android:id="@+id/Zchat_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/bSelectSTBActivity"
+        android:layout_alignBottom="@+id/bSelectSTBActivity"
+        android:layout_toRightOf="@+id/bLoadSTB1"
+        android:text="ZChat" />
+
 </RelativeLayout>

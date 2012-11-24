@@ -5,15 +5,20 @@ import java.net.Inet4Address;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Observable;
+import java.util.Observer;
 
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.ActionBar.TabListener;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 
+import se.z_app.stb.Program;
 import se.z_app.stb.STB;
+import se.z_app.stb.STBEvent;
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.stb.api.STBContainer;
+import se.z_app.stb.api.STBListener;
 import se.z_app.stb.api.RemoteControl.Button;
 import android.app.ActionBar;
 
@@ -33,6 +38,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 
@@ -42,7 +49,7 @@ import android.widget.Spinner;
  * @author refrectored by: Linus Back
  * 
  */
-public class MainTabActivity extends SherlockFragmentActivity implements TabListener{
+public class MainTabActivity extends SherlockFragmentActivity implements TabListener, Observer{
 
 	private com.actionbarsherlock.app.ActionBar actionBar;
 	private Tab tabRC;
@@ -55,12 +62,62 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	private Vibrator vibe;	
 	private static Handler myHandler;
 	private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
-	private RemoteControlFragment rcfragment;// = new RemoteControlFragment(this);
-	private EPGFragment epgfragment;// = new EPGFragment(this);
-	private WebTVFragment webfragment;// = new WebTVFragment(this);
-	private MainViewFragment mainfragment;// = new MainViewFragment(this);
-    private ChannelInformationFragment chinfragment;// = new ChannelInformationFragment(this);
+	private Fragment currentFragmen;
+	private RemoteControlFragment rcfragment;
+	private EPGFragment epgfragment;
+	private WebTVFragment webfragment;
+	private MainViewFragment mainfragment;
+    private ChannelInformationFragment chinfragment;
+    private PlayMediaFilesFragment filesfragment;
+    private ImageView volumIcon;
+    private ProgressBar volumPB;
+    private int tmp;
+    private boolean boolTemp;
     public int SDK_INT = android.os.Build.VERSION.SDK_INT;
+	
+    
+	@Override
+	public void update(Observable observable, Object data) {
+		STBEvent event = STBListener.instance().getCurrentEvent();
+		if(event.getType().equals("mute")){
+			System.out.println();
+			boolTemp = event.getState();
+			runOnUiThread(new Runnable() {
+				boolean state = boolTemp;
+				@Override
+				public void run() {
+					if(state){
+						volumIcon.setImageDrawable(getResources().getDrawable(R.drawable.vol_mute));
+					}else{ 
+						volumIcon.setImageDrawable(getResources().getDrawable(R.drawable.vol_up2));
+					}
+					
+				}
+			});
+			
+		}else if(event.getType().equals("volume")){
+			tmp = event.getValue();
+			runOnUiThread(new Runnable() {
+				int value = tmp;
+				@Override
+				public void run() {
+					volumPB.setProgress(value);	
+					volumIcon.setImageDrawable(getResources().getDrawable(R.drawable.vol_up2));
+				}
+			});
+		}
+	}
+    
+    
+    
+    @Override
+	protected void onDestroy() {
+		super.onDestroy();
+		STBListener.instance().deleteObserver(this);
+	}
+
+
+
 	/**
 	 * Standard create function for the fragment activity.
 	 * Sets the layout.
@@ -71,6 +128,8 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 		setContentView(R.layout.activity_main_tab);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+		STBListener.instance().addObserver(this);
+		
 		vibe = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE) ;
 
 		myHandler = new Handler(){
@@ -82,6 +141,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 		new Thread(new MyTimedTask()).start();
 	}
 
+
 	/**
 	 * Allows you to set the orientation of the screen from outside of the class
 	 * @param i
@@ -89,6 +149,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
     public void setOrientation(int i){
     		setRequestedOrientation(i);
     }
+
 
 	/**
 	 * Vibrates the phone for 95 milliseconds.
@@ -220,13 +281,13 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
     		
     	}
 		else if(tab.equals(tabFav)){
-			Log.i("FragmentLog", "Fav");
+			Log.i("FragmentLog", "Files");
 			//WARNING! : provisional function
-			if(chinfragment == null){
-				chinfragment = new ChannelInformationFragment(this);
+			if(filesfragment == null){
+				filesfragment = new PlayMediaFilesFragment(this);
 				isNew = true;
     		}
-			fragment = chinfragment;
+			fragment = filesfragment;
 					
 		}else if(tab.equals(tabMain)){
 			Log.i("FragmentLog", "Main");
@@ -239,6 +300,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 
     	
 		if(fragment != null)
+			currentFragmen = fragment;
 			if(isNew)
 				getSupportFragmentManager().beginTransaction().add(R.id.container, fragment).commit();
 			else
@@ -271,7 +333,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 		else if(tab.equals(tabFav)){
 			Log.i("Detaching FragmentLog", "Fav");
 			//WARNING! : provisional function 
-			fragment = chinfragment;
+			fragment = filesfragment;
 			
 		}
 		else if(tab.equals(tabMain)){
@@ -283,12 +345,26 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	         //ft.detach(fragment);
 			
 	        getSupportFragmentManager().beginTransaction().hide(fragment).commit();
-	    }
-    	 
-		
+	        getSupportFragmentManager().beginTransaction().hide(currentFragmen).commit();
+	    }	
 
 	}
 
+	public void showChannelInformation(Program program){
+		getSupportFragmentManager().beginTransaction().hide(currentFragmen).commit();
+		if(chinfragment == null){
+			chinfragment = new ChannelInformationFragment(this, program);
+			getSupportFragmentManager().beginTransaction().add(R.id.container, chinfragment).commit();
+			
+		}else{
+			chinfragment.focusOnProgram(program);
+			getSupportFragmentManager().beginTransaction().show(chinfragment).commit();
+		}
+		currentFragmen = chinfragment;
+		
+		
+	}
+	
 
 	/**
 	 * Auto-generated method. Does nothing.
@@ -319,6 +395,8 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 		actionBar.addTab(tabFav.setTabListener(this));
 
 	}
+	
+	
 
 
 	/**
@@ -361,6 +439,19 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 		mySpinner.setSelection(selected);
 
 		mySpinner.setOnItemSelectedListener(new MyOnItemSelectedListener());
+		
+		volumPB = (ProgressBar)myView.findViewById(R.id.volume_progressbar);
+		volumIcon = (ImageView)myView.findViewById(R.id.volume_icon);
+		volumIcon.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				RemoteControl.instance().sendButton(Button.MUTE);
+			}
+		});
+		//RemoteControl.instance().sendButton(Button.VOLMINUS);
+		//RemoteControl.instance().sendButton(Button.VOLPLUS);
+		
 
 		return myView;				
 	}
@@ -459,6 +550,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 
 		}
 	}
+
 
 
 }

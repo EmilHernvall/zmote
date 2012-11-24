@@ -15,22 +15,20 @@ import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.OrientationListener;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.support.v4.app.Fragment;
 
 /**
@@ -39,6 +37,7 @@ import android.support.v4.app.Fragment;
  *
  */
 public class EPGFragment extends Fragment{
+	public static Program eventProgram = null;
 	private Channel temp;
 	private EPG epg;
 	private RelativeLayout view;
@@ -63,12 +62,6 @@ public class EPGFragment extends Fragment{
 	private OnTouchListener toutch;
 	private int currentX = -1, currentY = -1;
 
-	private OrientationListener orientationListener = null;
-	private int changes = 0;
-	private int orientation_var = 1;	// Horiz: 0 , Vertical: 1
-	private boolean epg_loaded = false;
-
-
 	public EPGFragment(MainTabActivity main){
 		this.main = main;
 	}
@@ -89,8 +82,6 @@ public class EPGFragment extends Fragment{
 		hz_scroll = (HorizontalScrollView)view.findViewById(R.id.hz_scroll);
 		hz_scroll_time = (HorizontalScrollView)view.findViewById(R.id.hz_timeline_parent);
 		timebar_hz_scroll = (LinearLayout)view.findViewById(R.id.timebar_hz_scroll);
-		
-
 			
 		//2D Scrolling, TODO: Fling needs to be implemented
 		toutch = new View.OnTouchListener() {
@@ -103,7 +94,6 @@ public class EPGFragment extends Fragment{
 				
 				synchronized (toutch) {
 					
-				
 					switch (event.getAction()) {
 	
 			        case MotionEvent.ACTION_MOVE: {
@@ -155,70 +145,79 @@ public class EPGFragment extends Fragment{
 		hz_scroll.setOnTouchListener(toutch);
 		scroll_view.setOnTouchListener(toutch);
 		
-		
 		// Get the size of the screen in pixels
 		screen_width = getResources().getDisplayMetrics().widthPixels;
 		
-		orientation_var = 1;
-        orientationListener = new OrientationListener(view.getContext()) {
-			
-			@Override
-			public void onOrientationChanged(int orientation) {
-				// TODO Tune it propertly
-				
-				// Just some print of the orientation variable
-				Log.i("Orientation:"," "+orientation);
-				//if(orientation == Configuration.ORIENTATION_LANDSCAPE) Log.i("Position: "," landscape");
-				//if(orientation == Configuration.ORIENTATION_PORTRAIT) Log.i("Position: "," portrait");
-				//if(orientation == Configuration.ORIENTATION_UNDEFINED) Log.i("Position: "," undefined");
-				//if(orientation == Configuration.ORIENTATION_SQUARE)	Log.i("Position: "," square");
-				
-				// If we have 3.0 or later
-				if( main.SDK_INT > 10){
-					if(orientation != ORIENTATION_UNKNOWN && changes != 0 && epg_loaded){
-						
-						if(orientation_var == 1){
-							Toast.makeText(view.getContext(), "Changing...", Toast.LENGTH_SHORT).show();
-							Intent intent = new Intent(view.getContext(), EpgHorizontalActivity.class);
-							EPGFragment.this.startActivity(intent);
-							orientation_var = 0;
-							changes = 0;
-							//orientationListener.disable();
-						}else if(orientation_var == 0){
-							// Go back to the fragment in some way
-							Toast.makeText(view.getContext(), "Push back button", Toast.LENGTH_SHORT).show();
-							
-						}
-					}
-					changes++;
-				/*}else{	// If we have 2.3.6 or earlier
-					
-					if( (orientation < 10 || orientation > 270) && epg_loaded){
-						
-						if(orientation > 270) changes++;
-						if(orientation > 270 && changes > 5){
-							//Toast.makeText(view.getContext(), "changeeeddd", Toast.LENGTH_SHORT).show();
-							Intent intent = new Intent(view.getContext(), EpgHorizontalActivity.class);
-							EPGFragment.this.startActivity(intent);
-							orientation_var = 0;
-							changes = -1;
-							orientationListener.disable();
-						}else if(orientation < 9){
-							// Go back to the fragment in some way
-							//Toast.makeText(view.getContext(), "Going back", Toast.LENGTH_SHORT).show();
-							changes = -1;
-						}
-					}
-					*/
-				}
-			}
-		};
-		orientationListener.enable();
 		new AsyncDataLoader().execute();
 
 		return view;
 	}
 
+    @Override
+    public void onResume(){
+    	
+    	if(eventProgram != null){
+    		// Load channel information view and focus on the program
+    		eventProgram = null;	// And reset variable
+    	}
+    	super.onResume();
+    }
+    
+    /**
+     * Sets the listener for the fliping button
+     */
+    public void setFlipButton(){
+    	
+    	ImageView flipButton = (ImageView) view.findViewById(R.id.flip_button);
+    	flipButton.setVisibility(View.VISIBLE);
+    	flipButton.setClickable(true);
+    	
+    	flipButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(view.getContext(), EpgHorizontalActivity.class);
+				EPGFragment.this.startActivity(intent);
+			}
+			
+		});
+	
+    }
+    
+    // Launches the channel information view when the app is returning from the horizontal epg
+    @Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data){
+    	super.onActivityResult(requestCode, resultCode, data);
+    	/*
+    	System.out.println(resultCode);
+    	Log.i("Result code:"," "+resultCode);
+        if(resultCode != 0){
+            //finish
+        	System.out.println(resultCode);
+        	Log.i("Result code:"," "+resultCode);
+        	Program progToShow = null;
+        	for(Channel ch: epg){
+        		for(Program prog: ch){
+        			if(prog.getEventID() == resultCode){
+        				progToShow = prog;
+        				break;
+        			}
+        		}
+        	}
+        	
+        	if( progToShow != null){
+	    	 	Fragment fragment = new ChannelInformationFragment(main, progToShow);
+				android.support.v4.app.FragmentManager fragmentManager = getFragmentManager();
+				android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+	
+				fragmentTransaction.replace(R.id.container, fragment);
+				fragmentTransaction.addToBackStack(null);
+				fragmentTransaction.commit();
+        	}
+        	
+        }*/
+    }
+    
     
     /**
      * Sets the timeBar in 30min intervals starting from the hour passed by "start"
@@ -250,14 +249,13 @@ public class EPGFragment extends Fragment{
     	
     	timebar_hz_scroll.setBackgroundColor(0xAA000000);	// Transparent background
     	timebar_hz_scroll.addView(program_timebar, pt_params);
-    	
     }
     
     /**
      * Sets the line that represent the current time
      */
     public void setNowLine(){
-    
+    			
     	Date now = new Date(System.currentTimeMillis());
     	long difference = now.getTime() - start.getTime();
     	int distance = (int)(difference/60000)*(screen_width/60);
@@ -305,8 +303,8 @@ public class EPGFragment extends Fragment{
     			cal.setTime(prog.getStart()); // sets calendar time/date
     		    cal.add(Calendar.SECOND, prog.getDuration()); // adds one hour
     		    temp = cal.getTime();
-    		    //Log.i("Program time:",""+prog.getStart().getHours()+"dia "+prog.getStart().getDay());
-    			if(end == null)
+
+    		    if(end == null)
     				end = temp;
     			else if(end.compareTo(temp) < 0){
 	    		    end = temp;
@@ -324,7 +322,6 @@ public class EPGFragment extends Fragment{
     	if(start != null && end != null)
     		duration = end.getTime() - start.getTime();		// Duration in milliseconds
     	schedule_lenght_in_hours = (int) (duration / (60*60*1000));
-    	//Date now = new Date(System.currentTimeMillis());
 
     }
     
@@ -359,6 +356,7 @@ public class EPGFragment extends Fragment{
 			number_of_channels++;
 	     }
 		setNowLine();
+		setFlipButton();
 	}
 
 	/**
@@ -456,7 +454,6 @@ public class EPGFragment extends Fragment{
 		
 		container.addView(text, textParams);
 		p_layout.addView(container, params);
-		
 	}
 	
 	/**
@@ -500,7 +497,6 @@ public class EPGFragment extends Fragment{
 	/**
 	 * Loads the information asynchronously
 	 * @author 
-	 *
 	 */
 	private class AsyncDataLoader extends AsyncTask<Integer, Integer, EPG>{
 
@@ -514,7 +510,6 @@ public class EPGFragment extends Fragment{
 		protected void onPostExecute(EPG epgTemp) {
 			epg = epgTemp;
 			view.findViewById(R.id.progressEPGView).setVisibility(View.INVISIBLE);
-			epg_loaded = true;
 			mainEPG();
 		}	
 

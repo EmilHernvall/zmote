@@ -38,7 +38,7 @@
             android:layout_alignParentLeft="true"
             android:layout_marginBottom="14dp"
             android:layout_marginLeft="13dp"
-            android:background="@drawable/remote_back"
+            android:background="@drawable/back_normal"
             android:minWidth="48dip" />
 
         <Button
@@ -49,7 +49,7 @@
             android:layout_alignBottom="@+id/undo_button"
             android:layout_margin="13dp"
             android:layout_toRightOf="@+id/undo_button"
-            android:background="@drawable/remote_settings"
+            android:background="@drawable/settings_normal"
             android:minWidth="48dip" />
 
         <Button
@@ -60,7 +60,7 @@
             android:layout_alignBottom="@+id/store_button"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
-            android:background="@drawable/remote_info"
+            android:background="@drawable/info_normal"
             android:minWidth="48dip" />
 
         <Button
@@ -71,7 +71,7 @@
             android:layout_alignBottom="@+id/info_button"
             android:layout_alignParentRight="true"
             android:layout_marginRight="14dp"
-            android:background="@drawable/remote_sound"
+            android:background="@drawable/mute_normal"
             android:minWidth="48dip" />
 
         <Button
@@ -82,7 +82,7 @@
             android:layout_alignBottom="@+id/mute_volume_button"
             android:layout_margin="13dp"
             android:layout_toLeftOf="@+id/mute_volume_button"
-            android:background="@drawable/remote_exit"
+            android:background="@drawable/cancel_normal"
             android:minWidth="48dip" />
 
         <Button
@@ -93,7 +93,7 @@
             android:layout_centerHorizontal="true"
             android:layout_margin="0dp"
             android:layout_marginBottom="-5dp"
-            android:background="@drawable/remote_down"
+            android:background="@drawable/down_normal"
             android:minHeight="96dip"
             android:minWidth="66dip" />
 
@@ -104,7 +104,7 @@
             android:layout_above="@+id/arrow_down_button"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="-5dp"
-            android:background="@drawable/remote_middle"
+            android:background="@drawable/middle_normal"
             android:minHeight="56dp"
             android:minWidth="56dp" />
 
@@ -115,7 +115,7 @@
             android:layout_above="@+id/confirm_button"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="-5dp"
-            android:background="@drawable/remote_up"
+            android:background="@drawable/up_normal"
             android:minHeight="96dp"
             android:minWidth="64dp" />
 
@@ -127,7 +127,7 @@
             android:layout_alignBottom="@+id/confirm_button"
             android:layout_margin="0.5dp"
             android:layout_toRightOf="@+id/confirm_button"
-            android:background="@drawable/remote_right"
+            android:background="@drawable/right_normal"
             android:minHeight="56dip"
             android:minWidth="96dip" />
 
@@ -139,7 +139,7 @@
             android:layout_alignBottom="@+id/confirm_button"
             android:layout_margin="1.5dp"
             android:layout_toLeftOf="@+id/confirm_button"
-            android:background="@drawable/remote_left"
+            android:background="@drawable/left_normal"
             android:minHeight="56dip"
             android:minWidth="96dip" />
     </RelativeLayout>

@@ -14,20 +14,18 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
-import android.view.OrientationListener;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class EpgHorizontalActivity extends Activity {
 
@@ -54,12 +52,8 @@ public class EpgHorizontalActivity extends Activity {
 	
 	private OnTouchListener toutch;
 	private int currentX = -1, currentY = -1;
-
-	private boolean epg_loaded = false;
-
-    
+ 
 	
-    @SuppressWarnings("deprecation")
 	@Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
@@ -76,7 +70,7 @@ public class EpgHorizontalActivity extends Activity {
 		timebar_hz_scroll = (LinearLayout)view.findViewById(R.id.timebar_hz_scroll);
 
 			
-		//2D Scrolling, TODO: Fling needs to be implemented
+		//2D Scrolling
 		toutch = new View.OnTouchListener() {
 			long startTime = System.currentTimeMillis();
 
@@ -145,7 +139,26 @@ public class EpgHorizontalActivity extends Activity {
 
 	}
 
-    
+    /**
+     * Sets the listener for the fliping button
+     */
+    public void setFlipButton(){
+    	
+    	ImageView flipButton = (ImageView) view.findViewById(R.id.flip_button);
+    	//flipButton.setVisibility(View.VISIBLE);
+    	flipButton.setClickable(true);
+    	
+    	flipButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+			
+		});
+	
+    }
+	
     /**
      * Sets the timeBar in 30min intervals starting from the hour passed by "start"
      * @param start		Starting time for the time bar
@@ -190,7 +203,7 @@ public class EpgHorizontalActivity extends Activity {
     	
     	// We just change the margin of the line according to the current time
     	RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(2,height_of_rows*number_of_channels);
-    	params.setMargins(distance+110, 0, 0, 0);	// TODO: Needed some tune here
+    	params.setMargins(distance+110, 0, 0, 0);
     	LinearLayout line = (LinearLayout)view.findViewById(R.id.now_line);
     	line.setVisibility(LinearLayout.VISIBLE);
     	line.setLayoutParams(params);
@@ -369,13 +382,8 @@ public class EpgHorizontalActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 			
-				/*Fragment fragment = new ChannelInformationFragment(main, p);
-				android.support.v4.app.FragmentManager fragmentManager = getFragmentManager();
-				android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-				fragmentTransaction.replace(R.id.container, fragment);
-				fragmentTransaction.addToBackStack(null);
-				fragmentTransaction.commit();*/
+				EPGFragment.eventProgram = p;
+				finish();
 			}
 			
 		});
@@ -440,7 +448,6 @@ public class EpgHorizontalActivity extends Activity {
 		protected void onPostExecute(EPG epgTemp) {
 			epg = epgTemp;
 			view.findViewById(R.id.progressEPGView).setVisibility(View.INVISIBLE);
-			epg_loaded = true;
 			mainEPG();
 		}	
 
