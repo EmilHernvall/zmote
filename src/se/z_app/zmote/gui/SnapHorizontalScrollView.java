@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
  * This class extends the functionality of the HorizontalScrollView
  * and create a new type of view which is able to snap the screen on
  * the items you pass it in an ArrayList
- * @author fran
+ * @author Francisco Valladares
  */
 public class SnapHorizontalScrollView extends HorizontalScrollView {
     private static final int SWIPE_MIN_DISTANCE = 5;

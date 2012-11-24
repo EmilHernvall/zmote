@@ -46,5 +46,7 @@
     <string name="top_lists">Top lists</string>
     <string name="search">Search</string>
     <string name="title_activity_epg_horizontal">EpgHorizontalActivity</string>
+    <string name="now_text">NOW</string>
+    <string name="image">Image View</string>
 
 </resources>
