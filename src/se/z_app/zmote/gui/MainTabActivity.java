@@ -60,6 +60,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	private WebTVFragment webfragment;// = new WebTVFragment(this);
 	private MainViewFragment mainfragment;// = new MainViewFragment(this);
     private ChannelInformationFragment chinfragment;// = new ChannelInformationFragment(this);
+    private PlayMediaFilesFragment filesfragment;
     public int SDK_INT = android.os.Build.VERSION.SDK_INT;
 	/**
 	 * Standard create function for the fragment activity.
@@ -220,13 +221,13 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
     		
     	}
 		else if(tab.equals(tabFav)){
-			Log.i("FragmentLog", "Fav");
+			Log.i("FragmentLog", "Files");
 			//WARNING! : provisional function
-			if(chinfragment == null){
-				chinfragment = new ChannelInformationFragment(this);
+			if(filesfragment == null){
+				filesfragment = new PlayMediaFilesFragment(this);
 				isNew = true;
     		}
-			fragment = chinfragment;
+			fragment = filesfragment;
 					
 		}else if(tab.equals(tabMain)){
 			Log.i("FragmentLog", "Main");
