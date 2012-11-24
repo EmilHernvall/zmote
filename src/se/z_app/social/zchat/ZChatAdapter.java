@@ -25,7 +25,11 @@ import android.util.Log;
 public class ZChatAdapter {
 	private String serverAdress = "rails.z-app.se"; 
 	
-	//TODO: Implement this with the ZChat server
+	/**
+	 * Get a feed containing posts about a specific program
+	 * @param program - the program the posts are about
+	 * @return the feed with the posts
+	 */
 	@SuppressWarnings("deprecation")
 	public Feed getFeed(Program program){
 		Feed theFeed = new Feed(program);
@@ -35,14 +39,15 @@ public class ZChatAdapter {
 		arg2 = URLEncoder.encode(arg2);
 		String channelName = URLEncoder.encode(program.getChannel().getName());
 		
-		//String arg3 = URLEncoder.encode(program.getStart().toString());
+		/* Send the date as one string per parameter to simplify the conversion between
+		 * java date and rails DateTime */
 		String year = "" + program.getStart().getYear();
 		String month = "" + (program.getStart().getMonth() + 1);
 		String day = "" + program.getStart().getDate();
 		String hours = "" + program.getStart().getHours();
 		String minutes = "" + program.getStart().getMinutes();
-		//Log.e("ZCHAT:", "The Date: " + program.getStart().getMonth());
-		//HttpGet httpGet = new GetHTTPResponse().getJSON("http://" + serverAdress +"post/"+arg1+"?program_name="+arg2);
+		
+		/* The string to the URL to get the posts */
 		String urlStr = "http://" + serverAdress +"/post/"+arg1+
 						"?program_name="+arg2+
 						"&channel_name="+channelName+
@@ -53,10 +58,11 @@ public class ZChatAdapter {
 						"&minutes="+minutes+
 						"";
 		
+		/* Get the JSON string from the URL */
 		String json = getJSON(urlStr, 4 * 4096);
-		Log.e("ZCHAT", "urlStr: " + urlStr);
-		// Code copied from "StandardCommand"
 
+		/* Try-catch block needed to get JSON objects. The app keeps running in case of a JSON error,
+		 * 	it usually just means there are no posts in a feed or no comments in a post */
 		try {
 			JSONArray jsonarray = new JSONArray(json);
 			
@@ -65,58 +71,34 @@ public class ZChatAdapter {
 				
 				Post thePost = new Post();
 				thePost.setFeed(theFeed);
-				
-				
 				thePost.setContent(jsonPost.getString("content"));
 				
+				/* Get the name of the user who commited the post */
 				String usernameID = URLEncoder.encode(jsonPost.getString("user_id"));
-				//Log.e("ZCHAT", usernameID);
 				String userURLString = "http://" + serverAdress +"/post/get_user_by_id?id="+usernameID;
 				String jsonUser = getJSON(userURLString, 4096);
 				JSONArray theUser = new JSONArray(jsonUser);
 				thePost.setUserName(theUser.getJSONObject(0).getString("name"));
 				
+				/* Get the date of creation and update */
 				String dateOfCreation = jsonPost.getString("created_at");
-				dateOfCreation = dateOfCreation.replace(" ", "-");
-				dateOfCreation = dateOfCreation.replace(":", "-");
-				dateOfCreation = dateOfCreation.replace("T", "-");
-				String startAr[] = dateOfCreation.split("\\-");
-				
-				
 				String lastUpdate = jsonPost.getString("updated_at");
-				lastUpdate = lastUpdate.replace(" ", "-");
-				lastUpdate = lastUpdate.replace(":", "-");
-				lastUpdate = lastUpdate.replace("T", "-");
-				String lastUpdateSplit[] = lastUpdate.split("\\-");
-				
-				Date lastUpdateDate = new Date(
-						Integer.parseInt(lastUpdateSplit[0])-1900,
-						Integer.parseInt(lastUpdateSplit[1])-1,
-						Integer.parseInt(lastUpdateSplit[2]),
-						Integer.parseInt(lastUpdateSplit[3]),
-						Integer.parseInt(lastUpdateSplit[4]),
-						Integer.parseInt(lastUpdateSplit[5].substring(0,  2))
-						);
-				
-				
-						
-				Date date = new Date(
-						Integer.parseInt(startAr[0])-1900,
-						Integer.parseInt(startAr[1])-1,
-						Integer.parseInt(startAr[2]),
-						Integer.parseInt(startAr[3]),
-						Integer.parseInt(startAr[4]),
-						Integer.parseInt(startAr[5].substring(0,  2))
-						);
-				thePost.setDateOfCreation(date);
+				Date creationDate = railsStringToDate(dateOfCreation);
+				Date lastUpdateDate = railsStringToDate(lastUpdate);
+				thePost.setDateOfCreation(creationDate);
 				thePost.setLastUpdate(lastUpdateDate);
+				
+				/* Get the id (for comments) */
 				int postID = jsonPost.getInt("id");
 				thePost.setId(postID);
 				
-				//Log.e("ZCHAT:", "The Date: " + program.getStart().getMonth());
-				String getCommentStr = "http://" + serverAdress +"/post/insert_comment "+
-						"?program_name="+arg2+
+				
+				/* URL to get the comments for the post */
+				String getCommentStr = "http://" + serverAdress +"/post/get_comments_by_postid "+
+						"?post_id=" + postID +
 						"";
+				
+				/* Get the comments for the post */
 				try
 				{
 					String getCommentJSONString = getJSON(getCommentStr, 4096);
@@ -130,19 +112,7 @@ public class ZChatAdapter {
 						newComment.setUserName(jsonComment.getString("username"));
 						
 						String commentDateCreation = jsonComment.getString("created_at");
-						commentDateCreation = commentDateCreation.replace(" ", "-");
-						commentDateCreation = commentDateCreation.replace(":", "-");
-						commentDateCreation = commentDateCreation.replace("T", "-");
-						String splitted[] = commentDateCreation.split("\\-");
-						
-						Date commentDate = new Date(
-								Integer.parseInt(splitted[0])-1900,
-								Integer.parseInt(splitted[1])-1,
-								Integer.parseInt(splitted[2]),
-								Integer.parseInt(splitted[3]),
-								Integer.parseInt(splitted[4]),
-								Integer.parseInt(splitted[5].substring(0,  2))
-								);
+						Date commentDate = railsStringToDate(commentDateCreation);
 						
 						newComment.setDateOfCreation(commentDate);
 						thePost.addComment(newComment);
@@ -165,70 +135,83 @@ public class ZChatAdapter {
 		return theFeed;
 	}
 	
-	//TODO: Implement this with ZChat server
+	/**
+	 * Function that commits a post to the server and returns the feed with the post added. Make sure the Post has a lastUpdateDate.
+	 * @param targetFeed
+	 * @param newPost
+	 * @return targetFeed
+	 */
 	@SuppressWarnings("deprecation")
 	public Feed commitPost(Feed targetFeed, Post newPost){
 		targetFeed.addPost(newPost);
-		String arg1 = URLEncoder.encode(newPost.getUserName());
-		String arg2 = URLEncoder.encode(targetFeed.getProgram().getName());
-		String arg3 = URLEncoder.encode(newPost.getContent());
-		String channelName = URLEncoder.encode(targetFeed.getProgram().getChannel().getName());
-		//Date theDate = targetFeed.getProgram().getStart();
-		/*
-		String year = ""+theDate.getYear();
 		
-		String month = "" + (theDate.getMonth() > 9 ? "0" + theDate.getMonth() : theDate.getMonth());
-		String day = "" + (theDate.getDay() > 9 ? "0" + theDate.getDay() : theDate.getDay());
-		String hour = "" + (theDate.getHours() > 9 ? "0" + theDate.getHours() : theDate.getHours());
-		String minutes = "" + (theDate.getMinutes() > 9 ? "0" + theDate.getMinutes() : theDate.getMinutes());
-		*/
+		/* The arguments for the post */
+		String username = URLEncoder.encode(newPost.getUserName());
+		String programName = URLEncoder.encode(targetFeed.getProgram().getName());
+		String postContent = URLEncoder.encode(newPost.getContent());
+		String channelName = URLEncoder.encode(targetFeed.getProgram().getChannel().getName());
+		
+		/* Send the date as one string per parameter to simplify the conversion between
+		 * java date and rails DateTime */
 		String year = "" + targetFeed.getProgram().getStart().getYear();
 		String month = "" + (targetFeed.getProgram().getStart().getMonth() + 1);
 		String day = "" + targetFeed.getProgram().getStart().getDate();
 		String hours = "" + targetFeed.getProgram().getStart().getHours();
 		String minutes = "" + targetFeed.getProgram().getStart().getMinutes();
-		//String dateString = URLEncoder.encode(theDate.toString());
 		
+		/* The string to be visited to commit the post */
 		String userURLString = "http://" + serverAdress +
 								"/post/insert_post?" +
-								"username="+arg1+"" +
-								"&program_name="+arg2+
-								"&channel_name="+channelName+
-								"&content="+arg3+
-								//"&starttime="+dateString+
-								"&year="+year+
-								"&month="+month+
-								"&day="+day+
-								"&hours="+hours+
-								"&minutes="+minutes+
+								"username=" + username+"" +
+								"&program_name=" + programName +
+								"&channel_name=" + channelName +
+								"&content=" + postContent +
+								"&year=" + year +
+								"&month=" + month +
+								"&day=" + day +
+								"&hours=" + hours +
+								"&minutes=" + minutes +
 								"";
 		Log.e("ZCHAT", "userURLString" + userURLString);
+		
+		/* Try-catch block needed to visit the URL */
 		try {
 			URL url = new URL(userURLString);
 			url.openStream().close();
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (MalformedURLException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (IOException e) {
 			e.printStackTrace();
 		}
-		//Log.e("ZCHAT", "urlStr: " + userURLString);
+		
+		/* Return the feed with the post commited */
 		return targetFeed;
 	}
 	
-	//TODO: Implement this with ZChat server
+	
+	/**
+	 * Function that commits a comment to the rails server
+	 * @param targetFeed - the feed that contains the post
+	 * @param targetPost - the post that is commented
+	 * @param newComment - the comment to be commited
+	 * @return the target feed with the comment commited
+	 */
 	@SuppressWarnings("deprecation")
 	public Feed commitComment(Feed targetFeed, Post targetPost, Comment newComment){
 		targetPost.addComment(newComment);
 		String commentContent = URLEncoder.encode(newComment.getContent());
 		String postId = ""+newComment.getParentPost().getId();
+		
+		/* The URL to be visited */
 		String urlString = "http://rails.z-app.se/post/insert_comment?"+
 							"post_id="+postId+
 							"&content="+commentContent+
 							"&username="+newComment.getUserName()+
 							"";
 		
+		/* Try-catch block needed to visit the URL */
 		try {
 			URL url = new URL(urlString);
 			url.openStream().close();
@@ -239,7 +222,38 @@ public class ZChatAdapter {
 		return targetFeed;
 	}
 	
+	/**
+	 * Function that converts a rails DateTime string to a Java Date
+	 * @param dateString - the string to be converted
+	 * @return A Java Date
+	 */
+	@SuppressWarnings("deprecation")
+	private Date railsStringToDate(String dateString) {
+		/* Replace all signs with "-" */
+		dateString = dateString.replace(" ", "-");
+		dateString = dateString.replace(":", "-");
+		dateString = dateString.replace("T", "-");
+		String splitted[] = dateString.split("\\-");
+		
+		/* Create a new Date and return it */
+		return new Date(
+				Integer.parseInt(splitted[0])-1900,
+				Integer.parseInt(splitted[1])-1,
+				Integer.parseInt(splitted[2]),
+				Integer.parseInt(splitted[3]),
+				Integer.parseInt(splitted[4]),
+				Integer.parseInt(splitted[5].substring(0,  2))
+				);
+	}
+	
+	/**
+	 * Function that gets a JSON String from a given URL
+	 * @param urlStr - the URL to be visited
+	 * @param bufferSize - the buffer size for each line
+	 * @return the JSON string
+	 */
 	private String getJSON(String urlStr, int bufferSize){
+		/* StringBuilder is a non-threadsafe (so more efficient) version of StringBuffer */
 		StringBuilder json = new StringBuilder();	
 		try {
 			URL url = new URL(urlStr);
@@ -254,7 +268,7 @@ public class ZChatAdapter {
 			
 			in.close();
 		}catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 		return json.toString();
 	}

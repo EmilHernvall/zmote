@@ -84,13 +84,14 @@ public class WebTVFragment extends Fragment {
 				LinearLayout linLay = (LinearLayout) view_temp.findViewById(R.id.searchBar);
 				linLay.setVisibility(View.GONE);
 				LinearLayout linLayResult = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
-				linLayResult.setVisibility(View.VISIBLE);
-				//		LinearLayout noSearch = (LinearLayout) view_temp.findViewById(R.id.noSearch);
-				//		noSearch.setVisibility(View.GONE);
-				//TODO set view when no serach string is entered
-				
-				//				LinearLayout linLayTopList = (LinearLayout) view_temp.findViewById(R.id.top_list);
-				//				linLayTopList.setVisibility(View.GONE);
+				linLayResult.setVisibility(View.VISIBLE);			
+				LinearLayout noSearch = (LinearLayout) view_temp.findViewById(R.id.noSearch);
+				noSearch.setVisibility(View.GONE);
+
+				//TODO set view when noSearch string is entered
+
+				//	LinearLayout linLayTopList = (LinearLayout) view_temp.findViewById(R.id.top_list);
+				//	linLayTopList.setVisibility(View.GONE);
 			}
 
 		});
@@ -110,8 +111,8 @@ public class WebTVFragment extends Fragment {
 
 				LinearLayout linLayResult = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
 				linLayResult.setVisibility(View.GONE);
-				//LinearLayout noSearch = (LinearLayout) view_temp.findViewById(R.id.noSearch);
-				//noSearch.setVisibility(View.GONE);
+				LinearLayout noSearch = (LinearLayout) view_temp.findViewById(R.id.noSearch);
+				noSearch.setVisibility(View.GONE);
 				//TODO fix so work
 			}
 		});
@@ -134,16 +135,14 @@ public class WebTVFragment extends Fragment {
 		pb = (ProgressBar)view_temp.findViewById(R.id.progressLodingEpgChannelInformation);
 		EditText search_box = (EditText)view_temp.findViewById(R.id.search_box_webtv);
 		search_for_this = search_box.getText().toString();
-		//String search_for_this_temp = search_for_this; 
 		TextView resultText = (TextView) view_temp.findViewById(R.id.result_webtv);
 		resultText.setText("Result for: '"+ search_for_this+"'");
 		// Here we should call a function like this
-		//TODO If no input in search field, no search shall be done //Emma
 
-		if(search_for_this != null){
+		//TODO If no input in search field, no search shall be done //Emma
+		if(search_for_this != null){  //DON'T DO ANYTHING DIFFERENT RAGARDLESS OF INPUT OR NOT 
 			new AsyncWebSearch().execute();
 		}
-
 	}
 
 	/**
@@ -187,17 +186,17 @@ public class WebTVFragment extends Fragment {
 			item_container.setBackgroundColor(0xFFCCCCCC);
 			item_container.setPadding(4, 4, 4, 4);
 
-			final LinearLayout item2 = new LinearLayout(view_temp.getContext()); //Check so ok with final //Emma
+			LinearLayout item2 = new LinearLayout(view_temp.getContext());
 			item2.setBackgroundColor(0xFF999999);
 			item2.setMinimumHeight(30);
 			item2.setClickable(true);
 
-			final ImageButton queueButton = new ImageButton(view_temp.getContext()); //Check so ok with final //Emma
+			ImageButton queueButton = new ImageButton(view_temp.getContext());
 			Drawable d = (Drawable) view_temp.getResources().getDrawable(R.drawable.queue_button);
 			queueButton.setBackgroundDrawable(d); //Check if ok, should not be used with API 16
 			item2.addView(queueButton);
 
-			final LinearLayout item = new LinearLayout(view_temp.getContext()); //Check so ok with final //Emma
+			LinearLayout item = new LinearLayout(view_temp.getContext());
 			item.setBackgroundColor(0xFF999999);
 			item.setMinimumHeight(30);
 			item.setClickable(true);
@@ -220,50 +219,28 @@ public class WebTVFragment extends Fragment {
 			results_ly.addView(item_container, item_container_params);
 
 			tempItem = x;
-			item.setOnTouchListener(new View.OnTouchListener() {
+
+			item.setOnClickListener(new View.OnClickListener() {
 				WebTVItem resultItem = tempItem;
-				@Override	
-				public boolean onTouch(View v, MotionEvent event) {
-
-					if(event.getAction() == MotionEvent.ACTION_DOWN){
-						item.setBackgroundColor(0x33B5E5);
-						WebTVCommand.instance().play(resultItem);
-						return true;
-					}
-
-					else if (event.getAction() == MotionEvent.ACTION_UP) {
-						item.setBackgroundColor(0xFF999999);
-						return true;
-					}
-
-					else{
-						return false;
-					}
+				@Override
+				public void onClick(View v) {
+					main.vibrate();
+					WebTVCommand.instance().play(resultItem);
+					//TODO Change color when press (only if time)
 				}
 			});
 
-			queueButton.setOnTouchListener(new View.OnTouchListener() {
+			queueButton.setOnClickListener(new View.OnClickListener() {
 				WebTVItem queueItem = tempItem;
-				@Override	
-				public boolean onTouch(View v, MotionEvent event) {
-
-					if(event.getAction() == MotionEvent.ACTION_DOWN){
-						item2.setBackgroundColor(0x33B5E5);
-						WebTVCommand.instance().queue(queueItem);
-						return true;
-					}
-					else if (event.getAction() == MotionEvent.ACTION_UP) {
-						item2.setBackgroundColor(0xFF999999);
-						return true;
-					}
-					else{
-						return false;
-					}
+				@Override
+				public void onClick(View v) {
+					main.vibrate();
+					WebTVCommand.instance().queue(queueItem);
+					//TODO Change color when press (only if time)
 				}
 			});
-		}	
+		}
 	}
-
 	/**
 	 * Add items into spinner (drop-down menu with services) dynamically
 	 * @author Maria Jesus Platero
