@@ -160,6 +160,7 @@ public class EPGFragment extends Fragment{
     		// Load channel information view and focus on the program
     		eventProgram = null;	// And reset variable
     	}
+    	super.onResume();
     }
     
     /**
