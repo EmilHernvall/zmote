@@ -168,11 +168,7 @@ public class EPGFragment extends Fragment{
 				
 				// Just some print of the orientation variable
 				Log.i("Orientation:"," "+orientation);
-				//if(orientation == Configuration.ORIENTATION_LANDSCAPE) Log.i("Position: "," landscape");
-				//if(orientation == Configuration.ORIENTATION_PORTRAIT) Log.i("Position: "," portrait");
-				//if(orientation == Configuration.ORIENTATION_UNDEFINED) Log.i("Position: "," undefined");
-				//if(orientation == Configuration.ORIENTATION_SQUARE)	Log.i("Position: "," square");
-				
+
 				// If we have 3.0 or later
 				if( main.SDK_INT > 10){
 					if(orientation != ORIENTATION_UNKNOWN && changes > 0 && epg_loaded){
@@ -194,46 +190,8 @@ public class EPGFragment extends Fragment{
 							Toast.makeText(view.getContext(), "Push back button", Toast.LENGTH_SHORT).show();
 						}
 						
-						/*
-						if(orientation_var == 1 && orientation > 300){
-							Toast.makeText(view.getContext(), "Changing...", Toast.LENGTH_SHORT).show();
-							Intent intent = new Intent(view.getContext(), EpgHorizontalActivity.class);
-							EPGFragment.this.startActivity(intent);
-							orientation_var = 0;
-							changes = -1;
-							//orientationListener.disable();
-							
-							Log.i("Orientation:"," "+orientation);
-							
-						}else if(orientation_var == 0 && orientation < 50){
-							// Go back to the fragment in some way
-							orientation_var = 1;
-							changes = -1;
-							Toast.makeText(view.getContext(), "Push back button", Toast.LENGTH_SHORT).show();
-							
-							Log.i("Orientation:"," "+orientation);
-						}*/
 					}
 					changes++;
-				/*}else{	// If we have 2.3.6 or earlier
-					
-					if( (orientation < 10 || orientation > 270) && epg_loaded){
-						
-						if(orientation > 270) changes++;
-						if(orientation > 270 && changes > 5){
-							//Toast.makeText(view.getContext(), "changeeeddd", Toast.LENGTH_SHORT).show();
-							Intent intent = new Intent(view.getContext(), EpgHorizontalActivity.class);
-							EPGFragment.this.startActivity(intent);
-							orientation_var = 0;
-							changes = -1;
-							orientationListener.disable();
-						}else if(orientation < 9){
-							// Go back to the fragment in some way
-							//Toast.makeText(view.getContext(), "Going back", Toast.LENGTH_SHORT).show();
-							changes = -1;
-						}
-					}
-					*/
 				}
 			}
 		};
