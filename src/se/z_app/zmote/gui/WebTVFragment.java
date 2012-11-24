@@ -70,7 +70,7 @@ public class WebTVFragment extends Fragment {
 		screenWidth = getResources().getDisplayMetrics().widthPixels;
 		screenHeight = getResources().getDisplayMetrics().heightPixels;
 		new AsyncWebServiceLoader().execute();
-
+		
 		// Set the listener for the search button
 		ImageButton search_button = (ImageButton)view_temp.findViewById(R.id.search_button_webtv);
 		search_button.setOnClickListener(new View.OnClickListener() {
@@ -78,8 +78,18 @@ public class WebTVFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				// Start a new search
-				search();
+				LinearLayout noSearch = (LinearLayout) view_temp.findViewById(R.id.noSearch);
+				LinearLayout noSearchLine = (LinearLayout) view_temp.findViewById(R.id.noSearchLine);
+				if(!search()){
+					noSearch.setVisibility(View.VISIBLE);
+					noSearchLine.setVisibility(View.VISIBLE);
+					LinearLayout results_ly = (LinearLayout) view_temp.findViewById(R.id.search_results_ly);
+					results_ly.removeAllViewsInLayout();
+					return;
+				}
 				//Loads the correct webTv icon
+				noSearch.setVisibility(View.GONE);
+				noSearchLine.setVisibility(View.GONE);
 				web_service = spinner.getSelectedItemPosition();
 				ImageView result_icon = (ImageView) view_temp.findViewById(R.id.webtv_icon_result);
 				result_icon.setImageBitmap(servicesIcons[web_service]);
@@ -87,18 +97,8 @@ public class WebTVFragment extends Fragment {
 				LinearLayout linLay = (LinearLayout) view_temp.findViewById(R.id.searchBar);
 				linLay.setVisibility(View.GONE);
 				LinearLayout linLayResult = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
-				linLayResult.setVisibility(View.VISIBLE);		
-				LinearLayout playBarLine = (LinearLayout) view_temp.findViewById(R.id.playBarLine);
-				playBarLine.setVisibility(View.GONE);	
-				LinearLayout playBar = (LinearLayout) view_temp.findViewById(R.id.play_results_ly);
-				playBar.setVisibility(View.GONE);
-
-				//	LinearLayout noSearch = (LinearLayout) view_temp.findViewById(R.id.noSearch);
-				//	noSearch.setVisibility(View.GONE);
-				//TODO set view when noSearch string is entered
-
-				//	LinearLayout linLayTopList = (LinearLayout) view_temp.findViewById(R.id.top_list);
-				//	linLayTopList.setVisibility(View.GONE);
+				linLayResult.setVisibility(View.VISIBLE);	
+				addPlayBar();
 			}
 
 		});
@@ -118,10 +118,11 @@ public class WebTVFragment extends Fragment {
 				playBarLine.setVisibility(View.GONE);
 				LinearLayout playBar = (LinearLayout) view_temp.findViewById(R.id.play_results_ly);
 				playBar.setVisibility(View.GONE);
-
 				LinearLayout noSearch = (LinearLayout) view_temp.findViewById(R.id.noSearch);
 				noSearch.setVisibility(View.GONE);
-				//TODO fix so work
+				LinearLayout noSearchLine = (LinearLayout) view_temp.findViewById(R.id.noSearchLine);
+				noSearchLine.setVisibility(View.GONE);
+
 			}
 		});
 
@@ -133,7 +134,9 @@ public class WebTVFragment extends Fragment {
 		playBar.setVisibility(View.GONE);
 		LinearLayout noSearch = (LinearLayout) view_temp.findViewById(R.id.noSearch);
 		noSearch.setVisibility(View.GONE);
-
+		LinearLayout noSearchLine = (LinearLayout) view_temp.findViewById(R.id.noSearchLine);
+		noSearchLine.setVisibility(View.GONE);
+		
 		return view_temp;
 	}    
 
@@ -141,7 +144,7 @@ public class WebTVFragment extends Fragment {
 	 * Calls the back-end function to get the results of a search and shows them
 	 * @author Francisco
 	 */
-	public void search(){
+	public boolean search(){
 
 		// We can set a progress bar to show the user that we are searching
 		pb = (ProgressBar)view_temp.findViewById(R.id.progressLodingEpgChannelInformation);
@@ -149,19 +152,15 @@ public class WebTVFragment extends Fragment {
 		search_for_this = search_box.getText().toString();
 		TextView resultText = (TextView) view_temp.findViewById(R.id.result_webtv);
 		resultText.setText("Result for: '"+ search_for_this+"'");
-		// Here we should call a function like this
-
+		
 		if(checkEmpty(search_box) == false){  //Check if the search box is empty
 			new AsyncWebSearch().execute();
+			return true;
 
 		}
 		else {
-			//		LinearLayout linLayResult = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
-			//		linLayResult.setVisibility(View.GONE);
-			LinearLayout noSearch = (LinearLayout) view_temp.findViewById(R.id.noSearch);
-			noSearch.setVisibility(View.VISIBLE);
-			LinearLayout results_ly = (LinearLayout) view_temp.findViewById(R.id.search_results_ly);
-			results_ly.removeAllViewsInLayout();
+			
+			return false;
 		}
 	}
 
@@ -272,24 +271,23 @@ public class WebTVFragment extends Fragment {
 			});
 		}
 
+		System.out.println("TEST 2");
 		//TODO make buttons work
-//		addPlayBar();
+		//addPlayBar();
 		
 	}
 
 	/** 
-	 * Method that sets the play/pause/next/forward buttons
+	 * Method that sets the play-/pause-/next-/forward buttons
 	 * @Author Emma Axelsson
 	 */
 	public void addPlayBar(){
-
+		System.out.println("TEST 2");
 		LinearLayout playBarLine = (LinearLayout) view_temp.findViewById(R.id.playBarLine);
 		LinearLayout playBar = (LinearLayout) view_temp.findViewById(R.id.play_results_ly);
-	//	LinearLayout.LayoutParams buttonContainerParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);
-	//	LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,(int)(screenHeight*0.15));
-
-		playBar.addView(playBarLine);
-
+		playBar.setVisibility(View.VISIBLE);
+		playBar.setBackgroundColor(0x8833B5E5);
+		playBarLine.setVisibility(View.VISIBLE);
 	}
 
 	/**
