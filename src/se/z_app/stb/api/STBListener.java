@@ -19,6 +19,7 @@ public class STBListener extends Observable implements Observer, Runnable{
 
 	private Thread myThread;
 	private STB stb;
+	private STBEvent event;
 	
 	private static class SingletonHolder { 
         public static final STBListener INSTANCE = new STBListener();
@@ -47,6 +48,9 @@ public class STBListener extends Observable implements Observer, Runnable{
 	
 	
 
+	public STBEvent getCurrentEvent(){
+		return event;
+	}
 	
 	
 	public void update(Observable obsesrvable, Object data) {
@@ -62,11 +66,12 @@ public class STBListener extends Observable implements Observer, Runnable{
 
 	public void run() {
 		
-		STBEvent event;
+		System.out.println("Initiating Listner");
 		eventListener.init(stb);
 		
-		
+		//System.out.println("waiting for events");
 		while((event = eventListener.getNextEvent())!=null){
+			//System.out.println("Recived Event");
 			this.setChanged();
 			this.notifyObservers(event);
 
