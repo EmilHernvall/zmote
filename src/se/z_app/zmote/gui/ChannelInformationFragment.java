@@ -78,6 +78,11 @@ public class ChannelInformationFragment extends Fragment{
 	
 	public void focusOnProgram(Program program){
 		
+		int temp_id = ((program.getChannel().getNr()*10000)+program.getEventID());
+		LinearLayout temp = (LinearLayout)view_temp.findViewById(temp_id);
+		temp.setFocusableInTouchMode(true);
+		temp.requestFocus();
+		
 	}
 	
 	/**
