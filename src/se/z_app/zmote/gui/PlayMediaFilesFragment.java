@@ -2,9 +2,11 @@ package se.z_app.zmote.gui;
 
 import java.io.File;
 import java.util.LinkedList;
+import java.util.concurrent.ExecutionException;
 
-import se.z_app.stb.WebTVItem;
-import se.z_app.stb.api.WebTVCommand;
+import se.z_app.stb.MediaItem;
+import se.z_app.stb.api.RemoteControl;
+import se.z_app.zmote.webtv.MediaStreamer;
 
 
 
@@ -18,9 +20,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentSkipListMap;
 
@@ -28,7 +32,8 @@ public class PlayMediaFilesFragment extends Fragment {
 	private MainTabActivity tab;
 	private float screenWidth = 0;
 	private View view_temp;
-
+	private ProgressBar pb;
+	private File tmpFile;
 
 	public PlayMediaFilesFragment(MainTabActivity mainTabActivity) {
 		this.tab = mainTabActivity;
@@ -38,15 +43,51 @@ public class PlayMediaFilesFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {	
 
-		view_temp = inflater.inflate(R.layout.fragment_web_tv, null);  //TODO: DO we need this?
+		view_temp = inflater.inflate(R.layout.fragment_stream_file, null); 
 		screenWidth = getResources().getDisplayMetrics().widthPixels;
-		new AsyncSearch().execute();
+		AsyncTask<Integer, Integer, ConcurrentSkipListMap> async = new AsyncSearch().execute();
+		try {
+			showResults(async.get());
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		search();
 		return view_temp;
+		
 	}
+	
+	/**
+	 * TODO: NOT TESTED
+	 */
+	public void search(){
+
+		// We can set a progress bar to show the user that we are searching
+		pb = (ProgressBar)view_temp.findViewById(R.id.progressLodingEpgChannelInformation);
+		EditText search_box = (EditText)view_temp.findViewById(R.id.search_box_webtv);
+//		search_for_this = search_box.getText().toString();
+		TextView resultText = (TextView) view_temp.findViewById(R.id.result_webtv);
+//		resultText.setText("Result for: '"+ search_for_this+"'");
+		// Here we should call a function like this
+
+		//TODO If no input in search field, no search shall be done //Emma
+//		if(search_for_this != null){  //DON'T DO ANYTHING DIFFERENT RAGARDLESS OF INPUT OR NOT 
+//			new AsyncWebSearch().execute();
+//		}
+	}
+	
+	/**
+	 * TODO: NOT TESTED
+	 * @param res
+	 */
 	
 	public void showResults(ConcurrentSkipListMap res){
 
 		// some layout stuff
+		Log.i("files","in the showResult()");
 		LinearLayout results_ly = (LinearLayout) view_temp.findViewById(R.id.search_results_ly);
 		results_ly.removeAllViewsInLayout(); 
 		LinearLayout.LayoutParams item_container_params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);
@@ -56,21 +97,17 @@ public class PlayMediaFilesFragment extends Fragment {
 
 			
 		while(!res.isEmpty()){
-//			File fetchingFile = res.
-//
-//			LinearLayout item_container = new LinearLayout(view_temp.getContext());
-//			item_container.setBackgroundColor(0xFFCCCCCC);
-//			item_container.setPadding(4, 4, 4, 4);
+			Object key = res.firstKey();
+			File fileToAdd = (File)res.remove(key);
+
+			LinearLayout item_container = new LinearLayout(view_temp.getContext());
+			item_container.setBackgroundColor(0xFFCCCCCC);
+			item_container.setPadding(4, 4, 4, 4);
 
 			LinearLayout item2 = new LinearLayout(view_temp.getContext());
 			item2.setBackgroundColor(0xFF999999);
 			item2.setMinimumHeight(30);
-			item2.setClickable(true);
-
-			ImageButton queueButton = new ImageButton(view_temp.getContext());
-			Drawable d = (Drawable) view_temp.getResources().getDrawable(R.drawable.queue_button);
-			queueButton.setBackgroundDrawable(d); //Check if ok, should not be used with API 16
-			item2.addView(queueButton);
+			item2.setClickable(true);		
 
 			LinearLayout item = new LinearLayout(view_temp.getContext());
 			item.setBackgroundColor(0xFF999999);
@@ -78,43 +115,43 @@ public class PlayMediaFilesFragment extends Fragment {
 			item.setClickable(true);
 
 			ImageView icon = new ImageView(view_temp.getContext());
-			//icon.setImageBitmap(x.getIcon());
+			String fileName = fileToAdd.toString();
+			if (fileName.endsWith(".mp3")){
+				icon.setBackgroundResource(R.drawable.ic_music);
+			}
+			else if (fileName.endsWith(".mp4")){
+				icon.setBackgroundResource(R.drawable.ic_video);
+			}
+			else{			
+			icon.setBackgroundResource(R.drawable.ic_action_search);
+			}
+			
 
 			TextView title = new TextView(view_temp.getContext());
-//			title.setText(res.getTitle());
+			title.setText(fileToAdd.getName());
 			title.setPadding(10, 0, 0, 0);
 			title.setTextColor(0xFF000000);
 
 			item.addView(icon, icon_params);
 			item.addView(title);
+			
+			item_container.addView(item, item_params);
+			item_container.addView(item2, item_params2);
+			results_ly.addView(item_container, item_container_params);
 
-//			new AsyncImageLoader(icon, x).execute();  //remove, we can add the image later
-//
-//			item_container.addView(item, item_params);
-//			item_container.addView(item2, item_params2);
-//			results_ly.addView(item_container, item_container_params);
-//
-//			tempItem = x;
-
+			tmpFile = fileToAdd;
 			item.setOnClickListener(new View.OnClickListener() {
-//				WebTVItem resultItem = tempItem;
+				File file = tmpFile;
 				@Override
 				public void onClick(View v) {
-//					main.vibrate();
-//					WebTVCommand.instance().play(resultItem);
-					//TODO Change color when press (only if time)
+					tab.vibrate();
+					MediaItem item = MediaStreamer.instance().addFile(file);
+					Log.i("files","launcing file "+ file.getAbsolutePath());
+					RemoteControl.instance().launch(item);
+					
 				}
 			});
 
-			queueButton.setOnClickListener(new View.OnClickListener() {
-//				WebTVItem queueItem = tempItem;
-				@Override
-				public void onClick(View v) {
-//					main.vibrate();
-//					WebTVCommand.instance().queue(queueItem);
-					//TODO Change color when press (only if time)
-				}
-			});
 		}
 	}
 
@@ -139,7 +176,6 @@ public class PlayMediaFilesFragment extends Fragment {
 								files.addLast(child);
 							}
 							else{
-//								Log.i("files","in the deepest deep the file name is: "+child.getName());
 								String filename = child.getName().toLowerCase();
 								if(filename.endsWith(".mp4") || filename.endsWith(".mp3")){
 									mediaFiles.put(child.lastModified(),child);
@@ -150,18 +186,12 @@ public class PlayMediaFilesFragment extends Fragment {
 					}
 				}
 			}
-
-//			Log.i("Files", "Scan time: " + (System.currentTimeMillis()-time));
-//			for (File file : mediaFiles) {
-//				Log.i("Files", "Found: " + file.getAbsolutePath());
-//			}
 			return mediaFiles;
 		}
 		@Override
 		protected ConcurrentSkipListMap doInBackground(Integer... params) {
 			return getResult();
 		}
-
 
 	}
 }
