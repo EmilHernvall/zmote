@@ -97,4 +97,18 @@
 	    </RelativeLayout>
     </HorizontalScrollView>
 
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" 
+        >
+	    <ImageView 
+	        android:id="@+id/flip_button"
+	        android:src="@android:drawable/ic_menu_always_landscape_portrait"
+	        android:contentDescription="@string/hello_world"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentRight="true"
+	        android:layout_alignParentBottom="true" />
+	    
+    </RelativeLayout>
 </RelativeLayout>
