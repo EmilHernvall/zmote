@@ -76,6 +76,10 @@ public class ChannelInformationFragment extends Fragment{
 		this.main = main;
 	}
 	
+	public void focusOnProgram(Program program){
+		
+	}
+	
 	/**
 	 * This to do when the instance of ChannelInformationFragment is created
 	 */
