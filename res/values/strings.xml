@@ -8,6 +8,7 @@
 
     <color name="black">#000000</color>
 	
+    <string name= "button_post_text">Post</string>
     <string name="activity_zchat_new_post"></string>
     <string name="activity_zchat_hintName">What do you think about the show?</string>
     <string name="title_activity_zchat">ZChat</string>

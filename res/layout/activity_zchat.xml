@@ -2,31 +2,103 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#000000"
     android:orientation="vertical" >
 
-
-
     <LinearLayout
-        android:id="@+id/feed_name"
         android:layout_width="match_parent"
-        android:layout_height="70dip"
-        android:background="#CCCCCC" >
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dip"
+        android:background="#CCCCCC"
+        android:orientation="vertical"
+        android:padding="2dip" >
 
-        <EditText
-            android:id="@+id/editText1"
-            android:layout_width="wrap_content"
-            android:layout_height="52dp"
-            android:background="#000000"
-            android:ems="10" >
-        </EditText>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="1dip" >
+
+            <TextView
+                android:id="@+id/time_of_feedUpdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:text="50 min ago"
+                android:textColor="#000000"
+                android:textSize="8sp" />
+
+            <TextView
+                android:id="@+id/feed_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_centerVertical="true"
+                android:paddingLeft="8dip"
+                android:text="Feed for: The dark knight"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:descendantFocusability="beforeDescendants"
+            android:focusableInTouchMode="true"
+            android:padding="1dip"
+            android:paddingLeft="8dip" >
+
+            <EditText
+                android:id="@+id/new_post"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/post_button"
+                android:background="#FFFFFF"
+                android:ems="10"
+                android:hint="@string/activity_zchat_hintName"
+                android:padding="2dip"
+                android:text="@string/activity_zchat_new_post"
+                android:textColor="#000000"
+                android:textColorHint="#666666"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/post_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:height="12dip"
+                android:text="@string/button_post_text"
+                android:textColor="#666666" />
+        </RelativeLayout>
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/list"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:divider="@null"
-        android:dividerHeight="0dip" />
+        android:orientation="horizontal" >
+
+        <RelativeLayout
+            android:layout_width="16dip"
+            android:layout_height="match_parent" >
+        </RelativeLayout>
+
+        <ListView
+            android:id="@+id/list_over_post"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:background="#CCCCCC"
+            android:divider="#000000"
+            android:dividerHeight="1dp"
+            android:orientation="vertical" >
+        </ListView>
+    </LinearLayout>
 
 </LinearLayout>
