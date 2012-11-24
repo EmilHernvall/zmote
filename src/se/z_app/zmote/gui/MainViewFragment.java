@@ -519,9 +519,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 
 		int padding = 10;
 
-		//TODO: imageList == 0 a bug appears, this happens when it dose not get connection to a STB		
-
-		if(imageList.isEmpty()){
+		if(imageList == null || imageList.isEmpty()){
 			return;
 		}
 		leftleft = imageList.get((currentChannelNr+imageList.size()-2)%imageList.size());
@@ -747,7 +745,6 @@ public class MainViewFragment extends Fragment implements OnGestureListener{
 		protected void onPostExecute(EPG epg) {
 
 			if(epg == null){
-				//TODO: Save this 
 				return;
 			}
 			v.findViewById(R.id.progressLoadingEPG).setVisibility(View.INVISIBLE);
