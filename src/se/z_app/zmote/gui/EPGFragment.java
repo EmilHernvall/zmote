@@ -119,6 +119,9 @@ public class EPGFragment extends Fragment{
 			        case MotionEvent.ACTION_UP: {
 			        	
 			        	long time = System.currentTimeMillis()-startTime;
+			        	if(time/20==0){
+			        		break;
+			        	}
 			        	int vx = 40*(int)((currentX - firstX)/(time/20));
 						int vy = 40*(int)((currentY - firstY)/(time/20));
 						System.out.println("vx: " + vx);
@@ -441,13 +444,16 @@ public class EPGFragment extends Fragment{
 			@Override
 			public void onClick(View v) {
 			
-				Fragment fragment = new ChannelInformationFragment(main, p);
-				android.support.v4.app.FragmentManager fragmentManager = getFragmentManager();
-				android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-				fragmentTransaction.replace(R.id.container, fragment);
-				fragmentTransaction.addToBackStack(null);
-				fragmentTransaction.commit();
+//				Fragment fragment = new ChannelInformationFragment(main, p);
+//				android.support.v4.app.FragmentManager fragmentManager = getFragmentManager();
+//				android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//
+//				fragmentTransaction.replace(R.id.container, fragment);
+//				fragmentTransaction.addToBackStack(null);
+//				fragmentTransaction.commit();
+				
+				main.showChannelInformation(p);
+				
 			}
 			
 		});

@@ -25,6 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
+                
                 android:text="50 min ago"
                 android:textColor="#000000"
                 android:textSize="8sp" />
@@ -39,7 +40,7 @@
                 android:paddingLeft="8dip"
                 android:text="Feed for: The dark knight"
                 android:textColor="#000000"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
         </RelativeLayout>
 
@@ -62,6 +63,8 @@
                 android:ems="10"
                 android:hint="@string/activity_zchat_hintName"
                 android:padding="2dip"
+                android:lines="2"
+                android:layout_marginLeft="6dip"
                 android:text="@string/activity_zchat_new_post"
                 android:textColor="#000000"
                 android:textColorHint="#666666"
@@ -96,7 +99,7 @@
             android:layout_marginTop="2dp"
             android:background="#CCCCCC"
             android:divider="#000000"
-            android:dividerHeight="1dp"
+            android:dividerHeight="2dp"
             android:orientation="vertical" >
         </ListView>
     </LinearLayout>
