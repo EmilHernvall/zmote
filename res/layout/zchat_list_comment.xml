@@ -38,13 +38,5 @@
         android:textColor="#000000"
         android:textSize="14sp" />
 
-    <TextView
-        android:id="@+id/comment_nr_of_comments"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/comment_content"
-        android:textColor="#000000"
-        android:textSize="8sp" />
 
 </RelativeLayout>

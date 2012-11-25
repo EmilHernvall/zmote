@@ -634,7 +634,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 		int voldownHight = v.findViewById(R.id.imageVolDown).getMeasuredHeight();
 
 		params1.setMargins(0, 0, 
-				0, voldownHight + (int)((imagehight*(centerScale)/4)));
+				0, (int)(voldownHight + (int)((imagehight*(centerScale)/4))));
 		center.setLayoutParams(params1);
 
 		ObjectAnimator.ofFloat(center, "scaleX", centerScale).setDuration(0).start();

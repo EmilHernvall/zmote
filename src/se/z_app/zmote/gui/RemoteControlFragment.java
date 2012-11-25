@@ -53,7 +53,6 @@ public class RemoteControlFragment extends Fragment implements Observer {
 	private EPG epg;
 	private EPGQuery query = new EPGQuery();
 	private boolean fetched = false;
-	private boolean muted = false;
     private ImageButton currentButton;
 
 	/**
@@ -301,31 +300,13 @@ public class RemoteControlFragment extends Fragment implements Observer {
 	            	vibrate();
 	            	RCProxy.instance().mute();
 	            	mute_volume_button.setBackgroundColor(0xFFFFFFFF);
-                    
-                    // Put here the "light" button
-	            	if(muted == true){
-	            		mute_volume_button.setBackgroundResource(R.drawable.unmute_pressed);
-	            	}else{
-	            		mute_volume_button.setBackgroundResource(R.drawable.mute_pressed);	
-	            	}
-	            	
+	            	mute_volume_button.setBackgroundResource(R.drawable.mute_pressed);	
                     return true;
                     
                 }else if(event.getAction() == MotionEvent.ACTION_UP){
                 	mute_volume_button.setBackgroundColor(0xFF000000);
-                	
-	            	if(muted == true){
-	            		mute_volume_button.setBackgroundResource(R.drawable.unmute_normal);
-	            	}else{
-	            		mute_volume_button.setBackgroundResource(R.drawable.mute_normal);
-	            	}
-	            	 
-	            	if(muted == true){
-	              	   muted = false;
-	                }else{
-	              	   muted = true;
-	                }
-	            	
+	            	mute_volume_button.setBackgroundResource(R.drawable.mute_normal);
+
                     return true;
                 }else{
                     return false;

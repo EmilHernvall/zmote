@@ -16,6 +16,7 @@ public interface BiDirectionalCmdInterface {
 	public Bitmap getWebTVServiceIcon(WebTVService serivce);
 	public Bitmap getWebTVItemIcon(WebTVItem item);
 	public WebTVItem[] searchWebTVService(String query, WebTVService service);
-	
+	public int getVolume();
+	public boolean isMute();
 	
 }
