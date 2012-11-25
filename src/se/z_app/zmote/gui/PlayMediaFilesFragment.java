@@ -6,7 +6,9 @@ import java.util.concurrent.ExecutionException;
 
 import se.z_app.stb.EPG;
 import se.z_app.stb.MediaItem;
+import se.z_app.stb.WebTVItem;
 import se.z_app.stb.api.RemoteControl;
+import se.z_app.stb.api.WebTVCommand;
 import se.z_app.zmote.webtv.MediaStreamer;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -91,12 +93,12 @@ public class PlayMediaFilesFragment extends Fragment {
 			item_container.setBackgroundColor(0xFFCCCCCC);
 			item_container.setPadding(4, 4, 4, 4);
 
-			LinearLayout item2 = new LinearLayout(view_temp.getContext());
+			final LinearLayout item2 = new LinearLayout(view_temp.getContext());
 			item2.setBackgroundColor(0xFF999999);
 			item2.setMinimumHeight(30);
 			item2.setClickable(true);		
 
-			LinearLayout item = new LinearLayout(view_temp.getContext());
+			final LinearLayout item = new LinearLayout(view_temp.getContext());
 			item.setBackgroundColor(0xFF999999);
 			item.setMinimumHeight(30);
 			item.setClickable(true);
@@ -135,14 +137,37 @@ public class PlayMediaFilesFragment extends Fragment {
 				@Override
 				public void onClick(View v) {
 					tab.vibrate();
-					MediaItem item = MediaStreamer.instance().addFile(file);
+					MediaItem item_n = MediaStreamer.instance().addFile(file);
 					Log.i("files","launcing file "+ file.getAbsolutePath());
-					RemoteControl.instance().launch(item);
+					RemoteControl.instance().launch(item_n);
+					item.setBackgroundColor(0x8833B5E5);
+					item2.setBackgroundColor(0x8833B5E5);
+					
+					//To restore the color after a few milliseconds
+					new Thread(new Runnable() {
+						@Override
+						public void run() {
+							try {
+								Thread.sleep(90);
+							} catch (InterruptedException e) {
+
+							}
+							tab.runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									item.setBackgroundColor(0xFF999999);
+									item2.setBackgroundColor(0xFF999999);
+								}
+							});
+						}
+					}).start();
 
 				}
 			});
 
 		}
+
+
 	}
 
 	private class AsyncSearch extends AsyncTask<Integer, Integer, ConcurrentSkipListMap>{
