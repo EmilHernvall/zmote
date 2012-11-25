@@ -56,8 +56,6 @@ public class WebTVFragment extends Fragment {
 	private String search_for_this = null;	
 	private float screenWidth = 0;
 	private WebTVItem tempItem;
-	private LinearLayout current_item;
-	private LinearLayout current_item2;
 
 
 	/**
@@ -273,14 +271,28 @@ public class WebTVFragment extends Fragment {
 				public void onClick(View v) {
 					main.vibrate();
 					WebTVCommand.instance().play(resultItem);
-			    	if(current_item != null && current_item2 != null){
-			    		current_item.setBackgroundColor(0xFF999999);
-			    		current_item2.setBackgroundColor(0xFF999999);
-			    	}
-					item.setBackgroundColor(0xFFCCCCCC);
-					item2.setBackgroundColor(0xFFCCCCCC);
-					current_item = item;	
-					current_item2 = item2;	
+			    	
+					item.setBackgroundColor(0x8833B5E5);
+					item2.setBackgroundColor(0x8833B5E5);
+					
+					//To restore the color after a few milliseconds
+					new Thread(new Runnable() {
+						@Override
+						public void run() {
+							try {
+								Thread.sleep(90);
+							} catch (InterruptedException e) {
+
+							}
+							main.runOnUiThread(new Runnable() {
+									@Override
+									public void run() {
+										item.setBackgroundColor(0xFF999999);
+							    		item2.setBackgroundColor(0xFF999999);
+									}
+							});
+						}
+					}).start();
 				}
 			});
 
@@ -291,7 +303,29 @@ public class WebTVFragment extends Fragment {
 				public void onClick(View v) {
 					main.vibrate();
 					WebTVCommand.instance().queue(queueItem);
-					//TODO Change color when press (only if time)
+					
+					item.setBackgroundColor(0xFFCCCCCC);
+					item2.setBackgroundColor(0xFFCCCCCC);
+					
+					//To restore the color after a few milliseconds
+					new Thread(new Runnable() {
+						@Override
+						public void run() {
+							try {
+								Thread.sleep(90);
+							} catch (InterruptedException e) {
+
+							}
+							main.runOnUiThread(new Runnable() {
+									@Override
+									public void run() {
+										item.setBackgroundColor(0xFF999999);
+							    		item2.setBackgroundColor(0xFF999999);
+									}
+							});
+						}
+					}).start();
+
 				}
 			});
 		}
@@ -314,7 +348,6 @@ public class WebTVFragment extends Fragment {
 				//If the user swipes
 				if(event.getAction() == MotionEvent.ACTION_DOWN){
 					main.vibrate();
-					//TODO: Function to perform HERE	
 
 					play_button.setBackgroundColor(0xFFFFFFFF);
 					// Put here the "light" button
@@ -364,8 +397,6 @@ public class WebTVFragment extends Fragment {
 				//If the user swipes
 				if(event.getAction() == MotionEvent.ACTION_DOWN){
 					main.vibrate();
-					//TODO: Function to perform HERE	
-
 					previous_button.setBackgroundColor(0xFFFFFFFF);
 					// Put here the "light" button
 					previous_button.setBackgroundResource(R.drawable.previous_pressed);
