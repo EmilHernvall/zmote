@@ -4,13 +4,9 @@ package se.z_app.zmote.gui;
 
 import java.io.File;
 
-import se.z_app.stb.Channel;
-import se.z_app.stb.EPG;
 import se.z_app.stb.MediaItem;
-import se.z_app.stb.Program;
 import se.z_app.stb.STB;
 import se.z_app.stb.STB.STBEnum;
-import se.z_app.stb.api.EPGData;
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.stb.api.STBContainer;
 import se.z_app.zmote.webtv.MediaStreamer;
@@ -26,9 +22,7 @@ import android.widget.Button;
 //Pleas add your view or setting on this activity to make it easier for testing and accsess 
 public class MainTestActivity extends Activity {
 
-	private MediaStreamer ms;
-	
-    @Override
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_test);
