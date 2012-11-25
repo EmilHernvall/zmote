@@ -13,6 +13,7 @@ import se.z_app.stb.STB.STBEnum;
 import se.z_app.stb.api.EPGData;
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.stb.api.STBContainer;
+import se.z_app.zmote.epg.EPGContentHandler;
 import se.z_app.zmote.webtv.MediaStreamer;
 import android.app.Activity;
 import android.content.Intent;
@@ -161,11 +162,8 @@ public class MainTestActivity extends Activity {
 			public void onClick(View v) {
 
 				
-				Bundle args = new Bundle();
-
-				args.putString("program", "Batman");
+				ZChatActivity.targetProgram = EPGContentHandler.instance().getEPG().iterator().next().iterator().next();
 				Intent intent = new Intent(MainTestActivity.this, ZChatActivity.class);
-				intent.putExtras(args);
 				MainTestActivity.this.startActivity(intent);
 				
 			}

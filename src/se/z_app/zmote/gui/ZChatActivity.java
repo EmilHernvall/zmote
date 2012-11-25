@@ -9,6 +9,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 import se.z_app.social.Comment;
 import se.z_app.social.Feed;
+import se.z_app.social.PostInterface;
 
 import se.z_app.social.zchat.ZChatAdapter;
 import se.z_app.social.Post;
@@ -24,10 +25,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.view.ViewStub;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -61,7 +67,7 @@ public class ZChatActivity extends SherlockActivity {
 		ListView postList = (ListView) findViewById(R.id.list_over_post);
 		
 		TextView textView = (TextView) findViewById(R.id.feed_name);
-		//textView.setText(myProgram.getName());
+		textView.setText(myProgram.getName());
 
 		//TODO fix so it depends on the last added post.
 		textView = (TextView) findViewById(R.id.time_of_feedUpdate);
@@ -95,16 +101,18 @@ public class ZChatActivity extends SherlockActivity {
 
 		private ZChatActivity zChatActivity;
 		private Feed feed;
-		private ArrayList<Post> list;
+		private ArrayList<PostInterface> list;
 
 
 		public FragmentAdabter(ZChatActivity zChatActivity , Feed feed){
 			this.zChatActivity = zChatActivity;
 			this.feed = feed;
 			Iterator<Post> iter = feed.iterator();
-			list = new ArrayList<Post>();
+			list = new ArrayList<PostInterface>();
 			while(iter.hasNext()){
-				list.add(0, iter.next());
+				Post post = iter.next();
+				list.add(0, post);
+				list.addAll(1, post.getCommentsAsCollection());
 
 			}
 
@@ -118,7 +126,7 @@ public class ZChatActivity extends SherlockActivity {
 		}
 
 		@Override
-		public Post getItem(int position) {
+		public PostInterface getItem(int position) {
 			return list.get(position);
 		}
 
@@ -130,8 +138,8 @@ public class ZChatActivity extends SherlockActivity {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			//TODO Remove the sysouts
-			System.out.println("This is the ID of the post: "+ list.get(position).getId());
-			System.out.println("The number of comments are: "+list.get(position).getCommentsAsCollection().size());
+			//System.out.println("This is the ID of the post: "+ list.get(position).getId());
+			//System.out.println("The number of comments are: "+list.get(position).getCommentsAsCollection().size());
 
 			View vi=convertView;
 			if(convertView==null){
@@ -147,62 +155,29 @@ public class ZChatActivity extends SherlockActivity {
 			userName.setText(list.get(position).getUserName());
 			date.setText(list.get(position).getDateOfCreation().toString());
 			content.setText(list.get(position).getContent());
-			nrOfComments.setText(list.get(position).getComments().length + " comments");
-			ListView commitList = (ListView) vi.findViewById(R.id.list_over_comments);
-			commitList.setAdapter(new CommitAdabter(list.get(position), zChatActivity));
-			return vi;
-		}
-	}
-	
-	private class CommitAdabter extends BaseAdapter{
-		
-
-		private ZChatActivity activity;
-		private ArrayList<Comment> comments = new ArrayList<Comment>();
-		
-		public CommitAdabter(Post post, ZChatActivity activity){
-			comments.addAll(post.getCommentsAsCollection());
-			this.activity = activity;
-			
-		}
-		
-		@Override
-		public int getCount() {
-			return comments.size();
-		}
-
-		@Override
-		public Object getItem(int position) {
-			return comments.get(position);
-		}
-
-		@Override
-		public long getItemId(int position) {
-			return position;
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			System.out.println("Now writing comment nr: "+ position);
-			View vi=convertView;
-			if(convertView==null){
-				vi = ((LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.zchat_list_comment, null);
+			if(list.get(position) instanceof Post){
+				nrOfComments.setText(((Post) list.get(position)).getComments().length + " comments");
+				RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+				ImageView layout = (ImageView) vi.findViewById(R.id.post_layout_view);
+				layout.bringToFront();
+				layout.setLayoutParams(lp);
+			}else{
+				nrOfComments.setText(null);
+				RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(45, LayoutParams.MATCH_PARENT);
+				ImageView layout = (ImageView) vi.findViewById(R.id.post_layout_view);
+				layout.bringToFront();
+				layout.setLayoutParams(lp);
+				
 			}
-			
-			TextView userName = (TextView) vi.findViewById(R.id.comment_user_name);
-			TextView date = (TextView) vi.findViewById(R.id.comment_date);
-			TextView content = (TextView) vi.findViewById(R.id.comment_content);
+			//nrOfComments.setText(list.get(position).getComments().length + " comments");
 
-	
-			userName.setText(comments.get(position).getUserName());
-			date.setText(comments.get(position).getDateOfCreation().toString());
-			content.setText(comments.get(position).getContent());
-			
+			/*ListView commitList = (ListView) vi.findViewById(R.id.list_over_comments);
+			commitList.setAdapter(new CommitAdabter(list.get(position), zChatActivity));*/
 			return vi;
 		}
-		
 	}
-
+	
+	
 	private class AsyncDataLoader extends AsyncTask<Integer, Integer, Feed>{
 
 		private ListView postList;
@@ -216,9 +191,9 @@ public class ZChatActivity extends SherlockActivity {
 
 			
 			//TODO return adapter.getFeed(programName);
-			System.out.println(EPGContentHandler.instance().getEPG().iterator().next().iterator().next().getName());
-			return adapter.getFeed(EPGContentHandler.instance().getEPG().iterator().next().iterator().next());
-
+			//System.out.println(EPGContentHandler.instance().getEPG().iterator().next().iterator().next().getName());
+			//return adapter.getFeed(EPGContentHandler.instance().getEPG().iterator().next().iterator().next());
+			return adapter.getFeed(myProgram);
 
 		}
 
