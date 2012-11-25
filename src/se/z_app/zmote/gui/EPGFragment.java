@@ -242,7 +242,7 @@ public class EPGFragment extends Fragment{
     	
     	// Now label
     	RelativeLayout.LayoutParams text_params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
-    	text_params.setMargins(distance+110, 0, 0, 0);
+    	text_params.setMargins(distance+65, 0, 0, 0);
     	TextView now_text = (TextView)view.findViewById(R.id.now_text);
     	now_text.setVisibility(TextView.VISIBLE);
     	now_text.setLayoutParams(text_params);
@@ -251,8 +251,12 @@ public class EPGFragment extends Fragment{
     	//now_text.invalidate();	//Not sure if needed
     	
     	// Center the screen on the now line
-    	hz_scroll.scrollBy(distance, 0);
-    	hz_scroll_time.scrollBy(distance, 0);
+    	//hz_scroll.scrollBy(distance, 0);
+    	//hz_scroll_time.scrollBy(distance, 0);
+    	line.setFocusableInTouchMode(true);
+    	line.requestFocus();
+    	now_text.setFocusableInTouchMode(true);
+    	now_text.requestFocus();
 
     }
     /**
