@@ -8,8 +8,11 @@ import android.os.Environment;
 import se.z_app.httpserver.ZmoteHTTPD;
 import se.z_app.stb.MediaItem;
 
-
-
+/**
+ * Class that handles streaming media from the phone to the STB
+ * 
+ * @author Rasmus Holm
+ */
 public class MediaStreamer {
 	private int port = 8080;
 	private ZmoteHTTPD httpd;
@@ -31,7 +34,6 @@ public class MediaStreamer {
 	/**
 	 * Private constructor, since it's a singleton
 	 */
-	
 	public void setLocalIP(String ip){
 		this.ip = ip;
 	}
@@ -43,12 +45,13 @@ public class MediaStreamer {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		
-		
 	}
 	
-	
+	/**
+	 * Adds a MediaRequestHandler with the specified file to the HTTP server in use.
+	 * @param file the file to add to the server
+	 * @return the MediaItem from the file
+	 */
 	public MediaItem addFile(File file){
 		
 		
@@ -68,11 +71,6 @@ public class MediaStreamer {
 		item.setUrl("http://" + ip + ":" + port + uri );
 		System.out.println("http://" + ip + ":" + port + uri);
 		return item;	
-		
-		
 	}
-	
-	
-	
 	
 }
