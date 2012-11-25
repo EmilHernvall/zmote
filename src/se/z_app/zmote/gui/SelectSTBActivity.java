@@ -27,12 +27,8 @@ import android.text.TextWatcher;
 
 /**
  * The STB Activity screen. Here is the main screen where the STB list is shown as well as the find STB button.
- * @author viktordahl + others + mariaplatero (AddSTB)
- *
- * The screen where the STB list is shown as well as the find STB button.
  * 
- * @author Viktor Dahl, + others
- * 
+ * @author Viktor Dahl + others + Maria Platero (AddSTB)
  */
 public class SelectSTBActivity extends Activity {
     private SelectSTBListView theView;
