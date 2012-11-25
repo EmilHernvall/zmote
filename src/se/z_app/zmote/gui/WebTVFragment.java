@@ -21,6 +21,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView.FindListener;
 import android.widget.ArrayAdapter;
@@ -53,7 +55,14 @@ public class WebTVFragment extends Fragment {
 	private String search_for_this = null;	
 	private float screenWidth = 0;
 	private WebTVItem tempItem;
+	private LinearLayout current_item;
+	private LinearLayout current_item2;
 
+
+	/**
+	 * Creates a WebTV fragment with the main activity indicated
+	 * @param mainTabActivity the main activity of the application
+	 */
 	public WebTVFragment(MainTabActivity mainTabActivity) {
 		/*
 		 * @Leonard: Changed the function this.main = main; it didn't do anything
@@ -100,6 +109,9 @@ public class WebTVFragment extends Fragment {
 				LinearLayout linLayResult = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
 				linLayResult.setVisibility(View.VISIBLE);	
 				addPlayBar();
+				
+				InputMethodManager imm = (InputMethodManager)main.getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(view_temp.findViewById(R.id.search_box_webtv).getWindowToken(), 0);
 			}
 
 		});
@@ -139,7 +151,15 @@ public class WebTVFragment extends Fragment {
 
 		return view_temp;
 	}    
+	/*	This is not working and its really extrange (but its solved on the main tab activity)
+	@Override
+	public void onPause(){
+		InputMethodManager imm = (InputMethodManager)main.getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(view_temp.findViewById(R.id.search_box_webtv).getWindowToken(), 0);
+		super.onPause();
+	}*/
 
+	
 	/**
 	 * Calls the back-end function to get the results of a search and shows them
 	 * @author Francisco
@@ -167,8 +187,8 @@ public class WebTVFragment extends Fragment {
 	/**
 	 * Check if there is an input in the text box or not
 	 * @Author Thed and Ralf 
-	 * @param text from text box
-	 * @return boolean
+	 * @param thaText text from the text box
+	 * @return boolean whether the text box is empty or not
 	 */
 	private boolean checkEmpty(EditText thaText) {
 		if(thaText.getText().toString().trim().length() > 0){
@@ -221,7 +241,7 @@ public class WebTVFragment extends Fragment {
 			item_container.setBackgroundColor(0xFFCCCCCC);
 			item_container.setPadding(4, 4, 4, 4);
 
-			LinearLayout item2 = new LinearLayout(view_temp.getContext());
+			final LinearLayout item2 = new LinearLayout(view_temp.getContext());
 			item2.setBackgroundColor(0xFF999999);
 			item2.setMinimumHeight(30);
 			item2.setClickable(true);
@@ -231,7 +251,7 @@ public class WebTVFragment extends Fragment {
 			queueButton.setBackgroundDrawable(d); //Check if ok, should not be used with API 16
 			item2.addView(queueButton);
 
-			LinearLayout item = new LinearLayout(view_temp.getContext());
+			final LinearLayout item = new LinearLayout(view_temp.getContext());
 			item.setBackgroundColor(0xFF999999);
 			item.setMinimumHeight(30);
 			item.setClickable(true);
@@ -260,7 +280,14 @@ public class WebTVFragment extends Fragment {
 				public void onClick(View v) {
 					main.vibrate();
 					WebTVCommand.instance().play(resultItem);
-					//TODO Change color when press (only if time)
+			    	if(current_item != null && current_item2 != null){
+			    		current_item.setBackgroundColor(0xFF999999);
+			    		current_item2.setBackgroundColor(0xFF999999);
+			    	}
+					item.setBackgroundColor(0xFFCCCCCC);
+					item2.setBackgroundColor(0xFFCCCCCC);
+					current_item = item;	
+					current_item2 = item2;	
 				}
 			});
 
@@ -279,7 +306,7 @@ public class WebTVFragment extends Fragment {
 
 	/** 
 	 * Method that sets the play-/pause-/next-/forward buttons
-	 * @Author Emma Axelsson & Mar’a Platero
+	 * @Author Emma Axelsson & Maria Platero
 	 */
 	public void addPlayBar(){
 		RelativeLayout playBarPlacement = (RelativeLayout) view_temp.findViewById(R.id.playBarPlacement);
@@ -287,7 +314,7 @@ public class WebTVFragment extends Fragment {
 		LinearLayout playBar = (LinearLayout) view_temp.findViewById(R.id.play_results_ly);
 		playBar.setVisibility(View.VISIBLE);
 		playBar.setBackgroundColor(0xFF000000);
-//		playBarLine.setVisibility(View.VISIBLE);
+	//	playBarLine.setVisibility(View.VISIBLE);
 		playBarPlacement.setVisibility(View.VISIBLE);
 		playBarPlacement.setBackgroundColor(0x00000000);
 
@@ -374,6 +401,7 @@ public class WebTVFragment extends Fragment {
 
 	/**
 	 * Add items into spinner (drop-down menu with services) dynamically
+	 * @param services[] array with the WebTV services to add
 	 * @author Maria Jesus Platero
 	 */
 	public void addItemsOnSpinner(WebTVService services[]) {
