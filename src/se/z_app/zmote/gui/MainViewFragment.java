@@ -258,9 +258,9 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 		int can1 = 0;
 		int can2 = 0;
 		int fin = 0;
-		if(imageList == null || imageList.isEmpty()){
-			return;
-		}
+//		if(imageList == null || imageList.isEmpty()){
+//			return;
+//		}
 		int size = imageList.size(); 
 		channelNr = (channelNr+size)%size;
 
@@ -275,6 +275,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 			}
 			can2++;
 			can1++;
+			
 		}
 
 		if(fin < 0){
@@ -557,6 +558,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 		int padding = 10;
 
 		if(imageList == null || imageList.isEmpty()){
+			new AsyncDataLoader().execute();
 			return;
 		}
 		leftleft = imageList.get((currentChannelNr+imageList.size()-2)%imageList.size());
