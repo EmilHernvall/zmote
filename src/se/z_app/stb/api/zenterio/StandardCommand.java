@@ -217,6 +217,34 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 		return webResults;
 	}
 
+	
+	@Override
+	public int getVolume() {
+		String jsonString = new GetHTTPResponse().getJSON("http://" + ip + "/mdio/volume");
+		try {
+			JSONObject json = new JSONObject(jsonString);
+			return json.getInt("volume");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		return 0;
+	}
+
+	@Override
+	public boolean isMute() {
+		String jsonString = new GetHTTPResponse().getJSON("http://" + ip + "/mdio/volume");
+		try {
+			JSONObject json = new JSONObject(jsonString);
+			return json.getInt("mute") == 1 ? true : false;
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	
+		return false;
+	}
+	
+	
 	private class GetHTTPResponse{
 		public Bitmap getImage(String urlStr){
 			URL url;

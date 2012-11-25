@@ -45,7 +45,6 @@ public class WebTVFragment extends Fragment {
 	private WebTVService services[];
 	private String search_for_this = null;	
 	private float screenWidth = 0;
-	private float screenHeight = 0;
 	private WebTVItem tempItem;
 
 
@@ -69,7 +68,6 @@ public class WebTVFragment extends Fragment {
 
 		view_temp = inflater.inflate(R.layout.fragment_web_tv, null);
 		screenWidth = getResources().getDisplayMetrics().widthPixels;
-		screenHeight = getResources().getDisplayMetrics().heightPixels;
 		new AsyncWebServiceLoader().execute();
 
 		// Set the listener for the search button
@@ -100,7 +98,7 @@ public class WebTVFragment extends Fragment {
 				LinearLayout linLayResult = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
 				linLayResult.setVisibility(View.VISIBLE);	
 				addPlayBar();
-				
+
 				InputMethodManager imm = (InputMethodManager)main.getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(view_temp.findViewById(R.id.search_box_webtv).getWindowToken(), 0);
 			}
@@ -142,7 +140,7 @@ public class WebTVFragment extends Fragment {
 		super.onPause();
 	}*/
 
-	
+
 	/**
 	 * Calls the back-end function to get the results of a search and shows them
 	 * @author Francisco
@@ -161,7 +159,7 @@ public class WebTVFragment extends Fragment {
 			new AsyncWebSearch().execute();
 			return true;
 		}
-		
+
 		else {
 			return false;
 		}
@@ -209,10 +207,10 @@ public class WebTVFragment extends Fragment {
 	 * @author Francisco & Emma
 	 */
 	public void showResults(WebTVItem[] res){
-	
+
 		LinearLayout results_ly = (LinearLayout) view_temp.findViewById(R.id.search_results_ly);
 		results_ly.removeAllViewsInLayout(); 
-		
+
 		LinearLayout.LayoutParams item_container_params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);		
 		LinearLayout.LayoutParams item_params = new LinearLayout.LayoutParams((int)(screenWidth*0.85),LayoutParams.MATCH_PARENT);
 		LinearLayout.LayoutParams icon_params = new LinearLayout.LayoutParams(100,80);
@@ -263,10 +261,10 @@ public class WebTVFragment extends Fragment {
 				public void onClick(View v) {
 					main.vibrate();
 					WebTVCommand.instance().play(resultItem);
-			    	
+
 					item.setBackgroundColor(0x8833B5E5);
 					item2.setBackgroundColor(0x8833B5E5);
-					
+
 					//To restore the color after a few milliseconds
 					new Thread(new Runnable() {
 						@Override
@@ -277,11 +275,11 @@ public class WebTVFragment extends Fragment {
 
 							}
 							main.runOnUiThread(new Runnable() {
-									@Override
-									public void run() {
-										item.setBackgroundColor(0xFF999999);
-							    		item2.setBackgroundColor(0xFF999999);
-									}
+								@Override
+								public void run() {
+									item.setBackgroundColor(0xFF999999);
+									item2.setBackgroundColor(0xFF999999);
+								}
 							});
 						}
 					}).start();
@@ -295,10 +293,10 @@ public class WebTVFragment extends Fragment {
 				public void onClick(View v) {
 					main.vibrate();
 					WebTVCommand.instance().queue(queueItem);
-					
+
 					item.setBackgroundColor(0xFFCCCCCC);
 					item2.setBackgroundColor(0xFFCCCCCC);
-					
+
 					//To restore the color after a few milliseconds
 					new Thread(new Runnable() {
 						@Override
@@ -309,11 +307,11 @@ public class WebTVFragment extends Fragment {
 
 							}
 							main.runOnUiThread(new Runnable() {
-									@Override
-									public void run() {
-										item.setBackgroundColor(0xFF999999);
-							    		item2.setBackgroundColor(0xFF999999);
-									}
+								@Override
+								public void run() {
+									item.setBackgroundColor(0xFF999999);
+									item2.setBackgroundColor(0xFF999999);
+								}
 							});
 						}
 					}).start();
