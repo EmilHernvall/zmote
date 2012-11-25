@@ -49,6 +49,7 @@ public class EpgHorizontalActivity extends Activity {
 	private Date end;
 	private int screen_width = 0;
 	private int schedule_lenght_in_hours = 48;
+	private int distance = 0;
 	
 	private OnTouchListener toutch;
 	private int currentX = -1, currentY = -1;
@@ -384,6 +385,7 @@ public class EpgHorizontalActivity extends Activity {
 			
 				EPGFragment.eventProgram = p;
 				finish();
+				main.vibrate();
 			}
 			
 		});

@@ -330,7 +330,7 @@ public class WebTVFragment extends Fragment {
 					next_button.setBackgroundColor(0xFFFFFFFF);
 					// Put here the "light" button
 					next_button.setBackgroundResource(R.drawable.next_pressed);		
-					RemoteControl.instance().sendButton(se.z_app.stb.api.RemoteControl.Button.LEFT);
+					RemoteControl.instance().sendButton(se.z_app.stb.api.RemoteControl.Button.RIGHT);
 					return true;
 				}
 				else if(event.getAction() == MotionEvent.ACTION_UP){
@@ -355,7 +355,7 @@ public class WebTVFragment extends Fragment {
 					previous_button.setBackgroundColor(0xFFFFFFFF);
 					// Put here the "light" button
 					previous_button.setBackgroundResource(R.drawable.previous_pressed);
-					RemoteControl.instance().sendButton(se.z_app.stb.api.RemoteControl.Button.RIGHT);
+					RemoteControl.instance().sendButton(se.z_app.stb.api.RemoteControl.Button.LEFT);
 					return true;
 				}
 

@@ -58,6 +58,7 @@ public class EPGFragment extends Fragment{
 	private Date end;
 	private int screen_width = 0;
 	private int schedule_lenght_in_hours = 48;
+	private int distance = 0;
 	
 	private OnTouchListener toutch;
 	private int currentX = -1, currentY = -1;
@@ -182,6 +183,7 @@ public class EPGFragment extends Fragment{
 			public void onClick(View v) {
 				Intent intent = new Intent(view.getContext(), EpgHorizontalActivity.class);
 				EPGFragment.this.startActivity(intent);
+				main.vibrate();
 			}
 			
 		});
@@ -228,7 +230,7 @@ public class EPGFragment extends Fragment{
     			
     	Date now = new Date(System.currentTimeMillis());
     	long difference = now.getTime() - start.getTime();
-    	int distance = (int)(difference/60000)*(screen_width/60);
+    	distance = (int)(difference/60000)*(screen_width/60);
     	
     	// We just change the margin of the line according to the current time
     	RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(2,height_of_rows*number_of_channels);
