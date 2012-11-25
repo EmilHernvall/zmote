@@ -66,6 +66,7 @@ public class MediaStreamer {
 		MediaItem item = new MediaItem();
 		item.setName(file.getName());
 		item.setUrl("http://" + ip + ":" + port + uri );
+		System.out.println("http://" + ip + ":" + port + uri);
 		return item;	
 		
 		
