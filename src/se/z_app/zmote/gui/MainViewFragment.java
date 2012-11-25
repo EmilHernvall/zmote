@@ -250,7 +250,10 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 		RemoteControl.instance().launch(channel);
 	}
 	
-	
+	/**
+	 * Rotates the view to the indicated channel
+	 * @param channelNr the channel number of the channel to rotate to
+	 */
 	public void rotateToChannel(int channelNr){		
 		if(currentChannelNr == channelNr){
 			return;
@@ -287,13 +290,19 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 	}
 	
 
-
+	/**
+	 * The same as calling rotateRight(1)
+	 */
 	private void rotateRight(){
 		rotateRight(1);
 	}
 
 
 	private int tmpInt;
+	/**
+	 * Rotates the view to the right the indicated number of turns
+	 * @param turns the number of turns to rotate the view
+	 */
 	private void rotateRight(int turns){
 		if(isAnimationRunning){
 			return;
@@ -304,9 +313,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 			setVariables();
 			posVar = true;
 		}					
-
-
-
+		
 		currentChannelNr = (currentChannelNr+imageList.size()-1)%imageList.size();
 
 		ImageView newLeft = imageList.get((currentChannelNr+imageList.size()-2)%imageList.size());
@@ -425,10 +432,17 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 		leftleft= newLeft;
 	}
 
+	/**
+	 * The same as calling rotateLeft(1)
+	 */
 	private void rotateLeft(){
 		rotateLeft(1);
 	}
 
+	/**
+	 * Rotates the view to the left the indicated number of turns
+	 * @param turns the number of turns to rotate the view
+	 */
 	private void rotateLeft(int turns){
 
 		if(isAnimationRunning){
@@ -549,7 +563,9 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 		rightright = newRight;
 	}
 
-
+	/**
+	 * Builds the view for the current channel
+	 */
 	private void buildForCurrentChannel(){
 		if(imagewidth == 0){
 			imagewidth = 96;

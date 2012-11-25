@@ -33,6 +33,8 @@ import android.support.v4.app.Fragment;
 
 /**
  * 
+ * The fragment that handles displaying the EPG View
+ * 
  * @author Thed Mannerlof, Ralf Nilsson, Francisco Valladares, Maria Platero
  *
  */
@@ -293,7 +295,7 @@ public class EPGFragment extends Fragment{
     		}
     	}
     	
-    	// Get the lenght of the schedule in hours
+    	// Get the length of the schedule in hours
     	long duration = 0;
     	if(start != null && end != null)
     		duration = end.getTime() - start.getTime();		// Duration in milliseconds
@@ -302,7 +304,7 @@ public class EPGFragment extends Fragment{
     }
     
     /**
-     * Fetch the channels
+     * Fetches the channels from the EPG and adds the channels and programs to the layout
      */
 	void mainEPG(){
 		
@@ -336,8 +338,8 @@ public class EPGFragment extends Fragment{
 	}
 
 	/**
-	 * Adding icon to the layout
-	 * @param ch
+	 * Adds a new button with channel icon to the layout
+	 * @param ch channel which the icon belongs to
 	 */
 	void addIconToLayout(Channel ch){
 		
@@ -365,7 +367,8 @@ public class EPGFragment extends Fragment{
 
 	/**
 	 * Adding programs to the layout
-	 * @param pg
+	 * @param pg the program to add
+	 * @param n_program number of the program to add
 	 */
 	void addProgramToLayout(Program pg, int n_program){
 		
@@ -439,11 +442,11 @@ public class EPGFragment extends Fragment{
 	}
 	
 	/**
-	 * Changes the icons size
-	 * @param bm
-	 * @param newHeight
-	 * @param newWidth
-	 * @return resizedBitmap
+	 * Method for changing the dimensions of a bitmap picture
+	 * @param bm the bitmap picture to be re-sized
+	 * @param newHeight the height of the re-sized bitmap picture
+	 * @param newWidth the width of the re-sized bitmap picture
+	 * @return resizedBitmap the re-sized bitmap picture
 	 */
 	public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
 	
@@ -467,7 +470,7 @@ public class EPGFragment extends Fragment{
 
 	/**
 	 * Loads the information asynchronously
-	 * @author 
+	 * @author Rasmus Holm, Francisco Valladares
 	 */
 	private class AsyncDataLoader extends AsyncTask<Integer, Integer, EPG>{
 
