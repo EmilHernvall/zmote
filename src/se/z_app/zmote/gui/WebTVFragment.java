@@ -183,7 +183,7 @@ public class WebTVFragment extends Fragment {
 		results_ly.removeAllViewsInLayout();
 
 		LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
-		textParams.setMargins((int)screenWidth/2 - 30, 30, 0, 0);
+		textParams.setMargins((int)screenWidth/2 -50 , 30, 0, 0);
 
 		TextView noResults = new TextView(view_temp.getContext());
 		noResults.setText("No results");
