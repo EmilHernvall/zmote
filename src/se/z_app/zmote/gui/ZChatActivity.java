@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.MenuItem;
+
 import se.z_app.social.Feed;
 
 import se.z_app.social.zchat.ZChatAdapter;
@@ -31,7 +34,7 @@ import android.widget.TextView;
  * 
  * @author Linus Back
  */
-public class ZChatActivity extends Activity {
+public class ZChatActivity extends SherlockActivity {
 	
 	public static Program targetProgram;
 	private final static ZChatAdapter adapter = new ZChatAdapter();
@@ -51,12 +54,13 @@ public class ZChatActivity extends Activity {
 		
 		ZChatActivity myActivity = this;
 		setContentView(R.layout.activity_zchat);
-	
+	 
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		ListView postList = (ListView) findViewById(R.id.list_over_post);
-
+		
 		TextView textView = (TextView) findViewById(R.id.feed_name);
-		textView.setText(myProgram.getName());
+		//textView.setText(myProgram.getName());
 
 		//TODO fix so it depends on the last added post.
 		textView = (TextView) findViewById(R.id.time_of_feedUpdate);
@@ -71,6 +75,18 @@ public class ZChatActivity extends Activity {
 		postButton.setOnClickListener(new PostButtonListener(myActivity, postList));
 
 	}
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	        case android.R.id.home:
+	           
+	        	super.onBackPressed();
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
+	
+
 
 
 
