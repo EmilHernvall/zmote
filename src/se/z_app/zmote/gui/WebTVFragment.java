@@ -33,6 +33,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import se.z_app.stb.api.*;
@@ -54,7 +55,6 @@ public class WebTVFragment extends Fragment {
 	private WebTVService services[];
 	private String search_for_this = null;	
 	private float screenWidth = 0;
-	private float screenHeight = 0;
 	private WebTVItem tempItem;
 	private LinearLayout current_item;
 	private LinearLayout current_item2;
@@ -71,13 +71,15 @@ public class WebTVFragment extends Fragment {
 		this.main = mainTabActivity;
 	}
 
+	/**
+	 * Create the different views. Search, no search, results and no results view 
+	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {	
 
 		view_temp = inflater.inflate(R.layout.fragment_web_tv, null);
 		screenWidth = getResources().getDisplayMetrics().widthPixels;
-		screenHeight = getResources().getDisplayMetrics().heightPixels;
 		new AsyncWebServiceLoader().execute();
 
 		// Set the listener for the search button
@@ -120,29 +122,27 @@ public class WebTVFragment extends Fragment {
 		search_button_back.setOnClickListener(new View.OnClickListener() {		
 			@Override
 			public void onClick(View v) {
-
 				// Go back to first view
 				LinearLayout linLay = (LinearLayout) view_temp.findViewById(R.id.searchBar);
 				linLay.setVisibility(View.VISIBLE);
 				LinearLayout linLayResult = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
 				linLayResult.setVisibility(View.GONE);
-				LinearLayout playBarLine = (LinearLayout) view_temp.findViewById(R.id.playBarLine);
-				playBarLine.setVisibility(View.GONE);
+	//			LinearLayout playBarLine = (LinearLayout) view_temp.findViewById(R.id.playBarLine);
+	//			playBarLine.setVisibility(View.GONE);
 				LinearLayout playBar = (LinearLayout) view_temp.findViewById(R.id.play_results_ly);
 				playBar.setVisibility(View.GONE);
 				LinearLayout noSearch = (LinearLayout) view_temp.findViewById(R.id.noSearch);
 				noSearch.setVisibility(View.GONE);
 				LinearLayout noSearchLine = (LinearLayout) view_temp.findViewById(R.id.noSearchLine);
 				noSearchLine.setVisibility(View.GONE);
-
 			}
 		});
 
 		//Default view when first entering the webTV view
 		LinearLayout linLayStart = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
 		linLayStart.setVisibility(View.GONE);	
-		LinearLayout playBarLine = (LinearLayout) view_temp.findViewById(R.id.playBarLine);
-		playBarLine.setVisibility(View.GONE);
+//		LinearLayout playBarLine = (LinearLayout) view_temp.findViewById(R.id.playBarLine);
+//		playBarLine.setVisibility(View.GONE);
 		LinearLayout playBar = (LinearLayout) view_temp.findViewById(R.id.play_results_ly);
 		playBar.setVisibility(View.GONE);
 		LinearLayout noSearch = (LinearLayout) view_temp.findViewById(R.id.noSearch);
@@ -174,13 +174,13 @@ public class WebTVFragment extends Fragment {
 		TextView resultText = (TextView) view_temp.findViewById(R.id.result_webtv);
 		resultText.setText("Result for: '"+ search_for_this+"'");
 
-		if(checkEmpty(search_box) == false){  //Check if the search box is empty
+		//Check whether the text box is empty or not
+		if(checkEmpty(search_box) == false){  
 			new AsyncWebSearch().execute();
 			return true;
 		}
-
+		
 		else {
-
 			return false;
 		}
 	}
@@ -236,7 +236,7 @@ public class WebTVFragment extends Fragment {
 		LinearLayout.LayoutParams icon_params = new LinearLayout.LayoutParams(100,80);
 		LinearLayout.LayoutParams item_params2 = new LinearLayout.LayoutParams((int)(screenWidth*0.15),LayoutParams.MATCH_PARENT);
 
-		//Sets the results view in webTV
+		//Loads the results view
 		for(WebTVItem x: res){
 			LinearLayout item_container = new LinearLayout(view_temp.getContext());
 			item_container.setBackgroundColor(0xFFCCCCCC);
@@ -310,12 +310,14 @@ public class WebTVFragment extends Fragment {
 	 * @Author Emma Axelsson & Maria Platero
 	 */
 	public void addPlayBar(){
-		System.out.println("TEST 2");
-		LinearLayout playBarLine = (LinearLayout) view_temp.findViewById(R.id.playBarLine);
+		RelativeLayout playBarPlacement = (RelativeLayout) view_temp.findViewById(R.id.playBarPlacement);
+//		LinearLayout playBarLine = (LinearLayout) view_temp.findViewById(R.id.playBarLine);
 		LinearLayout playBar = (LinearLayout) view_temp.findViewById(R.id.play_results_ly);
 		playBar.setVisibility(View.VISIBLE);
-		playBar.setBackgroundColor(0x8833B5E5);
-		playBarLine.setVisibility(View.VISIBLE);
+		playBar.setBackgroundColor(0xFF000000);
+	//	playBarLine.setVisibility(View.VISIBLE);
+		playBarPlacement.setVisibility(View.VISIBLE);
+		playBarPlacement.setBackgroundColor(0x00000000);
 
 		play_button = (ImageButton) view_temp.findViewById(R.id.play_button);
 		next_button = (ImageButton) view_temp.findViewById(R.id.next_button);
