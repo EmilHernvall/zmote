@@ -128,19 +128,21 @@ public class ZChatActivity extends SherlockActivity {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
+			//TODO Remove the sysouts
+			System.out.println("This is the ID of the post: "+ list.get(position).getId());
 			System.out.println("The number of comments are: "+list.get(position).getCommentsAsCollection().size());
 
 			View vi=convertView;
 			if(convertView==null){
 				vi = ((LayoutInflater)zChatActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.zchat_list, null);
 			}
-
+			
 			TextView userName = (TextView) vi.findViewById(R.id.post_user_name);
 			TextView date = (TextView) vi.findViewById(R.id.post_date);
 			TextView content = (TextView) vi.findViewById(R.id.post_content);
 			TextView nrOfComments = (TextView) vi.findViewById(R.id.post_nr_of_comments);
 
-
+	
 			userName.setText(list.get(position).getUserName());
 			date.setText(list.get(position).getDateOfCreation().toString());
 			content.setText(list.get(position).getContent());
@@ -166,7 +168,7 @@ public class ZChatActivity extends SherlockActivity {
 		@Override
 		protected Feed doInBackground(Integer... arg0) {
 
-
+			
 			//TODO return adapter.getFeed(programName);
 			System.out.println(EPGContentHandler.instance().getEPG().iterator().next().iterator().next().getName());
 			return adapter.getFeed(EPGContentHandler.instance().getEPG().iterator().next().iterator().next());

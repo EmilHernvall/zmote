@@ -102,12 +102,12 @@ public class ZChatAdapter {
 				
 				/* Get the comments for the post */
 				try{
-					String getCommentJSONString = getJSON(getCommentStr, 4096);
+					String getCommentJSONString = getJSON(getCommentStr, 4*4096);
 
 					
 					JSONArray commentJSONArray = new JSONArray(getCommentJSONString);
 					for(int j = 0; j < commentJSONArray.length(); j ++){
-						JSONObject jsonComment = commentJSONArray.getJSONObject(i);
+						JSONObject jsonComment = commentJSONArray.getJSONObject(j);
 						Comment newComment = new Comment(thePost);
 						newComment.setId(jsonComment.getInt("id"));
 						newComment.setContent(jsonComment.getString("content"));
