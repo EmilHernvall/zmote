@@ -145,7 +145,6 @@ public class ZChatAdapter {
 	 */
 	@SuppressWarnings("deprecation")
 	public Feed commitPost(Feed targetFeed, Post newPost){
-		targetFeed.addPost(newPost);
 		
 		/* The arguments for the post */
 		String username = URLEncoder.encode(newPost.getUserName());
@@ -176,7 +175,20 @@ public class ZChatAdapter {
 								"";
 		Log.e("ZCHAT", "userURLString" + userURLString);
 		
-		/* Try-catch block needed to visit the URL */
+		/* Get the JSON object when saving the post so we can set the ID of the post */
+		String postJSONString = getJSON(userURLString, 4096);
+		try {
+			JSONObject theReturnedPost = new JSONObject(postJSONString);
+			int theId = theReturnedPost.getInt("id");
+			newPost.setId(theId);
+			
+			newPost.setDateOfCreation(railsStringToDate(theReturnedPost.getString("created_at")));
+			newPost.setLastUpdate(railsStringToDate(theReturnedPost.getString("updated_at")));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		} 
+		
+		/* Try-catch block needed to visit the URL *//*
 		try {
 			URL url = new URL(userURLString);
 			url.openStream().close();
@@ -189,6 +201,7 @@ public class ZChatAdapter {
 		}
 		
 		/* Return the feed with the post commited */
+		targetFeed.addPost(newPost);
 		return targetFeed;
 	}
 	
@@ -202,7 +215,7 @@ public class ZChatAdapter {
 	 */
 	@SuppressWarnings("deprecation")
 	public Feed commitComment(Feed targetFeed, Post targetPost, Comment newComment){
-		targetPost.addComment(newComment);
+		
 		String commentContent = URLEncoder.encode(newComment.getContent());
 		String postId = ""+newComment.getParentPost().getId();
 		
@@ -213,14 +226,19 @@ public class ZChatAdapter {
 							"&username="+newComment.getUserName()+
 							"";
 		
-		/* Try-catch block needed to visit the URL */
+		/* Get the JSON object when saving the comment so we can set the dates and id correctly */
+		String postJSONString = getJSON(urlString, 4096);
 		try {
-			URL url = new URL(urlString);
-			url.openStream().close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			JSONObject theReturnedPost = new JSONObject(postJSONString);
+			int theId = theReturnedPost.getInt("id");
+			newComment.setId(theId);
+			
+			newComment.setDateOfCreation(railsStringToDate(theReturnedPost.getString("created_at")));
+		} 
+		catch (JSONException e) {
 			e.printStackTrace();
-		}
+		} 
+		targetPost.addComment(newComment);
 		return targetFeed;
 	}
 	
