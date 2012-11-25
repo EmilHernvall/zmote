@@ -26,6 +26,11 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+/**
+ * Activity that handles the GUI for the ZChat
+ * 
+ * @author Linus Back
+ */
 public class ZChatActivity extends Activity {
 	
 	public static Program targetProgram;
