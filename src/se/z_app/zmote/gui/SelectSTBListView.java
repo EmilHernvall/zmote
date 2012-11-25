@@ -35,7 +35,7 @@ public class SelectSTBListView extends ListView {
 	}
 
 	/**
-	 * notify�s the adapter when the list is changed
+	 * Notifies the adapter when the list is changed
 	 */
 	public void notifyAdapter() {
 		if (theAdapter != null)
@@ -43,10 +43,11 @@ public class SelectSTBListView extends ListView {
 	}
 
 	/**
-	 * sets the lenght of the STB list
+	 * Sets the length of the STB list
 	 * 
-	 * @param theActivity
-	 * @param listIn
+	 * @param theActivity the activity
+	 * @param listIn the list of STBs as an array
+	 * @param filePath path to the file
 	 */
 	public void setList(Activity theActivity, STB[] listIn, String filePath) {
 		theList.clear();

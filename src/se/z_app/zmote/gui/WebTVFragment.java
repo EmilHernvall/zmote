@@ -6,6 +6,7 @@ import se.z_app.stb.WebTVItem;
 import se.z_app.stb.WebTVService;
 import se.z_app.zmote.webtv.WebTVQuery;
 import android.R.drawable;
+import android.app.Activity;
 import android.content.ClipData.Item;
 import android.content.Context;
 import android.graphics.Bitmap;

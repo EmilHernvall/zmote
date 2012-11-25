@@ -35,6 +35,7 @@ import android.util.Log;
 
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -254,6 +255,13 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 		Fragment fragment = null;
     	boolean isNew = false;
     	
+    	if(!tab.equals(tabWeb)){
+    		if(findViewById(R.id.search_box_webtv) != null){
+    		InputMethodManager imm = (InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(findViewById(R.id.search_box_webtv).getWindowToken(), 0);
+    		}
+    	}
+    	
     	if(tab.equals(tabRC)){
     		Log.i("FragmentLog", "RC");
     		if(rcfragment == null){
@@ -384,8 +392,10 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 		tabRC = actionBar.newTab().setIcon(R.drawable.ic_dialog_dialer);
 		tabMain = actionBar.newTab().setIcon(R.drawable.ic_new_home);
 		tabEPG = actionBar.newTab().setIcon(R.drawable.collections_go_to_today);
-		tabFav = actionBar.newTab().setIcon(R.drawable.ic_menu_files);  //Maybe change name on this, this is the file browser
-		tabWeb = actionBar.newTab().setIcon(R.drawable.location_web_site);
+
+		tabFav = actionBar.newTab().setIcon(R.drawable.sd_storage);
+		tabWeb = actionBar.newTab().setIcon(R.drawable.location_map);
+
 
 		// Add the tabs to the action bar
 		actionBar.addTab(tabMain.setTabListener(this));

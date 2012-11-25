@@ -27,6 +27,11 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+/**
+ * Activity that handles the EPG layout when it is put into landscape model
+ * 
+ * @author Thed Mannerlof, Ralf Nilsson, Francisco Valladares, Maria Platero
+ */
 public class EpgHorizontalActivity extends Activity {
 
 	private Channel temp;
@@ -49,6 +54,7 @@ public class EpgHorizontalActivity extends Activity {
 	private Date end;
 	private int screen_width = 0;
 	private int schedule_lenght_in_hours = 48;
+	private int distance = 0;
 	
 	private OnTouchListener toutch;
 	private int currentX = -1, currentY = -1;
@@ -211,7 +217,7 @@ public class EpgHorizontalActivity extends Activity {
     	
     	// Now label
     	RelativeLayout.LayoutParams text_params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
-    	text_params.setMargins(distance+110, 0, 0, 0);
+    	text_params.setMargins(distance+65, 0, 0, 0);
     	TextView now_text = (TextView)view.findViewById(R.id.now_text);
     	now_text.setVisibility(TextView.VISIBLE);
     	now_text.setLayoutParams(text_params);
@@ -220,9 +226,12 @@ public class EpgHorizontalActivity extends Activity {
     	//now_text.invalidate();	//Not sure if needed
     	
     	// Center the screen on the now line
-    	hz_scroll.scrollBy(distance, 0);
-    	hz_scroll_time.scrollBy(distance, 0);
-
+    	//hz_scroll.scrollBy(distance, 0);
+    	//hz_scroll_time.scrollBy(distance, 0);
+    	line.setFocusableInTouchMode(true);
+    	line.requestFocus();
+    	now_text.setFocusableInTouchMode(true);
+    	now_text.requestFocus();
     }
     /**
      * Gets the time of the earlier program of the epg
@@ -268,7 +277,7 @@ public class EpgHorizontalActivity extends Activity {
     }
     
     /**
-     * Fetch the channels
+     * Fetches the channels from the EPG and adds the channels and programs to the layout
      */
 	void mainEPG(){
 		
@@ -301,8 +310,8 @@ public class EpgHorizontalActivity extends Activity {
 	}
 
 	/**
-	 * Adding icon to the layout
-	 * @param ch
+	 * Adds a new button with channel icon to the layout
+	 * @param ch channel which the icon belongs to
 	 */
 	void addIconToLayout(Channel ch){
 		
@@ -330,7 +339,8 @@ public class EpgHorizontalActivity extends Activity {
 
 	/**
 	 * Adding programs to the layout
-	 * @param pg
+	 * @param pg the program to add
+	 * @param n_program number of the program to add
 	 */
 	void addProgramToLayout(Program pg, int n_program){
 		
@@ -384,6 +394,7 @@ public class EpgHorizontalActivity extends Activity {
 			
 				EPGFragment.eventProgram = p;
 				finish();
+				main.vibrate();
 			}
 			
 		});
@@ -405,11 +416,11 @@ public class EpgHorizontalActivity extends Activity {
 	}
 	
 	/**
-	 * Changes the icons size
-	 * @param bm
-	 * @param newHeight
-	 * @param newWidth
-	 * @return resizedBitmap
+	 * Method for changing the dimensions of a bitmap picture
+	 * @param bm the bitmap picture to be re-sized
+	 * @param newHeight the height of the re-sized bitmap picture
+	 * @param newWidth the width of the re-sized bitmap picture
+	 * @return resizedBitmap the re-sized bitmap picture
 	 */
 	public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
 	
@@ -433,8 +444,7 @@ public class EpgHorizontalActivity extends Activity {
 
 	/**
 	 * Loads the information asynchronously
-	 * @author 
-	 *
+	 * @author Rasmus Holm, Francisco Valladares
 	 */
 	private class AsyncDataLoader extends AsyncTask<Integer, Integer, EPG>{
 

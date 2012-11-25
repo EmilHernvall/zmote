@@ -370,7 +370,7 @@ public class ChannelInformationFragment extends Fragment{
     	
     	// Buttons
     	social_but = new ImageButton(view_temp.getContext());
-    	social_but.setImageResource(R.drawable.social_icon);
+    	social_but.setImageResource(R.drawable.social_icon_dark);
     	social_but.setBackgroundResource(0);
     	fav_but = new ImageButton(view_temp.getContext());
     	fav_but.setImageResource(R.drawable.not_favorite_icon);
@@ -416,12 +416,12 @@ public class ChannelInformationFragment extends Fragment{
 		});
     	
     	// Add the buttons to the layout
-    	but_menu.addView(imdb_but, but_params);
-    	but_menu.addView(fav_but, but_params);
+    	//but_menu.addView(imdb_but, but_params);
+    	//but_menu.addView(fav_but, but_params);
     	but_menu.addView(social_but, but_params);
-    	but_space.addView(but_left_space, but_left_space_params);
-    	but_space.addView(but_menu);
-    	return but_space;
+    	//but_space.addView(but_left_space, but_left_space_params);
+    	//but_space.addView(but_menu);
+    	return but_menu;
     }
     
     /**

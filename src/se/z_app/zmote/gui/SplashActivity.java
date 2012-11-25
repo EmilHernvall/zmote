@@ -14,7 +14,7 @@ import android.widget.ImageView;
 
 /**
  * First screen loaded with the current STB logo and loading animation
- * @author Francisco
+ * @author Francisco Valladares
  *
  */
 public class SplashActivity extends Activity {

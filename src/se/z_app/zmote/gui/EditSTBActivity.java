@@ -11,6 +11,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+/**
+ * Activity that handles re-naming STBs
+ * 
+ * @author Christian Vestman, Marcus Widegren
+ */
 public class EditSTBActivity extends Activity {
 
 	STB stb;
