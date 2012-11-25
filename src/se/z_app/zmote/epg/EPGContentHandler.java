@@ -239,7 +239,7 @@ public class EPGContentHandler extends Observable implements Runnable, Observer{
 			STBEvent event = STBListener.instance().getCurrentEvent();
 			//System.out.println("Evente Recived");
 			if(event.getUrl() != null){
-				System.out.println("Evente Recived URL: " + event.getUrl());
+				//System.out.println("Evente Recived URL: " + event.getUrl());
 				for (Channel channel : currentEPG) {
 					if(event.getUrl().toLowerCase().contains(channel.getUrl().toLowerCase())){
 						System.out.println("Found Channel: " + channel.getName());

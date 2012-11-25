@@ -92,19 +92,21 @@ public class ZChatAdapter {
 				int postID = jsonPost.getInt("id");
 				thePost.setId(postID);
 				
-				
+				theFeed.addPost(thePost);
 				/* URL to get the comments for the post */
-				String getCommentStr = "http://" + serverAdress +"/post/get_comments_by_postid "+
+				String getCommentStr = "http://" + serverAdress +"/post/get_comments_by_postid"+
 						"?post_id=" + postID +
 						"";
 				
+
+				
 				/* Get the comments for the post */
-				try
-				{
+				try{
 					String getCommentJSONString = getJSON(getCommentStr, 4096);
+
+					
 					JSONArray commentJSONArray = new JSONArray(getCommentJSONString);
-					for(int j = 0; j < commentJSONArray.length(); i ++)
-					{
+					for(int j = 0; j < commentJSONArray.length(); j ++){
 						JSONObject jsonComment = commentJSONArray.getJSONObject(i);
 						Comment newComment = new Comment(thePost);
 						newComment.setId(jsonComment.getInt("id"));
@@ -123,7 +125,7 @@ public class ZChatAdapter {
 					
 				}
 				
-				theFeed.addPost(thePost);
+				
 				
 			}
 			

@@ -258,7 +258,6 @@ public class WebTVFragment extends Fragment {
 				WebTVItem resultItem = tempItem;
 				@Override
 				public void onClick(View v) {
-					main.vibrate();
 					WebTVCommand.instance().play(resultItem);
 					//TODO Change color when press (only if time)
 				}

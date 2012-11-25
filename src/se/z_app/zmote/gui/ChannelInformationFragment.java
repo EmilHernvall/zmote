@@ -513,12 +513,12 @@ public class ChannelInformationFragment extends Fragment{
 		
 		@Override
 		public void onClick(View v) {
-			Bundle args = new Bundle();
+	
 			//TODO Add diffrent kinds of arguemnts dependsing on what needs to 
 			//identify the program.
-			args.putString("program", myProgram.getName());
+
+			ZChatActivity.targetProgram = myProgram;
 			Intent intent = new Intent(getActivity(), ZChatActivity.class);
-			intent.putExtras(args);
 			getActivity().startActivity(intent);
 			
 		}
