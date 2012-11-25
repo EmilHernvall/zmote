@@ -24,6 +24,7 @@ import se.z_app.zmote.epg.EPGQuery;
 import se.z_app.zmote.gui.R.drawable;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.gesture.GestureOverlayView;
 import android.gesture.GestureOverlayView.OnGestureListener;
 
@@ -101,8 +102,9 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 
 	private ProgressBar programProgress; 
 	private TextView programText;
-	private LinearLayout programWrapper;
+	private RelativeLayout programWrapper;
 	private TextView channelName;
+	private Program currentProgram;
 
 	private ArrayList<ImageView> imageList = new ArrayList<ImageView>();
 	private ArrayList<Channel> channelList = new ArrayList<Channel>();
@@ -671,27 +673,40 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 		r.addView(right);
 		r.addView(rightright);
 
-		RelativeLayout wrapper = new RelativeLayout(r.getContext());
+		programWrapper = new RelativeLayout(r.getContext());
 		params1 = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		params1.setMargins(20, screenheight-centerHight-voldownHight+2*padding, 20, voldownHight);
-		wrapper.setLayoutParams(params1);
+		programWrapper.setLayoutParams(params1);
 		
-		programWrapper = new LinearLayout(r.getContext());
-		programWrapper.setOrientation(LinearLayout.VERTICAL);
+		LinearLayout wrapper = new LinearLayout(r.getContext());
+		wrapper.setOrientation(LinearLayout.VERTICAL);
 		//params1 = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		//params1.setMargins(20, screenheight-centerHight-voldownHight+2*padding, 20, voldownHight);
 		//programWrapper.setLayoutParams(params1);
 		
 		
 		
-		LinearLayout firstLineWrapper = new LinearLayout(r.getContext());
-		firstLineWrapper.setOrientation(LinearLayout.HORIZONTAL);
-		
 		channelName = new TextView(v.getContext());
 		channelName.setTextColor(0xFFFFFFFF);
 		
-//		ImageButton socialIcon = new ImageButton(r.getContext());
-//		socialIcon.setBackgroundDrawable(r.getResources().getDrawable(R.drawable.social_icon_light));
+		ImageButton socialIcon = new ImageButton(r.getContext());
+		socialIcon.setBackgroundDrawable(r.getResources().getDrawable(R.drawable.social_icon_light));
+		params1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		params1.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+		params1.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+		socialIcon.setLayoutParams(params1);
+		socialIcon.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if(currentProgram != null){
+					main.vibrate();
+					ZChatActivity.targetProgram = currentProgram;
+					Intent intent = new Intent(getActivity(), ZChatActivity.class);
+					getActivity().startActivity(intent);
+				}
+			}
+		});
 		
 		
 		programProgress = new ProgressBar(v.getContext(), null, android.R.attr.progressBarStyleHorizontal);
@@ -704,13 +719,13 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 
 		
 		
-		programWrapper.addView(channelName);
-		programWrapper.addView(programProgress);
-		programWrapper.addView(programText);
+		wrapper.addView(channelName);
+		wrapper.addView(programProgress);
+		wrapper.addView(programText);
 
-		wrapper.addView(programWrapper);
-		
-		r.addView(wrapper);
+		programWrapper.addView(wrapper);
+		programWrapper.addView(socialIcon);
+		r.addView(programWrapper);
 	}
 
 	private void hideText(){
@@ -740,7 +755,8 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 		}
 		if(currentProgram == null)	
 			return;
-
+		this.currentProgram = currentProgram;
+		
 		String name = currentProgram.getName();
 		String startTime = new SimpleDateFormat("HH:mm").format(currentProgram.getStart());
 		String info = currentProgram.getLongText();
