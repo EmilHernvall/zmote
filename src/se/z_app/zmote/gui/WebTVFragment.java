@@ -6,6 +6,7 @@ import se.z_app.stb.WebTVItem;
 import se.z_app.stb.WebTVService;
 import se.z_app.zmote.webtv.WebTVQuery;
 import android.R.drawable;
+import android.app.Activity;
 import android.content.ClipData.Item;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -21,6 +22,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView.FindListener;
 import android.widget.ArrayAdapter;
@@ -98,6 +101,9 @@ public class WebTVFragment extends Fragment {
 				LinearLayout linLayResult = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
 				linLayResult.setVisibility(View.VISIBLE);	
 				addPlayBar();
+				
+				InputMethodManager imm = (InputMethodManager)main.getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(view_temp.findViewById(R.id.search_box_webtv).getWindowToken(), 0);
 			}
 
 		});
@@ -140,6 +146,27 @@ public class WebTVFragment extends Fragment {
 		return view_temp;
 	}    
 
+	@Override
+	public void onPause(){
+		InputMethodManager imm = (InputMethodManager)main.getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(view_temp.findViewById(R.id.search_box_webtv).getWindowToken(), 0);
+		super.onPause();
+	}
+	/*
+	@Override
+	public void onStop(){
+		InputMethodManager imm = (InputMethodManager)main.getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(view_temp.findViewById(R.id.search_box_webtv).getWindowToken(), 0);
+		super.onStop();
+	}
+	
+	@Override
+	public void onDestroyView(){
+		InputMethodManager imm = (InputMethodManager)main.getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(view_temp.findViewById(R.id.search_box_webtv).getWindowToken(), 0);
+		super.onDestroyView();
+	}*/
+	
 	/**
 	 * Calls the back-end function to get the results of a search and shows them
 	 * @author Francisco
@@ -279,7 +306,7 @@ public class WebTVFragment extends Fragment {
 
 	/** 
 	 * Method that sets the play-/pause-/next-/forward buttons
-	 * @Author Emma Axelsson & Mar’a Platero
+	 * @Author Emma Axelsson & Maria Platero
 	 */
 	public void addPlayBar(){
 		System.out.println("TEST 2");
