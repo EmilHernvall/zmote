@@ -54,6 +54,10 @@ public class WebTVFragment extends Fragment {
 	private float screenHeight = 0;
 	private WebTVItem tempItem;
 
+	/**
+	 * Creates a WebTV fragment with the main activity indicated
+	 * @param mainTabActivity the main activity of the application
+	 */
 	public WebTVFragment(MainTabActivity mainTabActivity) {
 		/*
 		 * @Leonard: Changed the function this.main = main; it didn't do anything
@@ -167,8 +171,8 @@ public class WebTVFragment extends Fragment {
 	/**
 	 * Check if there is an input in the text box or not
 	 * @Author Thed and Ralf 
-	 * @param text from text box
-	 * @return boolean
+	 * @param thaText text from the text box
+	 * @return boolean whether the text box is empty or not
 	 */
 	private boolean checkEmpty(EditText thaText) {
 		if(thaText.getText().toString().trim().length() > 0){
@@ -372,6 +376,7 @@ public class WebTVFragment extends Fragment {
 
 	/**
 	 * Add items into spinner (drop-down menu with services) dynamically
+	 * @param services[] array with the WebTV services to add
 	 * @author Maria Jesus Platero
 	 */
 	public void addItemsOnSpinner(WebTVService services[]) {
