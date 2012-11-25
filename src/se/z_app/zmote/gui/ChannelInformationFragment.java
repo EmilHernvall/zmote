@@ -44,8 +44,6 @@ public class ChannelInformationFragment extends Fragment{
 	private boolean fetched = false;
 	private MainTabActivity main;
 	private ProgressBar pb;
-	private ImageButton fav_but;
-	private ImageButton imdb_but;
 	private ImageButton social_but;
 	
 	private Program currentProgram = null;
@@ -200,14 +198,9 @@ public class ChannelInformationFragment extends Fragment{
     	new_btn.setClickable(true);
     	new_btn.setPadding(0, 0, 0, 0);
     	
-    	// Set listeners to execute this
-    	//RemoteControl.instance().launch(ch.getUrl()); //
-    	//	temp = ch;
-    	
+    	// Set listeners
     	new_btn.setOnClickListener(new View.OnClickListener() {
-    		//int channelNr = i_tmp;
     		Channel tempChannel = temp;
-    		
     		@Override
 			public void onClick(View v) {			
 				RemoteControl.instance().launch(tempChannel);
@@ -352,18 +345,10 @@ public class ChannelInformationFragment extends Fragment{
      */
     public View addProgramButtons(Program program){
     	
-    	// Get the width of the screen
-    	int width_screen = getResources().getDisplayMetrics().widthPixels;
-    	
     	// Now we add the Imdb, Fav and Social buttons
     	LinearLayout.LayoutParams but_params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
     	but_params.setMargins(0, 0, 0, 0);
-    	LinearLayout.LayoutParams but_left_space_params = new LinearLayout.LayoutParams(width_screen-305, LayoutParams.WRAP_CONTENT);
-    	but_left_space_params.setMargins(0, 0, 0, 0);
-    	LinearLayout but_left_space = new LinearLayout(view_temp.getContext());
-    	but_left_space.setOrientation(1);
-    	LinearLayout but_space = new LinearLayout(view_temp.getContext());
-    	but_space.setOrientation(0);
+    	
     	LinearLayout but_menu = new LinearLayout(view_temp.getContext());
     	but_menu.setOrientation(0);	// Vertical 1; Horizontal 0
     	but_menu.setPadding(15, 0, 15, 5);
@@ -372,55 +357,11 @@ public class ChannelInformationFragment extends Fragment{
     	social_but = new ImageButton(view_temp.getContext());
     	social_but.setImageResource(R.drawable.social_icon_dark);
     	social_but.setBackgroundResource(0);
-    	fav_but = new ImageButton(view_temp.getContext());
-    	fav_but.setImageResource(R.drawable.not_favorite_icon);
-    	fav_but.setBackgroundResource(0);
-    	fav_but.setPadding(0, 10, 0, 0);
-    	imdb_but = new ImageButton(view_temp.getContext());
-    	imdb_but.setImageResource(R.drawable.imdb_icon);
-    	imdb_but.setBackgroundResource(0);
-
-    	
-    	// Set functions to the buttons (listeners)
-    	fav_but.setOnClickListener(new OnClickListener() {
-			ImageButton thisOne = fav_but;
-			@Override
-			public void onClick(View view) {
-				
-				// We will use setTag to associate custom data to the button
-				// In this case, the custom data is if its favorite or not
-				if(thisOne.getTag() == (Object)0){
-					thisOne.setTag(1);
-					thisOne.setImageResource(R.drawable.favorite_icon);
-				}else{
-					thisOne.setTag(0);
-					thisOne.setImageResource(R.drawable.not_favorite_icon);
-				}
-				/*
-				 * TODO: Add here some code to add this channel to the favorite list
-				 */
-			}
-		});
-    	
     	social_but.setOnClickListener(new SocialTVOnClickListener(program));
     	
-    	imdb_but.setOnClickListener(new OnClickListener() {
-			//ImageButton thisOne = imdb_but;
-			@Override
-			public void onClick(View view) {
-				
-				/*
-				 * TODO: Add here some code to add this channel to the favorite list
-				 */
-			}
-		});
-    	
     	// Add the buttons to the layout
-    	//but_menu.addView(imdb_but, but_params);
-    	//but_menu.addView(fav_but, but_params);
     	but_menu.addView(social_but, but_params);
-    	//but_space.addView(but_left_space, but_left_space_params);
-    	//but_space.addView(but_menu);
+    	
     	return but_menu;
     }
     

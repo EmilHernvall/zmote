@@ -40,7 +40,6 @@ public class EpgHorizontalActivity extends Activity {
 	private EPG epg;
 	private RelativeLayout view;
 	private ScrollView scroll_view;
-	private MainTabActivity main;
 	private LinearLayout i_layout;
 	private LinearLayout p_layout;
 	private LinearLayout vt_scroll;
@@ -56,8 +55,6 @@ public class EpgHorizontalActivity extends Activity {
 	private Date end;
 	private int screen_width = 0;
 	private int schedule_lenght_in_hours = 48;
-	private int distance = 0;
-	
 	private OnTouchListener toutch;
 	private int currentX = -1, currentY = -1;
 	private Vibrator vibe;
