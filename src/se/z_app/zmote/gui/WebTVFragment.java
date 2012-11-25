@@ -132,14 +132,6 @@ public class WebTVFragment extends Fragment {
 
 		return view_temp;
 	}    
-	/*	This is not working and its really extrange (but its solved on the main tab activity)
-	@Override
-	public void onPause(){
-		InputMethodManager imm = (InputMethodManager)main.getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(view_temp.findViewById(R.id.search_box_webtv).getWindowToken(), 0);
-		super.onPause();
-	}*/
-
 
 	/**
 	 * Calls the back-end function to get the results of a search and shows them
@@ -191,7 +183,7 @@ public class WebTVFragment extends Fragment {
 		results_ly.removeAllViewsInLayout();
 
 		LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
-		textParams.setMargins((int)screenWidth/2 - 30, 30, 0, 0);
+		textParams.setMargins((int)screenWidth/2 -50 , 30, 0, 0);
 
 		TextView noResults = new TextView(view_temp.getContext());
 		noResults.setText("No results");

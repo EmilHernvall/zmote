@@ -20,7 +20,8 @@ public class EPGData implements Observer{
 	private BiDirectionalCmdInterface com;
 	
 	/**
-	 * Singleton
+	 * Creates and holds the singleton instance of the EPG data class
+	 * @author Markus Widegren, Rasmus Holm
 	 */
 	private static class SingletonHolder { 
         public static final EPGData INSTANCE = new EPGData();

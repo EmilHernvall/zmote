@@ -85,7 +85,7 @@ public class EPGFragment extends Fragment{
 		hz_scroll_time = (HorizontalScrollView)view.findViewById(R.id.hz_timeline_parent);
 		timebar_hz_scroll = (LinearLayout)view.findViewById(R.id.timebar_hz_scroll);
 			
-		//2D Scrolling, TODO: Fling needs to be implemented
+		//2D Scrolling
 		toutch = new View.OnTouchListener() {
 			long startTime = System.currentTimeMillis();
 
@@ -241,7 +241,7 @@ public class EPGFragment extends Fragment{
     	
     	// We just change the margin of the line according to the current time
     	RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(2,height_of_rows*number_of_channels);
-    	params.setMargins(distance+3, 0, 0, 0);	// TODO: Needed some tune here
+    	params.setMargins(distance+3, 0, 0, 0);
     	LinearLayout line = (LinearLayout)view.findViewById(R.id.now_line);
     	line.setVisibility(LinearLayout.VISIBLE);
     	line.setLayoutParams(params);
