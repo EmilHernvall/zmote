@@ -47,7 +47,10 @@ public class WebTVdbHandler extends SQLiteOpenHelper{
 		         null, null, null, null);
 		WebTVService[] serviceArr  = new WebTVService[cursor.getCount()];
 		Log.w(WebTVdbHandler.class.getName(), "WebTVServises Cursor.length " + cursor.getCount());
-		
+		if (cursor.getCount() == 0){
+			return null;
+		}
+		else{
 		int iterationCounter=0;
 		cursor.moveToFirst();
 	    while (!cursor.isAfterLast()) {
@@ -65,6 +68,7 @@ public class WebTVdbHandler extends SQLiteOpenHelper{
 	    cursor.close();	
 	    db.close();
 		return serviceArr;
+		}
 	}
 	
 	public void updateServices(STB stb, WebTVService[] service){

@@ -9,35 +9,102 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Observable;
+import java.util.Observer;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
-import se.z_app.stb.Channel;
+import android.util.Log;
 import se.z_app.stb.WebTVItem;
 import se.z_app.stb.WebTVService;
+import se.z_app.stb.api.STBContainer;
 import se.z_app.stb.api.WebTVCommand;
+
 
 /**
  * 
- * @author Sebastian
+ * @author Sebastian Rauhala
  * 
  *
  */
 
-public class WebTVQuery {
+public class WebTVQuery extends Observable implements Observer, Runnable {
 	private String defaultDir;
+	private WebTVdbHandler db;
+	private static Context theContext;
+	private long updateIntervalMillis = 3600 * 1000;
+	private WebTVService[] WebTvServices;	
+	private WebTVService webtvservice;
+	private boolean isRunning;
+	private Thread thread, thread2;
 	
+	private static class SingletonHolder { 
+        public static final WebTVQuery INSTANCE = new WebTVQuery();
+        
+	}	
 	
-	
-	public WebTVQuery(){
+	public static WebTVQuery instance(){
+		Log.i("WebTVQuery test", "WebTVQuary test WebTVQuery Instance()");
+		return SingletonHolder.INSTANCE;
+		
+	}
+
+	private WebTVQuery(){
 		defaultDir = Environment.getExternalStorageDirectory().getAbsolutePath()+"/zmote";
 		new File(defaultDir).mkdirs();
+		Log.i("WebTVQuery test", "WebTVQuary test WebTVQuery got initialized");
+		
+		thread = new Thread(this);
+//		thread2 = new Thread(this);
+		isRunning = true;
+		webtvservice = new WebTVService();
+//		db.updateServices(STBContainer.instance().getActiveSTB(), WebTvServices);
+		STBContainer.instance().addObserver(this);
+//		STBListener.instance().addObserver(this);
+		thread.start();
+//		thread2.start();
 	}
 	
-	public WebTVService[] getService(){
-		return WebTVCommand.instance().getService();
+	public void buildWebTVdb(){
+		if (theContext != null){
+			db = new WebTVdbHandler(theContext);
+			WebTVService[] services = db.selectServices(STBContainer.instance().getActiveSTB());
+			if (services == null){
+				Log.i("WebTVQuery test", "WebTVQuary test WebTV service == Null");
+				WebTvServices = WebTVCommand.instance().getService();
+				db.updateServices(STBContainer.instance().getActiveSTB(), WebTvServices);
+			}
+			else{
+				Log.i("WebTVQuery test", "WebTVQuary test WebTV service != Null ");
+				WebTvServices = services;
+			}	
+		}
+		else {
+			WebTvServices = db.selectServices(STBContainer.instance().getActiveSTB());
+		}
 	}
+	
+	
+	 
+	public static void setContext(Context theContextIn) {
+		theContext = theContextIn;
+		Log.i("WebTVQuery test", "WebTVQuary test WebTV Context is set: " + theContext);
+	}
+	
+	
+	public WebTVService[] getService(){
+		synchronized (this) {
+			if(WebTvServices == null){
+//				Log.i("WebTVQuery test", "WebTVQuary test WebTV WebTVServices == null");
+				buildWebTVdb();
+			}
+		}
+//		Log.i("WebTVQuery test", "WebTVQuary test WebTV WebTVServices != null " + WebTvServices);
+		return WebTvServices;
+	}
+	
 	
 	public Bitmap populateWithIcon(WebTVService service){
 		populateWithIconFromCache(service);
@@ -198,6 +265,40 @@ public class WebTVQuery {
 		}
 		
 		return theImage;
+	}
+
+	@Override
+	public void update(Observable observable, Object data) {
+		// TODO Auto-generated method stub
+		if(observable instanceof STBContainer){
+			synchronized (thread) {
+				thread.notifyAll();
+			}
+		}
+		
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		while(isRunning){
+			if(STBContainer.instance().getActiveSTB() != null){
+				
+				synchronized(this){
+					buildWebTVdb();
+				}
+					Log.i("WebTVQuery test", "WebTVQuary test Run()");
+			}
+			try {
+				synchronized (thread) {
+					thread.wait();
+				}
+			} catch (InterruptedException e) {
+				
+			}
+		}
+		
+		
 	}
 	
 }

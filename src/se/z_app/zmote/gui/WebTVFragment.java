@@ -430,9 +430,11 @@ public class WebTVFragment extends Fragment {
 
 		@Override
 		protected WebTVService[] doInBackground(Integer... params) {
-			WebTVQuery query = new WebTVQuery();
-			services = query.getService();
-			query.populateWithIcon(services);
+//			WebTVQuery query = new WebTVQuery();
+//			services = query.getService();
+			services = WebTVQuery.instance().getService();
+//			query.populateWithIcon(services);
+			WebTVQuery.instance().populateWithIcon(services);
 			return services;
 		}
 
@@ -452,9 +454,9 @@ public class WebTVFragment extends Fragment {
 		@Override
 		protected WebTVItem[] doInBackground(Integer... arg0) {
 			web_service = spinner.getSelectedItemPosition();
-			WebTVQuery query = new WebTVQuery();
-			WebTVItem[] elements= query.search(search_for_this, services[web_service]);
-
+//			WebTVQuery query = new WebTVQuery();
+//			WebTVItem[] elements= query.search(search_for_this, services[web_service]);
+			WebTVItem[] elements= WebTVQuery.instance().search(search_for_this, services[web_service]);
 			return elements;
 		}
 
@@ -487,8 +489,9 @@ public class WebTVFragment extends Fragment {
 
 		@Override
 		protected WebTVItem doInBackground(Integer... params) {
-			WebTVQuery query = new WebTVQuery();
-			query.populateWithIcon(item);
+//			WebTVQuery query = new WebTVQuery();
+//			query.populateWithIcon(item);
+			WebTVQuery.instance().populateWithIcon(item);
 			return item;
 		}
 

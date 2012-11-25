@@ -10,16 +10,22 @@ import se.z_app.stb.api.STBContainer;
 import se.z_app.stb.api.WebTVCommand;
 import se.z_app.zmote.epg.EPGContentHandler;
 import se.z_app.zmote.webtv.MediaStreamer;
+import se.z_app.zmote.webtv.WebTVQuery;
 
 public class Bootstrap {
+	private static Context context;
 	private static String ip;
 	
+	
+	public Context getContext(){
+		return context;
+	}
 	public static String getLocalIP(){
 		return ip;
 	}
 	
 	public Bootstrap(Context context, WifiManager wifiManager){
-		
+		Bootstrap.context = context;		
 		EPGContentHandler.setContext(context);
         EPGContentHandler.instance();
         RemoteControl.instance();
@@ -27,6 +33,8 @@ public class Bootstrap {
         STBContainer.instance();
         RCProxy.instance();
         WebTVCommand.instance();
+        WebTVQuery.instance();
+        WebTVQuery.setContext(context);
         
     	WifiInfo wifiInfo = wifiManager.getConnectionInfo();
     	int ipAddress = wifiInfo.getIpAddress();    	
