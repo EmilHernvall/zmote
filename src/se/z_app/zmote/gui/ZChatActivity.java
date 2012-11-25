@@ -7,6 +7,7 @@ import java.util.Iterator;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 
+import se.z_app.social.Comment;
 import se.z_app.social.Feed;
 
 import se.z_app.social.zchat.ZChatAdapter;
@@ -147,14 +148,59 @@ public class ZChatActivity extends SherlockActivity {
 			date.setText(list.get(position).getDateOfCreation().toString());
 			content.setText(list.get(position).getContent());
 			nrOfComments.setText(list.get(position).getComments().length + " comments");
-
-
-
+			ListView commitList = (ListView) vi.findViewById(R.id.list_over_comments);
+			commitList.setAdapter(new CommitAdabter(list.get(position), zChatActivity));
 			return vi;
 		}
+	}
+	
+	private class CommitAdabter extends BaseAdapter{
+		
 
+		private ZChatActivity activity;
+		private ArrayList<Comment> comments = new ArrayList<Comment>();
+		
+		public CommitAdabter(Post post, ZChatActivity activity){
+			comments.addAll(post.getCommentsAsCollection());
+			this.activity = activity;
+			
+		}
+		
+		@Override
+		public int getCount() {
+			return comments.size();
+		}
 
+		@Override
+		public Object getItem(int position) {
+			return comments.get(position);
+		}
 
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			System.out.println("Now writing comment nr: "+ position);
+			View vi=convertView;
+			if(convertView==null){
+				vi = ((LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.zchat_list_comment, null);
+			}
+			
+			TextView userName = (TextView) vi.findViewById(R.id.comment_user_name);
+			TextView date = (TextView) vi.findViewById(R.id.comment_date);
+			TextView content = (TextView) vi.findViewById(R.id.comment_content);
+
+	
+			userName.setText(comments.get(position).getUserName());
+			date.setText(comments.get(position).getDateOfCreation().toString());
+			content.setText(comments.get(position).getContent());
+			
+			return vi;
+		}
+		
 	}
 
 	private class AsyncDataLoader extends AsyncTask<Integer, Integer, Feed>{
