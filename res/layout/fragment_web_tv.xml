@@ -140,24 +140,24 @@
 
         <ImageButton
             android:id="@+id/previous_button"
-            android:layout_width="38dp"
-            android:layout_height="38dp"
+            android:layout_width="39dp"
+            android:layout_height="39dp"
             android:background="@drawable/previous_button"
             android:baselineAlignBottom="false"
             android:contentDescription="@string/search" />
 
         <ImageButton
             android:id="@+id/play_button"
-            android:layout_width="38dp"
-            android:layout_height="38dp"
+            android:layout_width="39dp"
+            android:layout_height="39dp"
             android:background="@drawable/play_button"
             android:baselineAlignBottom="false"
             android:contentDescription="@string/search" />
 
         <ImageButton
             android:id="@+id/next_button"
-            android:layout_width="38dp"
-            android:layout_height="38dp"
+            android:layout_width="39dp"
+            android:layout_height="39dp"
             android:background="@drawable/next_button"
             android:baselineAlignBottom="false"
             android:contentDescription="@string/search" />

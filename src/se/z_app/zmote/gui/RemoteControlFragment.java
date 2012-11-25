@@ -43,6 +43,7 @@ public class RemoteControlFragment extends Fragment implements Observer {
 	private Button mute_volume_button;
 	private Button info_button;
 	private Button exit_button;
+
 	private MainTabActivity main;
 	private View view;
 	
@@ -53,7 +54,7 @@ public class RemoteControlFragment extends Fragment implements Observer {
 	private EPGQuery query = new EPGQuery();
 	private boolean fetched = false;
 	private boolean muted = false;
-	private ImageButton active;
+    private ImageButton currentButton;
 
 	/**
 	 * Constructor for the remote control fragment
@@ -87,10 +88,6 @@ public class RemoteControlFragment extends Fragment implements Observer {
 
 		EPGContentHandler.instance().addObserver(this);
 		
-		/*
-		 * TODO: Follow the current channel in the icon bar
-		 * change the background when changing channel
-		 * */
 		view = inflater.inflate(R.layout.fragment_remote_control, null);
 		channel_icons_layout = (LinearLayout)view.findViewById(R.id.channel_icons_ly);
 	
@@ -98,7 +95,6 @@ public class RemoteControlFragment extends Fragment implements Observer {
 
 		btnListeners(view);
 		new AsyncDataLoader().execute();
-
 		return view;
 	}
 
@@ -431,14 +427,14 @@ public class RemoteControlFragment extends Fragment implements Observer {
      * pressed in the arrows of the remote control
      * @author Maria Platero
      */
+
     public void highlightChannel(){
     	
-    	/*
-		 * TODO: FIX getCurrentChannel();
-		 * check that is still working when currentChannel() is working
-		 * it crash if you press an arrow before pressing any channel in the 
-		 * icon list
-		 */
+
+    	if(currentButton != null){
+    		currentButton.setBackgroundResource(0);
+    	}
+    	
 		final EPGQuery query_t = new EPGQuery();
 		epg = query_t.getEPG();
 		getFullEPG();
@@ -461,12 +457,9 @@ public class RemoteControlFragment extends Fragment implements Observer {
 					boton.setBackgroundResource(R.color.abs__background_holo_light);
 					boton.setFocusableInTouchMode(true);
 					boton.requestFocus();
+					currentButton = boton;
 				}
 				
-				if(boton != active && active != null){				
-					active.setBackgroundResource(0);
-					active = boton;
-				}
 			}
 		
     }	
@@ -490,27 +483,18 @@ public class RemoteControlFragment extends Fragment implements Observer {
 
     	temp = ch;
     	new_btn.setOnClickListener(new View.OnClickListener() {
-
     		Channel channel = temp;
+    		
     		@Override
-			public void onClick(View v) {
-    		
-    			if(new_btn != active && active !=null){
-    				active.setBackgroundResource(0);	
-    			}
-    			
-    			new_btn.setBackgroundResource(R.color.abs__background_holo_light);
+			public void onClick(View v) {	
     			RemoteControl.instance().launch(channel);
-				main.vibrate();
-				active = new_btn;
-				
-				
+				main.vibrate();		
 			}
-    		
 		});
     	
 
     	channel_icons_layout.addView(new_btn);	
+    	highlightChannel();
     }
 	
     /**
