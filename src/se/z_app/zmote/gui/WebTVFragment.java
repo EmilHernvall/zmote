@@ -43,6 +43,9 @@ public class WebTVFragment extends Fragment {
 	private Spinner spinner;
 	private View view_temp;
 	private MainTabActivity main;
+	private ImageButton play_button;
+	private ImageButton next_button;
+	private ImageButton previous_button;
 	private int web_service = 0;  // To know in what service are we currently (youtube, spotify...)
 	private ProgressBar pb;
 	private WebTVService services[];
@@ -50,6 +53,7 @@ public class WebTVFragment extends Fragment {
 	private float screenWidth = 0;
 	private float screenHeight = 0;
 	private WebTVItem tempItem;
+	
 
 	/*	public WebTVFragment(){
 
@@ -259,6 +263,7 @@ public class WebTVFragment extends Fragment {
 					//TODO Change color when press (only if time)
 				}
 			});
+		
 
 			queueButton.setOnClickListener(new View.OnClickListener() {
 				WebTVItem queueItem = tempItem;
@@ -271,15 +276,11 @@ public class WebTVFragment extends Fragment {
 			});
 		}
 
-		System.out.println("TEST 2");
-		//TODO make buttons work
-		//addPlayBar();
-		
 	}
 
 	/** 
 	 * Method that sets the play-/pause-/next-/forward buttons
-	 * @Author Emma Axelsson
+	 * @Author Emma Axelsson & Mar’a Platero
 	 */
 	public void addPlayBar(){
 		System.out.println("TEST 2");
@@ -288,7 +289,84 @@ public class WebTVFragment extends Fragment {
 		playBar.setVisibility(View.VISIBLE);
 		playBar.setBackgroundColor(0x8833B5E5);
 		playBarLine.setVisibility(View.VISIBLE);
+		
+		play_button = (ImageButton) view_temp.findViewById(R.id.play_button);
+		next_button = (ImageButton) view_temp.findViewById(R.id.next_button);
+		previous_button = (ImageButton) view_temp.findViewById(R.id.previous_button);
+		
+		// Listener with visual feedback for the button
+		play_button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                //If the user swipes
+               if(event.getAction() == MotionEvent.ACTION_DOWN){
+            	    main.vibrate();
+            	  //TODO: Function to perform HERE	
+            	    
+                    play_button.setBackgroundColor(0xFFFFFFFF);
+                    // Put here the "light" button
+                   play_button.setBackgroundResource(R.drawable.play_pressed);
+                    return true;
+                }
+                else if(event.getAction() == MotionEvent.ACTION_UP){
+                	play_button.setBackgroundColor(0xFF000000);
+                	play_button.setBackgroundResource(R.drawable.play_button);	
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        });
+		
+		// Listener with visual feedback for the button
+		next_button.setOnTouchListener(new View.OnTouchListener() {
+	            @Override
+	            public boolean onTouch(View v, MotionEvent event) {
+	                //If the user swipes
+	               if(event.getAction() == MotionEvent.ACTION_DOWN){
+	            	    main.vibrate();
+	            	  //TODO: Function to perform HERE	
+	            	    
+	   					next_button.setBackgroundColor(0xFFFFFFFF);
+	                    // Put here the "light" button
+	   					next_button.setBackgroundResource(R.drawable.next_pressed);
+	                    return true;
+	                }
+	                else if(event.getAction() == MotionEvent.ACTION_UP){
+	                	next_button.setBackgroundColor(0xFF000000);
+	                	next_button.setBackgroundResource(R.drawable.next_button);	
+	                    return true;
+	                }else{
+	                    return false;
+	                }
+	            }
+	        });
+				
+			// Listener with visual feedback for the button
+			previous_button.setOnTouchListener(new View.OnTouchListener() {
+	            @Override
+	            public boolean onTouch(View v, MotionEvent event) {
+	                //If the user swipes
+	               if(event.getAction() == MotionEvent.ACTION_DOWN){
+	            	    main.vibrate();
+	   					//TODO: Function to perform HERE	
+	            	    
+	   					previous_button.setBackgroundColor(0xFFFFFFFF);
+	                    // Put here the "light" button
+	   					previous_button.setBackgroundResource(R.drawable.previous_pressed);
+	                    return true;
+	                }
+	                else if(event.getAction() == MotionEvent.ACTION_UP){
+	                	previous_button.setBackgroundColor(0xFF000000);
+	                	previous_button.setBackgroundResource(R.drawable.previous_button);	
+	                    return true;
+	                }else{
+	                    return false;
+	                }
+	            }
+	        });
 	}
+	
 
 	/**
 	 * Add items into spinner (drop-down menu with services) dynamically
