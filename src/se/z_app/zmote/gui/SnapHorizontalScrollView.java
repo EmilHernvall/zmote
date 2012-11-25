@@ -26,7 +26,7 @@ public class SnapHorizontalScrollView extends HorizontalScrollView {
     private int mActiveFeature = 0;
  
     /**
-     * Default constructor
+     * Same as default constructor for HorizontalScrollView with same parameters
      * @param context
      * @param attrs
      * @param defStyle
@@ -36,7 +36,7 @@ public class SnapHorizontalScrollView extends HorizontalScrollView {
     }
  
     /**
-     * Default constructor
+     * Same as default constructor for HorizontalScrollView with same parameters
      * @param context
      * @param attrs
      */
@@ -45,7 +45,7 @@ public class SnapHorizontalScrollView extends HorizontalScrollView {
     }
  
     /**
-     * Default constructor
+     * Same as default constructor for HorizontalScrollView with same parameters
      * @param context
      */
     public SnapHorizontalScrollView(Context context) {
@@ -54,7 +54,7 @@ public class SnapHorizontalScrollView extends HorizontalScrollView {
  
     /**
      * Inserts the items in the scroll view
-     * @param items
+     * @param items list of items to insert
      */
 	public void setFeatureItems(ArrayList items){
     	
@@ -95,7 +95,7 @@ public class SnapHorizontalScrollView extends HorizontalScrollView {
 	
 	/**
 	 * Custom version of SimpleOnGestureListener
-	 * @author fran
+	 * @author Fransisco Valladares
 	 */
     class MyGestureDetector extends SimpleOnGestureListener {
     	

@@ -53,12 +53,11 @@ public class WebTVFragment extends Fragment {
 	private float screenWidth = 0;
 	private float screenHeight = 0;
 	private WebTVItem tempItem;
-	
 
-	/*	public WebTVFragment(){
-
-	}*/
-
+	/**
+	 * Creates a WebTV fragment with the main activity indicated
+	 * @param mainTabActivity the main activity of the application
+	 */
 	public WebTVFragment(MainTabActivity mainTabActivity) {
 		/*
 		 * @Leonard: Changed the function this.main = main; it didn't do anything
@@ -74,7 +73,7 @@ public class WebTVFragment extends Fragment {
 		screenWidth = getResources().getDisplayMetrics().widthPixels;
 		screenHeight = getResources().getDisplayMetrics().heightPixels;
 		new AsyncWebServiceLoader().execute();
-		
+
 		// Set the listener for the search button
 		ImageButton search_button = (ImageButton)view_temp.findViewById(R.id.search_button_webtv);
 		search_button.setOnClickListener(new View.OnClickListener() {
@@ -130,6 +129,7 @@ public class WebTVFragment extends Fragment {
 			}
 		});
 
+		//Default view when first entering the webTV view
 		LinearLayout linLayStart = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
 		linLayStart.setVisibility(View.GONE);	
 		LinearLayout playBarLine = (LinearLayout) view_temp.findViewById(R.id.playBarLine);
@@ -140,7 +140,7 @@ public class WebTVFragment extends Fragment {
 		noSearch.setVisibility(View.GONE);
 		LinearLayout noSearchLine = (LinearLayout) view_temp.findViewById(R.id.noSearchLine);
 		noSearchLine.setVisibility(View.GONE);
-		
+
 		return view_temp;
 	}    
 
@@ -156,14 +156,14 @@ public class WebTVFragment extends Fragment {
 		search_for_this = search_box.getText().toString();
 		TextView resultText = (TextView) view_temp.findViewById(R.id.result_webtv);
 		resultText.setText("Result for: '"+ search_for_this+"'");
-		
+
 		if(checkEmpty(search_box) == false){  //Check if the search box is empty
 			new AsyncWebSearch().execute();
 			return true;
-
 		}
+
 		else {
-			
+
 			return false;
 		}
 	}
@@ -171,14 +171,17 @@ public class WebTVFragment extends Fragment {
 	/**
 	 * Check if there is an input in the text box or not
 	 * @Author Thed and Ralf 
-	 * @param text from text box
-	 * @return boolean
+	 * @param thaText text from the text box
+	 * @return boolean whether the text box is empty or not
 	 */
 	private boolean checkEmpty(EditText thaText) {
-		if(thaText.getText().toString().trim().length() > 0)
+		if(thaText.getText().toString().trim().length() > 0){
 			return false;
-		else
+		}
+
+		else{
 			return true;
+		}
 	}
 
 	/**
@@ -216,7 +219,7 @@ public class WebTVFragment extends Fragment {
 		LinearLayout.LayoutParams icon_params = new LinearLayout.LayoutParams(100,80);
 		LinearLayout.LayoutParams item_params2 = new LinearLayout.LayoutParams((int)(screenWidth*0.15),LayoutParams.MATCH_PARENT);
 
-
+		//Sets the results view in webTV
 		for(WebTVItem x: res){
 			LinearLayout item_container = new LinearLayout(view_temp.getContext());
 			item_container.setBackgroundColor(0xFFCCCCCC);
@@ -254,16 +257,18 @@ public class WebTVFragment extends Fragment {
 
 			tempItem = x;
 
+			//Play webTV item
 			item.setOnClickListener(new View.OnClickListener() {
 				WebTVItem resultItem = tempItem;
 				@Override
 				public void onClick(View v) {
+					main.vibrate();
 					WebTVCommand.instance().play(resultItem);
 					//TODO Change color when press (only if time)
 				}
 			});
-		
 
+			//Queue webTV item
 			queueButton.setOnClickListener(new View.OnClickListener() {
 				WebTVItem queueItem = tempItem;
 				@Override
@@ -274,11 +279,6 @@ public class WebTVFragment extends Fragment {
 				}
 			});
 		}
-
-		System.out.println("TEST 2");
-		//TODO make buttons work
-		//addPlayBar();
-		
 	}
 
 	/** 
@@ -292,87 +292,91 @@ public class WebTVFragment extends Fragment {
 		playBar.setVisibility(View.VISIBLE);
 		playBar.setBackgroundColor(0x8833B5E5);
 		playBarLine.setVisibility(View.VISIBLE);
-		
+
 		play_button = (ImageButton) view_temp.findViewById(R.id.play_button);
 		next_button = (ImageButton) view_temp.findViewById(R.id.next_button);
 		previous_button = (ImageButton) view_temp.findViewById(R.id.previous_button);
-		
-		// Listener with visual feedback for the button
+
+		// Listener with visual feedback for the play/pause_button
 		play_button.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                //If the user swipes
-               if(event.getAction() == MotionEvent.ACTION_DOWN){
-            	    main.vibrate();
-            	  //TODO: Function to perform HERE	
-            	    
-                    play_button.setBackgroundColor(0xFFFFFFFF);
-                    // Put here the "light" button
-                   play_button.setBackgroundResource(R.drawable.play_pressed);
-                    return true;
-                }
-                else if(event.getAction() == MotionEvent.ACTION_UP){
-                	play_button.setBackgroundColor(0xFF000000);
-                	play_button.setBackgroundResource(R.drawable.play_button);	
-                    return true;
-                }else{
-                    return false;
-                }
-            }
-        });
-		
-		// Listener with visual feedback for the button
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				//If the user swipes
+				if(event.getAction() == MotionEvent.ACTION_DOWN){
+					main.vibrate();
+					//TODO: Function to perform HERE	
+
+					play_button.setBackgroundColor(0xFFFFFFFF);
+					// Put here the "light" button
+					play_button.setBackgroundResource(R.drawable.play_pressed);
+					RemoteControl.instance().sendButton(se.z_app.stb.api.RemoteControl.Button.TOGGLEPAUSEPLAY);
+					return true;
+				}
+				else if(event.getAction() == MotionEvent.ACTION_UP){
+					play_button.setBackgroundColor(0xFF000000);
+					play_button.setBackgroundResource(R.drawable.play_button);	
+					return true;
+				}else{
+					return false;
+				}
+			}
+		});
+
+		// Listener with visual feedback for the next_button
 		next_button.setOnTouchListener(new View.OnTouchListener() {
-	            @Override
-	            public boolean onTouch(View v, MotionEvent event) {
-	                //If the user swipes
-	               if(event.getAction() == MotionEvent.ACTION_DOWN){
-	            	    main.vibrate();
-	            	  //TODO: Function to perform HERE	
-	            	    
-	   					next_button.setBackgroundColor(0xFFFFFFFF);
-	                    // Put here the "light" button
-	   					next_button.setBackgroundResource(R.drawable.next_pressed);
-	                    return true;
-	                }
-	                else if(event.getAction() == MotionEvent.ACTION_UP){
-	                	next_button.setBackgroundColor(0xFF000000);
-	                	next_button.setBackgroundResource(R.drawable.next_button);	
-	                    return true;
-	                }else{
-	                    return false;
-	                }
-	            }
-	        });
-				
-			// Listener with visual feedback for the button
-			previous_button.setOnTouchListener(new View.OnTouchListener() {
-	            @Override
-	            public boolean onTouch(View v, MotionEvent event) {
-	                //If the user swipes
-	               if(event.getAction() == MotionEvent.ACTION_DOWN){
-	            	    main.vibrate();
-	   					//TODO: Function to perform HERE	
-	            	    
-	   					previous_button.setBackgroundColor(0xFFFFFFFF);
-	                    // Put here the "light" button
-	   					previous_button.setBackgroundResource(R.drawable.previous_pressed);
-	                    return true;
-	                }
-	                else if(event.getAction() == MotionEvent.ACTION_UP){
-	                	previous_button.setBackgroundColor(0xFF000000);
-	                	previous_button.setBackgroundResource(R.drawable.previous_button);	
-	                    return true;
-	                }else{
-	                    return false;
-	                }
-	            }
-	        });
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				//If the user swipes
+				if(event.getAction() == MotionEvent.ACTION_DOWN){
+					main.vibrate();
+					//TODO: Function to perform HERE	
+
+					next_button.setBackgroundColor(0xFFFFFFFF);
+					// Put here the "light" button
+					next_button.setBackgroundResource(R.drawable.next_pressed);		
+					RemoteControl.instance().sendButton(se.z_app.stb.api.RemoteControl.Button.RIGHT);
+					return true;
+				}
+				else if(event.getAction() == MotionEvent.ACTION_UP){
+					next_button.setBackgroundColor(0xFF000000);
+					next_button.setBackgroundResource(R.drawable.next_button);	
+					return true;
+				}else{
+					return false;
+				}
+			}
+		});
+
+		// Listener with visual feedback for the previous_button
+		previous_button.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				//If the user swipes
+				if(event.getAction() == MotionEvent.ACTION_DOWN){
+					main.vibrate();
+					//TODO: Function to perform HERE	
+
+					previous_button.setBackgroundColor(0xFFFFFFFF);
+					// Put here the "light" button
+					previous_button.setBackgroundResource(R.drawable.previous_pressed);
+					RemoteControl.instance().sendButton(se.z_app.stb.api.RemoteControl.Button.LEFT);
+					return true;
+				}
+
+				else if(event.getAction() == MotionEvent.ACTION_UP){
+					previous_button.setBackgroundColor(0xFF000000);
+					previous_button.setBackgroundResource(R.drawable.previous_button);	
+					return true;
+				}else{
+					return false;
+				}
+			}
+		});
 	}
-	
 
 	/**
 	 * Add items into spinner (drop-down menu with services) dynamically
+	 * @param services[] array with the WebTV services to add
 	 * @author Maria Jesus Platero
 	 */
 	public void addItemsOnSpinner(WebTVService services[]) {
@@ -418,12 +422,7 @@ public class WebTVFragment extends Fragment {
 
 			ImageView icon = new ImageView(view_temp.getContext());
 			icon.setImageBitmap(services[position]);
-			// Set the same image for the results image
-			//	if(position == web_service){
-			//		ImageView result_icon = (ImageView) view_temp.findViewById(R.id.webtv_icon_result);
-			//		result_icon.setImageBitmap(services[position]);
-			//}
-			//TODO Probably remove commented //Emma
+
 			return icon;
 		}
 	}
@@ -466,7 +465,7 @@ public class WebTVFragment extends Fragment {
 
 		@Override
 		protected void onPostExecute(WebTVItem elements[]) {
-			// Sorry for the ugly way to check if the vector is empty
+
 			int counter = 0;
 
 			for(WebTVItem item: elements){
