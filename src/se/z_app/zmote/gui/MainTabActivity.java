@@ -13,9 +13,11 @@ import com.actionbarsherlock.app.ActionBar.TabListener;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 
+import se.z_app.stb.EPG;
 import se.z_app.stb.Program;
 import se.z_app.stb.STB;
 import se.z_app.stb.STBEvent;
+import se.z_app.stb.api.EPGData;
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.stb.api.STBContainer;
 import se.z_app.stb.api.STBListener;
@@ -25,11 +27,13 @@ import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.AsyncTaskLoader;
 
 import android.util.Log;
 
@@ -139,6 +143,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 				setAlive(mst.what);
 			}
 		};
+		new LoadVolume().execute();
 		new Thread(new MyTimedTask()).start();
 	}
 
@@ -357,6 +362,46 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	    }	
 
 	}
+	/**
+	 * Auto-generated method. Does nothing.
+	 */
+	@Override
+	public void onTabReselected(Tab tab,
+			android.support.v4.app.FragmentTransaction ft) {
+		Fragment fragment = null;
+		if(tab.equals(tabRC)){
+    		Log.i("Detaching FragmentLog", "RC");
+    		fragment = rcfragment;
+    	}
+    	else if(tab.equals(tabEPG)){
+    		Log.i("Detaching FragmentLog", "EPG");
+    		fragment = epgfragment;
+    	}
+    	else if(tab.equals(tabWeb)){
+    		Log.i("Detaching FragmentLog", "WebTV");
+    		fragment = webfragment;
+    	}
+		else if(tab.equals(tabFav)){
+			Log.i("Detaching FragmentLog", "Fav");
+			//WARNING! : provisional function 
+			fragment = filesfragment;
+			
+		}
+		else if(tab.equals(tabMain)){
+			Log.i("Detaching FragmentLog", "Main");
+			fragment = mainfragment;
+		}
+    	
+		if (fragment != null) {
+	        getSupportFragmentManager().beginTransaction().hide(currentFragmen).commit();
+	        getSupportFragmentManager().beginTransaction().show(fragment).commit();
+	        currentFragmen = fragment;
+	    }	
+
+
+	}
+	
+	
 
 	public void showChannelInformation(Program program){
 		getSupportFragmentManager().beginTransaction().hide(currentFragmen).commit();
@@ -374,15 +419,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	}
 	
 
-	/**
-	 * Auto-generated method. Does nothing.
-	 */
-	@Override
-	public void onTabReselected(Tab tab,
-			android.support.v4.app.FragmentTransaction ft) {
-
-
-	}
+	
 
 	/**
 	 * Adds all the navigation tabs to the action bar.
@@ -518,6 +555,21 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 
 
 	}
+	
+	private class LoadVolume extends AsyncTask<Integer, Integer, Integer>{
+
+		@Override
+		protected Integer doInBackground(Integer... params) {
+			return EPGData.instance().getVolume();
+		}
+		
+		@Override
+		protected void onPostExecute(Integer volume) {
+			volumPB.setProgress(volume);
+		}
+		
+	}
+	
 	private class MyTimedTask implements Runnable{
 
 		int timeout= 1000;
