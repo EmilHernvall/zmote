@@ -10,18 +10,13 @@ import se.z_app.stb.api.RCProxy;
 import se.z_app.stb.api.RemoteControl;
 import se.z_app.zmote.epg.EPGContentHandler;
 import se.z_app.zmote.epg.EPGQuery;
-import se.z_app.zmote.gui.SnapHorizontalScrollView.MyGestureDetector;
-
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -29,7 +24,7 @@ import android.widget.LinearLayout;
 
 /**
  * Creates the view with the remote control buttons, the channel icons list and some other buttons
- * @author Thed Mannerlöf & Ralph Nilsson & Maria Platero
+ * @author Thed Mannerlof & Ralph Nilsson & Maria Platero
  * 
  */
 public class RemoteControlFragment extends Fragment implements Observer {
