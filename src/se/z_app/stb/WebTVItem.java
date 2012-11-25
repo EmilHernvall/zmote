@@ -2,9 +2,9 @@ package se.z_app.stb;
 
 import android.graphics.Bitmap;
 /**
+ * Class that describes a WebTV item, such as a YouTube clip or a Spotify song.
  * 
  * @author Linus Back
- *
  */
 
 public class WebTVItem {

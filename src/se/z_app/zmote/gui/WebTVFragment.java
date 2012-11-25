@@ -45,6 +45,7 @@ public class WebTVFragment extends Fragment {
 	private WebTVService services[];
 	private String search_for_this = null;	
 	private float screenWidth = 0;
+	private float screenHeight = 0;
 	private WebTVItem tempItem;
 
 
@@ -68,6 +69,7 @@ public class WebTVFragment extends Fragment {
 
 		view_temp = inflater.inflate(R.layout.fragment_web_tv, null);
 		screenWidth = getResources().getDisplayMetrics().widthPixels;
+		screenHeight = getResources().getDisplayMetrics().heightPixels;
 		new AsyncWebServiceLoader().execute();
 
 		// Set the listener for the search button
@@ -207,10 +209,10 @@ public class WebTVFragment extends Fragment {
 	 * @author Francisco & Emma
 	 */
 	public void showResults(WebTVItem[] res){
-
+	
 		LinearLayout results_ly = (LinearLayout) view_temp.findViewById(R.id.search_results_ly);
 		results_ly.removeAllViewsInLayout(); 
-
+		
 		LinearLayout.LayoutParams item_container_params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);		
 		LinearLayout.LayoutParams item_params = new LinearLayout.LayoutParams((int)(screenWidth*0.85),LayoutParams.MATCH_PARENT);
 		LinearLayout.LayoutParams icon_params = new LinearLayout.LayoutParams(100,80);
@@ -315,7 +317,6 @@ public class WebTVFragment extends Fragment {
 							});
 						}
 					}).start();
-
 				}
 			});
 		}
