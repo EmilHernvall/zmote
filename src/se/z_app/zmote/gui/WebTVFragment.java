@@ -6,6 +6,7 @@ import se.z_app.stb.WebTVItem;
 import se.z_app.stb.WebTVService;
 import se.z_app.zmote.webtv.WebTVQuery;
 import android.R.drawable;
+import android.app.Activity;
 import android.content.ClipData.Item;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -21,6 +22,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView.FindListener;
 import android.widget.ArrayAdapter;
@@ -53,6 +56,9 @@ public class WebTVFragment extends Fragment {
 	private float screenWidth = 0;
 	private float screenHeight = 0;
 	private WebTVItem tempItem;
+	private LinearLayout current_item;
+	private LinearLayout current_item2;
+
 
 	/**
 	 * Creates a WebTV fragment with the main activity indicated
@@ -102,6 +108,9 @@ public class WebTVFragment extends Fragment {
 				LinearLayout linLayResult = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
 				linLayResult.setVisibility(View.VISIBLE);	
 				addPlayBar();
+				
+				InputMethodManager imm = (InputMethodManager)main.getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(view_temp.findViewById(R.id.search_box_webtv).getWindowToken(), 0);
 			}
 
 		});
@@ -143,7 +152,15 @@ public class WebTVFragment extends Fragment {
 
 		return view_temp;
 	}    
+	/*	This is not working and its really extrange (but its solved on the main tab activity)
+	@Override
+	public void onPause(){
+		InputMethodManager imm = (InputMethodManager)main.getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(view_temp.findViewById(R.id.search_box_webtv).getWindowToken(), 0);
+		super.onPause();
+	}*/
 
+	
 	/**
 	 * Calls the back-end function to get the results of a search and shows them
 	 * @author Francisco
@@ -225,7 +242,7 @@ public class WebTVFragment extends Fragment {
 			item_container.setBackgroundColor(0xFFCCCCCC);
 			item_container.setPadding(4, 4, 4, 4);
 
-			LinearLayout item2 = new LinearLayout(view_temp.getContext());
+			final LinearLayout item2 = new LinearLayout(view_temp.getContext());
 			item2.setBackgroundColor(0xFF999999);
 			item2.setMinimumHeight(30);
 			item2.setClickable(true);
@@ -235,7 +252,7 @@ public class WebTVFragment extends Fragment {
 			queueButton.setBackgroundDrawable(d); //Check if ok, should not be used with API 16
 			item2.addView(queueButton);
 
-			LinearLayout item = new LinearLayout(view_temp.getContext());
+			final LinearLayout item = new LinearLayout(view_temp.getContext());
 			item.setBackgroundColor(0xFF999999);
 			item.setMinimumHeight(30);
 			item.setClickable(true);
@@ -264,7 +281,14 @@ public class WebTVFragment extends Fragment {
 				public void onClick(View v) {
 					main.vibrate();
 					WebTVCommand.instance().play(resultItem);
-					//TODO Change color when press (only if time)
+			    	if(current_item != null && current_item2 != null){
+			    		current_item.setBackgroundColor(0xFF999999);
+			    		current_item2.setBackgroundColor(0xFF999999);
+			    	}
+					item.setBackgroundColor(0xFFCCCCCC);
+					item2.setBackgroundColor(0xFFCCCCCC);
+					current_item = item;	
+					current_item2 = item2;	
 				}
 			});
 
@@ -283,7 +307,7 @@ public class WebTVFragment extends Fragment {
 
 	/** 
 	 * Method that sets the play-/pause-/next-/forward buttons
-	 * @Author Emma Axelsson & Mar’a Platero
+	 * @Author Emma Axelsson & Maria Platero
 	 */
 	public void addPlayBar(){
 		System.out.println("TEST 2");

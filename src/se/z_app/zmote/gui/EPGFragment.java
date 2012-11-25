@@ -70,7 +70,6 @@ public class EPGFragment extends Fragment{
 	}
     
 	
-    @SuppressWarnings("deprecation")
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -147,7 +146,8 @@ public class EPGFragment extends Fragment{
 				}
 			}
 		};
-			
+		
+		hz_scroll_time.setOnTouchListener(toutch);
 		hz_scroll.setOnTouchListener(toutch);
 		scroll_view.setOnTouchListener(toutch);
 		
