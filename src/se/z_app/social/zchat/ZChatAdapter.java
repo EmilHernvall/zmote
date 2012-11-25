@@ -92,7 +92,7 @@ public class ZChatAdapter {
 				int postID = jsonPost.getInt("id");
 				thePost.setId(postID);
 				
-				theFeed.addPost(thePost);
+
 				/* URL to get the comments for the post */
 				String getCommentStr = "http://" + serverAdress +"/post/get_comments_by_postid"+
 						"?post_id=" + postID +
@@ -124,7 +124,7 @@ public class ZChatAdapter {
 					Log.i("GetComments", "ZChat adapter: JSON Failure: " + e.toString());
 					
 				}
-				
+				theFeed.addPost(thePost);
 				
 				
 			}
