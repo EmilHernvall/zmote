@@ -1,8 +1,6 @@
 package se.z_app.zmote.gui;
 
 
-import se.z_app.stb.api.RemoteControl;
-import se.z_app.zmote.epg.EPGContentHandler;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,11 +16,6 @@ import android.widget.ImageView;
  *
  */
 public class SplashActivity extends Activity {
-	/* TODO
-	 * Right now we're using some established time
-	 * We should figure out when to leave the screen
-	 *  (modules load finish, for example.)
-	 * Set the display time, in milliseconds (or extract it out as a configurable parameter) */
 	
     private final int SPLASH_DISPLAY_LENGTH = 1000;
     
@@ -44,11 +37,6 @@ public class SplashActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        /* TODO here:
-         	1- Access the BD
-        	2- Get the operator logo
-         	3- Set @id/opLogo to the image we get    */
         
         ImageView iView = (ImageView) findViewById(R.id.opLogo);
         iView.setImageResource(R.drawable.tele2);
