@@ -218,22 +218,27 @@ public class EpgHorizontalActivity extends Activity {
     public void setNowLine(){
     
     	Date now = new Date(System.currentTimeMillis());
-    	long difference = now.getTime() - start.getTime();
+    	long difference = 0;
+    	try{
+    		difference = now.getTime() - start.getTime();
+    	}catch(NumberFormatException ex){
+    		System.out.println("Exception on setNowLine()");
+    	}
     	int distance = (int)(difference/60000)*(screen_width/60);
     	
     	// We just change the margin of the line according to the current time
     	RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(2,height_of_rows*number_of_channels);
-    	params.setMargins(distance, 0, 0, 0);
+    	params.setMargins(distance+3, 0, 0, 0);
     	LinearLayout line = (LinearLayout)view.findViewById(R.id.now_line);
     	line.setVisibility(LinearLayout.VISIBLE);
     	line.setLayoutParams(params);
     	
     	// Now label
     	RelativeLayout.LayoutParams text_params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
-    	if( (distance-45) < 0 ){
+    	if( (distance-42) < 0 ){
     		text_params.setMargins(distance, 0, 0, 0);
     	}else{
-    		text_params.setMargins(distance-45, 0, 0, 0);
+    		text_params.setMargins(distance-42, 0, 0, 0);
     	}
     	TextView now_text = (TextView)view.findViewById(R.id.now_text);
     	now_text.setVisibility(TextView.VISIBLE);
