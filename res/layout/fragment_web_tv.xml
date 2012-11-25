@@ -97,13 +97,14 @@
       
     </LinearLayout>
     -->
-<LinearLayout
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="#33B5E5"
         android:orientation="vertical" >
     </LinearLayout>
-    
+
     <LinearLayout
         android:id="@+id/noSearch"
         android:layout_width="match_parent"
@@ -130,59 +131,73 @@
         android:orientation="vertical" >
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/play_results_ly"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="#000000"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal" >
+    <RelativeLayout
+        android:id="@+id/playBarPlacement"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
 
-        <ImageButton
-            android:id="@+id/previous_button"
-            android:layout_width="39dp"
-            android:layout_height="39dp"
-            android:background="@drawable/previous_button"
-            android:baselineAlignBottom="false"
-            android:contentDescription="@string/search" />
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
 
-        <ImageButton
-            android:id="@+id/play_button"
-            android:layout_width="39dp"
-            android:layout_height="39dp"
-            android:background="@drawable/play_button"
-            android:baselineAlignBottom="false"
-            android:contentDescription="@string/search" />
-
-        <ImageButton
-            android:id="@+id/next_button"
-            android:layout_width="39dp"
-            android:layout_height="39dp"
-            android:background="@drawable/next_button"
-            android:baselineAlignBottom="false"
-            android:contentDescription="@string/search" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/playBarLine"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="#33B5E5"
-        android:orientation="vertical" >
-    </LinearLayout>
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+            <LinearLayout
+                android:id="@+id/search_results_ly"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#000000"
+                android:orientation="vertical"
+                android:scrollbars="vertical" >
+            </LinearLayout>
+        </ScrollView>
 
         <LinearLayout
-            android:id="@+id/search_results_ly"
+            android:id="@+id/play_results_ly"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#000000"
-            android:orientation="vertical"
-            android:scrollbars="vertical" >
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical" >
+
+     <!--        <LinearLayout
+                android:id="@+id/playBarLine"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#33B5E5">
+             </LinearLayout>  -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_alignParentBottom="true"
+                android:background="#000000"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal" >
+
+                <ImageButton
+                    android:id="@+id/previous_button"
+                    android:layout_width="39dp"
+                    android:layout_height="39dp"
+                    android:background="@drawable/previous_button"
+                    android:baselineAlignBottom="true"
+                    android:contentDescription="@string/search" />
+
+                <ImageButton
+                    android:id="@+id/play_button"
+                    android:layout_width="39dp"
+                    android:layout_height="39dp"
+                    android:background="@drawable/play_button"
+                    android:baselineAlignBottom="true"
+                    android:contentDescription="@string/search" />
+
+                <ImageButton
+                    android:id="@+id/next_button"
+                    android:layout_width="39dp"
+                    android:layout_height="39dp"
+                    android:background="@drawable/next_button"
+                    android:baselineAlignBottom="true"
+                    android:contentDescription="@string/search" />
+               
+            </LinearLayout>
         </LinearLayout>
-    </ScrollView>
+    </RelativeLayout>
 
 </LinearLayout>
