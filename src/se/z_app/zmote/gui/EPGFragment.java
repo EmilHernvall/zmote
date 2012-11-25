@@ -70,7 +70,6 @@ public class EPGFragment extends Fragment{
 	}
     
 	
-    @SuppressWarnings("deprecation")
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -147,7 +146,8 @@ public class EPGFragment extends Fragment{
 				}
 			}
 		};
-			
+		
+		hz_scroll_time.setOnTouchListener(toutch);
 		hz_scroll.setOnTouchListener(toutch);
 		scroll_view.setOnTouchListener(toutch);
 		
@@ -236,7 +236,7 @@ public class EPGFragment extends Fragment{
     	
     	// We just change the margin of the line according to the current time
     	RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(2,height_of_rows*number_of_channels);
-    	params.setMargins(distance+110, 0, 0, 0);	// TODO: Needed some tune here
+    	params.setMargins(distance, 0, 0, 0);	// TODO: Needed some tune here
     	LinearLayout line = (LinearLayout)view.findViewById(R.id.now_line);
     	line.setVisibility(LinearLayout.VISIBLE);
     	line.setLayoutParams(params);
@@ -244,7 +244,7 @@ public class EPGFragment extends Fragment{
     	
     	// Now label
     	RelativeLayout.LayoutParams text_params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
-    	text_params.setMargins(distance+65, 0, 0, 0);
+    	text_params.setMargins(distance-45, 0, 0, 0);
     	TextView now_text = (TextView)view.findViewById(R.id.now_text);
     	now_text.setVisibility(TextView.VISIBLE);
     	now_text.setLayoutParams(text_params);
