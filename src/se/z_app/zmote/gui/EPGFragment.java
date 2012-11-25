@@ -33,6 +33,8 @@ import android.support.v4.app.Fragment;
 
 /**
  * 
+ * The fragment that handles displaying the EPG View
+ * 
  * @author Thed Mannerlof, Ralf Nilsson, Francisco Valladares, Maria Platero
  *
  */
@@ -58,6 +60,7 @@ public class EPGFragment extends Fragment{
 	private Date end;
 	private int screen_width = 0;
 	private int schedule_lenght_in_hours = 48;
+	private int distance = 0;
 	
 	private OnTouchListener toutch;
 	private int currentX = -1, currentY = -1;
@@ -182,6 +185,7 @@ public class EPGFragment extends Fragment{
 			public void onClick(View v) {
 				Intent intent = new Intent(view.getContext(), EpgHorizontalActivity.class);
 				EPGFragment.this.startActivity(intent);
+				main.vibrate();
 			}
 			
 		});
@@ -228,7 +232,7 @@ public class EPGFragment extends Fragment{
     			
     	Date now = new Date(System.currentTimeMillis());
     	long difference = now.getTime() - start.getTime();
-    	int distance = (int)(difference/60000)*(screen_width/60);
+    	distance = (int)(difference/60000)*(screen_width/60);
     	
     	// We just change the margin of the line according to the current time
     	RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(2,height_of_rows*number_of_channels);
@@ -240,7 +244,7 @@ public class EPGFragment extends Fragment{
     	
     	// Now label
     	RelativeLayout.LayoutParams text_params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
-    	text_params.setMargins(distance+110, 0, 0, 0);
+    	text_params.setMargins(distance+65, 0, 0, 0);
     	TextView now_text = (TextView)view.findViewById(R.id.now_text);
     	now_text.setVisibility(TextView.VISIBLE);
     	now_text.setLayoutParams(text_params);
@@ -249,8 +253,12 @@ public class EPGFragment extends Fragment{
     	//now_text.invalidate();	//Not sure if needed
     	
     	// Center the screen on the now line
-    	hz_scroll.scrollBy(distance, 0);
-    	hz_scroll_time.scrollBy(distance, 0);
+    	//hz_scroll.scrollBy(distance, 0);
+    	//hz_scroll_time.scrollBy(distance, 0);
+    	line.setFocusableInTouchMode(true);
+    	line.requestFocus();
+    	now_text.setFocusableInTouchMode(true);
+    	now_text.requestFocus();
 
     }
     /**
@@ -287,7 +295,7 @@ public class EPGFragment extends Fragment{
     		}
     	}
     	
-    	// Get the lenght of the schedule in hours
+    	// Get the length of the schedule in hours
     	long duration = 0;
     	if(start != null && end != null)
     		duration = end.getTime() - start.getTime();		// Duration in milliseconds
@@ -296,7 +304,7 @@ public class EPGFragment extends Fragment{
     }
     
     /**
-     * Fetch the channels
+     * Fetches the channels from the EPG and adds the channels and programs to the layout
      */
 	void mainEPG(){
 		
@@ -330,8 +338,8 @@ public class EPGFragment extends Fragment{
 	}
 
 	/**
-	 * Adding icon to the layout
-	 * @param ch
+	 * Adds a new button with channel icon to the layout
+	 * @param ch channel which the icon belongs to
 	 */
 	void addIconToLayout(Channel ch){
 		
@@ -359,7 +367,8 @@ public class EPGFragment extends Fragment{
 
 	/**
 	 * Adding programs to the layout
-	 * @param pg
+	 * @param pg the program to add
+	 * @param n_program number of the program to add
 	 */
 	void addProgramToLayout(Program pg, int n_program){
 		
@@ -433,11 +442,11 @@ public class EPGFragment extends Fragment{
 	}
 	
 	/**
-	 * Changes the icons size
-	 * @param bm
-	 * @param newHeight
-	 * @param newWidth
-	 * @return resizedBitmap
+	 * Method for changing the dimensions of a bitmap picture
+	 * @param bm the bitmap picture to be re-sized
+	 * @param newHeight the height of the re-sized bitmap picture
+	 * @param newWidth the width of the re-sized bitmap picture
+	 * @return resizedBitmap the re-sized bitmap picture
 	 */
 	public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
 	
@@ -461,7 +470,7 @@ public class EPGFragment extends Fragment{
 
 	/**
 	 * Loads the information asynchronously
-	 * @author 
+	 * @author Rasmus Holm, Francisco Valladares
 	 */
 	private class AsyncDataLoader extends AsyncTask<Integer, Integer, EPG>{
 
