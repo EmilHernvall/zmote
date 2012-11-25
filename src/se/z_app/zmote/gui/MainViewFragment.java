@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
 
-import org.junit.internal.RealSystem;
+
 
 import com.actionbarsherlock.internal.nineoldandroids.animation.Animator;
 import com.actionbarsherlock.internal.nineoldandroids.animation.Animator.AnimatorListener;
@@ -21,9 +21,7 @@ import se.z_app.stb.api.RemoteControl.Button;
 
 import se.z_app.zmote.epg.EPGContentHandler;
 import se.z_app.zmote.epg.EPGQuery;
-import se.z_app.zmote.gui.R.drawable;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.gesture.GestureOverlayView;
 import android.gesture.GestureOverlayView.OnGestureListener;

@@ -240,7 +240,6 @@ public class EPGFragment extends Fragment{
     	LinearLayout line = (LinearLayout)view.findViewById(R.id.now_line);
     	line.setVisibility(LinearLayout.VISIBLE);
     	line.setLayoutParams(params);
-    	//line.invalidate();	// Not sure if needed
     	
     	// Now label
     	RelativeLayout.LayoutParams text_params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
@@ -250,11 +249,8 @@ public class EPGFragment extends Fragment{
     	now_text.setLayoutParams(text_params);
     	now_text.setTypeface(null, Typeface.BOLD);
     	now_text.setBackgroundColor(0xBB000000);
-    	//now_text.invalidate();	//Not sure if needed
     	
     	// Center the screen on the now line
-    	//hz_scroll.scrollBy(distance, 0);
-    	//hz_scroll_time.scrollBy(distance, 0);
     	line.setFocusableInTouchMode(true);
     	line.requestFocus();
     	now_text.setFocusableInTouchMode(true);
@@ -282,23 +278,25 @@ public class EPGFragment extends Fragment{
     		    cal.add(Calendar.SECOND, prog.getDuration()); // adds one hour
     		    temp = cal.getTime();
 
-    		    if(end == null)
+    		    if(end == null){
     				end = temp;
-    			else if(end.compareTo(temp) < 0){
+    		    }else if(end.compareTo(temp) < 0){
 	    		    end = temp;
     			}
     			
-    			if(start == null)
+    			if(start == null){
     				start = prog.getStart();
-    			else if(start.compareTo(prog.getStart()) > 0)
+    			}else if(start.compareTo(prog.getStart()) > 0){
     				start = prog.getStart();
+    			}
     		}
     	}
     	
     	// Get the length of the schedule in hours
     	long duration = 0;
-    	if(start != null && end != null)
+    	if(start != null && end != null){
     		duration = end.getTime() - start.getTime();		// Duration in milliseconds
+    	}
     	schedule_lenght_in_hours = (int) (duration / (60*60*1000));
 
     }
@@ -415,13 +413,12 @@ public class EPGFragment extends Fragment{
 		text.setOnClickListener(new View.OnClickListener() {
 			
 			Program p = program_temp;
-			/* 
-			 * When a program is clicked, the channel information view is loaded */
+			/* When a program is clicked, the channel information view is loaded */
 			@Override
 			public void onClick(View v) {
-				
+
 				main.showChannelInformation(p);
-				
+	
 			}
 			
 		});
@@ -450,8 +447,9 @@ public class EPGFragment extends Fragment{
 	 */
 	public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
 	
-		if(bm == null)
+		if(bm == null){
 			return null;
+		}
 		int width = bm.getWidth();
 		int height = bm.getHeight();
 		
