@@ -134,7 +134,8 @@ public class EpgHorizontalActivity extends Activity {
 				}
 			}
 		};
-			
+		
+		hz_scroll_time.setOnTouchListener(toutch);
 		hz_scroll.setOnTouchListener(toutch);
 		scroll_view.setOnTouchListener(toutch);
 		
@@ -151,7 +152,6 @@ public class EpgHorizontalActivity extends Activity {
     public void setFlipButton(){
     	
     	ImageView flipButton = (ImageView) view.findViewById(R.id.flip_button);
-    	//flipButton.setVisibility(View.VISIBLE);
     	flipButton.setClickable(true);
     	
     	flipButton.setOnClickListener(new View.OnClickListener() {
@@ -209,25 +209,25 @@ public class EpgHorizontalActivity extends Activity {
     	
     	// We just change the margin of the line according to the current time
     	RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(2,height_of_rows*number_of_channels);
-    	params.setMargins(distance+110, 0, 0, 0);
+    	params.setMargins(distance, 0, 0, 0);
     	LinearLayout line = (LinearLayout)view.findViewById(R.id.now_line);
     	line.setVisibility(LinearLayout.VISIBLE);
     	line.setLayoutParams(params);
-    	//line.invalidate();	// Not sure if needed
     	
     	// Now label
     	RelativeLayout.LayoutParams text_params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
-    	text_params.setMargins(distance+65, 0, 0, 0);
+    	if( (distance-45) < 0 ){
+    		text_params.setMargins(distance, 0, 0, 0);
+    	}else{
+    		text_params.setMargins(distance-45, 0, 0, 0);
+    	}
     	TextView now_text = (TextView)view.findViewById(R.id.now_text);
     	now_text.setVisibility(TextView.VISIBLE);
     	now_text.setLayoutParams(text_params);
     	now_text.setTypeface(null, Typeface.BOLD);
     	now_text.setBackgroundColor(0xBB000000);
-    	//now_text.invalidate();	//Not sure if needed
     	
     	// Center the screen on the now line
-    	//hz_scroll.scrollBy(distance, 0);
-    	//hz_scroll_time.scrollBy(distance, 0);
     	line.setFocusableInTouchMode(true);
     	line.requestFocus();
     	now_text.setFocusableInTouchMode(true);
@@ -253,26 +253,27 @@ public class EpgHorizontalActivity extends Activity {
     			cal.setTime(prog.getStart()); // sets calendar time/date
     		    cal.add(Calendar.SECOND, prog.getDuration()); // adds one hour
     		    temp = cal.getTime();
-    		    //Log.i("Program time:",""+prog.getStart().getHours()+"dia "+prog.getStart().getDay());
-    			if(end == null)
+
+    		    if(end == null){
     				end = temp;
-    			else if(end.compareTo(temp) < 0){
+    			}else if(end.compareTo(temp) < 0){
 	    		    end = temp;
     			}
     			
-    			if(start == null)
+    			if(start == null){
     				start = prog.getStart();
-    			else if(start.compareTo(prog.getStart()) > 0)
+    			}else if(start.compareTo(prog.getStart()) > 0){
     				start = prog.getStart();
+    			}
     		}
     	}
     	
     	// Get the lenght of the schedule in hours
     	long duration = 0;
-    	if(start != null && end != null)
+    	if(start != null && end != null){
     		duration = end.getTime() - start.getTime();		// Duration in milliseconds
+    	}
     	schedule_lenght_in_hours = (int) (duration / (60*60*1000));
-    	//Date now = new Date(System.currentTimeMillis());
 
     }
     
@@ -387,8 +388,7 @@ public class EpgHorizontalActivity extends Activity {
 		text.setOnClickListener(new View.OnClickListener() {
 			
 			Program p = program_temp;
-			/* 
-			 * When a program is clicked, the channel information view is loaded */
+			/*  When a program is clicked, the channel information view is loaded */
 			@Override
 			public void onClick(View v) {
 			
@@ -424,8 +424,9 @@ public class EpgHorizontalActivity extends Activity {
 	 */
 	public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
 	
-		if(bm == null)
+		if(bm == null){
 			return null;
+		}
 		int width = bm.getWidth();
 		int height = bm.getHeight();
 		
