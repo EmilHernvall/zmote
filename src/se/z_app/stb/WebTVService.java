@@ -2,9 +2,9 @@ package se.z_app.stb;
 
 import android.graphics.Bitmap;
 /**
+ * Class that describes a generic WebTV service provided by the app, e.g. YouTube or Spotify.
  * 
  * @author Linus Back
- *
  */
 public class WebTVService {
 	private String id;
