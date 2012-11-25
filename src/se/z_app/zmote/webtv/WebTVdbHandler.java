@@ -11,13 +11,10 @@ import se.z_app.stb.STB;
 import se.z_app.stb.WebTVService;
 
 /**
+ * Class that handles the SQLite database for the WebTV features.
  * 
  * @author Sebastian Rauhala
- * 
- *
  */
-
-
 public class WebTVdbHandler extends SQLiteOpenHelper{
 	
 	private static final int DATABASE_VERSION=8;
@@ -35,11 +32,20 @@ public class WebTVdbHandler extends SQLiteOpenHelper{
 	      + " TEXT);";
 	
 	
+	/**
+	 * Creates a handler for the database that can be used to access and manage it.
+	 * @param context the application context
+	 */
 	public WebTVdbHandler(Context context) {
 		super(context, DATABASE_Name, null, DATABASE_VERSION);
 		// TODO Auto-generated constructor stub
 	}
 	
+	/**
+	 * Creates an array with all WebTV services available on the specified STB
+	 * @param stb - The STB from which to fetch WebTV services
+	 * @return An array with all available WebTV services
+	 */
 	public WebTVService[] selectServices(STB stb){
 		
 		SQLiteDatabase db = this.getReadableDatabase();
@@ -67,6 +73,12 @@ public class WebTVdbHandler extends SQLiteOpenHelper{
 		return serviceArr;
 	}
 	
+	/**
+	 * Updates the database information for all services in the array. 
+	 * All services must belong to the same STB.
+	 * @param stb - The STB to which the services belongs
+	 * @param service - An array with all services to update
+	 */
 	public void updateServices(STB stb, WebTVService[] service){
 		for (int i = 0; i<service.length;i++) { //not tested and I'm tired, starts from 1 or 0??
 			updateServices(stb, service[i]);
@@ -74,6 +86,11 @@ public class WebTVdbHandler extends SQLiteOpenHelper{
 		
 	}
 	
+	/**
+	 * Updates the database information for the service specified
+	 * @param stb - The STB to which the service belongs
+	 * @param service - The service to update
+	 */
 	public void updateServices (STB stb, WebTVService service){
 		System.out.println(DATABASE_CREATE);
 		SQLiteDatabase db = this.getWritableDatabase();
@@ -90,12 +107,22 @@ public class WebTVdbHandler extends SQLiteOpenHelper{
 		db.close();
 	}
 
+	/**
+	 * Called to create the database for the first time.
+	 * @param db - The database to create
+	 */
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		// TODO Auto-generated method stub
 		db.execSQL(DATABASE_CREATE);
 	}
 
+	/**
+	 * Called when the database needs to be updated
+	 * @param db - The database to update
+	 * @param oldVersion - The version of the old database
+	 * @param newVersion - The version of the new database
+	 */
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// TODO Auto-generated method stub

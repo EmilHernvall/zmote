@@ -10,7 +10,9 @@ import se.z_app.stb.api.RemoteControl;
 import se.z_app.zmote.epg.EPGQuery;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
@@ -58,12 +60,24 @@ public class EpgHorizontalActivity extends Activity {
 	
 	private OnTouchListener toutch;
 	private int currentX = -1, currentY = -1;
- 
+	private Vibrator vibe;
+	
+	public void vibrate(){
+		vibe.vibrate(95);
+	}
+	
+	/**
+	 * vibrates the phone a number a number of milliseconds.
+	 * @param ms number of milliseconds the the phone vibrates
+	 */
+	public void vibrate(int ms){
+		vibe.vibrate(ms);
+	}
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
-    	
+    	vibe = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE) ;
     	setContentView(R.layout.fragment_epg);
 		view = (RelativeLayout) this.findViewById(R.id.epg_container);
 
@@ -330,7 +344,7 @@ public class EpgHorizontalActivity extends Activity {
 			public void onClick(View v) {
 				
 				RemoteControl.instance().launch(tempChannel);
-				main.vibrate();
+				vibrate();
 			}
 		});
 		
@@ -394,7 +408,7 @@ public class EpgHorizontalActivity extends Activity {
 			
 				EPGFragment.eventProgram = p;
 				finish();
-				main.vibrate();
+				vibrate();
 			}
 			
 		});

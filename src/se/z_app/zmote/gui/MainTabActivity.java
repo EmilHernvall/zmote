@@ -520,7 +520,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	}
 	private class MyTimedTask implements Runnable{
 
-		int timeout= 500;
+		int timeout= 1000;
 		int timer = 100;
 		boolean boxactive = false;
 		boolean newBoxactive = false;
