@@ -35,6 +35,7 @@ import android.util.Log;
 
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -253,6 +254,13 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 			android.support.v4.app.FragmentTransaction ft) {
 		Fragment fragment = null;
     	boolean isNew = false;
+    	
+    	if(!tab.equals(tabWeb)){
+    		if(findViewById(R.id.search_box_webtv) != null){
+    		InputMethodManager imm = (InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(findViewById(R.id.search_box_webtv).getWindowToken(), 0);
+    		}
+    	}
     	
     	if(tab.equals(tabRC)){
     		Log.i("FragmentLog", "RC");

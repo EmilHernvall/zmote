@@ -149,27 +149,14 @@ public class WebTVFragment extends Fragment {
 
 		return view_temp;
 	}    
-
+	/*	This is not working and its really extrange (but its solved on the main tab activity)
 	@Override
 	public void onPause(){
 		InputMethodManager imm = (InputMethodManager)main.getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(view_temp.findViewById(R.id.search_box_webtv).getWindowToken(), 0);
 		super.onPause();
-	}
-	/*
-	@Override
-	public void onStop(){
-		InputMethodManager imm = (InputMethodManager)main.getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(view_temp.findViewById(R.id.search_box_webtv).getWindowToken(), 0);
-		super.onStop();
-	}
-	
-	@Override
-	public void onDestroyView(){
-		InputMethodManager imm = (InputMethodManager)main.getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(view_temp.findViewById(R.id.search_box_webtv).getWindowToken(), 0);
-		super.onDestroyView();
 	}*/
+
 	
 	/**
 	 * Calls the back-end function to get the results of a search and shows them
