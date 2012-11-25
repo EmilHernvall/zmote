@@ -157,12 +157,12 @@
             android:layout_alignParentBottom="true"
             android:orientation="vertical" >
 
-     <!--        <LinearLayout
+            <LinearLayout
                 android:id="@+id/playBarLine"
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="#33B5E5">
-             </LinearLayout>  -->
+                android:layout_height="3dp"
+                android:background="#33B5E5" >
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -184,6 +184,8 @@
                     android:id="@+id/play_button"
                     android:layout_width="39dp"
                     android:layout_height="39dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
                     android:background="@drawable/play_button"
                     android:baselineAlignBottom="true"
                     android:contentDescription="@string/search" />
@@ -195,7 +197,6 @@
                     android:background="@drawable/next_button"
                     android:baselineAlignBottom="true"
                     android:contentDescription="@string/search" />
-               
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>

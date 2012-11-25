@@ -127,10 +127,6 @@ public class WebTVFragment extends Fragment {
 				linLay.setVisibility(View.VISIBLE);
 				LinearLayout linLayResult = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
 				linLayResult.setVisibility(View.GONE);
-	//			LinearLayout playBarLine = (LinearLayout) view_temp.findViewById(R.id.playBarLine);
-	//			playBarLine.setVisibility(View.GONE);
-				LinearLayout playBar = (LinearLayout) view_temp.findViewById(R.id.play_results_ly);
-				playBar.setVisibility(View.GONE);
 				LinearLayout noSearch = (LinearLayout) view_temp.findViewById(R.id.noSearch);
 				noSearch.setVisibility(View.GONE);
 				LinearLayout noSearchLine = (LinearLayout) view_temp.findViewById(R.id.noSearchLine);
@@ -141,10 +137,6 @@ public class WebTVFragment extends Fragment {
 		//Default view when first entering the webTV view
 		LinearLayout linLayStart = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
 		linLayStart.setVisibility(View.GONE);	
-//		LinearLayout playBarLine = (LinearLayout) view_temp.findViewById(R.id.playBarLine);
-//		playBarLine.setVisibility(View.GONE);
-		LinearLayout playBar = (LinearLayout) view_temp.findViewById(R.id.play_results_ly);
-		playBar.setVisibility(View.GONE);
 		LinearLayout noSearch = (LinearLayout) view_temp.findViewById(R.id.noSearch);
 		noSearch.setVisibility(View.GONE);
 		LinearLayout noSearchLine = (LinearLayout) view_temp.findViewById(R.id.noSearchLine);
@@ -310,14 +302,6 @@ public class WebTVFragment extends Fragment {
 	 * @Author Emma Axelsson & Maria Platero
 	 */
 	public void addPlayBar(){
-		RelativeLayout playBarPlacement = (RelativeLayout) view_temp.findViewById(R.id.playBarPlacement);
-//		LinearLayout playBarLine = (LinearLayout) view_temp.findViewById(R.id.playBarLine);
-		LinearLayout playBar = (LinearLayout) view_temp.findViewById(R.id.play_results_ly);
-		playBar.setVisibility(View.VISIBLE);
-		playBar.setBackgroundColor(0xFF000000);
-	//	playBarLine.setVisibility(View.VISIBLE);
-		playBarPlacement.setVisibility(View.VISIBLE);
-		playBarPlacement.setBackgroundColor(0x00000000);
 
 		play_button = (ImageButton) view_temp.findViewById(R.id.play_button);
 		next_button = (ImageButton) view_temp.findViewById(R.id.next_button);
