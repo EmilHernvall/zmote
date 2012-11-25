@@ -5,35 +5,25 @@ import java.util.List;
 import se.z_app.stb.WebTVItem;
 import se.z_app.stb.WebTVService;
 import se.z_app.zmote.webtv.WebTVQuery;
-import android.R.drawable;
-import android.app.Activity;
-import android.content.ClipData.Item;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.WebSettings;
-import android.webkit.WebView.FindListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import se.z_app.stb.api.*;
@@ -108,7 +98,7 @@ public class WebTVFragment extends Fragment {
 				LinearLayout linLayResult = (LinearLayout) view_temp.findViewById(R.id.resultsBar);
 				linLayResult.setVisibility(View.VISIBLE);	
 				addPlayBar();
-				
+
 				InputMethodManager imm = (InputMethodManager)main.getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(view_temp.findViewById(R.id.search_box_webtv).getWindowToken(), 0);
 			}
@@ -150,7 +140,7 @@ public class WebTVFragment extends Fragment {
 		super.onPause();
 	}*/
 
-	
+
 	/**
 	 * Calls the back-end function to get the results of a search and shows them
 	 * @author Francisco
@@ -169,7 +159,7 @@ public class WebTVFragment extends Fragment {
 			new AsyncWebSearch().execute();
 			return true;
 		}
-		
+
 		else {
 			return false;
 		}
@@ -271,10 +261,10 @@ public class WebTVFragment extends Fragment {
 				public void onClick(View v) {
 					main.vibrate();
 					WebTVCommand.instance().play(resultItem);
-			    	
+
 					item.setBackgroundColor(0x8833B5E5);
 					item2.setBackgroundColor(0x8833B5E5);
-					
+
 					//To restore the color after a few milliseconds
 					new Thread(new Runnable() {
 						@Override
@@ -285,11 +275,11 @@ public class WebTVFragment extends Fragment {
 
 							}
 							main.runOnUiThread(new Runnable() {
-									@Override
-									public void run() {
-										item.setBackgroundColor(0xFF999999);
-							    		item2.setBackgroundColor(0xFF999999);
-									}
+								@Override
+								public void run() {
+									item.setBackgroundColor(0xFF999999);
+									item2.setBackgroundColor(0xFF999999);
+								}
 							});
 						}
 					}).start();
@@ -303,10 +293,10 @@ public class WebTVFragment extends Fragment {
 				public void onClick(View v) {
 					main.vibrate();
 					WebTVCommand.instance().queue(queueItem);
-					
+
 					item.setBackgroundColor(0xFFCCCCCC);
 					item2.setBackgroundColor(0xFFCCCCCC);
-					
+
 					//To restore the color after a few milliseconds
 					new Thread(new Runnable() {
 						@Override
@@ -317,15 +307,14 @@ public class WebTVFragment extends Fragment {
 
 							}
 							main.runOnUiThread(new Runnable() {
-									@Override
-									public void run() {
-										item.setBackgroundColor(0xFF999999);
-							    		item2.setBackgroundColor(0xFF999999);
-									}
+								@Override
+								public void run() {
+									item.setBackgroundColor(0xFF999999);
+									item2.setBackgroundColor(0xFF999999);
+								}
 							});
 						}
 					}).start();
-
 				}
 			});
 		}

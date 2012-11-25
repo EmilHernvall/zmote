@@ -1,6 +1,5 @@
 package se.z_app.zmote.webtv;
 
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -19,26 +18,34 @@ import se.z_app.stb.WebTVService;
 import se.z_app.stb.api.WebTVCommand;
 
 /**
+ * Class that handles requests to perform tasks with WebTV related content
  * 
- * @author Sebastian
- * 
- *
+ * @author Sebastian Rauhala
  */
-
 public class WebTVQuery {
 	private String defaultDir;
 	
-	
-	
+	/**
+	 * Creates a new WebTVQuery with an associated folder in the media storage on the phone 
+	 */
 	public WebTVQuery(){
 		defaultDir = Environment.getExternalStorageDirectory().getAbsolutePath()+"/zmote";
 		new File(defaultDir).mkdirs();
 	}
 	
+	/**
+	 * Fetches all WebTV services available
+	 * @return An array with all available WebTV services
+	 */
 	public WebTVService[] getService(){
 		return WebTVCommand.instance().getService();
 	}
 	
+	/**
+	 * Sets the correct icon for the WebTV service
+	 * @param service - The service for which to set the icon
+	 * @return The image set as icon for the service
+	 */
 	public Bitmap populateWithIcon(WebTVService service){
 		populateWithIconFromCache(service);
 		
@@ -57,8 +64,10 @@ public class WebTVQuery {
 		return b;
 	}
 	
-	
-	
+	/**
+	 * Sets the correct icons for the WebTV services
+	 * @param services[] - The services for which to set the icons
+	 */
 	public void populateWithIcon(WebTVService services[]){
 		populateWithIconFromCache(services);
 		
@@ -73,6 +82,11 @@ public class WebTVQuery {
 		saveIconsToCache(services);
 	}
 
+	/**
+	 * Sets the correct icon for the WebTV item
+	 * @param item - The item for which to set the icon
+	 * @return The image set as icon for the item
+	 */
 	public Bitmap populateWithIcon(WebTVItem item){
 		Bitmap b = null;
 		if(item.getIconURL().startsWith("http://")){
@@ -84,43 +98,59 @@ public class WebTVQuery {
 		return b;
 	}
 	
+	/**
+	 * Sets the correct icons for the WebTV items
+	 * @param item[] - The items for which to set the icons
+	 */
 	public void populateWithIcon(WebTVItem item[]){
 		for(WebTVItem ite : item){
 			populateWithIcon(ite);
 		}
 	}
 	
+	/**
+	 * Searches for WebTV content in a specified WebTV service
+	 * @param q - A string with the search term
+	 * @param s - The WebTV service to search in
+	 * @return An array with all items matchiong the search string
+	 */
 	public WebTVItem[] search(String q, WebTVService s){
 		return WebTVCommand.instance().search(q, s);
 	}
 
+	/**
+	 * Plays a specified WebTV item
+	 * @param item - The item to be played
+	 */
 	public void play(WebTVItem item){
 		WebTVCommand.instance().play(item);
 	}
 	
+	/**
+	 * Puts a WebTV item into the play queue
+	 * @param item - The item to be placed in the queue
+	 */
 	public void queue(WebTVItem item){
 		WebTVCommand.instance().queue(item);
 	}
 	
-	
-	
-	
-	//Cacheing stuff
-	
+	/**
+	 * Sets the cached icon for the specified service.
+	 * @param services - The service to set the icon for
+	 */
 	private void populateWithIconFromCache(WebTVService services){
-		
-		//System.out.println("Populating here 1");
 		String iconPath = defaultDir+"/"+services.getID()+".png";
 		File iconFile = new File(iconPath);
 		if(iconFile.exists()){
 			services.setIcon(BitmapFactory.decodeFile(iconPath));
 		}
-	
 	}
 	
+	/**
+	 * Sets the cached icon for the specified services.
+	 * @param services[] - An array with all services to set icons for.
+	 */
 	private void populateWithIconFromCache(WebTVService services[]){
-		//System.out.println("Populating here 2");
-		
 		for (WebTVService webTVService : services) {
 			String iconPath = defaultDir+"/"+webTVService.getID()+".png";
 			File iconFile = new File(iconPath);
@@ -130,9 +160,11 @@ public class WebTVQuery {
 		}
 	}
 	
-	
+	/**
+	 * Saves the icon for the specified service to the cache
+	 * @param services - The service to save the icon for
+	 */
 	private void saveIconsToCache(WebTVService services){
-		//System.out.println("Saving here 1");
 		if(services.getIcon() != null){
 			String iconPath = defaultDir+"/"+services.getID()+".png";	
 			FileOutputStream out;
@@ -145,14 +177,15 @@ public class WebTVQuery {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
-			}
-			
+			}	
 		}
-		
 	}
 	
+	/**
+	 * Saves the icons for the specified services to the cache
+	 * @param services[] - The services to save the icons for
+	 */
 	private void saveIconsToCache(WebTVService services[]){
-		//System.out.println("Saving here 2");
 		for (WebTVService webTVService : services) {
 			if(webTVService.getIcon() != null){
 				String iconPath = defaultDir+"/"+webTVService.getID()+".png";
@@ -168,12 +201,15 @@ public class WebTVQuery {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				
 			}
 		}
 	}
 	
-	
+	/**
+	 * Fetches the image at the specified URL
+	 * @param urlStr - The URL to the desired image
+	 * @return The image as a bitmap
+	 */
 	public Bitmap getImage(String urlStr){
 		URL url;
 		Bitmap theImage = null;

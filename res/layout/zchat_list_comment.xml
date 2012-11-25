@@ -7,7 +7,7 @@
     android:paddingLeft="8dip" >
 
     <TextView
-        android:id="@+id/post_user_name"
+        android:id="@+id/comment_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -19,43 +19,32 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/post_date"
+        android:id="@+id/comment_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/post_user_name"
+        android:layout_toLeftOf="@+id/comment_user_name"
         android:textColor="#000000"
         android:textSize="8sp" />
 
     <TextView
-        android:id="@+id/post_content"
+        android:id="@+id/comment_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/post_user_name"
+        android:layout_below="@+id/comment_user_name"
         android:layout_centerVertical="true"
         android:textColor="#000000"
         android:textSize="14sp" />
 
     <TextView
-        android:id="@+id/post_nr_of_comments"
+        android:id="@+id/comment_nr_of_comments"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/post_content"
+        android:layout_below="@+id/comment_content"
         android:textColor="#000000"
         android:textSize="8sp" />
-
-    <ListView
-        android:id="@+id/list_over_comments"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="2dip"
-        android:background="#CCCCCC"
-        android:divider="#000000"
-        android:dividerHeight="2dp"
-        android:orientation="vertical" >
-    </ListView>
 
 </RelativeLayout>
