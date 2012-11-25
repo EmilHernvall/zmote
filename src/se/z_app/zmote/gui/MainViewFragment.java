@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.junit.internal.RealSystem;
+
 import com.actionbarsherlock.internal.nineoldandroids.animation.Animator;
 import com.actionbarsherlock.internal.nineoldandroids.animation.Animator.AnimatorListener;
 import com.actionbarsherlock.internal.nineoldandroids.animation.AnimatorSet;
@@ -21,6 +23,7 @@ import se.z_app.zmote.epg.EPGContentHandler;
 import se.z_app.zmote.epg.EPGQuery;
 import se.z_app.zmote.gui.R.drawable;
 
+import android.annotation.SuppressLint;
 import android.gesture.GestureOverlayView;
 import android.gesture.GestureOverlayView.OnGestureListener;
 
@@ -38,6 +41,7 @@ import android.view.View;
 
 import android.view.ViewGroup;
 
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -667,26 +671,46 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 		r.addView(right);
 		r.addView(rightright);
 
-		programWrapper = new LinearLayout(r.getContext());
-		programWrapper.setOrientation(LinearLayout.VERTICAL);
+		RelativeLayout wrapper = new RelativeLayout(r.getContext());
 		params1 = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		params1.setMargins(20, screenheight-centerHight-voldownHight+2*padding, 20, voldownHight);
-
-		programWrapper.setLayoutParams(params1);
-
+		wrapper.setLayoutParams(params1);
+		
+		programWrapper = new LinearLayout(r.getContext());
+		programWrapper.setOrientation(LinearLayout.VERTICAL);
+		//params1 = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		//params1.setMargins(20, screenheight-centerHight-voldownHight+2*padding, 20, voldownHight);
+		//programWrapper.setLayoutParams(params1);
+		
+		
+		
+		LinearLayout firstLineWrapper = new LinearLayout(r.getContext());
+		firstLineWrapper.setOrientation(LinearLayout.HORIZONTAL);
+		
 		channelName = new TextView(v.getContext());
 		channelName.setTextColor(0xFFFFFFFF);
-		programProgress = new ProgressBar(v.getContext(), null, android.R.attr.progressBarStyleHorizontal);	
+		
+//		ImageButton socialIcon = new ImageButton(r.getContext());
+//		socialIcon.setBackgroundDrawable(r.getResources().getDrawable(R.drawable.social_icon_light));
+		
+		
+		programProgress = new ProgressBar(v.getContext(), null, android.R.attr.progressBarStyleHorizontal);
+
+		
 		programText = new TextView(v.getContext());
 		programText.setTextColor(0xFFFFFFFF);
 
 		showText();
 
+		
+		
 		programWrapper.addView(channelName);
 		programWrapper.addView(programProgress);
 		programWrapper.addView(programText);
 
-		r.addView(programWrapper);
+		wrapper.addView(programWrapper);
+		
+		r.addView(wrapper);
 	}
 
 	private void hideText(){
