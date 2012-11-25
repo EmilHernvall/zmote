@@ -1,5 +1,10 @@
 package se.z_app.stb.api;
 
+/**
+ * Creates an API factory where all interfaces are null.
+ * @author Rasmus Holm
+ *
+ */
 public class APIFactoryNull extends AbstractAPIFactory{
 
 	@Override
