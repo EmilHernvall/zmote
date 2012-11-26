@@ -11,6 +11,7 @@ public class WebTVService {
 	private String name;
 	private Bitmap icon;
 	private String iconURL;
+	private long dateOfCreation;
 	
 	
 	public String getID() {
@@ -36,5 +37,13 @@ public class WebTVService {
 	}
 	public void setIconURL(String iconURL) {
 		this.iconURL = iconURL;
+	}
+	public void setDateOfCreation(long dateOfCreation) {
+		// TODO Auto-generated method stub
+		this.dateOfCreation = dateOfCreation;
+	}
+	
+	public long getDateOfCreation(){
+		return dateOfCreation;
 	}
 }

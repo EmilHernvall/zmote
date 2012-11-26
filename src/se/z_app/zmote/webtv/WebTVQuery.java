@@ -70,11 +70,13 @@ public class WebTVQuery extends Observable implements Observer, Runnable {
 	public void buildWebTVdb(){
 		if (theContext != null){
 			db = new WebTVdbHandler(theContext);
+			WebTVService servicedatecrated = db.selectTimeCreated(STBContainer.instance().getActiveSTB());
 			WebTVService[] services = db.selectServices(STBContainer.instance().getActiveSTB());
-			if (services == null){
+			if (services == null || servicedatecrated.getDateOfCreation() < System.currentTimeMillis() + updateIntervalMillis){
 				Log.i("WebTVQuery test", "WebTVQuary test WebTV service == Null");
 				WebTvServices = WebTVCommand.instance().getService();
 				db.updateServices(STBContainer.instance().getActiveSTB(), WebTvServices);
+				db.updateDateOfCreation(STBContainer.instance().getActiveSTB());
 			}
 			else{
 				Log.i("WebTVQuery test", "WebTVQuary test WebTV service != Null ");
