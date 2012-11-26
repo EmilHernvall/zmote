@@ -260,6 +260,7 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+			    break;
 			case PLAYWEBTV:
 				httpclient = new DefaultHttpClient();
 				httpGet = new HttpGet("http://" + address +"/mdio/webtv/play?url=webtv:"+arg1);
