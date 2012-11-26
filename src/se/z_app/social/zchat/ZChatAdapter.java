@@ -72,8 +72,8 @@ public class ZChatAdapter{
 				Post thePost = new Post();
 				thePost.setFeed(theFeed);
 				thePost.setContent(jsonPost.getString("content"));
-
-				/* Get the name of the user who commited the post */
+				thePost.setUserName(jsonPost.getString("username"));
+				/* Get the name of the user who commited the post *//*
 				String usernameID = URLEncoder.encode(jsonPost.getString("user_id"));
 				String userURLString = "http://" + serverAdress +"/post/get_user_by_id?id="+usernameID;
 				String jsonUser = getJSON(userURLString, 4096);
