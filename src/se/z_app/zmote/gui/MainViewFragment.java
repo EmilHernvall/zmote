@@ -248,6 +248,10 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 		if(currentChannelNr == channelNr){
 			return;
 		}
+		
+		int size = imageList.size(); 
+		channelNr = (channelNr+size)%size;
+		
 		rotateToChannel(channelNr);
 
 		Channel channel = channelList.get(channelNr);
