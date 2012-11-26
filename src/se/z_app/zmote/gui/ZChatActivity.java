@@ -69,13 +69,6 @@ public class ZChatActivity extends SherlockActivity {
 		super.onCreate(savedInstanceState);
 
 		setUserName();
-
-		//TODO remove the hardcoded username from app only used because
-		//the rails server only accepts some names. Names that work are:
-		// Linus, Marcus
-		userName="Linus";
-		//------------------
-
 		myActivity = this;
 		setContentView(R.layout.activity_zchat);
 
