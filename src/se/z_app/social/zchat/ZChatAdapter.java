@@ -190,7 +190,7 @@ public class ZChatAdapter{
 				"&hours=" + hours +
 				"&minutes=" + minutes +
 				"";
-		Log.e("ZCHAT", "userURLString" + userURLString);
+		//Log.e("ZCHAT", "userURLString" + userURLString);
 
 		/* Get the JSON object when saving the post so we can set the ID of the post */
 		String postJSONString = getJSON(userURLString, 4096);
