@@ -54,6 +54,7 @@ public class ZChatActivity extends SherlockActivity {
 	private ZChatActivity myActivity;
 	private ListView postList;
 	private Object syncLock = new Object();
+	private TimedUpdate timedUpdate;
 	private int timeBeforeFirstUpdate = 5000;
 	private int timeBetweenUpdates = 5000;
 
@@ -88,8 +89,20 @@ public class ZChatActivity extends SherlockActivity {
 		Button postButton = (Button) findViewById(R.id.post_button);
 
 		postButton.setOnClickListener(new PostButtonListener(myActivity, postList));
-		new Timer().schedule(new TimedUpdate(), timeBeforeFirstUpdate, timeBetweenUpdates);
+		
 
+
+	}
+
+	public void onStart(){
+		super.onStart();
+		timedUpdate = new TimedUpdate(timeBeforeFirstUpdate, timeBetweenUpdates);
+		new Thread(timedUpdate).start();
+		
+	}
+	public void onStop(){
+		super.onStop();
+		timedUpdate.stopRunning();
 	}
 
 
@@ -103,7 +116,7 @@ public class ZChatActivity extends SherlockActivity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
+
 
 
 
@@ -391,22 +404,62 @@ public class ZChatActivity extends SherlockActivity {
 	}
 
 
-	private class TimedUpdate extends TimerTask{
-
+	private class TimedUpdate implements Runnable{
+		private boolean isRunning;
+		private int timeBeforeFirstUpdate;
+		private int timeBetweenUpdates;
+		private Object TimedSyncLock = new Object();
+		
+		public TimedUpdate(int timeBeforeFirstUpdate, int timeBetweenUpdates) {
+			this.timeBeforeFirstUpdate = timeBeforeFirstUpdate;
+			this.timeBetweenUpdates = timeBetweenUpdates;
+			isRunning = true;
+			
+		}
+		public boolean isRunning(){
+			synchronized (TimedSyncLock){
+				return isRunning;
+			}
+		}
+		public void stopRunning(){
+			synchronized (TimedSyncLock){
+				isRunning = false;
+			}
+		}
+		
+		
 		@Override
 		public void run() {
-			Feed newFeed = getAdapter().getFeed(getMyProgram());
-			if(newFeed.getLastUpdated().after(getFeed().getLastUpdated())){
-				setFeed(newFeed);
-				runOnUiThread(new Runnable() {
-					
-					@Override
-					public void run() {
-						postList.setAdapter(new FragmentAdabter(myActivity, getFeed()));
-						
-					}
-				});
+			try {
+				Thread.sleep(timeBeforeFirstUpdate);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+			while(isRunning()){
+				Feed newFeed = getAdapter().getFeed(getMyProgram());
+				
+				if(newFeed.getLastUpdated().after(getFeed().getLastUpdated())){
+					setFeed(newFeed);
+					runOnUiThread(new Runnable() {
+
+						@Override
+						public void run() {
+							postList.setAdapter(new FragmentAdabter(myActivity, getFeed()));
+
+						}
+					});
+				}
+				try {
+					Thread.sleep(timeBetweenUpdates);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			
+			}
+			
+			
 
 		}
 
