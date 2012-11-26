@@ -82,6 +82,7 @@ public class ZChatActivity extends SherlockActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		postList = (ListView) findViewById(R.id.list_over_post);
+		postList.setItemsCanFocus(true);
 
 		TextView textView = (TextView) findViewById(R.id.feed_name);
 		textView.setText("Feed for: '"+getMyProgram().getName()+"'");

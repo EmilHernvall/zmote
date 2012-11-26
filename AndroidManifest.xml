@@ -35,7 +35,7 @@
             android:name=".ZChatActivity"
             android:label="@string/title_activity_zchat"
             android:screenOrientation="portrait" 
-            android:windowSoftInputMode="stateHidden">
+            android:windowSoftInputMode="adjustPan">
 
         </activity>            
         <activity
