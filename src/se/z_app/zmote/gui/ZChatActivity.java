@@ -3,6 +3,8 @@ package se.z_app.zmote.gui;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
@@ -15,8 +17,10 @@ import se.z_app.social.zchat.ZChatAdapter;
 import se.z_app.social.Post;
 import se.z_app.stb.Program;
 
-import se.z_app.zmote.epg.EPGContentHandler;
-import android.app.Activity;
+
+import android.accounts.Account;
+import android.accounts.AccountManager;
+
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,15 +29,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
-import android.view.ViewStub;
-import android.widget.AbsListView;
+
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+
 import android.widget.ListView;
-import android.widget.RelativeLayout;
+
 import android.widget.TextView;
 
 /**
@@ -42,71 +44,151 @@ import android.widget.TextView;
  * @author Linus Back
  */
 public class ZChatActivity extends SherlockActivity {
-	
+
 	public static Program targetProgram;
-	private final static ZChatAdapter adapter = new ZChatAdapter();
-	
+	private final ZChatAdapter adapter = new ZChatAdapter();
+
 	private Program myProgram;
 	private Feed myFeed;
-	private String userName = "Linus";
-	
+	private String userName = null;
+	private ZChatActivity myActivity;
+	private ListView postList;
+	private Object syncLock = new Object();
+	private int timeBeforeFirstUpdate = 5000;
+	private int timeBetweenUpdates = 5000;
+
+
 	public ZChatActivity(){
 		myProgram = targetProgram;
 		targetProgram = null;
+
 	}
 
 
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-		
-		ZChatActivity myActivity = this;
+
+		setUserName();
+
+		//TODO remove the hardcoded username from app only used because
+		//the rails server only accepts some names. Names that work are:
+		// Linus, Marcus
+		userName="Linus";
+		//------------------
+
+		myActivity = this;
 		setContentView(R.layout.activity_zchat);
-	 
+
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		ListView postList = (ListView) findViewById(R.id.list_over_post);
-		
+		postList = (ListView) findViewById(R.id.list_over_post);
+
 		TextView textView = (TextView) findViewById(R.id.feed_name);
-		textView.setText(myProgram.getName());
+		textView.setText("Feed for: '"+getMyProgram().getName()+"'");
 
 		//TODO fix so it depends on the last added post.
 		textView = (TextView) findViewById(R.id.time_of_feedUpdate);
-		textView.setText("50 min ago");
+		//textView.setText("50 min ago");
 
 
 		new AsyncDataLoader(this, postList).execute();
 
 
-		
+
 		Button postButton = (Button) findViewById(R.id.post_button);
+
 		postButton.setOnClickListener(new PostButtonListener(myActivity, postList));
+		new Timer().schedule(new TimedUpdate(), timeBeforeFirstUpdate, timeBetweenUpdates);
 
 	}
+
+
 	public boolean onOptionsItemSelected(MenuItem item) {
-	    switch (item.getItemId()) {
-	        case android.R.id.home:
-	           
-	        	super.onBackPressed();
-	            return true;
-	        default:
-	            return super.onOptionsItemSelected(item);
-	    }
+		switch (item.getItemId()) {
+		case android.R.id.home:
+
+			super.onBackPressed();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 	
 
 
 
+	/**
+	 * Sets the user name to a user name of the device.
+	 * First tries to set it to facebook name, if non exists
+	 * sets it to the google account.
+	 */
+	private void setUserName(){
+		AccountManager accountManager = AccountManager.get(this); 
+		// Account[] account = accountManager.getAccountsByType("com.google");
+		Account[] accounts = accountManager.getAccounts();
+		boolean foundGoogleAcc= false;
+		for(int i=0; i<accounts.length;i++){
+			if(accounts[i].type.equals("com.sec.android.app.sns3.facebook")){
+				userName = accounts[i].name;
+				return;
+			}
+			if(accounts[i].type.equals("com.google")&& !foundGoogleAcc){
+				userName = accounts[i].name.split("@")[0].replace(".", " ");
+				foundGoogleAcc = true;
+			}
+		}
+
+		if(userName!=null){
+			return;
+		}
+		else if(accounts[0]!=null){
+			String temp = accounts[0].name;
+			if(temp.contains("@")){
+				userName = accounts[0].name.split("@")[0].replace(".", " ");
+				return;
+			}else{
+				userName = accounts[0].name.replace(".", " ");
+				return;
+			}
+
+
+		}
+		userName = "userName";   
+
+
+
+	}
+
+	private void setFeed(Feed feed){
+		synchronized (syncLock) {
+			myFeed = feed;
+		}
+	}
+
+	private Feed getFeed(){
+		synchronized (syncLock) {
+			return myFeed;
+		}
+	}
+	private synchronized ZChatAdapter getAdapter(){
+		return adapter;
+	}
+
+	private synchronized Program getMyProgram(){
+		return myProgram;
+	}
+
 
 	private class FragmentAdabter extends BaseAdapter{
 
 		private ZChatActivity zChatActivity;
-		private Feed feed;
+
 		private ArrayList<PostInterface> list;
 
 
 		public FragmentAdabter(ZChatActivity zChatActivity , Feed feed){
 			this.zChatActivity = zChatActivity;
-			this.feed = feed;
+
 			Iterator<Post> iter = feed.iterator();
 			list = new ArrayList<PostInterface>();
 			while(iter.hasNext()){
@@ -137,47 +219,53 @@ public class ZChatActivity extends SherlockActivity {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			//TODO Remove the sysouts
-			//System.out.println("This is the ID of the post: "+ list.get(position).getId());
-			//System.out.println("The number of comments are: "+list.get(position).getCommentsAsCollection().size());
-
 			View vi=convertView;
-			if(convertView==null){
-				vi = ((LayoutInflater)zChatActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.zchat_list, null);
-			}
-			
-			TextView userName = (TextView) vi.findViewById(R.id.post_user_name);
-			TextView date = (TextView) vi.findViewById(R.id.post_date);
-			TextView content = (TextView) vi.findViewById(R.id.post_content);
-			TextView nrOfComments = (TextView) vi.findViewById(R.id.post_nr_of_comments);
-
-	
-			userName.setText(list.get(position).getUserName());
-			date.setText(list.get(position).getDateOfCreation().toString());
-			content.setText(list.get(position).getContent());
 			if(list.get(position) instanceof Post){
-				nrOfComments.setText(((Post) list.get(position)).getComments().length + " comments");
-				RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-				ImageView layout = (ImageView) vi.findViewById(R.id.post_layout_view);
-				layout.bringToFront();
-				layout.setLayoutParams(lp);
-			}else{
-				nrOfComments.setText(null);
-				RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(45, LayoutParams.MATCH_PARENT);
-				ImageView layout = (ImageView) vi.findViewById(R.id.post_layout_view);
-				layout.bringToFront();
-				layout.setLayoutParams(lp);
-				
-			}
-			//nrOfComments.setText(list.get(position).getComments().length + " comments");
+				Post post = (Post) list.get(position);
 
-			/*ListView commitList = (ListView) vi.findViewById(R.id.list_over_comments);
-			commitList.setAdapter(new CommitAdabter(list.get(position), zChatActivity));*/
+				vi = ((LayoutInflater)zChatActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.zchat_list, null);
+
+				TextView userName = (TextView) vi.findViewById(R.id.post_user_name);
+				TextView date = (TextView) vi.findViewById(R.id.post_date);
+				TextView content = (TextView) vi.findViewById(R.id.post_content);
+				TextView nrOfComments = (TextView) vi.findViewById(R.id.post_nr_of_comments);
+
+
+				userName.setText(post.getUserName());
+				date.setText(post.getDateOfCreation().toString());
+				content.setText(post.getContent());
+
+				nrOfComments.setText(post.getComments().length + " comments");
+				Button commentButton = (Button) vi.findViewById(R.id.comment_button);
+				commentButton.setOnClickListener(new CommentButtonListener(post, myActivity, postList, vi));
+
+
+
+			}else{
+				Comment comment = (Comment) list.get(position);
+
+				vi = ((LayoutInflater)zChatActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.zchat_list_comment, null);
+
+
+				TextView userName = (TextView) vi.findViewById(R.id.comment_user_name);
+				TextView date = (TextView) vi.findViewById(R.id.comment_date);
+				TextView content = (TextView) vi.findViewById(R.id.comment_content);
+
+
+				userName.setText(comment.getUserName());
+				date.setText(comment.getDateOfCreation().toString());
+				content.setText(comment.getContent());
+
+
+
+
+			}
+
 			return vi;
 		}
 	}
-	
-	
+
+
 	private class AsyncDataLoader extends AsyncTask<Integer, Integer, Feed>{
 
 		private ListView postList;
@@ -186,24 +274,18 @@ public class ZChatActivity extends SherlockActivity {
 			this.postList = postList;
 			this.activity = activity;
 		}
+
 		@Override
 		protected Feed doInBackground(Integer... arg0) {
-
-			
-			//TODO return adapter.getFeed(programName);
-			//System.out.println(EPGContentHandler.instance().getEPG().iterator().next().iterator().next().getName());
-			//return adapter.getFeed(EPGContentHandler.instance().getEPG().iterator().next().iterator().next());
-			return adapter.getFeed(myProgram);
-
+			return getAdapter().getFeed(getMyProgram());
 		}
 
 		protected void onPostExecute(Feed feed){
-			myFeed = feed;
+			setFeed(feed);
 			postList.setAdapter(new FragmentAdabter(activity, feed));
-
 		}
-
 	}
+
 
 	private class CommitPost extends AsyncTask<Integer, Integer, Feed>{
 		private ListView postList;
@@ -217,34 +299,87 @@ public class ZChatActivity extends SherlockActivity {
 		}
 		@Override
 		protected Feed doInBackground(Integer... arg0) {
-			System.out.println("Starting Do in backround");
+
 			Post post = new Post();
 			post.setContent(content);
-			post.setFeed(myFeed);
+			post.setFeed(getFeed());
 			post.setUserName(userName);
 			post.setDateOfCreation(new Date());
 			post.setLastUpdate(new Date());
-			System.out.println("Created post");
-			
-			Feed newFeed = adapter.commitPost(myFeed, post);
-			System.out.println("got feed");
+
+			Feed newFeed = getAdapter().commitPost(getFeed(), post);
+
 			return newFeed;
 		}
-
 		protected void onPostExecute(Feed feed){
-			//TODO remove te sysout
-			System.out.println("On post on the commitPost was done atleast: " + feed.equals(myFeed));
-			myFeed = feed;
+
+			setFeed(feed);
 			postList.setAdapter(new FragmentAdabter(activity, feed));
 
 		}
 	}
 
+
+	private class CommitComment extends AsyncTask<Integer, Integer, Feed>{
+		private ZChatActivity zChat;
+		private ListView list;
+		private Post post;
+		private String content;
+
+		public CommitComment(ZChatActivity zChat, ListView list, Post post,
+				String string) {
+			this.content = string;
+			this.list = list;
+			this.zChat = zChat;
+			this.post = post;
+		}
+
+		@Override
+		protected Feed doInBackground(Integer... params) {
+			Comment comment = new Comment(post);
+			comment.setContent(content);
+			comment.setDateOfCreation(new Date());
+			comment.setUserName(userName);
+			Feed feed = getAdapter().commitComment(getFeed(), post, comment);
+			return feed;
+		}
+		protected void onPostExecute(Feed feed){
+
+			setFeed(feed);
+			list.setAdapter(new FragmentAdabter(zChat, feed));
+
+		}
+
+
+	}
+
+	private class CommentButtonListener implements OnClickListener{
+
+		private Post post;
+		private ZChatActivity zChat;
+		private ListView list;
+		private View view;
+
+		public CommentButtonListener(Post post, ZChatActivity zChat, ListView list, View view){
+			this.list = list;
+			this.post = post;
+			this.zChat = zChat;
+			this.view = view;
+		}
+		@Override
+		public void onClick(View v) {
+			EditText edit = (EditText) view.findViewById(R.id.new_comment);
+			new CommitComment(zChat, list, post, edit.getText().toString()).execute();
+
+		}
+
+	}
 	private class PostButtonListener implements OnClickListener{
 
 		private ZChatActivity activity;
 		private ListView postList;
-		private String content;
+
+
 		public PostButtonListener(ZChatActivity activity ,ListView postList){
 			this.activity = activity;
 
@@ -252,15 +387,40 @@ public class ZChatActivity extends SherlockActivity {
 		}
 		@Override
 		public void onClick(View v) {
-			//TODO remove the sysouyt
-			System.out.println("Post was Pressed mutcherfucker");
+
 			EditText edit = (EditText) findViewById(R.id.new_post);
-			
+
 			new CommitPost(activity, postList, edit.getText().toString()).execute();
-			
+
 		}
 
 	}
+
+
+	private class TimedUpdate extends TimerTask{
+
+		@Override
+		public void run() {
+			Feed newFeed = getAdapter().getFeed(getMyProgram());
+			if(newFeed.getLastUpdated().after(getFeed().getLastUpdated())){
+				setFeed(newFeed);
+				runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						postList.setAdapter(new FragmentAdabter(myActivity, getFeed()));
+						
+					}
+				});
+			}
+
+		}
+
+	}
+
+
+
+
 
 }
 

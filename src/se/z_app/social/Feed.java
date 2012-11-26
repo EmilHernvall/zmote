@@ -1,6 +1,7 @@
 package se.z_app.social;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import se.z_app.stb.Program;
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentSkipListMap;
@@ -8,12 +9,13 @@ import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentSkipListMap;
 /**
  * Class that describes a comment feed that is associated with a program
  * 
- * @author Rasmus Holm
+ * @author Rasmus Holm refractored Linus Back
  */
 public class Feed implements Iterable<Post>{
 	
 	private ConcurrentSkipListMap posts = new ConcurrentSkipListMap();
 	private Program program;
+	private Date lastUpdated;
 	
 	/**
 	 * Constructor for Feed
@@ -21,6 +23,7 @@ public class Feed implements Iterable<Post>{
 	 */
 	public Feed(Program program){
 		this.program = program;
+		lastUpdated = new Date(0);
 	}
 	
 	/**
@@ -69,6 +72,24 @@ public class Feed implements Iterable<Post>{
 		Post[] tbr = new Post[col.size()];
 		col.toArray(tbr);
 		return tbr;
+	}
+
+	/**
+	 * Gets the date when the feed was last updated.
+	 * Added so that easy comparison between feeds should work.
+	 * @return
+	 */
+	public Date getLastUpdated() {
+		return lastUpdated;
+	}
+
+	/**
+	 * Setter for the date when the feed was last updated.
+	 * Added so that easy comparison between feeds should work.
+	 * @param lastUpdated
+	 */
+	public void setLastUpdated(Date lastUpdated) {
+		this.lastUpdated = lastUpdated;
 	}
 	
 }
