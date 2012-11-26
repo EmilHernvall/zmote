@@ -376,7 +376,11 @@ public class ZChatActivity extends SherlockActivity {
 		@Override
 		public void onClick(View v) {
 			EditText edit = (EditText) view.findViewById(R.id.new_comment);
-			new CommitComment(zChat, list, post, edit.getText().toString()).execute();
+			String content = edit.getText().toString();
+			if(!content.equals("") && content!=null){
+				new CommitComment(zChat, list, post, content).execute();
+			}
+			
 
 		}
 
@@ -396,9 +400,10 @@ public class ZChatActivity extends SherlockActivity {
 		public void onClick(View v) {
 
 			EditText edit = (EditText) findViewById(R.id.new_post);
-
-			new CommitPost(activity, postList, edit.getText().toString()).execute();
-
+			String content = edit.getText().toString();
+			if(!content.equals("") && content!=null){
+				new CommitPost(activity, postList, content).execute();
+			}
 		}
 
 	}
