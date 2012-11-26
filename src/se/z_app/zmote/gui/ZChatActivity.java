@@ -86,10 +86,6 @@ public class ZChatActivity extends SherlockActivity {
 		TextView textView = (TextView) findViewById(R.id.feed_name);
 		textView.setText("Feed for: '"+getMyProgram().getName()+"'");
 
-		//TODO fix so it depends on the last added post.
-		textView = (TextView) findViewById(R.id.time_of_feedUpdate);
-		//textView.setText("50 min ago");
-
 
 		new AsyncDataLoader(this, postList).execute();
 
@@ -189,6 +185,10 @@ public class ZChatActivity extends SherlockActivity {
 		public FragmentAdabter(ZChatActivity zChatActivity , Feed feed){
 			this.zChatActivity = zChatActivity;
 
+			TextView textView = (TextView) findViewById(R.id.time_of_feedUpdate);
+			if(feed.getLastUpdated().compareTo(new Date(0))!=0){
+				textView.setText(feed.getLastUpdated().toString());
+			}
 			Iterator<Post> iter = feed.iterator();
 			list = new ArrayList<PostInterface>();
 			while(iter.hasNext()){

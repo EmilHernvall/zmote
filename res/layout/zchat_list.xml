@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:paddingLeft="8dip"
+                android:paddingRight="2dip"
                 android:textColor="#000000"
                 android:textSize="8sp" />
 
