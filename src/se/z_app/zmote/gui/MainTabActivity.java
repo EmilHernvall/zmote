@@ -485,7 +485,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 		mySpinner.setAdapter(adapter);
 		mySpinner.setSelection(selected);
 
-		mySpinner.setOnItemSelectedListener(new MyOnItemSelectedListener());
+		mySpinner.setOnItemSelectedListener(new MyOnItemSelectedListener(selected));
 		
 		volumPB = (ProgressBar)myView.findViewById(R.id.volume_progressbar);
 		volumIcon = (ImageView)myView.findViewById(R.id.volume_icon);
@@ -530,16 +530,25 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 		 * Sets the active STB in the STB container based on what the user 
 		 * selects in the drop down menu.
 		 */
+		private int lastSelected;
+		public MyOnItemSelectedListener(int selected) {
+			lastSelected = selected;
+		}
+
 		@Override
 		public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
 				long arg3) {
 			//Checks if the chosen item is the edit one.
 			if(arg2==arg0.getAdapter().getCount()-1){
 				Intent mainIntent = new Intent(MainTabActivity.this,
-						SelectSTBActivity.class); 
+				SelectSTBActivity.class); 
 				MainTabActivity.this.startActivity(mainIntent);
+				arg0.setSelection(lastSelected);
+				
+				
 			}
 			else{
+				lastSelected = arg2;
 				STBContainer.instance().setActiveSTB(STBContainer.instance().getSTBs()[arg2]);
 			}
 		}
