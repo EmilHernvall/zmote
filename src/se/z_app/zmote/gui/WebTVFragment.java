@@ -402,7 +402,8 @@ public class WebTVFragment extends Fragment {
 	 * @author Maria Jesus Platero
 	 */
 	public void addItemsOnSpinner(WebTVService services[]) {
-
+		if(services == null)
+			return;
 		List<Bitmap> list = new ArrayList<Bitmap>();
 
 		for(WebTVService serv : services){

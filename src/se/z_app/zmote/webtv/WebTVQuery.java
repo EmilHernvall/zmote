@@ -69,8 +69,9 @@ public class WebTVQuery {
 	 * @param services[] - The services for which to set the icons
 	 */
 	public void populateWithIcon(WebTVService services[]){
+		if(services == null)
+			return;
 		populateWithIconFromCache(services);
-		
 		for(WebTVService serv : services){
 			if(serv.getIcon() == null)
 				for(int i = 0; i<10; i++){
@@ -151,6 +152,8 @@ public class WebTVQuery {
 	 * @param services[] - An array with all services to set icons for.
 	 */
 	private void populateWithIconFromCache(WebTVService services[]){
+		if(services == null)
+			return;
 		for (WebTVService webTVService : services) {
 			String iconPath = defaultDir+"/"+webTVService.getID()+".png";
 			File iconFile = new File(iconPath);
