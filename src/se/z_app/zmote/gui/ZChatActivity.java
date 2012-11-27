@@ -45,7 +45,7 @@ public class ZChatActivity extends SherlockActivity {
 
 	public static Program targetProgram;
 	ListView postList;
-	
+
 	private final ZChatAdapter adapter = new ZChatAdapter();
 
 	private Program myProgram;
@@ -95,7 +95,7 @@ public class ZChatActivity extends SherlockActivity {
 
 		postButton.setOnClickListener(new PostButtonListener(myActivity, 
 				postList));
-		
+
 
 
 	}
@@ -108,7 +108,7 @@ public class ZChatActivity extends SherlockActivity {
 		timedUpdate = new TimedUpdate(this, timeBeforeFirstUpdate, 
 				timeBetweenUpdates);
 		new Thread(timedUpdate).start();
-		
+
 	}
 	/**
 	 * stops the thread that updates the feed.
@@ -134,44 +134,6 @@ public class ZChatActivity extends SherlockActivity {
 	}
 
 
-
-
-	/**
-	 * Sets the user name to a user name of the device.
-	 * First tries to set it to facebook name of a synced calender, if non 
-	 * exists sets it to the google account.
-	 */
-	private void setUserName(){
-		AccountManager accountManager = AccountManager.get(this); 
-		// Account[] account = accountManager.getAccountsByType("com.google");
-		Account[] accounts = accountManager.getAccounts();
-		boolean foundGoogleAcc= false;
-		for(int i=0; i<accounts.length;i++){
-			if(accounts[i].type.equals("com.sec.android.app.sns3.facebook")){
-				userName = accounts[i].name;
-				return;
-			}
-			if(accounts[i].type.equals("com.google")&& !foundGoogleAcc){
-				userName = accounts[i].name.split("@")[0].replace(".", " ");
-				foundGoogleAcc = true;
-			}
-		}
-
-		if(userName!=null){
-			return;
-		}
-		else if(accounts[0]!=null){
-			String temp = accounts[0].name;
-			if(temp.contains("@")){
-				userName = accounts[0].name.split("@")[0].replace(".", " ");
-				return;
-			}else{
-				userName = accounts[0].name.replace(".", " ");
-				return;
-			}
-		}
-		userName = "userName";   
-	}
 
 	/**
 	 * Synchronized setter for the feed.
@@ -210,6 +172,79 @@ public class ZChatActivity extends SherlockActivity {
 
 
 	/**
+	 * Sets the user name to a user name of the device.
+	 * First tries to set it to facebook name of a synced calender, if non 
+	 * exists sets it to the google account.
+	 */
+	private void setUserName(){
+		AccountManager accountManager = AccountManager.get(this); 
+		// Account[] account = accountManager.getAccountsByType("com.google");
+		Account[] accounts = accountManager.getAccounts();
+		boolean foundGoogleAcc= false;
+		for(int i=0; i<accounts.length;i++){
+			if(accounts[i].type.equals("com.sec.android.app.sns3.facebook")){
+				userName = accounts[i].name;
+				return;
+			}
+			if(accounts[i].type.equals("com.google")&& !foundGoogleAcc){
+				userName = accounts[i].name.split("@")[0].replace(".", " ");
+				foundGoogleAcc = true;
+			}
+		}
+
+		if(userName!=null){
+			return;
+		}
+		else if(accounts[0]!=null){
+			String temp = accounts[0].name;
+			if(temp.contains("@")){
+				userName = accounts[0].name.split("@")[0].replace(".", " ");
+				return;
+			}else{
+				userName = accounts[0].name.replace(".", " ");
+				return;
+			}
+		}
+		userName = "userName";   
+	}
+	/**
+	 * Translate the date1 to the difference to the other date1.
+	 * used to get the smallest difference between the date class and
+	 * the current date on the phone.
+	 * @param date1
+	 * @param date2
+	 * @return
+	 */
+	@SuppressWarnings("deprecation")
+	private String getSmallestDifference(Date date1, Date date2){
+		System.out.println(date1);
+		if(date1.getYear()!=date2.getYear()){
+			return date2.getYear()-date1.getYear()+" years ago";
+		}
+		if(date1.getMonth()!=date2.getMonth()){
+			return date2.getMonth()-date1.getMonth()+" months ago";
+		}
+		if(date1.getDay()!=date2.getDay()){
+			return date2.getDay()-date1.getDay()+" days ago";
+		}
+		//TODO check with server side why server is 1 hour behind real time.
+		if(date1.getHours()!=(date2.getHours()-1)){
+			return date2.getHours()-date1.getHours()+" hours ago";
+		}
+		if(date1.getMinutes()!=date2.getMinutes()){
+			return date2.getMinutes()-date1.getMinutes()+" minutes ago";
+		}
+		if(date1.getSeconds()!=date2.getSeconds()){
+			return date2.getSeconds()-date1.getSeconds()+" seconds ago";
+		}
+		
+		return "";
+	}
+
+
+
+
+	/**
 	 * Private class that translates the feed to a readable
 	 * listview.
 	 * @author Linus
@@ -229,7 +264,7 @@ public class ZChatActivity extends SherlockActivity {
 
 			TextView textView = (TextView) findViewById(R.id.time_of_feedUpdate);
 			if(getFeed().getLastUpdated().compareTo(new Date(0))!=0){
-				textView.setText(getFeed().getLastUpdated().toString());
+				textView.setText(getSmallestDifference(getFeed().getLastUpdated(), new Date()));
 			}
 			Iterator<Post> iter = getFeed().iterator();
 			list = new ArrayList<PostInterface>();
@@ -276,7 +311,9 @@ public class ZChatActivity extends SherlockActivity {
 
 
 				userName.setText(post.getUserName());
-				date.setText(post.getDateOfCreation().toString());
+				
+
+				date.setText(getSmallestDifference(post.getDateOfCreation(), new Date()));
 				content.setText(post.getContent());
 
 				nrOfComments.setText(post.getComments().length + " comments");
@@ -298,7 +335,7 @@ public class ZChatActivity extends SherlockActivity {
 
 
 				userName.setText(comment.getUserName());
-				date.setText(comment.getDateOfCreation().toString());
+				date.setText(getSmallestDifference(comment.getDateOfCreation(), new Date()));
 				content.setText(comment.getContent());
 			}
 			return vi;
@@ -459,7 +496,7 @@ public class ZChatActivity extends SherlockActivity {
 			}
 		}
 	}
-	
+
 	/**
 	 * Listener for when pressing the comment button.
 	 * @author Linus
