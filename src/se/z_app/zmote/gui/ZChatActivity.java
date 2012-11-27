@@ -444,7 +444,7 @@ public class ZChatActivity extends SherlockActivity {
 			while(isRunning()){
 				Feed newFeed = getAdapter().getFeed(getMyProgram());
 				
-				if(newFeed.getLastUpdated().after(getFeed().getLastUpdated())){
+				if(newFeed != null && newFeed.getLastUpdated().after(getFeed().getLastUpdated())){
 					setFeed(newFeed);
 					runOnUiThread(new Runnable() {
 
