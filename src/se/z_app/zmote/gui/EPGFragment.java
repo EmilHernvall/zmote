@@ -229,13 +229,15 @@ public class EPGFragment extends Fragment{
      * Sets the line that represent the current time
      */
     public void setNowLine(){
-    			
+    	
     	Date now = new Date(System.currentTimeMillis());
     	long difference = 0;
     	try{
     		difference = now.getTime() - start.getTime();
     	}catch(NumberFormatException ex){
     		System.out.println("Exception on setNowLine()");
+    	}catch(NullPointerException e) {
+    		return;
     	}
     	distance = (int)(difference/60000)*(screen_width/60);
     	
@@ -314,7 +316,8 @@ public class EPGFragment extends Fragment{
      * Fetches the channels from the EPG and adds the channels and programs to the layout
      */
 	void mainEPG(){
-		
+		if(epg == null)
+			return;
 		getStartTime();			// Decide the start time of the schedule
 		setProgramTimeBar();	// Add the time bar
 		number_of_channels = 0;	// Initialization 
