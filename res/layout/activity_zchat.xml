@@ -63,7 +63,8 @@
                 android:text="@string/activity_zchat_new_post"
                 android:textColor="#000000"
                 android:textColorHint="#666666"
-                android:textSize="12sp" />
+                android:textSize="12sp" 
+                android:textCursorDrawable="@null"/>
 
             <Button
                 android:id="@+id/post_button"
