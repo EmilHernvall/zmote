@@ -424,10 +424,10 @@ public class EPGFragment extends Fragment{
 	    end_tmp = calendar.getTime();
 		if( (now.compareTo(end_tmp) > 0) ){
 			// Background for ended programs
-			text.setBackgroundColor(0x55888888);
+			text.setBackgroundColor(0x55383838);
 		}else if( now.compareTo(pg.getStart()) > 0 ){
 			// Background for current programs
-			text.setBackgroundColor(0xFFFF9900);
+			text.setBackgroundColor(0xFF995C00);
 		}else{
 			// Background for next programs
 			text.setBackgroundColor(0xFF222222);
