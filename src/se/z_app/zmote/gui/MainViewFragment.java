@@ -96,7 +96,8 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 	private float rightrightScale;
 
 	private boolean isAnimationRunning = false;
-	private int animationDuration = 400;
+	private int defaultAnimationDuration = 400;
+	private int animationDuration;
 
 	private ProgressBar programProgress; 
 	private TextView programText;
@@ -124,7 +125,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 		Channel channel = EPGContentHandler.instance().getCurrentChannel();
 		long timeDiff = System.currentTimeMillis()-lastChannelChange;
 		//System.out.println("Updating for channel: " + channel.getName());
-		if(timeDiff > 1000){
+		if(timeDiff > 500){
 			if (!isAnimationRunning) {	
 				for(int i = 0; i< channelList.size(); i++){
 					if(channelList.get(i).getUrl().contains(channel.getUrl())){
@@ -133,7 +134,11 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 							int i = tmp;
 							@Override
 							public void run() {
-								rotateToChannel(i);								
+								if(Math.abs(currentChannelNr-i) < 3){
+									rotateToChannel(i, defaultAnimationDuration);					
+								}else{
+									rotateToChannel(i, defaultAnimationDuration/2);
+								}
 							}
 						});
 						
@@ -163,9 +168,9 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 				if(Math.abs(dirX) > Math.abs(dirY)){	
 					//Changing Channel from swipe
 					if(dirX < 0 )
-						setChannel(currentChannelNr-1);
+						setChannel(currentChannelNr-1, defaultAnimationDuration);
 					else if (dirX > 0)	
-						setChannel(currentChannelNr+1);
+						setChannel(currentChannelNr+1, defaultAnimationDuration);
 
 				}else{
 					//Changing Volume from swipe
@@ -227,11 +232,11 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 	 * @param target The channel to be set
 	 * @return A boolean, false if animation is running, true otherwise
 	 */
-	public boolean setChannel(Channel target){
+	public boolean setChannel(Channel target, int duration){
 		if (!isAnimationRunning) {	
 			for(int i = 0; i< channelList.size(); i++){
 				if(channelList.get(i).getUrl().contains(target.getUrl())){
-					setChannel(i);
+					setChannel(i, duration);
 					return true;
 				}
 			}
@@ -243,7 +248,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 	 * A setter for the channel
 	 * @param channelNr The channelNr to be set
 	 */	
-	public void setChannel(int channelNr){		
+	public void setChannel(int channelNr, int duration){		
 		lastChannelChange = System.currentTimeMillis();
 		if(currentChannelNr == channelNr || imageList.size() == 0){
 			return;
@@ -252,7 +257,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 		int size = imageList.size(); 
 		channelNr = (channelNr+size)%size;
 		
-		rotateToChannel(channelNr);
+		rotateToChannel(channelNr, duration);
 
 		Channel channel = channelList.get(channelNr);
 		RemoteControl.instance().launch(channel);
@@ -262,7 +267,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 	 * Rotates the view to the indicated channel
 	 * @param channelNr the channel number of the channel to rotate to
 	 */
-	public void rotateToChannel(int channelNr){		
+	public void rotateToChannel(int channelNr, int duration){		
 		if(currentChannelNr == channelNr){
 			return;
 		}
@@ -290,10 +295,10 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 		}
 
 		if(fin < 0){
-			rotateRight(fin*(-1));	
+			rotateRight(fin*(-1), duration);	
 		}
 		else{
-			rotateLeft(fin);	
+			rotateLeft(fin, duration);	
 		}
 	}
 	
@@ -302,7 +307,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 	 * The same as calling rotateRight(1)
 	 */
 	private void rotateRight(){
-		rotateRight(1);
+		rotateRight(1, defaultAnimationDuration);
 	}
 
 
@@ -311,7 +316,8 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 	 * Rotates the view to the right the indicated number of turns
 	 * @param turns the number of turns to rotate the view
 	 */
-	private void rotateRight(int turns){
+	private void rotateRight(int turns, int duration){
+		animationDuration = duration;
 		if(isAnimationRunning){
 			return;
 		}
@@ -364,7 +370,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 
 				turns--;
 				if(turns>0){
-					rotateRight(turns);
+					rotateRight(turns, animationDuration);
 				}else{
 					showText();
 				}
@@ -378,7 +384,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 
 				turns--;
 				if(turns>0){
-					rotateRight(turns);
+					rotateRight(turns, animationDuration);
 				}else{
 					showText();
 				}
@@ -444,15 +450,15 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 	 * The same as calling rotateLeft(1)
 	 */
 	private void rotateLeft(){
-		rotateLeft(1);
+		rotateLeft(1, defaultAnimationDuration);
 	}
 
 	/**
 	 * Rotates the view to the left the indicated number of turns
 	 * @param turns the number of turns to rotate the view
 	 */
-	private void rotateLeft(int turns){
-
+	private void rotateLeft(int turns, int duration){
+		animationDuration = duration;
 		if(isAnimationRunning){
 			return;
 		}
@@ -499,7 +505,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 				isAnimationRunning = false;
 				turns--;
 				if(turns>0){
-					rotateLeft(turns);
+					rotateLeft(turns, animationDuration);
 				}else{
 					showText();
 				}
@@ -511,7 +517,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 				isAnimationRunning = false;
 				turns--;
 				if(turns>0){
-					rotateLeft(turns);
+					rotateLeft(turns, animationDuration);
 				}else{
 					showText();
 				}
@@ -878,7 +884,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 					public void onClick(View v) {
 						if(i != currentChannelNr && !isAnimationRunning){
 							main.vibrate();
-							setChannel(i);
+							setChannel(i, defaultAnimationDuration);
 						}
 					}
 				});

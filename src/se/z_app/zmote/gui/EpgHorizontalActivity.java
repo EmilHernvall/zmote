@@ -238,7 +238,7 @@ public class EpgHorizontalActivity extends Activity {
     	// Now label
     	RelativeLayout.LayoutParams text_params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
     	if( (distance-35) >= 0 ){
-    		text_params.setMargins(distance-35, 0, 0, 0);
+    		text_params.setMargins(distance-35, 0, 0, 0 );
     	}else{
     		text_params.setMargins(distance, 0, 0, 0);
     	}
@@ -412,10 +412,10 @@ public class EpgHorizontalActivity extends Activity {
 	    end_tmp = calendar.getTime();
 		if( (now.compareTo(end_tmp) > 0) ){
 			// Background for ended programs
-			text.setBackgroundColor(0x55383838);
+			text.setBackgroundColor(0xFF383838);
 		}else if( now.compareTo(pg.getStart()) > 0 ){
 			// Background for current programs
-			text.setBackgroundColor(0xFF995C00);
+			text.setBackgroundColor(0xFF4E4E4E);
 		}else{
 			// Background for next programs
 			text.setBackgroundColor(0xFF222222);
