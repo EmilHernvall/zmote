@@ -123,6 +123,9 @@ public class EpgHorizontalActivity extends Activity {
 			        case MotionEvent.ACTION_UP: {
 			        	
 			        	long time = System.currentTimeMillis()-startTime;
+			        	if(time/20==0){
+			        		break;
+			        	}
 			        	int vx = 40*(int)((currentX - firstX)/(time/20));
 						int vy = 40*(int)((currentY - firstY)/(time/20));
 						System.out.println("vx: " + vx);
@@ -163,6 +166,7 @@ public class EpgHorizontalActivity extends Activity {
     public void setFlipButton(){
     	
     	ImageView flipButton = (ImageView) view.findViewById(R.id.flip_button);
+    	flipButton.setVisibility(View.VISIBLE);
     	flipButton.setClickable(true);
     	
     	flipButton.setOnClickListener(new View.OnClickListener() {
@@ -170,6 +174,7 @@ public class EpgHorizontalActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				finish();
+				vibrate();
 			}
 			
 		});
@@ -324,6 +329,7 @@ public class EpgHorizontalActivity extends Activity {
 			number_of_channels++;
 	     }
 		setNowLine();
+		setFlipButton();
 	}
 
 	/**
