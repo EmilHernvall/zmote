@@ -384,6 +384,8 @@ public class EPGFragment extends Fragment{
 		long difference = 0;
 		LinearLayout.LayoutParams params = null;
 		float length = 0;
+		Date now = new Date(System.currentTimeMillis());
+		Date end_tmp = null;
 		
 		if(n_program == 0){	// Only for the first program
 			
@@ -415,7 +417,22 @@ public class EPGFragment extends Fragment{
 		text.setPadding(2, 1, 2, 1);
 		text.setClickable(true);
 		text.setTextColor(0xFFFFFFFF);
-		text.setBackgroundColor(0xFF222222);
+		
+		Calendar calendar = Calendar.getInstance();
+	    calendar.setTime(pg.getStart());
+	    calendar.add(Calendar.SECOND, pg.getDuration());
+	    end_tmp = calendar.getTime();
+		if( (now.compareTo(end_tmp) > 0) ){
+			// Background for ended programs
+			text.setBackgroundColor(0x55888888);
+		}else if( now.compareTo(pg.getStart()) > 0 ){
+			// Background for current programs
+			text.setBackgroundColor(0xFFFF9900);
+		}else{
+			// Background for next programs
+			text.setBackgroundColor(0xFF222222);
+		}
+		
 		text.setGravity(Gravity.CENTER_VERTICAL);
 		
 		program_temp = pg;

@@ -230,17 +230,17 @@ public class EpgHorizontalActivity extends Activity {
     	
     	// We just change the margin of the line according to the current time
     	RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(2,height_of_rows*number_of_channels);
-    	params.setMargins(distance+3, 0, 0, 0);
+    	params.setMargins(distance+10, 0, 0, 0);
     	LinearLayout line = (LinearLayout)view.findViewById(R.id.now_line);
     	line.setVisibility(LinearLayout.VISIBLE);
     	line.setLayoutParams(params);
     	
     	// Now label
     	RelativeLayout.LayoutParams text_params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
-    	if( (distance-42) < 0 ){
-    		text_params.setMargins(distance, 0, 0, 0);
+    	if( (distance-35) >= 0 ){
+    		text_params.setMargins(distance-35, 0, 0, 0);
     	}else{
-    		text_params.setMargins(distance-42, 0, 0, 0);
+    		text_params.setMargins(distance, 0, 0, 0);
     	}
     	TextView now_text = (TextView)view.findViewById(R.id.now_text);
     	now_text.setVisibility(TextView.VISIBLE);
@@ -372,6 +372,8 @@ public class EpgHorizontalActivity extends Activity {
 		long difference = 0;
 		LinearLayout.LayoutParams params = null;
 		float length = 0;
+		Date now = new Date(System.currentTimeMillis());
+		Date end_tmp = null;
 		
 		if(n_program == 0){	// Only for the first program
 			
@@ -403,7 +405,22 @@ public class EpgHorizontalActivity extends Activity {
 		text.setPadding(2, 1, 2, 1);
 		text.setClickable(true);
 		text.setTextColor(0xFFFFFFFF);
-		text.setBackgroundColor(0xFF222222);
+		
+		Calendar calendar = Calendar.getInstance();
+	    calendar.setTime(pg.getStart());
+	    calendar.add(Calendar.SECOND, pg.getDuration());
+	    end_tmp = calendar.getTime();
+		if( (now.compareTo(end_tmp) > 0) ){
+			// Background for ended programs
+			text.setBackgroundColor(0x55888888);
+		}else if( now.compareTo(pg.getStart()) > 0 ){
+			// Background for current programs
+			text.setBackgroundColor(0xFFFF9900);
+		}else{
+			// Background for next programs
+			text.setBackgroundColor(0xFF222222);
+		}
+		
 		text.setGravity(Gravity.CENTER_VERTICAL);
 		
 		program_temp = pg;
