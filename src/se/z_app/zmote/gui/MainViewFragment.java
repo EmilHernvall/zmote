@@ -245,7 +245,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 	 */	
 	public void setChannel(int channelNr){		
 		lastChannelChange = System.currentTimeMillis();
-		if(currentChannelNr == channelNr){
+		if(currentChannelNr == channelNr || imageList.size() == 0){
 			return;
 		}
 		
