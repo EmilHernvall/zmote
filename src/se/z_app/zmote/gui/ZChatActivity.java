@@ -3,8 +3,6 @@ package se.z_app.zmote.gui;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
@@ -46,19 +44,23 @@ import android.widget.TextView;
 public class ZChatActivity extends SherlockActivity {
 
 	public static Program targetProgram;
+	ListView postList;
+	
 	private final ZChatAdapter adapter = new ZChatAdapter();
 
 	private Program myProgram;
 	private Feed myFeed;
 	private String userName = null;
 	private ZChatActivity myActivity;
-	private ListView postList;
 	private Object syncLock = new Object();
 	private TimedUpdate timedUpdate;
-	private int timeBeforeFirstUpdate = 5000;
+	private int timeBeforeFirstUpdate = 8000;
 	private int timeBetweenUpdates = 5000;
 
 
+	/**
+	 * Constructor that initialize the activity
+	 */
 	public ZChatActivity(){
 		myProgram = targetProgram;
 		targetProgram = null;
@@ -66,6 +68,9 @@ public class ZChatActivity extends SherlockActivity {
 	}
 
 
+	/**
+	 * On create function that create some usefull stuff
+	 */
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 
@@ -88,24 +93,35 @@ public class ZChatActivity extends SherlockActivity {
 
 		Button postButton = (Button) findViewById(R.id.post_button);
 
-		postButton.setOnClickListener(new PostButtonListener(myActivity, postList));
+		postButton.setOnClickListener(new PostButtonListener(myActivity, 
+				postList));
 		
 
 
 	}
 
+	/**
+	 * on start function starts the thread that updates the feed.
+	 */
 	public void onStart(){
 		super.onStart();
-		timedUpdate = new TimedUpdate(timeBeforeFirstUpdate, timeBetweenUpdates);
+		timedUpdate = new TimedUpdate(this, timeBeforeFirstUpdate, 
+				timeBetweenUpdates);
 		new Thread(timedUpdate).start();
 		
 	}
+	/**
+	 * stops the thread that updates the feed.
+	 */
 	public void onStop(){
 		super.onStop();
 		timedUpdate.stopRunning();
+		timedUpdate.setActivity(null);
 	}
 
-
+	/**
+	 * Sets the callback for when the icon in the action bar is pressed.
+	 */
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
@@ -122,8 +138,8 @@ public class ZChatActivity extends SherlockActivity {
 
 	/**
 	 * Sets the user name to a user name of the device.
-	 * First tries to set it to facebook name, if non exists
-	 * sets it to the google account.
+	 * First tries to set it to facebook name of a synced calender, if non 
+	 * exists sets it to the google account.
 	 */
 	private void setUserName(){
 		AccountManager accountManager = AccountManager.get(this); 
@@ -153,50 +169,69 @@ public class ZChatActivity extends SherlockActivity {
 				userName = accounts[0].name.replace(".", " ");
 				return;
 			}
-
-
 		}
 		userName = "userName";   
-
-
-
 	}
 
-	private void setFeed(Feed feed){
+	/**
+	 * Synchronized setter for the feed.
+	 * @param feed
+	 */
+	protected void setFeed(Feed feed){
 		synchronized (syncLock) {
 			myFeed = feed;
 		}
 	}
 
-	private Feed getFeed(){
+	/**
+	 * Synchronized getter for the feed.
+	 * @return
+	 */
+	protected Feed getFeed(){
 		synchronized (syncLock) {
 			return myFeed;
 		}
 	}
-	private synchronized ZChatAdapter getAdapter(){
+	/**
+	 * Synchronized getter for the the adabter.
+	 * @return
+	 */
+	protected synchronized ZChatAdapter getAdapter(){
 		return adapter;
 	}
 
-	private synchronized Program getMyProgram(){
+	/**
+	 * Synchronized getter for the the the program.
+	 * @return
+	 */
+	protected synchronized Program getMyProgram(){
 		return myProgram;
 	}
 
 
-	private class FragmentAdabter extends BaseAdapter{
+	/**
+	 * Private class that translates the feed to a readable
+	 * listview.
+	 * @author Linus
+	 *
+	 */
+	class MyListAdabter extends BaseAdapter{
 
 		private ZChatActivity zChatActivity;
-
 		private ArrayList<PostInterface> list;
 
-
-		public FragmentAdabter(ZChatActivity zChatActivity , Feed feed){
+		/**
+		 * The constructor for the class.
+		 * @param zChatActivity
+		 */
+		public MyListAdabter(ZChatActivity zChatActivity){
 			this.zChatActivity = zChatActivity;
 
 			TextView textView = (TextView) findViewById(R.id.time_of_feedUpdate);
-			if(feed.getLastUpdated().compareTo(new Date(0))!=0){
-				textView.setText(feed.getLastUpdated().toString());
+			if(getFeed().getLastUpdated().compareTo(new Date(0))!=0){
+				textView.setText(getFeed().getLastUpdated().toString());
 			}
-			Iterator<Post> iter = feed.iterator();
+			Iterator<Post> iter = getFeed().iterator();
 			list = new ArrayList<PostInterface>();
 			while(iter.hasNext()){
 				Post post = iter.next();
@@ -230,7 +265,9 @@ public class ZChatActivity extends SherlockActivity {
 			if(list.get(position) instanceof Post){
 				Post post = (Post) list.get(position);
 
-				vi = ((LayoutInflater)zChatActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.zchat_list, null);
+				vi = ((LayoutInflater)zChatActivity.getSystemService(
+						Context.LAYOUT_INFLATER_SERVICE)).inflate(
+								R.layout.zchat_list, null);
 
 				TextView userName = (TextView) vi.findViewById(R.id.post_user_name);
 				TextView date = (TextView) vi.findViewById(R.id.post_date);
@@ -244,14 +281,15 @@ public class ZChatActivity extends SherlockActivity {
 
 				nrOfComments.setText(post.getComments().length + " comments");
 				Button commentButton = (Button) vi.findViewById(R.id.comment_button);
-				commentButton.setOnClickListener(new CommentButtonListener(post, myActivity, postList, vi));
-
-
+				commentButton.setOnClickListener(new CommentButtonListener(post, 
+						myActivity, postList, vi));
 
 			}else{
 				Comment comment = (Comment) list.get(position);
 
-				vi = ((LayoutInflater)zChatActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.zchat_list_comment, null);
+				vi = ((LayoutInflater)zChatActivity.getSystemService(
+						Context.LAYOUT_INFLATER_SERVICE)).inflate(
+								R.layout.zchat_list_comment, null);
 
 
 				TextView userName = (TextView) vi.findViewById(R.id.comment_user_name);
@@ -262,21 +300,25 @@ public class ZChatActivity extends SherlockActivity {
 				userName.setText(comment.getUserName());
 				date.setText(comment.getDateOfCreation().toString());
 				content.setText(comment.getContent());
-
-
-
-
 			}
-
 			return vi;
 		}
 	}
 
-
+	/**
+	 * AsyncTask that gets the initial feed.
+	 * @author Linus
+	 *
+	 */
 	private class AsyncDataLoader extends AsyncTask<Integer, Integer, Feed>{
 
 		private ListView postList;
 		private ZChatActivity activity;
+		/**
+		 * Constructor for the class.
+		 * @param activity
+		 * @param postList
+		 */
 		public AsyncDataLoader(ZChatActivity activity ,ListView postList){
 			this.postList = postList;
 			this.activity = activity;
@@ -289,16 +331,27 @@ public class ZChatActivity extends SherlockActivity {
 
 		protected void onPostExecute(Feed feed){
 			setFeed(feed);
-			postList.setAdapter(new FragmentAdabter(activity, feed));
+			postList.setAdapter(new MyListAdabter(activity));
 		}
 	}
 
 
+	/**
+	 * AsyncTask that is used for commiting for Posts to the feed.
+	 * @author Linus
+	 *
+	 */
 	private class CommitPost extends AsyncTask<Integer, Integer, Feed>{
 		private ListView postList;
 		private ZChatActivity activity;
 		private String content;
 
+		/**
+		 * Constructor for the class.
+		 * @param activity
+		 * @param postList
+		 * @param content
+		 */
 		public CommitPost(ZChatActivity activity ,ListView postList, String content){
 			this.postList = postList;
 			this.activity = activity;
@@ -321,18 +374,30 @@ public class ZChatActivity extends SherlockActivity {
 		protected void onPostExecute(Feed feed){
 
 			setFeed(feed);
-			postList.setAdapter(new FragmentAdabter(activity, feed));
+			postList.setAdapter(new MyListAdabter(activity));
 
 		}
 	}
 
 
+	/**
+	 * Async task that is used to commit a comment and get the resulting feed.
+	 * @author Linus
+	 *
+	 */
 	private class CommitComment extends AsyncTask<Integer, Integer, Feed>{
 		private ZChatActivity zChat;
 		private ListView list;
 		private Post post;
 		private String content;
 
+		/**
+		 * Constructor for the class.
+		 * @param zChat
+		 * @param list
+		 * @param post
+		 * @param string
+		 */
 		public CommitComment(ZChatActivity zChat, ListView list, Post post,
 				String string) {
 			this.content = string;
@@ -353,13 +418,18 @@ public class ZChatActivity extends SherlockActivity {
 		protected void onPostExecute(Feed feed){
 
 			setFeed(feed);
-			list.setAdapter(new FragmentAdabter(zChat, feed));
+			list.setAdapter(new MyListAdabter(zChat));
 
 		}
 
 
 	}
 
+	/**
+	 * Listener for when pressing the comment button.
+	 * @author Linus
+	 *
+	 */
 	private class CommentButtonListener implements OnClickListener{
 
 		private Post post;
@@ -367,6 +437,13 @@ public class ZChatActivity extends SherlockActivity {
 		private ListView list;
 		private View view;
 
+		/**
+		 * The constructor for the class
+		 * @param post
+		 * @param zChat
+		 * @param list
+		 * @param view
+		 */
 		public CommentButtonListener(Post post, ZChatActivity zChat, ListView list, View view){
 			this.list = list;
 			this.post = post;
@@ -380,11 +457,14 @@ public class ZChatActivity extends SherlockActivity {
 			if(!content.equals("") && content!=null){
 				new CommitComment(zChat, list, post, content).execute();
 			}
-			
-
 		}
-
 	}
+	
+	/**
+	 * Listener for when pressing the comment button.
+	 * @author Linus
+	 *
+	 */
 	private class PostButtonListener implements OnClickListener{
 
 		private ZChatActivity activity;
@@ -409,66 +489,6 @@ public class ZChatActivity extends SherlockActivity {
 	}
 
 
-	private class TimedUpdate implements Runnable{
-		private boolean isRunning;
-		private int timeBeforeFirstUpdate;
-		private int timeBetweenUpdates;
-		private Object TimedSyncLock = new Object();
-		
-		public TimedUpdate(int timeBeforeFirstUpdate, int timeBetweenUpdates) {
-			this.timeBeforeFirstUpdate = timeBeforeFirstUpdate;
-			this.timeBetweenUpdates = timeBetweenUpdates;
-			isRunning = true;
-			
-		}
-		public boolean isRunning(){
-			synchronized (TimedSyncLock){
-				return isRunning;
-			}
-		}
-		public void stopRunning(){
-			synchronized (TimedSyncLock){
-				isRunning = false;
-			}
-		}
-		
-		
-		@Override
-		public void run() {
-			try {
-				Thread.sleep(timeBeforeFirstUpdate);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			while(isRunning()){
-				Feed newFeed = getAdapter().getFeed(getMyProgram());
-				
-				if(newFeed != null && newFeed.getLastUpdated().after(getFeed().getLastUpdated())){
-					setFeed(newFeed);
-					runOnUiThread(new Runnable() {
-
-						@Override
-						public void run() {
-							postList.setAdapter(new FragmentAdabter(myActivity, getFeed()));
-
-						}
-					});
-				}
-				try {
-					Thread.sleep(timeBetweenUpdates);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			
-			}
-			
-			
-
-		}
-
-	}
 
 
 
