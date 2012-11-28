@@ -16,12 +16,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 /**
  * A class for handling the connection to the SQLite database. Can do a lot of operations on the database.
- * @author Christian aka chrte707
+ * @author Christian Tenstedt
  *
  */
 public class EPGdbHandler extends SQLiteOpenHelper {
 	//	SQLiteDatabase database;
-	private static final int DATABASE_VERSION=7;  //Basically, if one have made any changes to the onCreate(), change version number here will update the db
+	private static final int DATABASE_VERSION=7;  /*Basically, if one have made any changes to the onCreate(), 
+													change version number here will update the db*/
 	private static final String DATABASE_Name="EPGData";
 	private static final String TABLE_CHANNEL="channel";
 	private static final String CHANNEL_NAME="name";
@@ -39,12 +40,7 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 	private static final String PROGRAM_LONGTEXT="longText";
 	private static final String TABLE_EPG ="epg";
 	private static final String EPG_DATEOFCREATION ="dateOfCreation";
-
-	//	private static final String TABLE_STB ="stb";  //we can uncomment this if we would like to save the STB in the future
-	//	private static final String STB_TYPE="type";
 	private static final String STB_MAC="mac";
-	//	private static final String STB_IP="ip";
-	//	private static final String STB_BOXNAME="boxName";
 
 	/**
 	 * Constructor for the class, needs a context
@@ -59,14 +55,17 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 	 * Creates the database if not exist, does this on the create of the instance
 	 */
 	public void onCreate(SQLiteDatabase db) {
-		String query = "CREATE TABLE " +TABLE_CHANNEL +"("+STB_MAC+" TEXT,"+CHANNEL_NAME+" TEXT,"+CHANNEL_ICONURL +" TEXT," +CHANNEL_NR +" INTEGER, "+ CHANNEL_ONID +" INTEGER,"+ CHANNEL_TSID +" INTEGER,"+CHANNEL_SID +" INTEGER);"; //The create string for channel
+		String query = "CREATE TABLE " +TABLE_CHANNEL +"("+STB_MAC+" TEXT,"+CHANNEL_NAME+
+				" TEXT,"+CHANNEL_ICONURL +" TEXT," +CHANNEL_NR +" INTEGER, "+ CHANNEL_ONID 
+				+" INTEGER,"+ CHANNEL_TSID +" INTEGER,"+CHANNEL_SID +" INTEGER);"; //The create string for channel
 		db.execSQL(query); 
-		query = "CREATE TABLE " +TABLE_PROGRAM +"("+STB_MAC+" TEXT,"+CHANNEL_NR+" INTEGER,"+PROGRAM_NAME+" TEXT,"+PROGRAM_EVENTID +" INTEGER," +PROGRAM_START +" INTEGER, "+ PROGRAM_DURATION +" INTEGER,"+ PROGRAM_SHORTTEXT +" TEXT,"+PROGRAM_LONGTEXT +" TEXT);"; //TODO: Is the channel_nr uniqe?
+		query = "CREATE TABLE " +TABLE_PROGRAM +"("+STB_MAC+" TEXT,"+CHANNEL_NR+
+				" INTEGER,"+PROGRAM_NAME+" TEXT,"+PROGRAM_EVENTID +" INTEGER," +
+				PROGRAM_START +" INTEGER, "+ PROGRAM_DURATION +" INTEGER,"+ PROGRAM_SHORTTEXT 
+				+" TEXT,"+PROGRAM_LONGTEXT +" TEXT);"; 
 		db.execSQL(query);
 		query = "CREATE TABLE " +TABLE_EPG +"("+STB_MAC+" TEXT,"+EPG_DATEOFCREATION+" INTEGER);"; 
 		db.execSQL(query);
-		//		query = "CREATE TABLE " +TABLE_STB +"("+STB_TYPE+" TEXT,"+STB_MAC +" TEXT," +STB_IP +" TEXT, "+ STB_BOXNAME +" TEXT);";
-		//		db.execSQL(query);
 	}
 
 	@Override
@@ -86,6 +85,7 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 	 * @return and EPG object
 	 */
 	public EPG selectEPG(STB stb){
+
 		EPG epg = new EPG();
 		epg.setStb(stb);
 		SQLiteDatabase db = this.getWritableDatabase();
@@ -116,6 +116,7 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 		db.close();
 		return epg;
 	}
+
 	/**
 	 * A method for updating the EPG in the database
 	 * @param stb The STB to be updated
@@ -203,14 +204,17 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 	 * A method for selecting programs, given an STB and a channel
 	 * @param stb The STB to get the data from
 	 * @param channel The channel which for fetching the program
-	 * @return an arraylist of the Programs
+	 * @return an arrayList of the Programs
 	 */
 	@SuppressWarnings("deprecation")
 	public Program[] selectPrograms(STB stb, Channel channel){
+		
 		SQLiteDatabase db = this.getReadableDatabase();
-		Cursor cursor = db.query(TABLE_PROGRAM,null,""+STB_MAC+"='"+stb.getMAC() + "' AND "+CHANNEL_NR+"="+channel.getNr()+"", null,null,null,null);
+		Cursor cursor = db.query(TABLE_PROGRAM,null,""+STB_MAC+"='"+stb.getMAC() + 
+				"' AND "+CHANNEL_NR+"="+channel.getNr()+"", null,null,null,null);
 		Program[] programArray = new Program[cursor.getCount()];
 		int iterationCounter=0;
+		
 		if(cursor.moveToFirst()) {
 			do{
 				Program program =new Program(new Channel()); 
@@ -225,11 +229,12 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 				programArray[iterationCounter]=program; 
 				iterationCounter++;
 			}while (cursor.moveToNext());
-		}
+		}		
 		cursor.close();
 		db.close();
 		return programArray;
 	}
+	
 	/**
 	 * A method for update a program
 	 * @param stb The given STB
@@ -254,6 +259,7 @@ public class EPGdbHandler extends SQLiteOpenHelper {
 		}
 		db.close();
 	}
+	
 	/**
 	 *A method for update programs
 	 * @param stb The given STB
