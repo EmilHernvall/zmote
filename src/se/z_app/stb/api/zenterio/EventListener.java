@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import se.z_app.stb.STB;
 import se.z_app.stb.STBEvent;
 import se.z_app.stb.api.EventListnerInterface;
+
 /**
  * Class that handles the events sent from the box.
  * refactored to work with the new firmware.
@@ -20,7 +21,7 @@ import se.z_app.stb.api.EventListnerInterface;
  */
 public class EventListener implements EventListnerInterface {
 
-	private String iPaddress;
+	private String IPaddress;
 	private STBEvent currentEvent;
 	private Socket socket;
 	private InputStream in;
@@ -28,23 +29,22 @@ public class EventListener implements EventListnerInterface {
 
 	/**
 	 * Initializes the event listener.
+	 * @param stb
 	 */
 	public void init(STB stb) {
-		iPaddress = stb.getIP();
+		IPaddress = stb.getIP();
 		
 		try {
-			socket = new Socket(iPaddress, 9999);
+			socket = new Socket(IPaddress, 9999);
 			in = socket.getInputStream();
 			buffer = new byte[512];
 		} catch (UnknownHostException e) { 
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		System.out.println("Listner is initiater");
+		System.out.println("Listner is initiated");
 
 	}
 
@@ -86,7 +86,6 @@ public class EventListener implements EventListnerInterface {
 				in.close();
 				socket.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch( RuntimeException e){
 
@@ -94,6 +93,10 @@ public class EventListener implements EventListnerInterface {
 		}
 	}
 
+	/**
+	 * Converts the string of events into STB events 
+	 * @param eventString
+	 */
 	private STBEvent stringToSTBEvent(String eventString){
 
 		try {
@@ -118,7 +121,6 @@ public class EventListener implements EventListnerInterface {
 			}
 			
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return currentEvent;
