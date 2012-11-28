@@ -27,10 +27,18 @@ public class Discovery implements DiscoveryInterface{
 	private String network;
 	private static int runningThreads = 0;
 	
+	/**
+	 * Discovers the network for the STB.
+	 * @param network
+	 */
 	public Discovery(String network){
 		this.network = network;
 	}
 	
+	/**
+	 * Find the available STBs in the network
+	 * @return stbArray
+	 */
 	@Override
 	public STB[] find() {
 		LinkedList<STB> stbs = new LinkedList<STB>();
@@ -63,35 +71,53 @@ public class Discovery implements DiscoveryInterface{
 		return stbArray;
 	}
 	
+	/**
+	 * Finds concrete STB in the network.
+	 * @param stb
+	 */
 	@Override
 	public STB[] find(STB stb) {
 		return find();
 	}
 
-	
+	/**
+	 * Class to scan the current network and find the available STBs.
+	 *@author Rasmus Holm
+	 */
 	private class STBScanner implements Runnable {
 		String network;
 		int start;
 		int upto;
 		LinkedList<STB> stbs = new LinkedList<STB>();
 		
+		/**
+		 * Constructor for the network scanner.
+		 * @param network
+		 * @param start
+		 * @param upto
+		 */
 		public STBScanner(String network, int start, int upto){
 			this.network = network;
 			this.start = start;
 			this.upto = upto;
 		}
 		
+		/**
+		 * Returns the collection of available STBs.
+		 */
 		public Collection<STB> getSTBCollection(){
 			return stbs;
 		}
 		
+		/**
+		 * Runs the scan in the network for the available STBs.
+		 */
 		@Override
 		public void run() {
 			try{
 				for(int i = start; i <= upto && i < 255; i++ ){
 					try {
 						InetAddress address = InetAddress.getByName(network+Integer.toString(i));
-						//System.out.println("Scanning " + address.toString());
 						if(address.isReachable(timeout)) {
 		
 							URL url = new URL("http://"+address.getHostAddress().toString()+"/cgi-bin/zids_discovery/");

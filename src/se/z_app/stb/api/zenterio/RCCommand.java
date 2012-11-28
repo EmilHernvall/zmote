@@ -92,8 +92,10 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 	}
 	
 	/**
-	 * Sends the facebook authorisation.
-	 * @param accesstoken, expires, uid
+	 * Sends the facebook authorization.
+	 * @param accesstoken
+	 * @param expires
+	 * @param uid
 	 */
 	public void facebookAuth(String accesstoken, String expires, String uid) {
 		new Thread(new RCCommandRunnable(Method.FACEBOOKAUTH, iPAdress, accesstoken, expires, uid)).start();
@@ -102,7 +104,8 @@ public class RCCommand implements MonoDirectionalCmdInterface {
 
 	/**
 	 * Sends a rawpost.
-	 * @param rawPostData, uri
+	 * @param rawPostData
+	 * @param uri
 	 */
 	public void rawPost(String rawPostData, String uri) {
 		new Thread(new RCCommandRunnable(Method.RAWPOST, iPAdress, rawPostData, uri)).start();
