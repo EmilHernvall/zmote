@@ -8,7 +8,18 @@ import se.z_app.stb.STB;
  *
  */
 public interface DiscoveryInterface {
+	
+	/**
+	 * Function that searches the subnet and returns an array of STB's found.
+	 * @return Array of STB's.
+	 */
 	public STB[] find();
+	
+	/**
+	 * Returns the result of the find function.
+	 * @param stb
+	 * @return Array of STB's.
+	 */
 	public STB[] find(STB stb);
 	
 }

@@ -11,9 +11,8 @@ import se.z_app.stb.Channel;
 import se.z_app.stb.Program;
 
 
-/**!!!!!!!!!!!!!!!!!!!!!!  REMOVE BEFOR HAND IN !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- * 
- */
+//TODO!!!!!!!!!!!!!!!!!!!!!!  REMOVE BEFORE HAND IN !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 
 
 /**
