@@ -18,16 +18,23 @@ import android.widget.TextView;
  */
 public class EditSTBActivity extends Activity {
 
+	//TODO add private/public attributes!!!!!!!!!!!!!!!!!!!!!!
 	STB stb;
 	int theIndex;
 
+	/**
+	 * Method that sets the modified
+	 * STB name
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		
 		theIndex = (Integer) getIntent().getSerializableExtra("index");
 		stb = SelectSTBList.instance().getList().get(theIndex);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_stb);
 		TextView tv;
+		
 		if (stb.getBoxName() != null) {
 			tv = (TextView) findViewById(R.id.activity_edit_stb_editNameid);
 			tv.setText(stb.getBoxName());
@@ -61,9 +68,9 @@ public class EditSTBActivity extends Activity {
 				EditSTBActivity.this.finish();
 			}
 		});
-		
 	}
 
+	//TODO add method description
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_edit_stb, menu);

@@ -50,5 +50,4 @@ public class Bootstrap {
     	MediaStreamer.instance().setLocalIP(ip);
     	Bootstrap.ip = ip;
 	}
-
 }
