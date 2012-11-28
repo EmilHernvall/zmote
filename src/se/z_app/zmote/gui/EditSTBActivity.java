@@ -18,9 +18,8 @@ import android.widget.TextView;
  */
 public class EditSTBActivity extends Activity {
 
-	//TODO add private/public attributes!!!!!!!!!!!!!!!!!!!!!!
-	STB stb;
-	int theIndex;
+	private STB stb;
+	private int theIndex;
 
 	/**
 	 * Method that sets the modified
@@ -70,7 +69,11 @@ public class EditSTBActivity extends Activity {
 		});
 	}
 
-	//TODO add method description
+	/**
+	 * Overridden method that creates the options menu
+	 *  (hardware button on many phones)
+	 *  (it doesn't lead anywhere though)
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_edit_stb, menu);
