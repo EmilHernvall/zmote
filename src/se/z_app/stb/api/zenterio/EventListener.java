@@ -15,7 +15,7 @@ import se.z_app.stb.api.EventListnerInterface;
 /**
  * Class that handles the events sent from the box.
  * refactored to work with the new firmware.
- * @author Linus 
+ * @author Linus Back
  *
  */
 public class EventListener implements EventListnerInterface {
@@ -64,11 +64,9 @@ public class EventListener implements EventListnerInterface {
 		}
 		
 		else if(socket.isConnected()){
-			//System.out.println("Waiting for message");
 			try {
 				int len = in.read(buffer);
 				currentEvent = stringToSTBEvent(new String(buffer, 0, len));
-				//System.out.println("Message Recived");
 			} catch (IOException e) {
 				return null;
 			}
