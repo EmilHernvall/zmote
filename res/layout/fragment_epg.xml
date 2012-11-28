@@ -43,6 +43,15 @@
                         android:background="#FF8000"
                         android:visibility="gone" >
                     </LinearLayout>
+                    
+			           <TextView
+			                android:id="@+id/now_line_trick"
+			                android:layout_width="wrap_content"
+			                android:layout_height="wrap_content"
+			                android:paddingLeft="50dp"
+			                android:layout_toRightOf="@id/now_line"
+			                android:text="" />
+                    
                 </RelativeLayout>
             </HorizontalScrollView>
 
@@ -90,6 +99,15 @@
                 android:text="@string/now_text"
                 android:textColor="#FF8000"
                 android:visibility="gone" />
+            
+            <TextView
+                android:id="@+id/now_text_trick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="50dp"
+                android:layout_toRightOf="@id/now_text"
+                android:text="" />
+            
         </RelativeLayout>
     </HorizontalScrollView>
 

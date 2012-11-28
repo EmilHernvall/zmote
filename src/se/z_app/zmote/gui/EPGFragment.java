@@ -260,12 +260,33 @@ public class EPGFragment extends Fragment{
     	now_text.setBackgroundColor(0xBB000000);
     	
     	// Center the screen on the now line
-    	line.setFocusableInTouchMode(true);
-    	line.requestFocus();
-    	now_text.setFocusableInTouchMode(true);
-    	now_text.requestFocus();
+    	centerOnNowLine();
 
     }
+    
+    /**
+     * Centers the EPG on the now line
+     * @author Francisco Valladares
+     */
+    public void centerOnNowLine(){
+    	
+    	int margin = (screen_width/2)-50;
+    	
+    	if(margin < 0){		// Sanity check
+    		margin = 200;
+    	}
+    	
+    	TextView line_temp = (TextView) view.findViewById(R.id.now_line_trick);
+    	line_temp.setPadding(margin, 0, 0, 0);
+    	line_temp.setFocusableInTouchMode(true);
+    	line_temp.requestFocus();
+    	TextView now_text_temp = (TextView) view.findViewById(R.id.now_text_trick);
+    	now_text_temp.setPadding(margin, 0, 0, 0);
+    	now_text_temp.setFocusableInTouchMode(true);
+    	now_text_temp.requestFocus();
+    	
+    }
+    
     /**
      * Gets the time of the earlier program of the epg
      * @author Francisco Valladares
