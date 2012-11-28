@@ -13,9 +13,7 @@ import se.z_app.stb.STBEvent;
  * @author Linus Back
  */
 public class STBListener extends Observable implements Observer, Runnable{
-
 	private EventListnerInterface eventListener;
-
 	private Thread myThread;
 	private STB stb;
 	private STBEvent event;
@@ -32,14 +30,14 @@ public class STBListener extends Observable implements Observer, Runnable{
 	 * Request the singleton instance of the STB listener
 	 * @return The instance of STB listener
 	 */
-	public static STBListener instance(){
+	public static STBListener instance() {
 		return SingletonHolder.INSTANCE;
 	}
 	
 	/**
 	 * Private constructor for the STB listener
 	 */
-	private STBListener(){
+	private STBListener() {
 		STBContainer.instance().addObserver(this);
 	}
 	
@@ -50,7 +48,7 @@ public class STBListener extends Observable implements Observer, Runnable{
 	@Override
 	public void addObserver(Observer observer) {
 		super.addObserver(observer);
-		if(eventListener !=null && eventListener.getCurrentEvent() != null){
+		if (eventListener !=null && eventListener.getCurrentEvent() != null) {
 			this.setChanged();
 			this.notifyObservers(eventListener.getCurrentEvent());
 		}	
@@ -69,29 +67,27 @@ public class STBListener extends Observable implements Observer, Runnable{
 	 */
 	public void update(Observable obsesrvable, Object data) {
 		stb = STBContainer.instance().getActiveSTB();
-		if(eventListener != null)
+		if(eventListener != null) {
 			eventListener.stop();
+		}
 		eventListener = AbstractAPIFactory.getFactory(stb).getEventListner();
 		
 		myThread = new Thread(this);
 		myThread.start();
-		
 	}
 
 	/**
 	 * Initiates the STB listener
 	 */
 	public void run() {
-		
 		System.out.println("Initiating Listner");
 		eventListener.init(stb);
 		
 		//System.out.println("waiting for events");
-		while((event = eventListener.getNextEvent())!=null){
+		while((event = eventListener.getNextEvent())!=null) {
 			//System.out.println("Recived Event");
 			this.setChanged();
 			this.notifyObservers(event);
-
 		}		
 	}
 }

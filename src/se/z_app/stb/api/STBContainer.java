@@ -29,7 +29,7 @@ public class STBContainer extends Observable implements Iterable<STB>{
 	 * Request the singleton instance of the STB container
 	 * @return The instance of the STB container
 	 */
-	public static STBContainer instance(){
+	public static STBContainer instance() {
 		return SingletonHolder.INSTANCE;	
 	}
 	
@@ -43,7 +43,7 @@ public class STBContainer extends Observable implements Iterable<STB>{
 	@Override
 	public void addObserver(Observer observer) {
 		super.addObserver(observer);
-		if(getActiveSTB() != null){
+		if(getActiveSTB() != null) {
 			observer.update(this, null);
 		}
 	}
@@ -52,7 +52,7 @@ public class STBContainer extends Observable implements Iterable<STB>{
 	 * Getter for the currently active STB
 	 * @return The active STB 
 	 */
-	public STB getActiveSTB(){
+	public STB getActiveSTB() {
 		return stb;
 	}
 	
@@ -60,8 +60,8 @@ public class STBContainer extends Observable implements Iterable<STB>{
 	 * Setter for the currently active STB
 	 * @param stb - The STB to be set as currently active
 	 */
-	public void setActiveSTB(STB stb){
-		if(this.stb != null && this.stb.equals(stb)){
+	public void setActiveSTB(STB stb) {
+		if(this.stb != null && this.stb.equals(stb)) {
 			return;
 		}		
 		addSTB(stb);
@@ -75,7 +75,7 @@ public class STBContainer extends Observable implements Iterable<STB>{
 	 * @param stb - The STB to be checked
 	 * @return True if active, otherwise false
 	 */
-	public boolean isActiveSTB(STB stb){
+	public boolean isActiveSTB(STB stb) {
 		return this.stb.equals(stb);
 	}
 	
@@ -84,11 +84,12 @@ public class STBContainer extends Observable implements Iterable<STB>{
 	 * @param stb - The STB to be added 
 	 * @return True if the STB was added, otherwise false
 	 */
-	public boolean addSTB(STB stb){
+	public boolean addSTB(STB stb) {
 		for(STB tmpSTB : stbs)
-			if(stb.getMAC()!=null && (tmpSTB.getMAC().equals(stb.getMAC())) || tmpSTB.getIP().equals(stb.getIP()))
+			if(stb.getMAC()!=null && 
+			(tmpSTB.getMAC().equals(stb.getMAC())) || tmpSTB.getIP().equals(stb.getIP())) {
 				return false;
-		
+			}
 		stbs.add(stb);
 		return true;
 	}
@@ -98,7 +99,7 @@ public class STBContainer extends Observable implements Iterable<STB>{
 	 * @param stb - The STB to be removed
 	 * @return True if the STB was removed, otherwise false
 	 */
-	public boolean removeSTB(STB stb){
+	public boolean removeSTB(STB stb) {
 		return stbs.remove(stb);
 	}
 	
@@ -107,7 +108,7 @@ public class STBContainer extends Observable implements Iterable<STB>{
 	 * @param stb - The STB to be checked
 	 * @return True if the STB is in the list, otherwise false
 	 */
-	public boolean containsSTB(STB stb){
+	public boolean containsSTB(STB stb) {
 		return stbs.contains(stb);
 	}
 	
@@ -124,7 +125,7 @@ public class STBContainer extends Observable implements Iterable<STB>{
 	 * Returns all STBs in the container's list
 	 * @return An array containing all STBs
 	 */
-	public STB[] getSTBs(){
+	public STB[] getSTBs() {
 		STB stbToBeReturned[] = new STB[stbs.size()];
 		stbs.toArray(stbToBeReturned);
 		return stbToBeReturned;
@@ -133,7 +134,7 @@ public class STBContainer extends Observable implements Iterable<STB>{
 	/**
 	 * Resets the container, removes the currently active STB and empties the list of STBs
 	 */
-	public void reset(){
+	public void reset() {
 		stbs = new LinkedList<STB>();
 		stb = null;
 		hasChanged();
