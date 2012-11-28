@@ -10,10 +10,10 @@ import android.content.pm.Signature;
 import android.util.Base64;
 import android.util.Log;
 
-public class GenerateFacebookKey {
+public class Remove_GenerateFacebookKey {
 	private Context context;
 
-	public GenerateFacebookKey(Context context) {
+	public Remove_GenerateFacebookKey(Context context) {
 		this.context = context;
 	}
 
