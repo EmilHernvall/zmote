@@ -10,6 +10,12 @@ import se.z_app.social.Post;
 import se.z_app.stb.Channel;
 import se.z_app.stb.Program;
 
+
+/**!!!!!!!!!!!!!!!!!!!!!!  REMOVE BEFOR HAND IN !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ * 
+ */
+
+
 /**
  * Class to test the Zhat view before the normal adapter is implemented.
  * @author Linus
