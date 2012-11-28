@@ -148,7 +148,7 @@ public class ZChatAdapter{
 		} catch (JSONException e) {
 			Log.i("GetPosts", "ZChat adapter: JSON Failure: " + e.toString());
 
-			return null;
+			return theFeed;
 		}
 		return theFeed;
 	}

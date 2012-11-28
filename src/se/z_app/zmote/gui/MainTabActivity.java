@@ -574,7 +574,8 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 		
 		@Override
 		protected void onPostExecute(Integer volume) {
-			volumPB.setProgress(volume);
+			if(volumPB != null)
+				volumPB.setProgress(volume);
 		}
 		
 	}
@@ -599,6 +600,8 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 				} catch (UnknownHostException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (NullPointerException e) {
 					e.printStackTrace();
 				}
 				if(boxactive == newBoxactive){

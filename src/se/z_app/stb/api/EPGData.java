@@ -130,7 +130,10 @@ public class EPGData implements Observer{
 		}
 	}	
 	public int getVolume(){
-		return com.getVolume();
+		if(com != null) {
+			return com.getVolume();
+		}
+		return 0;
 	}
 	public boolean isMute(){
 		return com.isMute();
