@@ -18,7 +18,7 @@ public class RemoteControl implements Observer {
 	 * Defines the available buttons on the virtual remote
 	 * @author Linus Back
 	 */
-	public enum Button{
+	public enum Button {
 		P0, P1, P2, P3, P4, P5, P6, P7, P8, P9, BACK, BLUE, BROWSERHOME, CHANNELMINUS, CHANNELPLUS, DOWN, 
 		EXIT, GREEN, GUIDE, INFO, LEFT, MENU, OK, OPT, RED, RIGHT, UP, VOLMINUS, VOLPLUS, YELLOW, MUTE, 
 		TOGGLEPAUSEPLAY;
@@ -99,5 +99,4 @@ public class RemoteControl implements Observer {
 	public void launch(Channel channel){
 		launch(channel.getUrl()+"&clid=0");	
 	}
-	
 }
