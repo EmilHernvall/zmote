@@ -33,7 +33,7 @@ public class WebTVQuery {
 	}
 	
 	/**
-	 * Fetches all WebTV services available
+	 * Fetches all WebTV services available from the STB
 	 * @return An array with all available WebTV services
 	 */
 	public WebTVService[] getService() {
@@ -113,7 +113,7 @@ public class WebTVQuery {
 	 * Searches for WebTV content in a specified WebTV service
 	 * @param q - A string with the search term
 	 * @param s - The WebTV service to search in
-	 * @return An array with all items matchiong the search string
+	 * @return An array with all items matching the search string
 	 */
 	public WebTVItem[] search(String q, WebTVService s) {
 		return WebTVCommand.instance().search(q, s);
@@ -218,13 +218,11 @@ public class WebTVQuery {
 		URL url;
 		Bitmap theImage = null;
 		try {
-			//TODO: Problem with loading images comes from creating rapid connections, keepAlive should be disable
 			url = new URL(urlStr);
 			HttpURLConnection connection = (HttpURLConnection)url.openConnection(); 
 			InputStream in = connection.getInputStream();
 			theImage = BitmapFactory.decodeStream(in);
 			in.close();
-			//connection.getOutputStream().close();
 			connection.disconnect();
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
