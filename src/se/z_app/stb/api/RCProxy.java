@@ -11,8 +11,6 @@ import se.z_app.stb.STBEvent;
  * @author Leonard Jansson, Viktor von Zeipel, refractored by Rasmus Holm, Linus Back
  */
 public class RCProxy implements Observer{
-
-
 	private RCProxyState state;
 	
 	/**
@@ -127,9 +125,8 @@ public class RCProxy implements Observer{
 		 * Code for setting different states depending on events sent from the box
 		 *  should go here.
 		 */
-		if(data instanceof STBEvent){
+		if(data instanceof STBEvent) {
 			
 		}
-		
 	}
 }

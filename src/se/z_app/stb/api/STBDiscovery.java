@@ -9,12 +9,12 @@ import se.z_app.stb.api.zenterio.Discovery;
  * @author Viktor Dahl
  */
 public class STBDiscovery {
-	String subNetAddress;
-	Discovery disc;
+	private String subNetAddress;
+	private Discovery disc;
 	
 	/**
 	 * Creates a new STBDiscovery with the specified sub-net address
-	 * @param subNetAddress - The sub-net address to use
+	 * @param subNetAddress - The subnet address to use (form xxx.xxx.xxx.)
 	 */
 	public STBDiscovery(String subNetAddress) {
 		this.subNetAddress = subNetAddress;

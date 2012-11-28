@@ -15,7 +15,8 @@ import se.z_app.stb.WebTVService;
  * @author Sebastian Rauhala
  */
 public class WebTVCommand implements Observer{
-
+	private MonoDirectionalCmdInterface MonoCmd;
+	private BiDirectionalCmdInterface BiCmd;
 	/**
 	 * Creates and holds the singleton instance of the WebTV command
 	 * @author Sebastian Rauhala
@@ -28,19 +29,16 @@ public class WebTVCommand implements Observer{
 	 * Request the singleton instance of the WebTV command
 	 * @return The instance of WebTV command
 	 */
-	public static WebTVCommand instance(){
+	public static WebTVCommand instance() {
 		return SingletonHolder.INSTANCE;
 	}
 	
 	/**
 	 * Private constructor for WebTV command that starts to listen to the STB container
 	 */
-	private WebTVCommand(){
+	private WebTVCommand() {
 		STBContainer.instance().addObserver(this);
 	}
-	
-	private MonoDirectionalCmdInterface MonoCmd;
-	private BiDirectionalCmdInterface BiCmd;
 	
 	@Override
 	public void update(Observable observable, Object data) {
@@ -55,11 +53,12 @@ public class WebTVCommand implements Observer{
 	 * @return An array with all WebTV services, or null if no BiDirectionalCommandInterface is found.
 	 */
 	public WebTVService[] getService(){
-		if(BiCmd != null){
+		if(BiCmd != null) {
 			return BiCmd.getWebTVServices();
 		}
-		else
-			return null;		
+		else {
+			return null;
+		}
 	}
 	
 	/**
@@ -68,20 +67,21 @@ public class WebTVCommand implements Observer{
 	 * @param service - The service to be searched
 	 * @return An array with the WebTV items that matched the search string
 	 */
-	public WebTVItem[] search(String query, WebTVService service){
-		if(BiCmd != null){
+	public WebTVItem[] search(String query, WebTVService service) {
+		if(BiCmd != null) {
 			return BiCmd.searchWebTVService(query, service);
 		}
-		else
+		else {
 			return null;
+		}
 	}
 	
 	/**
 	 * Forwards a WebTV item to the STB to be played
 	 * @param item - The item to be played
 	 */
-	public void play(WebTVItem item){
-		if (MonoCmd != null){
+	public void play(WebTVItem item) {
+		if (MonoCmd != null) {
 			MonoCmd.playWebTV(item);
 		} 	
 	}
@@ -90,8 +90,8 @@ public class WebTVCommand implements Observer{
 	 * Forwards a WebTV item to the STB to be put in the play queue
 	 * @param item The item to be queued
 	 */
-	public void queue(WebTVItem item){
-		if (MonoCmd != null){
+	public void queue(WebTVItem item) {
+		if (MonoCmd != null) {
 			MonoCmd.queueWebTV(item);
 		} 	
 	}
@@ -102,11 +102,12 @@ public class WebTVCommand implements Observer{
 	 * @return The icon for the specified item
 	 */
 	public Bitmap getIcon(WebTVItem item){
-		if (BiCmd != null){
+		if (BiCmd != null) {
 			return BiCmd.getWebTVItemIcon(item);
 		} 
-		else
+		else {
 			return null;
+		}
 	}
 	
 	/**
@@ -115,10 +116,11 @@ public class WebTVCommand implements Observer{
 	 * @return The icon for the specified service
 	 */
 	public Bitmap getIcon(WebTVService item){
-		if (BiCmd != null){
+		if (BiCmd != null) {
 			return BiCmd.getWebTVServiceIcon(item);
 		} 
-		else
+		else {
 			return null;
+		}
 	}
 }

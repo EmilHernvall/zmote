@@ -30,14 +30,14 @@ public class EPGData implements Observer{
 	 * Get the instance of this class
 	 * @return the instance
 	 */
-	public static EPGData instance(){
+	public static EPGData instance() {
 		return SingletonHolder.INSTANCE;
 	}
 	
 	/**
 	 * Private constructor, since it's a singleton
 	 */
-	private EPGData(){
+	private EPGData() {
 		STBContainer.instance().addObserver(this);
 	}
 	
@@ -54,7 +54,7 @@ public class EPGData implements Observer{
 	 * Get the current EPG
 	 * @return An EPG object 
 	 */
-	public EPG getEPG(){
+	public EPG getEPG() {
 		if(com == null) {
 			return null;
 		}
@@ -69,7 +69,7 @@ public class EPGData implements Observer{
 	 * Get the current channel
 	 * @return the current channel
 	 */
-	public Channel getCurrentChannel(){
+	public Channel getCurrentChannel() {
 		if(com == null) {
 			return null;
 		}
@@ -81,7 +81,7 @@ public class EPGData implements Observer{
 	 * @param channel
 	 * @return the icon as a bitmap
 	 */
-	public Bitmap getChannelIcon(Channel channel){
+	public Bitmap getChannelIcon(Channel channel) {
 		if(com == null || channel == null) {
 			return null;
 		}
@@ -96,7 +96,7 @@ public class EPGData implements Observer{
 	 * Get the icon for a channel, and set that channels icon to it
 	 * @param channel
 	 */
-	public void populateWithChannelIcon(Channel channel){
+	public void populateWithChannelIcon(Channel channel) {
 		if(com == null || channel == null) {
 			return;
 		}
@@ -107,9 +107,10 @@ public class EPGData implements Observer{
 	 * Populate all channels in an EPG with icons
 	 * @param epg
 	 */
-	public void populateWithChannelIcon(EPG epg){
-		if(com == null || epg == null)
+	public void populateWithChannelIcon(EPG epg) {
+		if(com == null || epg == null) {
 			return;
+		}
 		Iterator<Channel> channels = epg.iterator();
 		while(channels.hasNext()) {
 			populateWithChannelIcon(channels.next());
