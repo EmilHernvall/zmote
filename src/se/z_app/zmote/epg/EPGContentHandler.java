@@ -6,19 +6,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
-
 import se.z_app.stb.Channel;
 import se.z_app.stb.EPG;
 import se.z_app.stb.STBEvent;
 import se.z_app.stb.api.EPGData;
 import se.z_app.stb.api.STBContainer;
 import se.z_app.stb.api.STBListener;
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
-import android.util.Log;
 
 /**
  * Class that contains and controls the current EPG and the current channel
@@ -26,22 +23,20 @@ import android.util.Log;
  *
  */
 public class EPGContentHandler extends Observable implements Runnable, Observer{
-	//TODO: Implemnt cacheing of icons
 	private Thread thread;
 	private boolean isRunning;
 	private EPG currentEPG;
 	private Channel currentChannel;
-	private EPGdbHandler theDatabaseHandler;
 	private static Context theContext;
 	private long updateIntervalMillis = 3600 * 1000;
 	private long lastCachingOfIcons = 0;
 	private String defaultDir;
-	
+
 	/* Singleton */
 	private static class SingletonHolder { 
-         public static final EPGContentHandler INSTANCE = new EPGContentHandler();
+		public static final EPGContentHandler INSTANCE = new EPGContentHandler();
 	}	
-	
+
 	/**
 	 * Get the instance of EPGContentHandler
 	 * @return the instance
@@ -49,14 +44,14 @@ public class EPGContentHandler extends Observable implements Runnable, Observer{
 	public static EPGContentHandler instance(){
 		return SingletonHolder.INSTANCE;
 	}
-	
+
 	/**
 	 * Set the context for the database
 	 */
 	public static void setContext(Context theContextIn) {
 		theContext = theContextIn;
 	}
-	
+
 	/**
 	 * The private constructor
 	 */
@@ -71,7 +66,7 @@ public class EPGContentHandler extends Observable implements Runnable, Observer{
 		currentChannel = new Channel();
 		thread.start();
 	}
-	
+
 	/**
 	 * Get the current EPG
 	 * @return the EPG
@@ -84,7 +79,7 @@ public class EPGContentHandler extends Observable implements Runnable, Observer{
 			return currentEPG;
 		}
 	}
-	
+
 	/**
 	 * Get the current channel
 	 * @return the channel
@@ -96,10 +91,11 @@ public class EPGContentHandler extends Observable implements Runnable, Observer{
 			}
 			return currentChannel;
 		}
-	
 	}
 
-	
+	/**
+	 * Finds the current channel and it's url 
+	 */
 	private void findCurrentChannel(){
 		currentChannel = EPGData.instance().getCurrentChannel();
 		if(currentChannel.getUrl() != null){
@@ -111,14 +107,10 @@ public class EPGContentHandler extends Observable implements Runnable, Observer{
 			}
 		}
 	}
-	
-	
-	//TODO: Implement fetching populating EPG with Icons from cache, as well as putting "Missing image" images if a images
-	//is missing from the STB or cache
+
 	/**
 	 * Build the EPG by getting the icons from the box
-	 */
-	
+	 */	
 	private void buildEPG() {
 		if(theContext != null) {
 			EPGdbHandler theHandler = new EPGdbHandler(theContext);
@@ -128,7 +120,6 @@ public class EPGContentHandler extends Observable implements Runnable, Observer{
 				if(currentEPG != null) {
 					populateChannelIconFromCache(currentEPG);
 					EPGData.instance().populateAbsentChannelIcon(currentEPG);
-				
 				}
 				else{
 					currentEPG = new EPG();
@@ -150,10 +141,13 @@ public class EPGContentHandler extends Observable implements Runnable, Observer{
 			}
 		}
 	}
-	
-	
+
+	/**
+	 * Sets the icon path and converts it to a bitmap
+	 * @param epg
+	 */
 	private void populateChannelIconFromCache(EPG epg){
-		
+
 		for (Channel channel : epg) {
 			String iconPath = defaultDir+"/"+getChannelHash(channel)+".png";
 			File iconFile = new File(iconPath);
@@ -162,16 +156,20 @@ public class EPGContentHandler extends Observable implements Runnable, Observer{
 			}
 		}
 	}
-	
+
+	/**
+	 * Creates a thread and gets the icons 
+	 */
 	private void cacheChannelIcons(){
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				//Should implement something that checks that there is a STB active and avalible
+
 				for (Channel channel : currentEPG) {
 					Bitmap icon = null;
-					while(icon == null)
+					while(icon == null) {
 						icon = EPGData.instance().getChannelIcon(channel);
+					}
 					
 					channel.setIcon(icon);
 					String iconPath = defaultDir+"/"+getChannelHash(channel)+".png";
@@ -180,19 +178,25 @@ public class EPGContentHandler extends Observable implements Runnable, Observer{
 						channel.getIcon().compress(Bitmap.CompressFormat.PNG, 100, out);
 						out.flush();
 						out.close();
-					} 
+					}
+					
 					catch (FileNotFoundException e) { } 
 					catch (IOException e) {	}
-					
 				}				
 			}
 		}).start();
 	}
-	
+
+	/**
+	 * Get the channel information and returns a string where the Zenterio
+	 * boxes string attributes are added    
+	 * @param channel
+	 * @return string with channel information  
+	 */
 	private String getChannelHash(Channel channel){
 		return "tsid"+channel.getTsid()+"sid"+channel.getSid()+"onid"+channel.getOnid();
 	}
-	
+
 	/**
 	 * The main function of the class, a loop that gets
 	 *  the current channel and builds the EPG whenever it changes
@@ -207,25 +211,23 @@ public class EPGContentHandler extends Observable implements Runnable, Observer{
 						findCurrentChannel();
 					}
 				}
-				
+
 				if(lastCachingOfIcons + updateIntervalMillis < System.currentTimeMillis()){
 					lastCachingOfIcons = System.currentTimeMillis();
 					cacheChannelIcons();
 				}
 			}
-			
-			
-			
+
 			try {
 				synchronized (thread) {
 					thread.wait();
 				}
 			} catch (InterruptedException e) {
-				
+
 			}
 		}
 	}
-	
+
 	/**
 	 * When something changes, update the EPG and current channel if necessary
 	 */
@@ -237,9 +239,7 @@ public class EPGContentHandler extends Observable implements Runnable, Observer{
 			}
 		}else if(observable instanceof STBListener){
 			STBEvent event = STBListener.instance().getCurrentEvent();
-			//System.out.println("Evente Recived");
 			if(event.getUrl() != null){
-				//System.out.println("Evente Recived URL: " + event.getUrl());
 				for (Channel channel : currentEPG) {
 					if(event.getUrl().toLowerCase().contains(channel.getUrl().toLowerCase())){
 						System.out.println("Found Channel: " + channel.getName());
@@ -251,9 +251,9 @@ public class EPGContentHandler extends Observable implements Runnable, Observer{
 				}
 			}
 		}
-		
+
 	}
-	
+
 	/**
 	 * Get the current time limit for how long the EPG is valid
 	 * @return milliseconds
@@ -261,7 +261,7 @@ public class EPGContentHandler extends Observable implements Runnable, Observer{
 	public long getUpdateInterval() {
 		return updateIntervalMillis;
 	}
-	
+
 	/**
 	 * Set the current time limit for how long the EPG is valid
 	 * @param interval in milliseconds
@@ -269,5 +269,4 @@ public class EPGContentHandler extends Observable implements Runnable, Observer{
 	public void setUpdateInterval(long intervalIn) {
 		updateIntervalMillis = intervalIn;
 	}
-
 }
