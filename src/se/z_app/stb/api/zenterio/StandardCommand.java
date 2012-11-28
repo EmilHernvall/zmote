@@ -171,8 +171,8 @@ public class StandardCommand implements BiDirectionalCmdInterface{
 	}
 
 	
-	public Bitmap getWebTVServiceIcon(WebTVService serivce) {
-		String url = "http://" + ip +"/mdio/webtv/icon?locator=" + serivce.getIconURL();			
+	public Bitmap getWebTVServiceIcon(WebTVService service) {
+		String url = "http://" + ip +"/mdio/webtv/icon?locator=" + service.getIconURL();			
 			return new GetHTTPResponse().getImage(url);
 	}
 

@@ -5,7 +5,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import se.z_app.stb.Channel;
 import se.z_app.stb.EPG;
@@ -53,18 +52,16 @@ public class EPGData implements Observer{
 	
 	/**
 	 * Get the current EPG
-	 * @return the EPG
+	 * @return An EPG object 
 	 */
 	public EPG getEPG(){
 		if(com == null) {
 			return null;
 		}
-		
 		EPG epg = com.getEPG();
 		if(epg != null) {
 			epg.setStb(stb);
 		}
-		
 		return epg; 
 	}
 	
@@ -73,8 +70,9 @@ public class EPGData implements Observer{
 	 * @return the current channel
 	 */
 	public Channel getCurrentChannel(){
-		if(com == null)
+		if(com == null) {
 			return null;
+		}
 		return com.getCurrentChannel();
 	}
 	
@@ -84,12 +82,13 @@ public class EPGData implements Observer{
 	 * @return the icon as a bitmap
 	 */
 	public Bitmap getChannelIcon(Channel channel){
-		if(com == null || channel == null)
+		if(com == null || channel == null) {
 			return null;
+		}
 		Bitmap icon = null;
-		for(int i = 0; i<6 && icon == null; i++)
+		for(int i = 0; i<6 && icon == null; i++) {
 			icon = com.getChannelIcon(channel);
-		
+		}
 		return icon;
 	}
 	
@@ -98,8 +97,9 @@ public class EPGData implements Observer{
 	 * @param channel
 	 */
 	public void populateWithChannelIcon(Channel channel){
-		if(com == null || channel == null)
+		if(com == null || channel == null) {
 			return;
+		}
 		channel.setIcon(getChannelIcon(channel));
 	}
 	
@@ -111,7 +111,7 @@ public class EPGData implements Observer{
 		if(com == null || epg == null)
 			return;
 		Iterator<Channel> channels = epg.iterator();
-		while(channels.hasNext()){
+		while(channels.hasNext()) {
 			populateWithChannelIcon(channels.next());
 		}
 	}
@@ -121,21 +121,32 @@ public class EPGData implements Observer{
 	 * @param epg
 	 */
 	public void populateAbsentChannelIcon(EPG epg){
-		if(com == null || epg == null)
+		if(com == null || epg == null) {
 			return;
+		}
 		for (Channel channel : epg) {
-			if(channel.getIcon() == null){
+			if(channel.getIcon() == null) {
 				populateWithChannelIcon(channel);
 			}
 		}
-	}	
-	public int getVolume(){
+	}
+	
+	/**
+	 * Returns the current volume setting
+	 * @return An integer with the current volume
+	 */
+	public int getVolume() {
 		if(com != null) {
 			return com.getVolume();
 		}
 		return 0;
 	}
-	public boolean isMute(){
+	
+	/**
+	 * Return whether it's currently muted or not.
+	 * @return boolean
+	 */
+	public boolean isMute() {
 		return com.isMute();
 	}
 }
