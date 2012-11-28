@@ -73,12 +73,6 @@ public class ZChatAdapter{
 				thePost.setFeed(theFeed);
 				thePost.setContent(jsonPost.getString("content"));
 				thePost.setUserName(jsonPost.getString("username"));
-				/* Get the name of the user who commited the post *//*
-				String usernameID = URLEncoder.encode(jsonPost.getString("user_id"));
-				String userURLString = "http://" + serverAdress +"/post/get_user_by_id?id="+usernameID;
-				String jsonUser = getJSON(userURLString, 4096);
-				JSONArray theUser = new JSONArray(jsonUser);
-				thePost.setUserName(theUser.getJSONObject(0).getString("name"));
 
 				/* Get the date of creation and update */
 				String dateOfCreation = jsonPost.getString("created_at");
@@ -88,30 +82,23 @@ public class ZChatAdapter{
 				thePost.setDateOfCreation(creationDate);
 				thePost.setLastUpdate(lastUpdateDate);
 
-				/*Checks if the post was updated later then the feed itself
-				 *
-				 */
+				/*Checks if the post was updated later then the feed itself*/
 				if(theFeed.getLastUpdated().before(creationDate)){
 					theFeed.setLastUpdated(creationDate);
 				}
 
-
-				/* Get the id (for comments) */
+				/* Get the id (for comments)*/
 				int postID = jsonPost.getInt("id");
 				thePost.setId(postID);
-
 
 				/* URL to get the comments for the post */
 				String getCommentStr = "http://" + serverAdress +"/post/get_comments_by_postid"+
 						"?post_id=" + postID +
 						"";
 
-
-
 				/* Get the comments for the post */
 				try{
 					String getCommentJSONString = getJSON(getCommentStr, 4*4096);
-
 
 					JSONArray commentJSONArray = new JSONArray(getCommentJSONString);
 					for(int j = 0; j < commentJSONArray.length(); j ++){
@@ -127,22 +114,19 @@ public class ZChatAdapter{
 						newComment.setDateOfCreation(commentDate);
 						thePost.addComment(newComment);
 
-						/*Checks if the post was updated later then the feed itself
-						 *
-						 */
+						/*Checks if the post was updated later then the feed itself*/
 						if(theFeed.getLastUpdated().before(commentDate)){
 							theFeed.setLastUpdated(commentDate);
 						}
-
 					}
 				}
+				
 				catch (JSONException e) {
 					Log.i("GetComments", "ZChat adapter: JSON Failure: " + e.toString());
-
 				}
+				
 				theFeed.addPost(thePost);
-
-
+				
 			}
 
 		} catch (JSONException e) {
@@ -190,7 +174,6 @@ public class ZChatAdapter{
 				"&hours=" + hours +
 				"&minutes=" + minutes +
 				"";
-		//Log.e("ZCHAT", "userURLString" + userURLString);
 
 		/* Get the JSON object when saving the post so we can set the ID of the post */
 		String postJSONString = getJSON(userURLString, 4096);
@@ -204,38 +187,21 @@ public class ZChatAdapter{
 		} catch (JSONException e) {
 			e.printStackTrace();
 		} 
-
-		/* Try-catch block needed to visit the URL *//*
-		try {
-			URL url = new URL(userURLString);
-			url.openStream().close();
-		} 
-		catch (MalformedURLException e) {
-			e.printStackTrace();
-		} 
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		/*Checks if the post was updated later then the feed itself
-		 *
-		 */
 		
+		/*Checks if the post was updated later then the feed itself*/
 		targetFeed.setLastUpdated(newPost.getDateOfCreation());
-		
 
 		/* Return the feed with the post commited */
 		targetFeed.addPost(newPost);
 		return targetFeed;
 	}
 
-
 	/**
 	 * Function that commits a comment to the rails server
 	 * @param targetFeed - the feed that contains the post
 	 * @param targetPost - the post that is commented
-	 * @param newComment - the comment to be commited
-	 * @return the target feed with the comment commited
+	 * @param newComment - the comment to be committed
+	 * @return the target feed with the comment committed
 	 */
 	@SuppressWarnings("deprecation")
 	public Feed commitComment(Feed targetFeed, Post targetPost, Comment newComment){
@@ -256,17 +222,17 @@ public class ZChatAdapter{
 			JSONObject theReturnedPost = new JSONObject(postJSONString);
 			int theId = theReturnedPost.getInt("id");
 			newComment.setId(theId);
-
 			newComment.setDateOfCreation(railsStringToDate(theReturnedPost.getString("created_at")));
 		} 
+		
 		catch (JSONException e) {
 			e.printStackTrace();
 		} 
+		
 		/*
 		 * Updates the feed to be set as modified.
 		 */
 		targetFeed.setLastUpdated(newComment.getDateOfCreation());
-		
 		
 		targetPost.addComment(newComment);
 		return targetFeed;
@@ -305,23 +271,24 @@ public class ZChatAdapter{
 	private String getJSON(String urlStr, int bufferSize){
 		/* StringBuilder is a non-threadsafe (so more efficient) version of StringBuffer */
 		StringBuilder json = new StringBuilder();	
+
 		try {
 			URL url = new URL(urlStr);
 			InputStream in = url.openStream();
-
-
+			
 			byte buffer[] = new byte[bufferSize];
 			int len;
 			while ((len = in.read(buffer)) != -1) {
 				json = json.append(new String(buffer, 0, len));
 			}
-
+			
 			in.close();
+			
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		return json.toString();
 	}
-
 
 }
