@@ -53,12 +53,11 @@ public class MediaStreamer {
 	 * @return the MediaItem from the file
 	 */
 	public MediaItem addFile(File file){
-		
-		
 		String filename = file.getName();
 		String extention = "";
 		int index = filename.lastIndexOf(".");
-		if(index>0){
+		
+		if (index > 0) {
 			extention = filename.substring(index);
 		}
 		String uri = "/"+System.currentTimeMillis()+extention;

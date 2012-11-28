@@ -17,7 +17,6 @@ import se.z_app.httpserver.ZmoteHTTPDRequestHandler;
  * @author Rasmus Holm
  */
 public class MediaRequestHandler implements ZmoteHTTPDRequestHandler{
-
 	private String uri;
 	private File file;
 	
@@ -50,11 +49,12 @@ public class MediaRequestHandler implements ZmoteHTTPDRequestHandler{
 	 * @param httpd The HTTP server to serve the response
 	 * @return An HTTP response
 	 */
+	@SuppressWarnings("resource")
 	@Override
 	public Response serve(String uri, String method, Properties header,
 			Properties parms, Properties files, ZmoteHTTPD httpd) {
-		
 		InputStream in = null;
+		
 		try {
 			in = new FileInputStream(file);
 		} catch (FileNotFoundException e) {
@@ -64,7 +64,6 @@ public class MediaRequestHandler implements ZmoteHTTPDRequestHandler{
 		Response response = httpd.serveFile("/"+file.getName(), header, file.getParentFile(), false);
 		response.isStreaming = false;
 
-		
 		return response;
 	}
 	
