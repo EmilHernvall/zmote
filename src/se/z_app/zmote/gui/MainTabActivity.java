@@ -49,7 +49,7 @@ import android.widget.Spinner;
 
 
 /**
- * The main Fragment activity, extends the Sherlock library to support compability.
+ * The main Fragment activity, extends the Sherlock library to support compatibility.
  * 
  * @author refrectored by: Linus Back
  * 
@@ -80,15 +80,22 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
     private boolean boolTemp;
     public int SDK_INT = android.os.Build.VERSION.SDK_INT;
 	
-    
+    /**
+     * Update of the volume and mute state.
+     * @param observable
+     * @param data
+     */
 	@Override
 	public void update(Observable observable, Object data) {
 		STBEvent event = STBListener.instance().getCurrentEvent();
+		
 		if(event.getType().equals("mute")){
 			System.out.println();
 			boolTemp = event.getState();
+			 
 			runOnUiThread(new Runnable() {
 				boolean state = boolTemp;
+				
 				@Override
 				public void run() {
 					if(state){
@@ -114,7 +121,9 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	}
     
     
-    
+    /**
+     * Destroy of the view
+     */
     @Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -126,6 +135,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	/**
 	 * Standard create function for the fragment activity.
 	 * Sets the layout.
+	 * @param savedInstanceState
 	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -174,6 +184,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 
 	/**
 	 * Restores the navigation state.
+	 * @param savedInstanceState
 	 */
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
@@ -185,6 +196,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 
 	/**
 	 * Saves the navigation state.
+	 * @param outState
 	 */
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
@@ -195,6 +207,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	/**
 	 * Creates and shows the Action bar, including the navigations tabs and the
 	 * drop-down list.
+	 * @param menu
 	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -220,39 +233,41 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 		return true;
 	}
 
-
-
-
 	/**
 	 * Used to bind events to the physical volume buttons of the device.
 	 * In this case, it increase and decreases the volume of the STB.
+	 * @param event
 	 */
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
 		int action = event.getAction();
 		int keyCode = event.getKeyCode();
 		switch (keyCode) {
+		
 		case KeyEvent.KEYCODE_VOLUME_UP:
 			if (action == KeyEvent.ACTION_UP) {
 				RemoteControl.instance().sendButton(Button.VOLPLUS);
 				vibrate();
 			}
 			return true;
+			
 		case KeyEvent.KEYCODE_VOLUME_DOWN:
 			if (action == KeyEvent.ACTION_DOWN) {
 				RemoteControl.instance().sendButton(Button.VOLMINUS);
 				vibrate();
 			}
 			return true;
+			
 		default:
 			return super.dispatchKeyEvent(event);
 		}
 	}
 
-	
 	/**
 	 * Sets and displays the fragment that the user selects from the tabs.
 	 * If new fragments are implemented they should be set here.
+	 * @param tab
+	 * @param ft
 	 */
 	@Override
 	public void onTabSelected(Tab tab,
@@ -295,7 +310,6 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
     	}
 		else if(tab.equals(tabFav)){
 			Log.i("FragmentLog", "Files");
-			//WARNING! : provisional function
 			if(filesfragment == null){
 				filesfragment = new PlayMediaFilesFragment(this);
 				isNew = true;
@@ -318,10 +332,8 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 				getSupportFragmentManager().beginTransaction().add(R.id.container, fragment).commit();
 			else
 				getSupportFragmentManager().beginTransaction().show(fragment).commit();
-    	
-
+ 
 	}
-
 
 	/**
 	 * Auto-generated method. Does nothing.
@@ -345,7 +357,6 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
     	}
 		else if(tab.equals(tabFav)){
 			Log.i("Detaching FragmentLog", "Fav");
-			//WARNING! : provisional function 
 			fragment = filesfragment;
 			
 		}
@@ -362,6 +373,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	    }	
 
 	}
+	
 	/**
 	 * Auto-generated method. Does nothing.
 	 */
@@ -383,7 +395,6 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
     	}
 		else if(tab.equals(tabFav)){
 			Log.i("Detaching FragmentLog", "Fav");
-			//WARNING! : provisional function 
 			fragment = filesfragment;
 			
 		}
@@ -398,11 +409,12 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 	        currentFragmen = fragment;
 	    }	
 
-
 	}
-	
-	
-
+		
+	/**
+	 * Shows channels information
+	 * @param program
+	 */
 	public void showChannelInformation(Program program){
 		getSupportFragmentManager().beginTransaction().hide(currentFragmen).commit();
 		if(chinfragment == null){
@@ -414,12 +426,8 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 			getSupportFragmentManager().beginTransaction().show(chinfragment).commit();
 		}
 		currentFragmen = chinfragment;
-		
-		
+			
 	}
-	
-
-	
 
 	/**
 	 * Adds all the navigation tabs to the action bar.
@@ -433,7 +441,6 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 		tabFav = actionBar.newTab().setIcon(R.drawable.sd_storage);
 		tabWeb = actionBar.newTab().setIcon(R.drawable.location_map);
 
-
 		// Add the tabs to the action bar
 		actionBar.addTab(tabMain.setTabListener(this));
 		actionBar.addTab(tabRC.setTabListener(this));
@@ -443,9 +450,6 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 
 	}
 	
-	
-
-
 	/**
 	 * Creates the spinner for the drop down menu.
 	 * @return
@@ -457,7 +461,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 		mySpinner = (Spinner) myView.findViewById(R.id.action_bar_spinner);
 
 		/*gets all the boxes from the STB container. And saves the index of the
-    	 selected one so that the spinners defoult value is correct.*/
+    	 selected one so that the spinners default value is correct.*/
 		Iterator<STB> iterator = STBContainer.instance().iterator();
 		STBNames = new ArrayList<String>();
 		int temp = 0;
@@ -481,7 +485,7 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 		// Specify the layout to use when the list of choices appears
 		adapter.setDropDownViewResource(android.R.layout.
 				simple_spinner_dropdown_item);
-		// Apply the adapter to the spinner, also aplies a listner.
+		// Apply the adapter to the spinner, also applies a listener.
 		mySpinner.setAdapter(adapter);
 		mySpinner.setSelection(selected);
 
@@ -496,17 +500,15 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 				RemoteControl.instance().sendButton(Button.MUTE);
 			}
 		});
-		//RemoteControl.instance().sendButton(Button.VOLMINUS);
-		//RemoteControl.instance().sendButton(Button.VOLPLUS);
-		
 
 		return myView;				
 	}
 
 	public void setAlive(int isAlive){
 
-		if(actionBar == null) //TODO need to fixed, added so it won't crash due to other changes //Emma
+		if(actionBar == null){
 			return;
+		}
 		if(isAlive==1){
 			actionBar.setLogo(R.drawable.green_button2);
 		}else{
@@ -565,6 +567,9 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 
 	}
 	
+	/**
+	 * Loads the volume of the app.
+	 */
 	private class LoadVolume extends AsyncTask<Integer, Integer, Integer>{
 
 		@Override
@@ -580,6 +585,9 @@ public class MainTabActivity extends SherlockFragmentActivity implements TabList
 		
 	}
 	
+	/**
+	 * Asynchronous task.
+	 */
 	private class MyTimedTask implements Runnable{
 
 		int timeout= 1000;
