@@ -65,11 +65,21 @@ public class EPGFragment extends Fragment{
 	private OnTouchListener toutch;
 	private int currentX = -1, currentY = -1;
 
+	
+	/**
+	 * Default constructor
+	 * @param main
+	 */
 	public EPGFragment(MainTabActivity main){
 		this.main = main;
 	}
     
-	
+	/**
+	 * Creation of the view
+	 * @param inflater
+	 * @param container
+	 * @param savedInstance
+	 */
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -109,8 +119,7 @@ public class EPGFragment extends Fragment{
 			        	
 			        	int x2 = (int) event.getRawX();
 			            int y2 = (int) event.getRawY();
-			            
-			            
+			     
 			            scroll_view.scrollBy(currentX - x2 , currentY - y2);
 			            hz_scroll.scrollBy(currentX - x2 , currentY - y2);
 			            hz_scroll_time.scrollBy(currentX - x2, 0);	// Synchronization with timebar
@@ -118,6 +127,7 @@ public class EPGFragment extends Fragment{
 			            currentY = y2;
 			            break;
 			        }   
+			        
 			        case MotionEvent.ACTION_UP: {
 			        	
 			        	long time = System.currentTimeMillis()-startTime;
@@ -135,10 +145,9 @@ public class EPGFragment extends Fragment{
 			        		hz_scroll_time.fling((int)-vx);		// Timebar synch
 			        		hz_scroll.fling((int)-vx);
 							scroll_view.fling((int)-vy);
-			        	}
-			        		
-			        	break;
-			            
+			        	}	
+			        	
+			        	break;   
 			        }
 			        }
 					
@@ -159,6 +168,9 @@ public class EPGFragment extends Fragment{
 		return view;
 	}
 
+	/**
+	 * Resume of the view
+	 */
     @Override
     public void onResume(){
     	
@@ -191,8 +203,7 @@ public class EPGFragment extends Fragment{
 		});
 	
     }
-    
-    
+       
     /**
      * Sets the timeBar in 30min intervals starting from the hour passed by "start"
      * @param start		Starting time for the time bar
@@ -232,6 +243,7 @@ public class EPGFragment extends Fragment{
     	
     	Date now = new Date(System.currentTimeMillis());
     	long difference = 0;
+    	
     	try{
     		difference = now.getTime() - start.getTime();
     	}catch(NumberFormatException ex){
@@ -263,7 +275,6 @@ public class EPGFragment extends Fragment{
     	
     	// Center the screen on the now line
     	centerOnNowLine();
-
     }
     
     /**
@@ -299,15 +310,16 @@ public class EPGFragment extends Fragment{
     	start = null;
     	end = null;
     	Date temp = null;
-    	// We will check the start time of the first program of every channel
-    	// and get the starting hour of the earlier one
+    	
+    	/* We will check the start time of the first program of every channel
+    	 and get the starting hour of the earlier one */
     	for(Channel channel: epg){
     		
     		// Check for the latest and earlier program
     		for(Program prog: channel){
     			
-    			cal.setTime(prog.getStart()); // sets calendar time/date
-    		    cal.add(Calendar.SECOND, prog.getDuration()); // adds one hour
+    			cal.setTime(prog.getStart()); 					// sets calendar time/date
+    		    cal.add(Calendar.SECOND, prog.getDuration()); 	// adds one hour
     		    temp = cal.getTime();
 
     		    if(end == null){
@@ -376,24 +388,23 @@ public class EPGFragment extends Fragment{
 		
 		ImageButton new_btn = new ImageButton(view.getContext());
 		new_btn.setPadding(0, 0, 0, 0);
-		new_btn.setId(ch.getNr()+200);	// ID of the button: ChannelNr+200
+		new_btn.setId(ch.getNr()+200);					// ID of the button: ChannelNr+200
 		new_btn.setImageBitmap(getResizedBitmap(ch.getIcon(),height,width));
-		new_btn.setBackgroundResource(0);	// Set the background transparent
+		new_btn.setBackgroundResource(0);				// Set the background transparent
 		new_btn.setClickable(true);
 		temp = ch;
 		
 		new_btn.setOnClickListener(new View.OnClickListener() {
 			Channel tempChannel = temp;
+			
 			@Override
-			public void onClick(View v) {
-				
+			public void onClick(View v) {	
 				RemoteControl.instance().launch(tempChannel);
 				main.vibrate();
 			}
 		});
 		
 		i_layout.addView(new_btn);
-	
 	}
 
 	/**
@@ -446,6 +457,7 @@ public class EPGFragment extends Fragment{
 	    calendar.setTime(pg.getStart());
 	    calendar.add(Calendar.SECOND, pg.getDuration());
 	    end_tmp = calendar.getTime();
+	    
 		if( (now.compareTo(end_tmp) > 0) ){
 			// Background for ended programs
 			text.setBackgroundColor(0xFF383838);
@@ -466,9 +478,7 @@ public class EPGFragment extends Fragment{
 			/* When a program is clicked, the channel information view is loaded */
 			@Override
 			public void onClick(View v) {
-
 				main.showChannelInformation(p);
-	
 			}
 			
 		});

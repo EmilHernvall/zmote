@@ -54,23 +54,30 @@ public class EpgHorizontalActivity extends Activity {
 	private Date start;
 	private Date end;
 	private int screen_width = 0;
-	private int schedule_lenght_in_hours = 48;
+	private int schedule_length_in_hours = 48;
 	private OnTouchListener toutch;
 	private int currentX = -1, currentY = -1;
 	private Vibrator vibe;
 	
+	/**
+	 * Vibrates the phone.
+	 */
 	public void vibrate(){
 		vibe.vibrate(95);
 	}
 	
 	/**
-	 * vibrates the phone a number a number of milliseconds.
+	 * Vibrates the phone a number a number of milliseconds.
 	 * @param ms number of milliseconds the the phone vibrates
 	 */
 	public void vibrate(int ms){
 		vibe.vibrate(ms);
 	}
 	
+	/**
+	 * Creation of the view.
+	 * @param savedInstanceState
+	 */
 	@Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
@@ -90,9 +97,9 @@ public class EpgHorizontalActivity extends Activity {
 		//2D Scrolling
 		toutch = new View.OnTouchListener() {
 			long startTime = System.currentTimeMillis();
-
 			int firstX = 0;
 			int firstY = 0;
+			
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				
@@ -111,15 +118,15 @@ public class EpgHorizontalActivity extends Activity {
 			        	
 			        	int x2 = (int) event.getRawX();
 			            int y2 = (int) event.getRawY();
-			            
-			            
+			                
 			            scroll_view.scrollBy(currentX - x2 , currentY - y2);
 			            hz_scroll.scrollBy(currentX - x2 , currentY - y2);
 			            hz_scroll_time.scrollBy(currentX - x2, 0);	// Synchronization with timebar
 			            currentX = x2;
 			            currentY = y2;
 			            break;
-			        }   
+			        }
+			        
 			        case MotionEvent.ACTION_UP: {
 			        	
 			        	long time = System.currentTimeMillis()-startTime;
@@ -192,7 +199,7 @@ public class EpgHorizontalActivity extends Activity {
     	LinearLayout.LayoutParams pt_params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,30);
     	program_timebar.setOrientation(0);
     	
-    	for(int i=0; i<(schedule_lenght_in_hours*2); ++i){
+    	for(int i=0; i<(schedule_length_in_hours*2); ++i){
 			
 			TextView time = new TextView(view.getContext());
 			time.setTextColor(0xFFFF8000);
@@ -310,12 +317,12 @@ public class EpgHorizontalActivity extends Activity {
     		}
     	}
     	
-    	// Get the lenght of the schedule in hours
+    	// Get the length of the schedule in hours
     	long duration = 0;
     	if(start != null && end != null){
     		duration = end.getTime() - start.getTime();		// Duration in milliseconds
     	}
-    	schedule_lenght_in_hours = (int) (duration / (60*60*1000));
+    	schedule_length_in_hours = (int) (duration / (60*60*1000));
 
     }
     
@@ -431,6 +438,7 @@ public class EpgHorizontalActivity extends Activity {
 	    calendar.setTime(pg.getStart());
 	    calendar.add(Calendar.SECOND, pg.getDuration());
 	    end_tmp = calendar.getTime();
+	    
 		if( (now.compareTo(end_tmp) > 0) ){
 			// Background for ended programs
 			text.setBackgroundColor(0xFF383838);
@@ -451,7 +459,6 @@ public class EpgHorizontalActivity extends Activity {
 			/*  When a program is clicked, the channel information view is loaded */
 			@Override
 			public void onClick(View v) {
-			
 				EPGFragment.eventProgram = p;
 				finish();
 				vibrate();
