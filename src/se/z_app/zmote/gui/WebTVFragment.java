@@ -40,8 +40,8 @@ public class WebTVFragment extends Fragment {
 	private ImageButton play_button;
 	private ImageButton next_button;
 	private ImageButton previous_button;
-	private int web_service = 0;  // To know in what service are we currently (youtube, spotify...)
-	private ProgressBar pb;
+	private int web_service = 0;  // To know in what service are we currently in(youtube, spotify...)
+	private ProgressBar progressb;
 	private WebTVService services[];
 	private String search_for_this = null;	
 	private float screenWidth = 0;
@@ -140,7 +140,7 @@ public class WebTVFragment extends Fragment {
 	public boolean search(){
 
 		// We can set a progress bar to show the user that we are searching
-		pb = (ProgressBar)view_temp.findViewById(R.id.progressLodingEpgChannelInformation);
+		progressb = (ProgressBar)view_temp.findViewById(R.id.progressLodingEpgChannelInformation);
 		EditText search_box = (EditText)view_temp.findViewById(R.id.search_box_webtv);
 		search_for_this = search_box.getText().toString();
 		TextView resultText = (TextView) view_temp.findViewById(R.id.result_webtv);
@@ -151,7 +151,6 @@ public class WebTVFragment extends Fragment {
 			new AsyncWebSearch().execute();
 			return true;
 		}
-
 		else {
 			return false;
 		}
@@ -221,7 +220,7 @@ public class WebTVFragment extends Fragment {
 
 			ImageButton queueButton = new ImageButton(view_temp.getContext());
 			Drawable d = (Drawable) view_temp.getResources().getDrawable(R.drawable.queue_button);
-			queueButton.setBackgroundDrawable(d); //Check if ok, should not be used with API 16
+			queueButton.setBackgroundDrawable(d); 
 			item2.addView(queueButton);
 
 			final LinearLayout item = new LinearLayout(view_temp.getContext());
@@ -353,9 +352,8 @@ public class WebTVFragment extends Fragment {
 				//If the user swipes
 				if(event.getAction() == MotionEvent.ACTION_DOWN){
 					main.vibrate();
-					//TODO: Function to perform HERE	
-
 					next_button.setBackgroundColor(0xFFFFFFFF);
+					
 					// Put here the "light" button
 					next_button.setBackgroundResource(R.drawable.next_pressed);		
 					RemoteControl.instance().sendButton(se.z_app.stb.api.RemoteControl.Button.RIGHT);
@@ -399,11 +397,13 @@ public class WebTVFragment extends Fragment {
 	/**
 	 * Add items into spinner (drop-down menu with services) dynamically
 	 * @param services[] array with the WebTV services to add
-	 * @author Maria Jesus Platero
+	 * @author Mar’a Jesœs Platero
 	 */
 	public void addItemsOnSpinner(WebTVService services[]) {
-		if(services == null)
+		if(services == null){
 			return;
+		}
+		
 		List<Bitmap> list = new ArrayList<Bitmap>();
 
 		for(WebTVService serv : services){
@@ -421,7 +421,7 @@ public class WebTVFragment extends Fragment {
 
 	/**
 	 * Method to process the services icons
-	 * @author Maria Jesus Platero
+	 * @author Mar’a Jesœs Platero
 	 */
 	public class ImageAdapter extends ArrayAdapter<Bitmap>{
 
@@ -452,7 +452,7 @@ public class WebTVFragment extends Fragment {
 
 	/**
 	 * Asynchronous loader for the WebTV services
-	 * @author Maria Jesus Platero
+	 * @author Mar’a Jesœs Platero
 	 */
 	private class AsyncWebServiceLoader extends AsyncTask<Integer, Integer, WebTVService[]>{
 
@@ -488,7 +488,6 @@ public class WebTVFragment extends Fragment {
 
 		@Override
 		protected void onPostExecute(WebTVItem elements[]) {
-
 			int counter = 0;
 
 			for(WebTVItem item: elements){
@@ -496,9 +495,9 @@ public class WebTVFragment extends Fragment {
 				break;
 			}
 
-			if(counter > 0)
+			if(counter > 0){
 				showResults(elements);
-			else{
+			}else{
 				showNoResultsText();
 			}
 		}

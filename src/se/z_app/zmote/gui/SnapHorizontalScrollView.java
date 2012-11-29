@@ -67,8 +67,8 @@ public class SnapHorizontalScrollView extends HorizontalScrollView {
         for(int i = 0; i< items.size();i++){
             // Adding the items to the container
             internalWrapper.addView((View) mItems.get(i));
-            
         }
+        
         // Now we set the listener to make it snap
         setOnTouchListener(new View.OnTouchListener() {
             @Override

@@ -51,7 +51,7 @@ class TimedUpdate implements Runnable{
 		}
 	}
 	/**
-	 * Syncronized getter for the activity.
+	 * Synchronized getter for the activity.
 	 * @return
 	 */
 	public ZChatActivity getActivity(){
@@ -60,7 +60,7 @@ class TimedUpdate implements Runnable{
 		}
 	}
 	/**
-	 * Syncronized setter for the activity needing to be updated.
+	 * Synchronized setter for the activity needing to be updated.
 	 * @param activity
 	 */
 	public void setActivity(ZChatActivity activity){
