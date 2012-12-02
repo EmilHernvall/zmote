@@ -474,6 +474,7 @@ public class ZChatActivity extends SherlockActivity {
 			EditText edit = (EditText) view.findViewById(R.id.new_comment);
 			String content = edit.getText().toString();
 			if(!content.equals("") && content!=null){
+				edit.setText(null);
 				new CommitComment(zChat, list, post, content).execute();
 			}
 		}
@@ -501,7 +502,9 @@ public class ZChatActivity extends SherlockActivity {
 			EditText edit = (EditText) findViewById(R.id.new_post);
 			String content = edit.getText().toString();
 			if(!content.equals("") && content!=null){
+				edit.setText(null);
 				new CommitPost(activity, postList, content).execute();
+				
 			}
 		}
 
