@@ -222,6 +222,9 @@ public class ZChatActivity extends SherlockActivity {
 		if(date1.getMinutes()!=date2.getMinutes()){
 			return date2.getMinutes()-date1.getMinutes()+" minutes ago";
 		}
+		if(date2.getSeconds()-date1.getSeconds()<10){
+			return "just recently";
+		}
 		if(date1.getSeconds()!=date2.getSeconds()){
 			return date2.getSeconds()-date1.getSeconds()+" seconds ago";
 		}
