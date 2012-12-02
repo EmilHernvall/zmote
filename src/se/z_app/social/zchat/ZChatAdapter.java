@@ -73,7 +73,6 @@ public class ZChatAdapter{
 				thePost.setFeed(theFeed);
 				thePost.setContent(jsonPost.getString("content"));
 				thePost.setUserName(jsonPost.getString("username"));
-
 				/* Get the date of creation and update */
 				String dateOfCreation = jsonPost.getString("created_at");
 				String lastUpdate = jsonPost.getString("updated_at");
@@ -205,7 +204,8 @@ public class ZChatAdapter{
 	 */
 	@SuppressWarnings("deprecation")
 	public Feed commitComment(Feed targetFeed, Post targetPost, Comment newComment){
-
+		String username = URLEncoder.encode(newComment.getUserName());
+		
 		String commentContent = URLEncoder.encode(newComment.getContent());
 		String postId = ""+newComment.getParentPost().getId();
 
@@ -213,7 +213,7 @@ public class ZChatAdapter{
 		String urlString = "http://rails.z-app.se/post/insert_comment?"+
 				"post_id="+postId+
 				"&content="+commentContent+
-				"&username="+newComment.getUserName()+
+				"&username="+username+
 				"";
 
 		/* Get the JSON object when saving the comment so we can set the dates and id correctly */

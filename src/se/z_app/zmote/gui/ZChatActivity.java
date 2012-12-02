@@ -206,7 +206,6 @@ public class ZChatActivity extends SherlockActivity {
 	 */
 	@SuppressWarnings("deprecation")
 	private String getSmallestDifference(Date date1, Date date2){
-		System.out.println(date1);
 		if(date1.getYear()!=date2.getYear()){
 			return date2.getYear()-date1.getYear()+" years ago";
 		}
