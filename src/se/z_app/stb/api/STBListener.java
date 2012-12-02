@@ -88,6 +88,7 @@ public class STBListener extends Observable implements Observer, Runnable{
 			//System.out.println("Recived Event");
 			this.setChanged();
 			this.notifyObservers(event);
-		}		
+		}
+		System.out.println("Thread stoped....");
 	}
 }
