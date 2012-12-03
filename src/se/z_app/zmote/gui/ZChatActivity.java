@@ -38,7 +38,6 @@ import android.widget.TextView;
 
 /**
  * Activity that handles the GUI for the ZChat
- * 
  * @author Linus Back
  */
 public class ZChatActivity extends SherlockActivity {
@@ -57,19 +56,16 @@ public class ZChatActivity extends SherlockActivity {
 	private int timeBeforeFirstUpdate = 8000;
 	private int timeBetweenUpdates = 5000;
 
-
 	/**
 	 * Constructor that initialize the activity
 	 */
 	public ZChatActivity(){
 		myProgram = targetProgram;
 		targetProgram = null;
-
 	}
 
-
 	/**
-	 * On create function that create some usefull stuff
+	 * On create function that create some useful stuff
 	 */
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
@@ -86,22 +82,17 @@ public class ZChatActivity extends SherlockActivity {
 		TextView textView = (TextView) findViewById(R.id.feed_name);
 		textView.setText("Feed for: '"+getMyProgram().getName()+"'");
 
-
 		new AsyncDataLoader(this, postList).execute();
-
-
 
 		Button postButton = (Button) findViewById(R.id.post_button);
 
 		postButton.setOnClickListener(new PostButtonListener(myActivity, 
 				postList));
 
-
-
 	}
 
 	/**
-	 * on start function starts the thread that updates the feed.
+	 * Onstart function starts the thread that updates the feed.
 	 */
 	public void onStart(){
 		super.onStart();
@@ -111,7 +102,7 @@ public class ZChatActivity extends SherlockActivity {
 
 	}
 	/**
-	 * stops the thread that updates the feed.
+	 * Stops the thread that updates the feed.
 	 */
 	public void onStop(){
 		super.onStop();
@@ -133,8 +124,6 @@ public class ZChatActivity extends SherlockActivity {
 		}
 	}
 
-
-
 	/**
 	 * Synchronized setter for the feed.
 	 * @param feed
@@ -154,6 +143,7 @@ public class ZChatActivity extends SherlockActivity {
 			return myFeed;
 		}
 	}
+	
 	/**
 	 * Synchronized getter for the the adabter.
 	 * @return
@@ -170,15 +160,13 @@ public class ZChatActivity extends SherlockActivity {
 		return myProgram;
 	}
 
-
 	/**
 	 * Sets the user name to a user name of the device.
-	 * First tries to set it to facebook name of a synced calender, if non 
+	 * First tries to set it to facebook name of a synchronized calendar, if non 
 	 * exists sets it to the google account.
 	 */
 	private void setUserName(){
 		AccountManager accountManager = AccountManager.get(this); 
-		// Account[] account = accountManager.getAccountsByType("com.google");
 		Account[] accounts = accountManager.getAccounts();
 		boolean foundGoogleAcc= false;
 		for(int i=0; i<accounts.length;i++){
@@ -207,6 +195,7 @@ public class ZChatActivity extends SherlockActivity {
 		}
 		userName = "userName";   
 	}
+	
 	/**
 	 * Translate the date1 to the difference to the other date1.
 	 * used to get the smallest difference between the date class and
@@ -217,7 +206,6 @@ public class ZChatActivity extends SherlockActivity {
 	 */
 	@SuppressWarnings("deprecation")
 	private String getSmallestDifference(Date date1, Date date2){
-		System.out.println(date1);
 		if(date1.getYear()!=date2.getYear()){
 			return date2.getYear()-date1.getYear()+" years ago";
 		}
@@ -227,12 +215,15 @@ public class ZChatActivity extends SherlockActivity {
 		if(date1.getDay()!=date2.getDay()){
 			return date2.getDay()-date1.getDay()+" days ago";
 		}
-		//TODO check with server side why server is 1 hour behind real time.
+		
 		if(date1.getHours()!=(date2.getHours()-1)){
 			return date2.getHours()-date1.getHours()+" hours ago";
 		}
 		if(date1.getMinutes()!=date2.getMinutes()){
 			return date2.getMinutes()-date1.getMinutes()+" minutes ago";
+		}
+		if(date2.getSeconds()-date1.getSeconds()<10){
+			return "just recently";
 		}
 		if(date1.getSeconds()!=date2.getSeconds()){
 			return date2.getSeconds()-date1.getSeconds()+" seconds ago";
@@ -274,8 +265,6 @@ public class ZChatActivity extends SherlockActivity {
 				list.addAll(1, post.getCommentsAsCollection());
 
 			}
-
-
 		}
 
 		@Override
@@ -416,11 +405,9 @@ public class ZChatActivity extends SherlockActivity {
 		}
 	}
 
-
 	/**
 	 * Async task that is used to commit a comment and get the resulting feed.
 	 * @author Linus
-	 *
 	 */
 	private class CommitComment extends AsyncTask<Integer, Integer, Feed>{
 		private ZChatActivity zChat;
@@ -458,14 +445,11 @@ public class ZChatActivity extends SherlockActivity {
 			list.setAdapter(new MyListAdabter(zChat));
 
 		}
-
-
 	}
 
 	/**
 	 * Listener for when pressing the comment button.
 	 * @author Linus
-	 *
 	 */
 	private class CommentButtonListener implements OnClickListener{
 
@@ -492,6 +476,7 @@ public class ZChatActivity extends SherlockActivity {
 			EditText edit = (EditText) view.findViewById(R.id.new_comment);
 			String content = edit.getText().toString();
 			if(!content.equals("") && content!=null){
+				edit.setText(null);
 				new CommitComment(zChat, list, post, content).execute();
 			}
 		}
@@ -519,20 +504,12 @@ public class ZChatActivity extends SherlockActivity {
 			EditText edit = (EditText) findViewById(R.id.new_post);
 			String content = edit.getText().toString();
 			if(!content.equals("") && content!=null){
+				edit.setText(null);
 				new CommitPost(activity, postList, content).execute();
+				
 			}
 		}
 
 	}
 
-
-
-
-
-
-
 }
-
-
-
-

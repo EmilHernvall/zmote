@@ -7,7 +7,6 @@ import se.z_app.stb.STB;
 /**
  * Class that holds the list of STBs, will probably not be used once the databse
  * is implemented.
- * 
  * @author Marcus Widegren, Christian Vestman
  */
 public class SelectSTBList {

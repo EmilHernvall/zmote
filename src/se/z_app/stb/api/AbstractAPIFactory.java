@@ -9,6 +9,12 @@ import se.z_app.stb.api.zenterio.APIFactoryZenterio;
  * @author Rasmus Holm
  */
 public abstract class AbstractAPIFactory {
+	
+	/**
+	 * This method returns a APIFactory that is suited for the STB that is passed as an argument
+	 * @param stb the STB that an APIFactory is needed for
+	 * @return a APIFactory for the specified STB, with which APIs for the STB can be created.
+	 */
 	public static synchronized AbstractAPIFactory getFactory(STB stb){
 		if(stb == null){
 			return new APIFactoryNull();
@@ -21,8 +27,24 @@ public abstract class AbstractAPIFactory {
 		}
 	}
 	
+	/**
+	 * 
+	 * @return a realization of the DiscoveryInterface for a specific type of STB
+	 */
 	public abstract DiscoveryInterface getDiscovery();
+	/**
+	 * 
+	 * @return a realization of the BiDirectionalCmdInterface for a specific type of STB
+	 */
 	public abstract BiDirectionalCmdInterface getBiDirectional();
+	/**
+	 * 
+	 * @return a realization of the MonoDirectionalCmdInterface for a specific type of STB
+	 */
 	public abstract MonoDirectionalCmdInterface getMonoDirectional();
+	/**
+	 * 
+	 * @return a realization of the EventListnerInterface for a specific type of STB
+	 */
 	public abstract EventListnerInterface getEventListner();
 }

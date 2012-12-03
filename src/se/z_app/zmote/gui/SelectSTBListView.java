@@ -11,10 +11,7 @@ import android.widget.ListView;
 
 /**
  * The STB list generator
- * 
  * @author Marcus Widegren, Christian Vestman
- * 
- * 
  */
 public class SelectSTBListView extends ListView {
 	Vector<STB> theList = SelectSTBList.instance().getList();
@@ -43,8 +40,7 @@ public class SelectSTBListView extends ListView {
 	}
 
 	/**
-	 * Sets the length of the STB list
-	 * 
+	 * Sets the length of the STB list 
 	 * @param theActivity the activity
 	 * @param listIn the list of STBs as an array
 	 * @param filePath path to the file

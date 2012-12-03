@@ -9,9 +9,7 @@ import android.widget.TextView;
 /**
  * An ImageElement for the STB list, contains references to an STB and a
  * TextView
- * 
  * @author Marcus Widegren, Christian Westman
- * 
  */
 public class SelectSTBImageElement extends ImageView {
 	private STB theSTB;

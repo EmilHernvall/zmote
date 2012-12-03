@@ -30,13 +30,11 @@ import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentSkipListMap;
  * @author Christian Tennstedt & Marcus Widegren
  *
  */
-
 public class PlayMediaFilesFragment extends Fragment {
 
 	private MainTabActivity tab;
 	private float screenWidth = 0;
 	private View view_temp;
-	private ProgressBar pb;
 	private File tmpFile;
 
 
@@ -48,33 +46,25 @@ public class PlayMediaFilesFragment extends Fragment {
 		this.tab = mainTabActivity;
 	}
 
+	/**
+	 * Creation of the view
+	 * @return view_temp
+	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {	
 
 		view_temp = inflater.inflate(R.layout.fragment_stream_file, null); 
 		screenWidth = getResources().getDisplayMetrics().widthPixels;
-		AsyncTask<Integer, Integer, ConcurrentSkipListMap> async = new AsyncSearch().execute();  //the program waits until this line is executed, we could make this better to load the fragment faster
-		/*try {
-			showResults(async.get());
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		//		search();
+		 //the program waits until this line is executed, we could make this better to load the fragment faster	
+		AsyncTask<Integer, Integer, ConcurrentSkipListMap> async = new AsyncSearch().execute();
 		return view_temp;
-
 	}
 
-	//	private void search(){
-	//		pb = (ProgressBar)view_temp.findViewById(R.id.progressLodingEpgChannelInformation);
-	//		EditText search_box = (EditText)view_temp.findViewById(R.id.search_box_webtv);
-	//		TextView resultText = (TextView) view_temp.findViewById(R.id.result_webtv);
-	//	}
-
+	/**
+	 * Show the media files in the device.
+	 * @param res
+	 */
 	private void showResults(ConcurrentSkipListMap res){
 
 		// some layout stuff
@@ -170,6 +160,9 @@ public class PlayMediaFilesFragment extends Fragment {
 
 	}
 
+	/**
+	 * Asynchronous task.
+	 */
 	private class AsyncSearch extends AsyncTask<Integer, Integer, ConcurrentSkipListMap>{
 
 		private ConcurrentSkipListMap getResult(){
@@ -180,7 +173,6 @@ public class PlayMediaFilesFragment extends Fragment {
 			files.addLast(Environment.getDownloadCacheDirectory());
 
 			Log.i("Files", "Starting scan...");
-			long time = System.currentTimeMillis();
 			while(!files.isEmpty()){
 				File file = files.removeFirst();
 				File children[] = file.listFiles();
@@ -203,11 +195,18 @@ public class PlayMediaFilesFragment extends Fragment {
 			}
 			return mediaFiles;
 		}
+		
+		/**
+		 * Skips the list map
+		 */
 		@Override
 		protected ConcurrentSkipListMap doInBackground(Integer... params) {
 			return getResult();
 		}
 
+		/**
+		 * Post execution
+		 */
 		protected void onPostExecute(ConcurrentSkipListMap results) {
 
 			view_temp.findViewById(R.id.progressBarStream).setVisibility(View.INVISIBLE);

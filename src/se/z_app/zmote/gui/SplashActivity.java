@@ -42,13 +42,9 @@ public class SplashActivity extends Activity {
         iView.setImageResource(R.drawable.tele2);
         
         new Handler().postDelayed(new Runnable() {
-        	
-            
-            public void run() {
-				
-            	
-               
-				//Finish the splash activity so it can't be returned to.
+        	       
+           public void run() {
+        	   //Finish the splash activity so it can't be returned to.
                 SplashActivity.this.finish(); 		
               
                 // Create an Intent that will start the main activity.
@@ -62,7 +58,5 @@ public class SplashActivity extends Activity {
         }, SPLASH_DISPLAY_LENGTH);
         
     }
-    
-    
     
 }

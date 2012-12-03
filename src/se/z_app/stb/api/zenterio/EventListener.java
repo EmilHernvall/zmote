@@ -3,6 +3,7 @@ package se.z_app.stb.api.zenterio;
 import java.io.IOException;
 import java.io.InputStream;
 
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -21,21 +22,25 @@ import se.z_app.stb.api.EventListnerInterface;
  */
 public class EventListener implements EventListnerInterface {
 
-	private String IPaddress;
+	private String iPaddress;
 	private STBEvent currentEvent;
 	private Socket socket;
 	private InputStream in;
 	private byte[] buffer;
+	private boolean connectionClosed;
+	private Object synclock = new Object();
+	private final int timeBetweenReconnectTries = 1000;
+	private final int portToConnect = 9999;
 
 	/**
 	 * Initializes the event listener.
 	 * @param stb
 	 */
 	public void init(STB stb) {
-		IPaddress = stb.getIP();
+		iPaddress = stb.getIP();
 		
 		try {
-			socket = new Socket(IPaddress, 9999);
+			socket = new Socket(iPaddress, portToConnect);
 			in = socket.getInputStream();
 			buffer = new byte[512];
 		} catch (UnknownHostException e) { 
@@ -65,10 +70,58 @@ public class EventListener implements EventListnerInterface {
 		
 		else if(socket.isConnected()){
 			try {
+				System.out.println("Trying to read event from server");
 				int len = in.read(buffer);
 				currentEvent = stringToSTBEvent(new String(buffer, 0, len));
+				System.out.println(currentEvent.getType());
 			} catch (IOException e) {
-				return null;
+				/*
+				 * Will first check if the connection was closed by the 
+				 * STBListener.
+				 */
+				if(isConnectionClosed()){
+					System.out.println("Closed success!!!");
+					return null;
+				}
+				/*
+				 * If not then will try to close the connection and reconnect 
+				 * with a new  socket.
+				 */
+				while(true){
+					try {
+						Thread.sleep(timeBetweenReconnectTries);
+						if (isConnectionClosed()) {
+							return null;
+						}
+						System.out.println("Trying to reconnect");
+						in.close();
+						socket.close();
+						socket = new Socket();
+						socket.connect(new InetSocketAddress(iPaddress, portToConnect), 0);
+						System.out.println("Reconnecting done");
+						in = socket.getInputStream();
+						int len = in.read(buffer);
+						currentEvent = stringToSTBEvent(new String(buffer, 0, len));
+						break;
+						
+					} catch (IOException e1) {
+						if (isConnectionClosed()) {
+							return null;
+						}
+						System.out.println("Throwing another exception");
+						e1.printStackTrace();
+					} catch (InterruptedException e1) {
+						if (isConnectionClosed()) {
+							return null;
+						}
+						System.out.println("Problem with the sleep function");
+						e1.printStackTrace();
+					}
+				}
+
+
+				
+				
 			}
 		}
 		
@@ -83,13 +136,36 @@ public class EventListener implements EventListnerInterface {
 	public void stop(){
 		if(socket != null){
 			try {
+				setConnectionClosed(true);
+				System.out.println("Forcing close!!!");
 				in.close();
 				socket.close();
+				
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch( RuntimeException e){
 
 			}
+		}
+	}
+
+	/**
+	 * Synchronized getter for boolean connectionClosed.
+	 * @return the connectionClosed
+	 */
+	public boolean isConnectionClosed() {
+		synchronized (synclock) {
+			return connectionClosed;			
+		}
+	}
+
+	/**
+	 * Synchronized setter for boolean connectionClosed.
+	 * @param connectionClosed the connectionClosed to set
+	 */
+	public void setConnectionClosed(boolean connectionClosed) {
+		synchronized (synclock) {
+			this.connectionClosed = connectionClosed;			
 		}
 	}
 

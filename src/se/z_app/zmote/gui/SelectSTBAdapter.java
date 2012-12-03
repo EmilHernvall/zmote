@@ -20,7 +20,6 @@ import android.widget.BaseAdapter;
  * Adapter for the list of STBs to be shown as 
  *  an android ListView.
  * @author Marcus Widegren, Christian Vestman
- *
  */
 public class SelectSTBAdapter extends BaseAdapter {
 	private Activity activity;
@@ -73,9 +72,10 @@ public class SelectSTBAdapter extends BaseAdapter {
      */
     public View getView(int position, View convertView, ViewGroup parent) {
         View vi=convertView;
-        if(convertView==null)
+        if(convertView==null){
             vi = inflater.inflate(R.layout.list_row, null);
- 
+        }
+        
         ListTextViewElement boxName = (ListTextViewElement)vi.findViewById(R.id.boxname);
         boxName.setIndex(position);
         
@@ -99,7 +99,6 @@ public class SelectSTBAdapter extends BaseAdapter {
 					if(file.exists()){
 						MediaItem item = MediaStreamer.instance().addFile(file);
 						RemoteControl.instance().launch(item);
-						//System.out.println("Launching: " + item.getUrl() );
 					}
 				}
 				Intent mainIntent = new Intent(v.getContext(), MainTabActivity.class);
@@ -107,7 +106,8 @@ public class SelectSTBAdapter extends BaseAdapter {
 			}
 		});
         
-        SelectSTBImageElement thumb_image=(SelectSTBImageElement)vi.findViewById(R.id.editimage); // thumb image
+        //thumb image
+        SelectSTBImageElement thumb_image=(SelectSTBImageElement)vi.findViewById(R.id.editimage); 
         thumb_image.setSTB(stb);
         thumb_image.setTextView(boxName);
         thumb_image.setIndex(position);

@@ -24,7 +24,7 @@ import android.widget.LinearLayout;
 
 /**
  * Creates the view with the remote control buttons, the channel icons list and some other buttons
- * @author Thed Mannerlof & Ralph Nilsson & Maria Platero
+ * @author Thed Mannerlof & Ralph Nilsson & Mar’a Platero
  * 
  */
 public class RemoteControlFragment extends Fragment implements Observer {
@@ -63,6 +63,8 @@ public class RemoteControlFragment extends Fragment implements Observer {
 	/**
 	 * Updates and highlight the current channel asynchronously and in other thread
 	 * @author Rasmus
+	 * @param observable
+	 * @param data
 	 */
 	@Override
 	public void update(Observable observable, Object data) {
@@ -76,6 +78,12 @@ public class RemoteControlFragment extends Fragment implements Observer {
 		
 	}
 	
+	/**
+	 * Creation of the view
+	 * @param inflater
+	 * @param container
+	 * @param savedInstanceState
+	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -305,9 +313,7 @@ public class RemoteControlFragment extends Fragment implements Observer {
                     return true;
                 }else{
                     return false;
-                }
-               
-              
+                }          
             }
        });
 
@@ -378,8 +384,9 @@ public class RemoteControlFragment extends Fragment implements Observer {
 	 * @author Francisco Valladares
 	 */
 	public EPG getFullEPG(){
-		if(!fetched)
+		if(!fetched){
 			fetchEPG();
+		}
 		return epg;
 	}
 
@@ -401,12 +408,11 @@ public class RemoteControlFragment extends Fragment implements Observer {
     /**
      * This functions check the current channel and highlights it when
      * pressed in the arrows of the remote control
-     * @author Maria Platero
+     * @author Mar’a Platero
      */
 
     public void highlightChannel(){
     	
-
     	if(currentButton != null){
     		currentButton.setBackgroundResource(0);
     	}

@@ -51,7 +51,6 @@ import android.widget.TextView;
 /**
  * A fragment containing the main view (the view were one can scroll between channels)
  * @author Rasmus Holm
- *
  */
 public class MainViewFragment extends Fragment implements OnGestureListener, Observer{
 
@@ -120,11 +119,14 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 	}
 	
 	int tmp;
+	/**
+	 * Update of the channels information and state.
+	 */
 	@Override
 	public void update(Observable observable, Object data) {
 		Channel channel = EPGContentHandler.instance().getCurrentChannel();
 		long timeDiff = System.currentTimeMillis()-lastChannelChange;
-		//System.out.println("Updating for channel: " + channel.getName());
+	
 		if(timeDiff > 500){
 			if (!isAnimationRunning) {	
 				for(int i = 0; i< channelList.size(); i++){
@@ -153,6 +155,12 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 	boolean clicked = false;
 	float threshhold = 20;
 	boolean activeGest = false;
+	
+	/**
+	 * Handles the tactile gestures.
+	 * @param overlay
+	 * @param event
+	 */
 	@Override
 	public void onGesture(GestureOverlayView overlay, MotionEvent event) {
 		if(activeGest){
@@ -161,7 +169,6 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 
 			float dirX = x-currentX;
 			float dirY = y-currentY;
-
 
 			if(Math.abs(dirX) > threshhold || Math.abs(dirY) > threshhold ){
 				activeGest = false;
@@ -183,11 +190,23 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 		}
 
 	}
+	
+	/**
+	 * Gesture cancelled
+	 * @param overlay
+	 * @param event
+	 */
 	@Override
 	public void onGestureCancelled(GestureOverlayView overlay, MotionEvent event) {
 
 		activeGest = false;
 	}
+	
+	/**
+	 * Gesture ended
+	 * @param overlay
+	 * @param event
+	 */
 	@Override
 	public void onGestureEnded(GestureOverlayView overlay, MotionEvent event) {
 		activeGest= false;
@@ -195,6 +214,11 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 
 	float x;
 	float y;
+	/**
+	 * Gesture started
+	 * @param overlay
+	 * @param event
+	 */
 	@Override
 	public void onGestureStarted(GestureOverlayView overlay, MotionEvent event) {
 		activeGest = true;
@@ -202,14 +226,21 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 		y = event.getY();
 	}
 
-	
-	
+    /**
+     * Destroy of the view
+     */
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		EPGContentHandler.instance().deleteObserver(this);
 	}
 
+    /**
+     * Creation of the view
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -247,6 +278,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 	/**
 	 * A setter for the channel
 	 * @param channelNr The channelNr to be set
+	 * @param duration
 	 */	
 	public void setChannel(int channelNr, int duration){		
 		lastChannelChange = System.currentTimeMillis();
@@ -266,6 +298,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 	/**
 	 * Rotates the view to the indicated channel
 	 * @param channelNr the channel number of the channel to rotate to
+	 * @param duration
 	 */
 	public void rotateToChannel(int channelNr, int duration){		
 		if(currentChannelNr == channelNr){
@@ -274,9 +307,6 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 		int can1 = 0;
 		int can2 = 0;
 		int fin = 0;
-//		if(imageList == null || imageList.isEmpty()){
-//			return;
-//		}
 		int size = imageList.size(); 
 		channelNr = (channelNr+size)%size;
 
@@ -290,14 +320,12 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 				break;
 			}
 			can2++;
-			can1++;
-			
+			can1++;	
 		}
 
 		if(fin < 0){
 			rotateRight(fin*(-1), duration);	
-		}
-		else{
+		}else{
 			rotateLeft(fin, duration);	
 		}
 	}
@@ -612,7 +640,6 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 		LayoutParams params1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		params1.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 		params1.setMargins((int)(imagewidth*(leftleftScale-1)/2), (int)(imagehight*(leftleftScale-1)/2), 0, 0);
-		//params1.setMargins((int)(imagewidth*leftleftScale/4), (int)((imagehight*leftleftScale/4)), 0, 0);
 		leftleft.setLayoutParams(params1);
 
 		ObjectAnimator.ofFloat(leftleft, "scaleX", leftleftScale).setDuration(0).start();
@@ -640,7 +667,6 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 		params1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		params1.addRule(RelativeLayout.CENTER_HORIZONTAL);
 		params1.addRule(RelativeLayout.ABOVE, R.id.imageVolDown);
-		//params1.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		int voldownHight = v.findViewById(R.id.imageVolDown).getMeasuredHeight();
 
 		params1.setMargins(0, 0, 
@@ -653,7 +679,6 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 
 
 		//RightRight		
-
 		rightrightScale = 5*screenwidth/imagewidth/19;
 		params1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		params1.setMargins(0, (int)(imagehight*(rightrightScale-1)/2), (int)(imagewidth*(rightrightScale-1)/2), 0);
@@ -688,11 +713,6 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 		
 		LinearLayout wrapper = new LinearLayout(r.getContext());
 		wrapper.setOrientation(LinearLayout.VERTICAL);
-		//params1 = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		//params1.setMargins(20, screenheight-centerHight-voldownHight+2*padding, 20, voldownHight);
-		//programWrapper.setLayoutParams(params1);
-		
-		
 		
 		channelName = new TextView(v.getContext());
 		channelName.setTextColor(0xFFFFFFFF);
@@ -715,17 +735,13 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 				}
 			}
 		});
-		
-		
+				
 		programProgress = new ProgressBar(v.getContext(), null, android.R.attr.progressBarStyleHorizontal);
-
-		
+	
 		programText = new TextView(v.getContext());
 		programText.setTextColor(0xFFFFFFFF);
 
 		showText();
-
-		
 		
 		wrapper.addView(channelName);
 		wrapper.addView(programProgress);
@@ -736,10 +752,16 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 		r.addView(programWrapper);
 	}
 
+	/**
+	 * Hides text
+	 */
 	private void hideText(){
 		programWrapper.setVisibility(View.INVISIBLE);
 	}
 
+	/**
+	 * Shows text
+	 */
 	private void showText(){
 		String t = "";
 		Channel channel = channelList.get(currentChannelNr);
@@ -802,33 +824,39 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 
 	}
 
+	/**
+	 * Splits strings in to shorter strings
+	 */
 	private String trimString(String s, int max){
 		if(s.length() > max){
 			s = s.substring(0, max-4) + "...";
 		}
 		return s;
 	}
-
+	
+	/**
+	 * Set the variables values
+	 */
 	private void setVariables(){
 		leftleftX = leftleft.getLeft();
 		leftleftY = leftleft.getTop();
 
 		leftX = left.getLeft();
 		leftY = left.getTop();
-		//leftScale = left.getScaleX();
 
 		centerX = center.getLeft();
 		centerY = center.getTop();
-		//centerScale = center.getScaleX();
 
 		rightX = right.getLeft();
 		rightY = right.getTop();
 
 		rightrightX = rightright.getLeft();
 		rightrightY = rightright.getTop();
-		//rightScale = right.getScaleX();
 	}
 
+	/**
+	 * Asynchronous data loader.
+	 */
 	private class AsyncDataLoader extends AsyncTask<Integer, Integer, EPG>{
 
 		@Override
@@ -873,8 +901,7 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 				}
 
 				i.invalidate();
-
-
+				
 				imageList.add(i);
 				channelList.add(channel);
 
@@ -890,7 +917,6 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 				});
 
 				currentChannelNr++;
-
 			}
 
 			EPGQuery query = new EPGQuery();
@@ -912,7 +938,5 @@ public class MainViewFragment extends Fragment implements OnGestureListener, Obs
 		}
 
 	}
-
-
 
 }

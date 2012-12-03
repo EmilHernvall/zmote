@@ -36,28 +36,28 @@ public class SelectSTBActivity extends Activity {
     private ASyncSTBFinder async;
     private ProgressDialog dialog;
     private String filePath = null;
+    
+    /**
+     * Creation of the view
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_stb);
-        
-        
+       
         theView = (SelectSTBListView)findViewById(R.id.list_over_stb);
-        
-             
-        
+    
         Button scan = (Button) findViewById(R.id.button_scanforstb); 	//Scan for STB button
         Button add = (Button) findViewById(R.id.button_addstb); 		//Add manually button
-        
-        
+   
         scan.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
             	async = new ASyncSTBFinder();
             	async.execute();	
             }
         });
-        
-       
+          
         add.setOnClickListener(new View.OnClickListener() {	
         @Override
 			public void onClick(View v) {
@@ -67,8 +67,7 @@ public class SelectSTBActivity extends Activity {
         });
 	
         theView.setList(this, STBContainer.instance().getSTBs(), filePath);
-		
-		
+        
         dialog = new ProgressDialog(this);
         dialog.setCanceledOnTouchOutside(false);
 
@@ -88,9 +87,7 @@ public class SelectSTBActivity extends Activity {
 
 }
     
-        	
-
-    
+ 
     /**
      * Updates the STB list with an STB array
      * @param theList
@@ -102,12 +99,21 @@ public class SelectSTBActivity extends Activity {
  		}
  		theView.setList(this, STBContainer.instance().getSTBs(), filePath);
      }
+     
+     /**
+      * Creates the option menu.
+      * @param menu
+      */
      @Override
      public boolean onCreateOptionsMenu(Menu menu) {
          getMenuInflater().inflate(R.menu.activity_select_stb, menu);
          return true;
      }
      
+     /**
+      * Creates the options for the selectem item in the menu.
+      * @param item
+      */
      @Override
      public boolean onOptionsItemSelected(MenuItem item) {
          switch (item.getItemId()) {
@@ -118,7 +124,9 @@ public class SelectSTBActivity extends Activity {
          return super.onOptionsItemSelected(item);
      }
 
-    
+    /**
+     * Resume of the view.
+     */
      @Override
      public void onResume() {
      	if(theView != null)
@@ -126,25 +134,18 @@ public class SelectSTBActivity extends Activity {
      	super.onResume();
      }
 	
-
-
 	/**
-	 * Calls the STBDiscovery.find() for searching after STB's in an async task.
-	 * TODO: Add a message when no STB's are found.
-	 * 
+	 * Calls the STBDiscovery.find() for searching after STB's in an asynchronous task.
 	 * @return Array of STB's
 	 */
 	private class ASyncSTBFinder extends AsyncTask<Integer, Integer, STB[]> {
 
 		@Override
 		protected STB[] doInBackground(Integer... params) {
-			//System.out.println("Scanning: " + findSubnetAddress());
 			STBDiscovery stbDisc = new STBDiscovery(findSubnetAddress());
-			//STBDiscovery stbDisc = new STBDiscovery("130.236.248."); // -- Test to scan our test boxes
 			
 			long timer = System.currentTimeMillis();
-			
-			
+					
 			STB[] tbr = stbDisc.find();
 			
 			System.out.println("Time to scan network: " + (System.currentTimeMillis()-timer) + "ms");
@@ -173,9 +174,7 @@ public class SelectSTBActivity extends Activity {
 
 		/**
 		 * Finds the subnet of the devices network
-		 * 
-		 * @return the ip in a string in the form 192.168.0. (with the last
-		 *         "."!)
+		 * @return the ip in a string in the form 192.168.0. (with the last "."!)
 		 */
 		private String findSubnetAddress() {
 				String ip = Bootstrap.getLocalIP();
@@ -189,16 +188,7 @@ public class SelectSTBActivity extends Activity {
      * 
      */
     private void addSTB(){
-    	
-    
-     /*Save Button*/
-    /*
-     * TODO
-     * Do we need to check if the STB is valid ?
-     * Do we need to check for empty fields?
-     * Jump from one field to another in the IP when one is fulfilled 
-     * with 3 digits
-     * */
+
    	 Button savebutton = (Button) findViewById(R.id.activity_add_stb_save_button); 
 		 savebutton.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
@@ -223,13 +213,6 @@ public class SelectSTBActivity extends Activity {
 					String final_ip = temp1+"."+temp2+"."+temp3+"."+temp4;
 								
 					new_stb.setIP(final_ip);
-					
-					/*
-					 * TODO 
-					 * Needs to provide a choice of type for the user. 
-					 * A suggestion is to implement a drop down list (spinner).
-					 * That gets all the STB enums and just choices a BOX.
-					 */
 					new_stb.setType(STB.STBEnum.ZENTERIO);
 					
 					STB tempStb[] = new STB[1];

@@ -49,17 +49,14 @@ public class MediaRequestHandler implements ZmoteHTTPDRequestHandler{
 	 * @param httpd The HTTP server to serve the response
 	 * @return An HTTP response
 	 */
-	@SuppressWarnings("resource")
 	@Override
 	public Response serve(String uri, String method, Properties header,
 			Properties parms, Properties files, ZmoteHTTPD httpd) {
-		InputStream in = null;
 		
-		try {
-			in = new FileInputStream(file);
-		} catch (FileNotFoundException e) {
-			return httpd.new Response(httpd.HTTP_NOTFOUND, httpd.MIME_PLAINTEXT, "Not found");
-		}
+			
+			if(!file.exists() || !file.canRead() || !file.isFile())
+				return httpd.new Response(httpd.HTTP_NOTFOUND, httpd.MIME_PLAINTEXT, "Not found");
+		
 				
 		Response response = httpd.serveFile("/"+file.getName(), header, file.getParentFile(), false);
 		response.isStreaming = false;
